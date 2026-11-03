@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../match-page/_page.css" /><link rel="stylesheet" href="_after.css" />
+<style>
+/* Карты вкладками: v3, но главы — плитки карт сверху (тикер серии); открыта одна карта — график крупно, события прямо на линии */
+.v6-top { position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 24px; padding: 24px 28px; border-radius: 16px;
+  background: radial-gradient(40% 120% at 0% 50%, color-mix(in srgb, var(--ta) 22%, transparent), transparent 70%), radial-gradient(40% 120% at 100% 50%, color-mix(in srgb, var(--tb) 14%, transparent), transparent 70%), var(--c-ui-panel); }
+.v6-team { display: flex; align-items: center; gap: 16px; } .v6-team:last-child { flex-direction: row-reverse; text-align: right; }
+.v6-team .r-lg { width: 64px; height: 64px; } .v6-team > span { display: grid; justify-items: start; gap: 6px; } .v6-team:last-child > span { justify-items: end; } .v6-team b { font-size: 22px; } .v6-team small { color: var(--c-caption); font-size: 13px; }
+.v6-team.is-l b { color: var(--c-muted); } .v6-team.is-l .r-lg { opacity: .7; }
+.v6-c { display: grid; justify-items: center; gap: 6px; text-align: center; }
+.v6-c b { font: 700 72px/1 var(--font-c); } .v6-c b span.l { color: var(--c-ui-dim); } .v6-c b i { margin: 0 10px; color: var(--c-ui-dim); font-style: normal; font-size: 46px; }
+.v6-c p { color: var(--c-muted); font-size: 13.5px; } .v6-c .v6-res { padding: 4px 12px; border-radius: 14px; background: color-mix(in srgb, var(--tw) 18%, var(--c-ui-item)); color: var(--c-text); font-size: 13px; font-weight: 600; }
+/* Тикер карт */
+.v6-tk { display: grid; gap: 12px; }
+.v6-tk .a-maps { gap: 12px; } .v6-tk .a-map { position: relative; padding: 16px 18px; cursor: pointer; }
+.v6-tk .a-map em { font-size: 38px; }
+.v6-tk .a-map[aria-selected='true'] { background-color: color-mix(in srgb, var(--tc) 10%, var(--c-ui-panel)); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--tc) 75%, transparent), 0 16px 40px -22px var(--tc); opacity: 1; }
+.v6-tk .a-map[aria-selected='true']::after { content: ''; position: absolute; left: 50%; bottom: -9px; width: 16px; height: 16px; translate: -50% 0; rotate: 45deg; background: inherit; background-color: color-mix(in srgb, var(--tc) 10%, var(--c-ui-panel)); box-shadow: inset -2px -2px 0 0 color-mix(in srgb, var(--tc) 75%, transparent); }
+/* Открытая карта */
+.v6-map { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 22px; padding: 22px; border-radius: 16px; background: var(--c-ui-panel);
+  background-image: radial-gradient(50% 70% at 0% 0%, color-mix(in srgb, var(--tc) 12%, transparent), transparent 60%); }
+.v6-map__h { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 6px 14px; margin-bottom: 8px; }
+.v6-map__h b { font-size: 20px; } .v6-map__h small { color: var(--c-caption); font-size: 13px; }
+.v6-ch { position: relative; margin: 0; }
+.v6-plot { position: relative; height: 360px; }
+.v6-plot svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible; }
+.v6-pt { position: absolute; z-index: 1; display: grid; place-items: center; width: 34px; height: 34px; translate: -50% -50%; padding: 0; border: 0; border-radius: 50%; background: color-mix(in srgb, var(--tc) 28%, var(--c-ui-item)); color: var(--tc); font: 600 14px var(--font); box-shadow: 0 0 0 3px var(--c-ui-panel), 0 0 0 4.5px color-mix(in srgb, var(--tc) 60%, transparent); cursor: pointer; transition: scale .15s; }
+.v6-pt:hover, .v6-pt:focus-visible, .v6-pt.is-on { z-index: 3; scale: 1.15; background: var(--tc); color: var(--c-card-ink); outline: none; }
+.v6-tip { position: absolute; bottom: calc(100% + 12px); left: 50%; translate: -50% 0; display: none; gap: 2px; width: max-content; max-width: 240px; padding: 9px 12px; border-radius: 10px; background: var(--c-ui-hover); color: var(--c-text); text-align: left; font: 500 13px/1.35 var(--font); box-shadow: 0 12px 30px -10px var(--c-black); pointer-events: none; scale: calc(1 / 1.15); }
+.v6-tip time { color: var(--tc); font: 700 12.5px var(--font-c); }
+.v6-pt.is-l .v6-tip { left: -6px; translate: 0 0; } .v6-pt.is-r .v6-tip { left: auto; right: -6px; translate: 0 0; }
+.v6-pt.is-low .v6-tip { bottom: auto; top: calc(100% + 12px); }
+.v6-pt:hover .v6-tip, .v6-pt:focus-visible .v6-tip, .v6-pt.is-on .v6-tip { display: grid; }
+.v6-ax { position: relative; height: 18px; margin-top: 8px; color: var(--c-ui-dim); font-size: 11.5px; } .v6-ax span { position: absolute; translate: -50% 0; }
+.v6-ch figcaption { display: flex; justify-content: space-between; gap: 10px; margin-top: 6px; color: var(--c-caption); font-size: 12px; } .v6-ch figcaption span { display: inline-flex; align-items: center; gap: 6px; }
+.v6-hint { margin-top: 12px; color: var(--c-caption); font-size: 12.5px; }
+.v6-under { margin-top: 16px; }
+/* Правая колонка */
+.v6-side { display: grid; align-content: start; gap: 14px; }
+.v6-pl { display: grid; justify-items: center; gap: 6px; padding: 20px 14px 16px; border-radius: 14px; text-align: center; background: linear-gradient(180deg, color-mix(in srgb, var(--tc) 22%, var(--c-ui-item)), var(--c-ui-item) 75%); }
+.v6-pl small { color: var(--c-caption); font-size: 12px; } .v6-pl img { width: 104px; height: 104px; object-fit: cover; border-radius: 50%; background: var(--c-ui-panel); box-shadow: 0 0 0 3px var(--c-ui-panel), 0 0 30px -6px var(--tc); }
+.v6-pl b { font: 700 24px/1 var(--font-c); } .v6-pl em { color: var(--c-muted); font-size: 13px; font-style: normal; }
+.v6-kv { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.v6-kv div { display: grid; gap: 3px; padding: 12px; border-radius: 10px; background: var(--c-ui-item); } .v6-kv dt { color: var(--c-caption); font-size: 12px; } .v6-kv dd { margin: 0; font: 700 24px/1.05 var(--font-c); } .v6-kv dd small { margin-left: 4px; color: var(--c-caption); font: 500 12px var(--font); }
+.v6-skip { padding: 14px 18px; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--c-ui-line); color: var(--c-caption); font-size: 13.5px; }
+@container row (max-width: 700px) {
+  .v6-top { grid-template-columns: 1fr auto 1fr; gap: 6px; padding: 16px 10px; } .v6-team { flex-direction: column !important; gap: 6px; text-align: center !important; }
+  .v6-team .r-lg { width: 40px; height: 40px; } .v6-team b { font-size: 13.5px; } .v6-team small { display: none; } .v6-team > span, .v6-team:last-child > span { justify-items: center; }
+  .v6-c b { font-size: 44px; } .v6-c b i { margin: 0 4px; font-size: 28px; } .v6-c p { font-size: 11.5px; } .v6-c .v6-res { font-size: 11.5px; }
+  /* Плитки карт листаются вбок */
+  .v6-tk .a-maps { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 74%; gap: 8px; width: calc(100% + 24px); margin: 0 -12px; padding: 2px 12px 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .v6-tk .a-map { grid-template-columns: minmax(0, 1fr) auto; scroll-snap-align: start; padding: 12px 14px; } .v6-tk .a-map em { font-size: 28px; }
+  .v6-map { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 14px; }
+  .v6-plot { height: 220px; } .v6-pt { width: 26px; height: 26px; font-size: 11px; } .v6-tip { max-width: 200px; font-size: 12px; }
+  .v6-ch figcaption span:nth-child(2) { display: none; }
+  .v6-side { grid-template-columns: minmax(0, 1fr); } .v6-pl { grid-template-columns: auto minmax(0, 1fr); justify-items: start; text-align: left; column-gap: 12px; padding: 12px; }
+  .v6-pl img { grid-row: 1 / 4; width: 64px; height: 64px; } .v6-pl b { font-size: 20px; }
+}
+</style></head>
+<body><main class="p-page">
+  <h1>v6 · Карты вкладками</h1>
+  <p>v3 «История серии», но карты не главами одна под другой, а плитками-вкладками сверху, как тикер серии: у каждой — счёт, чья карта и кто взял. Открыта одна карта: её график крупно на всю ширину, ключевые моменты стоят прямо на линии — наведи или нажми на значок, всплывёт минута (в CS — раунд) и что случилось. Справа — игрок карты и главные цифры карты. На телефоне плитки листаются вбок, график ниже, игрок и цифры под ним.</p>
+  <div class="p-tools"><div class="p-seg"><button type="button" data-g="dota">Dota 2 · Spirit — Tundra 2 : 1</button><button type="button" data-g="cs">CS2 · G2 — FaZe 2 : 0</button></div></div>
+  <p class="p-cap">Десктоп · 1440 (рамка уменьшена под ширину окна)</p><div class="p-wrap"><div class="p-frame p-frame--desk" data-ma></div></div>
+  <p class="p-cap">Телефон · 390 — листается внутри рамки, плитки карт листаются вбок</p><div class="p-frame p-frame--phone" data-ma></div>
+</main>
+<script>
+window.MA = {}
+// CS: раунды строкой → разница раундов по ходу карты
+const раунды = (s) => { let d = 0; return [0, ...[...s].map((c) => (d += c === 'A' ? 1 : -1))] }
+let нг = 0
+// Крупный график карты: линия разницы, события — значками прямо на линии, подпись по наведению или нажатию
+const график = (m, x, i) => {
+  const к = m.карты[i], cs = m.g === 'cs', d = cs ? раунды(к.р) : к.ход, n = d.length - 1, мин = parseInt(к.длит)
+  const W = 1000, H = 360, mid = H / 2, max = Math.max(...d.map(Math.abs), cs ? 4 : 10) * 1.18
+  const X = (j) => (j / n) * W, Y = (v) => mid - (v / max) * (mid - 24)
+  const линия = d.map((v, j) => `${j ? 'L' : 'M'}${X(j).toFixed(1)} ${Y(v).toFixed(1)}`).join(' ')
+  const area = `${линия} L${W} ${mid} L0 ${mid} Z`, id = `v6${m.g}${i}n${++нг}`
+  const на = (j) => { const a = Math.floor(j), b = Math.min(n, a + 1), t = j - a; return d[a] + (d[b] - d[a]) * t }
+  const точки = к.соб.map(([t, тип, k, s]) => {
+    const j = Math.min(n, cs ? t : (t / мин) * n), v = на(j), left = (j / n) * 100, top = (Y(v) / H) * 100
+    const кл = `${left < 18 ? 'is-l' : left > 82 ? 'is-r' : ''} ${top < 28 ? 'is-low' : ''}`
+    return `<button type="button" class="v6-pt ${кл}" data-pt style="left:${left}%;top:${top}%;--tc:${x.цвет(m, k)}" aria-label="${s}">${x.ЗНАК[тип]}<span class="v6-tip"><time>${cs ? 'Раунд ' + t : t + '-я минута'}</time>${s}</span></button>`
+  }).join('')
+  const ось = cs ? [1, 6, 12, 18, n].map((r) => `<span style="left:${(r / n) * 100}%">${r}</span>`).join('') : [0, 10, 20, 30, 40].filter((t) => t <= мин).map((t) => `<span style="left:${(t / мин) * 100}%">${t}′</span>`).join('')
+  return `<figure class="v6-ch" style="--ta:${x.цвет(m, 'a')};--tb:${x.цвет(m, 'b')}">
+    <div class="v6-plot">
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">
+        <defs><clipPath id="${id}t"><rect x="0" y="0" width="${W}" height="${mid}" /></clipPath><clipPath id="${id}b"><rect x="0" y="${mid}" width="${W}" height="${mid}" /></clipPath>
+        <linearGradient id="${id}ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--ta)" stop-opacity=".5" /><stop offset="1" stop-color="var(--ta)" stop-opacity="0" /></linearGradient>
+        <linearGradient id="${id}gb" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="var(--tb)" stop-opacity=".5" /><stop offset="1" stop-color="var(--tb)" stop-opacity="0" /></linearGradient></defs>
+        <line x1="0" y1="${mid}" x2="${W}" y2="${mid}" class="a-chart__0" />
+        <path d="${area}" fill="url(#${id}ga)" clip-path="url(#${id}t)" /><path d="${area}" fill="url(#${id}gb)" clip-path="url(#${id}b)" />
+        <path d="${линия}" class="a-chart__l a-chart__l--a" clip-path="url(#${id}t)" style="stroke-width:3" /><path d="${линия}" class="a-chart__l a-chart__l--b" clip-path="url(#${id}b)" style="stroke-width:3" />
+      </svg>
+      ${точки}
+    </div>
+    <div class="v6-ax">${ось}</div>
+    <figcaption><span>${x.лого(m.a, 'sm')}${x.имя(m.a)} впереди</span><span>${cs ? 'разница раундов' : 'разница нетворса, тыс. золота'}</span><span>${x.имя(m.b)} впереди${x.лого(m.b, 'sm')}</span></figcaption>
+  </figure>`
+}
+// Главные цифры карты — из событий и счёта
+const цифры = (m, x, к, d) => {
+  const сколько = (тип, k) => к.соб.filter((e) => e[1] === тип && e[2] === k).length
+  if (m.g === 'cs') return [['Раунды', `${к.сч[0]} : ${к.сч[1]}`], ['Длительность', к.длит], ['Пистолетки', `${сколько('pistol', 'a')} : ${сколько('pistol', 'b')}`], ['Клатчи', `${сколько('clutch', 'a')} : ${сколько('clutch', 'b')}`]]
+  const пик = d.reduce((a, v) => (Math.abs(v) > Math.abs(a) ? v : a), 0)
+  return [['Убийства', `${к.сч[0]} : ${к.сч[1]}`], ['Длительность', к.длит], ['Макс. отрыв', `${Math.abs(пик).toFixed(1)}<small>тыс. · ${x.имя(m[пик >= 0 ? 'a' : 'b']).split(' ')[0]}</small>`], ['Рошаны', `${сколько('rosh', 'a')} : ${сколько('rosh', 'b')}`]]
+}
+MA.вариант = (m, x) => {
+  const w = x.поб(m), cs = m.g === 'cs'
+  const сыграны = m.карты.map((к, i) => [к, i]).filter(([к]) => к.сч)
+  const лишние = m.карты.filter((к) => !к.сч)
+  const панели = сыграны.map(([к, i]) => {
+    const [n, , строка] = к.mvp, d = cs ? раунды(к.р) : к.ход
+    return ['map' + i, `<section class="v6-map" style="--tc:${x.цвет(m, к.поб)}">
+      <div>
+        <div class="v6-map__h"><b>${к.n} · ${x.имя(m[к.поб])} взяли ${к.сч[0]} : ${к.сч[1]}</b><small>${к.под} · ${к.длит}</small></div>
+        ${график(m, x, i)}
+        <p class="v6-hint">Наведи или нажми на значок на линии — что случилось. ${cs ? '● пистолетка · ◎ клатч · ✦ эйс · ★ конец' : '⚔ драка · ◆ Рошан · ▲ башня · ★ конец'}</p>
+        <div class="v6-under">${x.состав_карты(m, i)}</div>
+      </div>
+      <aside class="v6-side">
+        <div class="v6-pl"><small>Игрок карты</small><img src="${x.фото(n)}" alt="" /><b>${n}</b><em>${строка}</em></div>
+        <dl class="v6-kv">${цифры(m, x, к, d).map(([t, v]) => `<div><dt>${t}</dt><dd>${v}</dd></div>`).join('')}</dl>
+        ${лишние.map((л) => `<p class="v6-skip">${л.n} — ${л.под}, не понадобилась</p>`).join('')}
+      </aside>
+    </section>`]
+  })
+  return `
+  <header class="v6-top" style="--ta:${x.цвет(m, 'a')};--tb:${x.цвет(m, 'b')}">
+    <div class="v6-team ${w === 'a' ? '' : 'is-l'}">${x.лого(m.a)}<span><b>${x.имя(m.a)}</b><small>${w === 'a' ? 'победа' : 'поражение'} · ${x.пипы(m.серия[0])}</small></span></div>
+    <div class="v6-c"><p>${m.тур} · ${m.стадия}</p><b><span class="${w === 'a' ? '' : 'l'}">${m.серия[0]}</span><i>:</i><span class="${w === 'b' ? '' : 'l'}">${m.серия[1]}</span></b><span class="v6-res">Завершён · ${m.дата} · ${m.длит}</span></div>
+    <div class="v6-team ${w === 'b' ? '' : 'is-l'}">${x.лого(m.b)}<span><b>${x.имя(m.b)}</b><small>${w === 'b' ? 'победа' : 'поражение'} · ${x.пипы(m.серия[1])}</small></span></div>
+  </header>
+  <div data-tabs class="v6-tk">${x.карты(m, { кнопки: true })}${x.панели(панели)}</div>
+  <div data-tabs class="a-sec">${x.вкладки([['t1', 'Таблица серии · ' + x.имя(m.a)], ['t2', x.имя(m.b)]])}<div style="margin-top:14px">${x.панели([['t1', x.таблица(m, 'a')], ['t2', x.таблица(m, 'b')]])}</div></div>
+  <div class="a-g2">${x.сек('Что дальше', x.дальше(m, 0))}${x.сек('Твой матч', x.мои(m))}</div>`
+}
+// Нажатие на значок события — подпись остаётся открытой (на телефоне нет наведения)
+document.addEventListener('click', (e) => {
+  const p = e.target.closest('[data-pt]')
+  document.querySelectorAll('[data-pt].is-on').forEach((q) => { if (q !== p) q.classList.remove('is-on') })
+  if (p) p.classList.toggle('is-on')
+})
+</script>
+<script src="_after.js"></script>
+</body></html>

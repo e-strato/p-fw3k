@@ -1,0 +1,20 @@
+/* Набор 2 · Продукт — наш текущий сайт (главная v9: LoL Esports / Sorare / SofaScore): плоские панели на почти чёрном,
+   много воздуха, один фиолетовый акцент, цвет — только у рейтинга и live. Шрифт — Inter */
+body.t-prod {
+  --s-page: #050505; --s-bg: #080808; --s-panel: #141414; --s-panel-2: #1f1f1f; --s-line: #ffffff14; --s-line-2: #ffffff0d;
+  --s-text: #f5f5f7; --s-muted: #a5a5a7; --s-accent: #ad8df5; --s-accent-soft: #ad8df51f; --s-on-accent: #160d2b;
+  --s-live: #e5484d; --s-coin: #e9c861; --s-win: #41d28d; --s-lose: #d98a5a; --s-track: #262626; --s-shadow: #000000;
+  --s-team-a: var(--c-team-ts); --s-team-b: var(--c-team-tun); --s-hd-bg: #080808; --s-hd-h: 64px;
+  --s-medal: linear-gradient(145deg, #f6c79c, #b06d3a 55%, #5b2f14); --s-medal-ink: #2a1408;
+  --s-gold: #f1c24c; --s-silver: #c9d2de; --s-bronze: #d08a55;
+  --s-font: 'Inter', system-ui, sans-serif; --s-font-h: 'Inter', system-ui, sans-serif; --s-font-num: 'Inter', system-ui, sans-serif; --s-fs: 14px;
+  --s-r: 14px; --s-r-s: 10px; --s-r-btn: 10px; --s-r-pill: 999px; --s-pad: 22px; --s-gap: 16px; --s-row-pad: 12px;
+  --s-h3: 17px; --s-h1: 42px; --s-panel-edge: none; --s-btn-glow: none;
+}
+.t-prod .ap { font-feature-settings: 'tnum' 1; }
+.t-prod .a-nav a[aria-current] { background: #ffffff12; }
+.t-prod .a-feat { background: radial-gradient(70% 120% at 15% 0%, #c9d2de14, transparent 60%), radial-gradient(70% 120% at 85% 0%, #7bd13f12, transparent 60%), #141414; }
+.t-prod .a-chips button[aria-pressed='true'] { background: #f5f5f7; color: #080808; }
+.t-prod .a-mine__it { background: #1a1a1a; }
+.t-prod .a-ob__main { padding: 32px 40px; }
+.t-prod .a-plh { background: radial-gradient(60% 140% at 0% 0%, color-mix(in srgb, var(--c-team-pv) 22%, transparent), transparent 60%), #141414; }

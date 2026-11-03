@@ -1,0 +1,40 @@
+/* w-bar v6–v8 — новые концепты после v2: ничего не ложится поверх страницы (_y.js). Общее (телефон, бар, ответы, анимации) — _x.css. */
+.y-phone .scr{ padding:0 16px 96px; }
+.y-head{ position:sticky; top:0; z-index:5; margin:0 -16px 12px; padding:0 16px; background:var(--w-page); border-bottom:1px solid var(--w-border); }
+.y-desk .y-head{ margin:0 0 12px; border:1px solid var(--w-border); border-top:0; border-radius:0 0 var(--w-r) var(--w-r); }
+.y-head .mline{ height:48px; } .y-head .mline .num{ color:var(--w-fg); font-weight:600; }
+.mut{ color:var(--w-muted-fg); font-size:12px; }
+.ans .an{ justify-content:center; }
+@keyframes grow{ from{ max-height:0; opacity:0; } to{ max-height:200px; opacity:1; } }
+@keyframes open{ from{ max-height:0; opacity:0; margin-top:-12px; } to{ max-height:260px; opacity:1; } }
+
+/* v6 «Строка в шапке»: липкая строка матча вырастает на строку с вопросом */
+.y-head.is-ev{ border-bottom-color:#3f3a1f; }
+.hq{ position:relative; display:flex; flex-direction:column; gap:8px; padding:4px 0 12px; overflow:hidden; }
+.anim-grow{ animation:grow .4s ease; }
+.hq-q{ display:flex; align-items:center; gap:8px; } .hq-q svg{ width:22px; height:22px; flex:none; }
+.hq-q span{ display:flex; flex-direction:column; } .hq-q b{ font-size:14px; font-weight:600; } .hq-q small{ font-size:12px; color:var(--w-muted-fg); }
+.hq-a{ display:flex; align-items:center; gap:10px; } .hq-ans{ flex:1; } .hq-ans .an{ height:36px; font-size:13px; }
+.hq-time{ position:absolute; left:0; bottom:0; height:2px; background:var(--gold); transition:width 1s linear; }
+.hq--done{ flex-direction:row; align-items:center; gap:8px; padding:0 0 10px; font-size:13px; }
+
+/* v7 «Карточка в ленте»: вопрос встаёт в страницу, страница раздвигается */
+.fc{ position:relative; overflow:hidden; padding:12px 14px 14px; border-radius:var(--w-r); background:#141206; border:1px solid #3f3a1f; }
+.anim-open{ animation:open .45s cubic-bezier(.2,.9,.3,1.1); }
+.fc-hd{ display:flex; align-items:center; gap:6px; font-size:12px; color:var(--w-muted-fg); } .fc-hd svg{ width:18px; height:18px; } .fc-hd b{ color:var(--w-fg); font-weight:600; }
+.fc .q{ margin:8px 0 10px; }
+.fc-time{ position:absolute; left:0; right:0; bottom:0; height:3px; background:#27272a; } .fc-time i{ display:block; height:100%; background:var(--gold); transition:width 1s linear; }
+.fc--done{ display:flex; align-items:center; gap:8px; padding:10px 14px; font-size:13px; background:var(--w-bg); border-color:var(--w-border); }
+
+/* v8 «Бар становится ответами»: бар выше на строку вопроса, вкладки → две половины */
+.bar--q{ height:112px; flex-direction:column; align-items:stretch; gap:8px; padding:10px 10px 18px; border-top-color:#3f3a1f; }
+.anim-morph{ animation:up .35s cubic-bezier(.2,.9,.3,1.2); }
+.bq-time{ position:absolute; left:0; top:-1px; height:2px; background:var(--gold); transition:width 1s linear; }
+.bq-q{ display:flex; align-items:center; gap:8px; font-size:13px; } .bq-q svg{ width:18px; height:18px; flex:none; } .bq-q b{ flex:1; font-weight:600; }
+.bq-a{ display:flex; align-items:center; gap:6px; }
+.bq-h{ flex:1; height:44px; border-radius:12px; background:var(--w-muted); font-weight:600; font-size:15px; } .bq-h:hover{ background:#3f3f46; }
+.bq-or{ font-size:11px; color:var(--w-muted-fg); }
+.bar > .bq-done{ flex-direction:row; gap:4px; font-size:12px; color:var(--w-fg); } .bq-done small{ color:var(--w-muted-fg); }
+.bar.in-side{ position:static; height:auto; border:1px solid #3f3a1f; border-radius:var(--w-r); padding:12px; background:#141206; }
+.d8--done{ display:flex; align-items:center; gap:8px; padding:12px; border-radius:var(--w-r); border:1px solid var(--w-border); background:var(--w-bg); font-size:13px; }
+.d8--calm{ padding:16px; border-radius:var(--w-r); border:1px dashed var(--w-border); color:var(--w-muted-fg); font-size:13px; text-align:center; }

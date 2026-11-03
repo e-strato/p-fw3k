@@ -1,0 +1,6 @@
+/* Лаба «Свечение»: CSS-ореол позади 3D-сцены — круг с мягким радиальным градиентом цвета редкости (--rc), без ступенек */
+.glow-css { position: absolute; left: 50%; top: 45%; z-index: 0; width: var(--s, 60vmin); aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; pointer-events: none; opacity: 0;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--rc) 50%, transparent), color-mix(in srgb, var(--rc) 16%, transparent) 50%, transparent); }
+/* Карты Хайперглитч на местах карт сайта: пропорция 5:7, размер карты — ширина места; свечение после переворота — общее, сайтовое */
+.bs .cs__card { aspect-ratio: 5 / 7; }
+.bs .cs__front .hg .kc { --w: var(--cw); }

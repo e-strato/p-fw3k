@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>v36 · Как v34: буква крупнее, линии между новостями</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="../widgets-unified/_type.css" /><link rel="stylesheet" href="_news.css" /><link rel="stylesheet" href="_feed.css" />
+<!-- З1 «Новости» v36 — общая лента (как v18) + поповеры на значках (дирижёр 30.10: «при наведении — поповеры, что это значит; разные визуальные версии v18: иконки по-разному, как в прошлых виджетах, размеры»).
+     Здесь: как v34, буква крупнее (17), между новостями тонкие линии (дирижёр 30.10: «34 очень прикольно, чуть больше; между новостями — очень тонкие разделители»); низ — источник, читают, время: чуть крупнее, серые, без контейнера, время моно (дирижёр 30.10: «ранг ярче, в первой строке перед названием; нижнюю часть — снизу, чуть больше, без контейнеров»). Состав — как v23. Рендер — _feed.js (look: 'r10'). Новости настоящие (../news/_real.js); ‼️ ранг, влияние, «читают» — пример. -->
+<style>
+  body{ margin:0; background:var(--w-page); color:var(--w-fg); font-family:var(--w-font); }
+  .lab-board{ padding:32px 48px; }
+  .is-phone .lab-board{ padding:32px 0; } .is-phone #w{ width:390px; margin:0 auto; }
+</style></head>
+<body><div class="lab-board"><div id="w"></div></div>
+<script src="../gs-match/data/_matches.js"></script><script src="../gs-match/data/_tournament.js"></script><script src="../gs-match/_wfit.js"></script>
+<script src="../news/_real.js"></script><script src="_feed.js"></script>
+<script>
+  const PIC = [{ v: 'mix', label: 'Как есть' }, { v: 'all', label: 'У всех' }, { v: 'none', label: 'Ни у одной' }]
+  const DEV = [{ v: 'desk', label: 'Компьютер' }, { v: 'phone', label: 'Телефон' }]
+  const S = { pic: 'mix', device: 'desk' }
+  const w = document.getElementById('w')
+  function render() { document.body.classList.toggle('is-phone', S.device === 'phone'); NFEED.render(w, { look: 'r10', pic: S.pic, phone: S.device === 'phone' }) }
+  window.LAB = { view: 'toolbar', go: (f, i) => { S.pic = PIC[i].v; render() }, cur: () => ({ f: 0, i: PIC.findIndex((x) => x.v === S.pic) }),
+    flows: () => [{ name: 'Картинки', steps: PIC.map((x) => ({ name: x.label, what: x.label })) }],
+    axes: () => [{ key: 'pic', name: 'Картинки', value: S.pic, options: PIC }, { key: 'device', name: 'Экран', value: S.device, options: DEV }],
+    set: (k, v) => { S[k] = v; render() },
+    caption: () => 'Наведи на значок — что он значит. Новости настоящие, ‼️ ранг и «читают» — пример' }
+  render()
+</script>
+</body></html>

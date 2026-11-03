@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../match-page/_page.css" /><link rel="stylesheet" href="_after.css" />
+<style>
+/* История + сцена: эмоциональная шапка из v1 (счёт серии, «Победа» в цвете победителя, игрок серии) → главы карт из v3 → «Что дальше» */
+.v5-hero { position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) 380px; align-items: center; gap: 40px; min-height: 470px; padding: 34px 44px; border-radius: 18px;
+  background: radial-gradient(55% 75% at 30% 45%, color-mix(in srgb, var(--tw) 28%, transparent), transparent 70%), radial-gradient(40% 80% at 88% 50%, color-mix(in srgb, var(--tw) 20%, transparent), transparent 70%), linear-gradient(180deg, color-mix(in srgb, var(--tw) 8%, var(--c-ui-panel)), var(--c-ui-bg)); }
+.v5-hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: repeating-linear-gradient(115deg, transparent 0 46px, color-mix(in srgb, var(--tw) 5%, transparent) 46px 47px); mask: radial-gradient(60% 70% at 35% 45%, #000, transparent); }
+.v5-l { display: grid; gap: 14px; }
+.v5-top { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; color: var(--c-muted); font-size: 13.5px; }
+.v5-top .r-gt { padding: 3px 8px; border-radius: 6px; background: var(--c-ui-item); color: var(--c-text); font-weight: 600; }
+.v5-head { display: flex; align-items: center; gap: 28px; }
+.v5-word { font: 700 150px/0.9 var(--font-c); letter-spacing: -.02em; color: color-mix(in srgb, var(--tw) 82%, var(--c-white)); text-shadow: 0 0 80px color-mix(in srgb, var(--tw) 55%, transparent); }
+.v5-num { display: grid; justify-items: center; gap: 2px; font: 700 96px/1 var(--font-c); } .v5-num small { font: 500 13px var(--font); color: var(--c-caption); }
+.v5-num--w { color: var(--tw); } .v5-num--l { color: var(--c-ui-dim); }
+.v5-teams { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 18px; } .v5-teams b { font-weight: 700; } .v5-teams span { color: var(--c-muted); } .v5-teams .r-lg { width: 34px; height: 34px; } .v5-teams i { color: var(--c-ui-dim); font-style: normal; }
+.v5-phrase { color: var(--c-muted); font-size: 16px; } .v5-phrase b { color: var(--c-text); }
+.v5-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+/* Игрок серии */
+.v5-mvp { position: relative; display: grid; justify-items: center; gap: 8px; padding: 26px 22px 20px; border-radius: 18px; text-align: center;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tw) 24%, var(--c-ui-panel)), var(--c-ui-panel) 70%); box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--tw) 55%, transparent), 0 30px 70px -30px color-mix(in srgb, var(--tw) 60%, transparent); }
+.v5-mvp .a-pc__tag { top: -13px; }
+.v5-mvp__img { width: 150px; height: 150px; object-fit: cover; border-radius: 50%; background: var(--c-ui-item); box-shadow: 0 0 0 4px var(--c-ui-panel), 0 0 40px -6px var(--tw); }
+.v5-mvp__n { font: 700 30px/1 var(--font-c); } .v5-mvp__r { color: var(--c-caption); font-size: 13px; }
+.v5-mvp__d { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; margin: 6px 0 0; padding-top: 12px; border-top: 1px solid var(--c-ui-line); }
+.v5-mvp__d dt { color: var(--c-caption); font-size: 12px; } .v5-mvp__d dd { margin: 2px 0 0; font: 700 28px/1 var(--font-c); }
+.v5-mvp__t { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; } .v5-mvp__t span { padding: 5px 10px; border-radius: 8px; background: color-mix(in srgb, var(--tw) 14%, var(--c-ui-item)); font-size: 12.5px; } .v5-mvp__t b { color: var(--c-text); }
+/* Главы — как v3 */
+.v5-bar { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-top: 8px; }
+.v5-bar h2 { font: 700 26px var(--font-c); } .v5-bar small { color: var(--c-caption); font-size: 13px; }
+.v5-story { display: grid; }
+.v5-ch { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 22px; padding: 22px; border-radius: 16px; background: var(--c-ui-panel);
+  background-image: radial-gradient(60% 80% at 0% 0%, color-mix(in srgb, var(--tc) 13%, transparent), transparent 60%); }
+.v5-ch__l { display: grid; align-content: start; gap: 14px; }
+.v5-ch__n { display: flex; align-items: baseline; gap: 10px; } .v5-ch__n b { font-size: 20px; } .v5-ch__n small { color: var(--c-caption); font-size: 13px; }
+.v5-ch__s { display: flex; align-items: center; gap: 12px; font: 700 52px/1 var(--font-c); } .v5-ch__s .l { color: var(--c-ui-dim); } .v5-ch__s i { color: var(--c-ui-dim); font-style: normal; font-size: 34px; }
+.v5-ch__w { display: flex; align-items: center; gap: 8px; color: var(--c-muted); font-size: 13.5px; } .v5-ch__w b { color: var(--c-text); }
+.v5-cmvp { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; background: color-mix(in srgb, var(--tc) 12%, var(--c-ui-item)); }
+.v5-cmvp .a-ava { width: 52px; height: 52px; box-shadow: 0 0 0 2px var(--tc); } .v5-cmvp span { display: grid; gap: 1px; } .v5-cmvp small { color: var(--c-caption); font-size: 12px; } .v5-cmvp b { font-size: 16px; } .v5-cmvp em { color: var(--c-muted); font-size: 12.5px; font-style: normal; }
+.v5-ch__r { display: grid; gap: 14px; min-width: 0; } .v5-ch .a-evl li { padding: 6px 0; font-size: 13px; }
+.v5-link { position: relative; display: flex; align-items: center; gap: 12px; height: 54px; margin-left: 172px; padding-left: 26px; color: var(--c-caption); font-size: 13px; }
+.v5-link::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--c-ui-hover); }
+.v5-link b { color: var(--c-text); font: 700 16px var(--font-c); }
+.v5-skip { display: flex; align-items: center; gap: 12px; padding: 16px 22px; border-radius: 14px; box-shadow: inset 0 0 0 1px var(--c-ui-line); color: var(--c-caption); font-size: 14px; } .v5-skip b { color: var(--c-muted); }
+/* Что дальше */
+.v5-next { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.v5-next .a-next { min-height: 100%; padding: 24px; } .v5-next .a-next__m { font-size: 20px; } .v5-next .a-next__m .r-lg { width: 44px; height: 44px; } .v5-next .a-next__t em { font-size: 36px; }
+.v5-fin { display: grid; gap: 10px; padding-top: 18px; } .v5-fin h2 { font: 700 26px var(--font-c); }
+@container row (max-width: 700px) {
+  .v5-hero { grid-template-columns: minmax(0, 1fr); gap: 22px; min-height: 0; padding: 20px 14px; border-radius: 14px; }
+  .v5-head { gap: 12px; justify-content: center; } .v5-word { font-size: 64px; } .v5-num { font-size: 52px; } .v5-num small { font-size: 11px; }
+  .v5-l { justify-items: center; text-align: center; } .v5-top { justify-content: center; font-size: 12px; }
+  .v5-teams { justify-content: center; gap: 8px; font-size: 14px; } .v5-teams .r-lg { width: 24px; height: 24px; } .v5-phrase { font-size: 14px; }
+  .v5-cta { justify-content: center; } .v5-cta .a-btn { height: 38px; padding: 0 14px; font-size: 13px; }
+  .v5-mvp { padding: 22px 14px 16px; } .v5-mvp__img { width: 108px; height: 108px; } .v5-mvp__n { font-size: 24px; } .v5-mvp__d dd { font-size: 22px; }
+  .v5-bar h2, .v5-fin h2 { font-size: 21px; } .v5-bar small { display: none; }
+  .v5-ch { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 14px; } .v5-ch__s { font-size: 40px; } .v5-link { margin-left: 24px; }
+  .v5-next { grid-template-columns: minmax(0, 1fr); gap: 12px; } .v5-next .a-next { padding: 16px; } .v5-next .a-next__m { font-size: 15px; } .v5-next .a-next__m .r-lg { width: 30px; height: 30px; } .v5-next .a-next__t em { font-size: 26px; }
+}
+</style></head>
+<body><main class="p-page">
+  <h1>v5 · История + сцена</h1>
+  <p>v3 «История серии» с эмоциональной шапкой из v1. Первый экран — победа: счёт серии крупно по краям слова «Победа» в цвете победителя, одна фраза-итог и игрок серии отдельной карточкой с фото, двумя числами и его титулами. Ниже — история серии главами, как в v3: каждая карта — счёт, победитель, игрок карты, пики или раунды и график со значками ключевых моментов; между главами — как менялся счёт серии. В конце — «Что дальше»: следующий матч победителя с живым отсчётом крупно, прогнозы на следующий раунд и твои очки.</p>
+  <div class="p-tools"><div class="p-seg"><button type="button" data-g="dota">Dota 2 · Spirit — Tundra 2 : 1</button><button type="button" data-g="cs">CS2 · G2 — FaZe 2 : 0</button></div></div>
+  <p class="p-cap">Десктоп · 1440 (рамка уменьшена под ширину окна)</p><div class="p-wrap"><div class="p-frame p-frame--desk" data-ma></div></div>
+  <p class="p-cap">Телефон · 390 — листается внутри рамки</p><div class="p-frame p-frame--phone" data-ma></div>
+</main>
+<script>
+window.MA = {}
+MA.вариант = (m, x) => {
+  const w = x.поб(m), l = w === 'a' ? 'b' : 'a', [sw, sl] = w === 'a' ? m.серия : [...m.серия].reverse(), cs = m.g === 'cs'
+  // Игрок серии: два числа и его титулы
+  const p = m.игроки[m.mvp[1]].find((q) => q[0] === m.mvp[0])
+  const ч1 = cs ? `${p[3]}–${p[4]}` : `${p[3]} / ${p[4]} / ${p[5]}`, ч2 = cs ? p[8].toFixed(2) : p[6]
+  const титулы = m.титулы.filter(([n]) => n === m.mvp[0]).map(([, т, ч]) => `<span><b>${т}</b> · ${ч}</span>`).join('')
+  let сa = 0, сb = 0
+  const главы = m.карты.map((к, i) => {
+    if (!к.сч) return `<div class="v5-link"><span>Серия закончилась ${сa} : ${сb}</span></div><div class="v5-skip"><b>${к.n}</b><span>${к.под} — не понадобилась</span></div>`
+    к.поб === 'a' ? сa++ : сb++
+    const [n, , строка] = к.mvp
+    const связка = i ? `<div class="v5-link"><span>Счёт серии</span><b>${сa - (к.поб === 'a')} : ${сb - (к.поб === 'b')} → ${сa} : ${сb}</b></div>` : ''
+    return `${связка}<article class="v5-ch" style="--tc:${x.цвет(m, к.поб)}">
+      <div class="v5-ch__l">
+        <p class="v5-ch__n"><b>${к.n}</b><small>${к.под}</small></p>
+        <p class="v5-ch__s"><span class="${к.поб === 'a' ? '' : 'l'}">${к.сч[0]}</span><i>:</i><span class="${к.поб === 'b' ? '' : 'l'}">${к.сч[1]}</span></p>
+        <p class="v5-ch__w">${x.лого(m[к.поб], 'sm')}<b>${x.имя(m[к.поб])}</b> взяли карту · ${к.длит}</p>
+        <div class="v5-cmvp">${x.ава(n)}<span><small>Игрок карты</small><b>${n}</b><em>${строка}</em></span></div>
+        ${x.состав_карты(m, i)}
+      </div>
+      <div class="v5-ch__r">${x.график(m, i, { h: 200, id: 'v5' })}${x.события(m, i)}</div>
+    </article>`
+  }).join('')
+  return `
+  <section class="v5-hero">
+    <div class="v5-l">
+      <p class="v5-top"><span class="r-gt">${m.игра}</span><b>${m.тур}</b><span>${m.стадия}</span><span>${m.дата} · ${m.длит}</span></p>
+      <div class="v5-head"><b class="v5-num v5-num--w">${sw}<small>${x.имя(m[w])}</small></b><b class="v5-word">Победа</b><b class="v5-num v5-num--l">${sl}<small>${x.имя(m[l])}</small></b></div>
+      <p class="v5-teams">${x.лого(m[w])}<b>${x.имя(m[w])}</b><i>${sw} : ${sl}</i><span>${x.имя(m[l])}</span>${x.лого(m[l])}</p>
+      <p class="v5-phrase"><b>${m.фраза[0]}</b>. ${m.фраза[1]}.</p>
+      <div class="v5-cta"><a class="a-btn a-btn--main" href="#">▶ Запись серии</a><a class="a-btn a-btn--ghost" href="#">Лучшие моменты · 4:12</a></div>
+    </div>
+    <article class="v5-mvp"><span class="a-pc__tag">Игрок серии</span>
+      <img class="v5-mvp__img" src="${x.фото(m.mvp[0])}" alt="" />
+      <b class="v5-mvp__n">${m.mvp[0]}</b><small class="v5-mvp__r">${x.имя(m[m.mvp[1]])} · ${m.mvp[2]} · ${m.mvp[3]}</small>
+      <dl class="v5-mvp__d"><div><dt>${m.два[0]}</dt><dd>${ч1}</dd></div><div><dt>${m.два[1]}</dt><dd>${ч2}</dd></div></dl>
+      <div class="v5-mvp__t">${титулы}</div>
+    </article>
+  </section>
+  <div class="v5-bar"><h2>Как прошла серия</h2><small>${cs ? '● пистолетка · ◎ клатч · ✦ эйс' : '⚔ драка · ◆ Рошан · ▲ башня · ★ конец'}</small></div>
+  <div class="v5-story">${главы}</div>
+  <div class="v5-fin"><h2>Что дальше</h2>
+    <div class="v5-next">${x.дальше(m, 0)}${x.сек('Прогнозы на следующий раунд', x.прогнозы(m))}${x.сек('Твой матч', x.мои(m))}</div>
+  </div>
+  <div data-tabs class="a-sec">${x.вкладки([['t1', x.имя(m[w])], ['t2', x.имя(m[l])]])}<div style="margin-top:14px">${x.панели([['t1', x.таблица(m, w)], ['t2', x.таблица(m, l)]])}</div></div>`
+}
+</script>
+<script src="_after.js"></script>
+</body></html>

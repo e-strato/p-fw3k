@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Archivo:wdth,wght@62..125,700..900&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_footer.css" />
+<style>
+/* v3 · По мотивам BLAST.tv и HLTV: над футером — хаб игр (плитки Dota 2 / LoL / CS 2 с турнирами и статусом, как у BLAST),
+   под ним — полоса из двух карточек «Fantasy в телефоне» и «Честная игра 18+» (как промо-полоса HLTV), внизу тонкая строка ссылок и соцсетей */
+.f3 { margin-top: 12px; padding: 40px 48px 26px; background: linear-gradient(180deg, transparent, var(--c-ui-panel) 120px); }
+.f3__h { display: flex; align-items: baseline; gap: 12px; margin: 0 0 16px; color: var(--c-text); font-size: 20px; font-weight: 700; }
+.f3__h small { color: var(--c-caption); font-size: 13px; font-weight: 400; }
+.f3__games { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.f3__g { overflow: hidden; border-radius: 12px; background: var(--c-ui-item); }
+.f3__art { position: relative; display: flex; align-items: flex-end; justify-content: space-between; height: 108px; padding: 16px 18px; isolation: isolate;
+  background: radial-gradient(70% 120% at 85% 20%, color-mix(in srgb, var(--g) 55%, transparent), transparent 70%), linear-gradient(135deg, color-mix(in srgb, var(--g) 25%, var(--c-ui-panel)), var(--c-ui-panel)); }
+.f3__art::after { content: ''; position: absolute; inset: 0; z-index: -1; background: repeating-linear-gradient(135deg, transparent 0 14px, color-mix(in srgb, var(--c-white) 3%, transparent) 14px 15px); }
+.f3__art b { color: var(--c-white); font: 900 26px/1 'Archivo', var(--font); font-stretch: 110%; letter-spacing: -.01em; }
+.f3__art b small { display: block; margin-top: 6px; color: var(--c-muted); font: 500 12px var(--font); letter-spacing: 0; }
+.f3__logos { display: flex; }
+.f3__logos img { width: 34px; height: 34px; margin-left: -8px; padding: 5px; border-radius: 50%; background: var(--c-ui-bg); object-fit: contain; box-shadow: 0 0 0 2px var(--c-ui-item); }
+.f3__mono { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 12px; background: color-mix(in srgb, var(--c-black) 35%, transparent); color: var(--c-text); font: 800 15px var(--font-c); }
+.f3__g ul { display: grid; gap: 4px; margin: 0; padding: 10px; list-style: none; }
+.f3__g li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px; border-radius: 6px; background: var(--c-ui-panel); color: var(--c-text); font-size: 13px; }
+.f3__g li em { flex: none; font: 700 11.5px var(--font-c); font-style: normal; color: var(--c-ui-dim); }
+.f3__g li em.is-live { color: var(--c-live); }
+.f3__g li em.is-soon { color: var(--c-accent); }
+.f3__promo { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; margin-top: 16px; }
+.f3__card { display: flex; align-items: center; gap: 22px; padding: 20px 22px; border-radius: 12px; background: var(--c-ui-item); }
+.f3__card h4 { margin: 0 0 4px; color: var(--c-text); font-size: 16px; font-weight: 700; }
+.f3__card p { margin: 0 0 12px; font-size: 13px; }
+.f3__phone { flex: none; width: 74px; height: 120px; padding: 6px; border-radius: 14px; background: var(--c-black); box-shadow: inset 0 0 0 1px var(--c-ui-line), 0 16px 30px -14px var(--c-accent); rotate: -8deg; }
+.f3__phone i { display: block; height: 100%; border-radius: 9px; background: linear-gradient(180deg, color-mix(in srgb, var(--c-accent) 50%, var(--c-ui-panel)), var(--c-ui-panel) 55%),
+  repeating-linear-gradient(180deg, transparent 0 14px, var(--c-ui-hover) 14px 22px); background-blend-mode: normal; }
+.f3__apps { display: flex; gap: 8px; }
+.f3__app { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px 0 10px; border-radius: 8px; background: var(--c-black); box-shadow: inset 0 0 0 1px var(--c-ui-line); color: var(--c-white); font-size: 13px; font-weight: 700; }
+.f3__app .ft-ic { font-size: 19px; }
+.f3__fair ul { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.f3__fair li { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--c-text); }
+.f3__fair li .ft-ic { font-size: 18px; color: var(--c-coin); }
+.f3__fair .ft-age { flex: none; width: 56px; height: 56px; border-radius: 50%; font-size: 18px; box-shadow: inset 0 0 0 2px var(--c-coin); color: var(--c-coin); }
+.f3__row { display: flex; align-items: center; gap: 24px; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--c-ui-line); }
+.f3__row .ft-brand i { width: 28px; height: 28px; }
+.f3__links { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 13px; }
+.f3__soc { display: flex; gap: 4px; margin-left: auto; }
+.f3__soc a { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 8px; color: var(--c-text); font-size: 18px; }
+.f3__soc a:hover { background: var(--c-ui-item); }
+.f3__fine { margin-top: 16px; text-align: center; }
+@container ft (max-width: 480px) {
+  .f3 { padding: 28px 16px 22px; }
+  .f3__games { display: flex; gap: 12px; margin: 0 -16px; padding: 0 16px 4px; overflow-x: auto; scrollbar-width: none; }
+  .f3__g { flex: 0 0 280px; }
+  .f3__promo { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .f3__card { gap: 16px; padding: 16px; }
+  .f3__phone { width: 58px; height: 96px; }
+  .f3__apps { flex-wrap: wrap; }
+  .f3__row { flex-wrap: wrap; gap: 14px; }
+  .f3__soc { margin-left: 0; }
+  .f3__fine { text-align: left; }
+}
+</style></head>
+<body><div class="ft-lab" id="lab"></div>
+<template id="ft">
+<footer class="ft f3">
+  <h3 class="f3__h">Где идёт игра <small>турниры сезона по играм</small></h3>
+  <div class="f3__games">
+    <div class="f3__g" style="--g: var(--c-team-pv)">
+      <div class="f3__art"><b>Dota 2<small>Fantasy и маркет открыты</small></b><span class="f3__logos"><img src="/p-fw3k/site/img/teams/ts.png" alt="" /><img src="/p-fw3k/site/img/teams/tun.png" alt="" /><img src="/p-fw3k/site/img/teams/pv.png" alt="" /></span></div>
+      <ul><li>DreamLeague · Сезон 27<em class="is-live">● live</em></li><li>BLAST Slam VIII<em>до 12 окт</em></li><li>The International 2026<em>итоги</em></li></ul>
+    </div>
+    <div class="f3__g" style="--g: var(--c-team-tl)">
+      <div class="f3__art"><b>League of Legends<small>Fantasy — скоро</small></b><span class="f3__mono">LoL</span></div>
+      <ul><li>LEC Summer · плей-офф<em>до 5 окт</em></li><li>Worlds 2026<em>15 окт — 14 ноя</em></li><li>Fantasy LoL<em class="is-soon">скоро</em></li></ul>
+    </div>
+    <div class="f3__g" style="--g: var(--c-team-aur)">
+      <div class="f3__art"><b>Counter-Strike 2<small>Fantasy — скоро</small></b><span class="f3__mono">CS</span></div>
+      <ul><li>PGL Major<em>с 14 окт</em></li><li>IEM · сезон осени<em>ноябрь</em></li><li>Fantasy CS 2<em class="is-soon">скоро</em></li></ul>
+    </div>
+  </div>
+  <div class="f3__promo">
+    <div class="f3__card"><span class="f3__phone"><i></i></span><div><h4>Fantasy в телефоне</h4><p>Очки пятёрки в реальном времени и пуш, когда твой игрок выходит на карту.</p>
+      <div class="f3__apps"><a class="f3__app"><i data-ic="apple"></i>App Store</a><a class="f3__app"><i data-ic="play"></i>Google Play</a></div></div></div>
+    <div class="f3__card f3__fair"><span class="ft-age">18+</span><div><h4>Честная игра</h4><ul><li><i data-ic="coin"></i>Монеты не покупаются и не выводятся</li><li><i data-ic="odds"></i>Шансы бустеров открыты</li><li><i data-ic="shield"></i>Fantasy — не ставки. <a style="color: var(--c-accent)">Помощь</a></li></ul></div></div>
+  </div>
+  <div class="f3__row">
+    <span class="ft-brand"><i>F</i>Fantasy · Dota 2</span>
+    <nav class="f3__links"><a>Как это работает</a><a>Очки</a><a>Бустеры и шансы</a><a>Вопросы и ответы</a><a>Поддержка</a><a>Партнёрам</a><a>Пресса</a><a>Соглашение</a><a>Конфиденциальность</a></nav>
+    <div class="f3__soc"><a aria-label="Telegram"><i data-ic="tg"></i></a><a aria-label="Twitch"><i data-ic="twitch"></i></a><a aria-label="YouTube"><i data-ic="yt"></i></a><a aria-label="Discord"><i data-ic="discord"></i></a><a aria-label="X"><i data-ic="x"></i></a></div>
+  </div>
+  <p class="ft-fine f3__fine">© 2026 Fantasy · Dota 2 · Не связан с Valve и Riot Games · Данные матчей — Liquipedia и OpenDota · <span class="ft-lang" style="height: 26px; padding: 0 8px; font-size: 12px"><i data-ic="globe"></i>Русский</span></p>
+</footer>
+</template>
+<script src="_footer.js"></script>
+<script>FOOTER.страница({
+  имя: 'v3 · По мотивам BLAST.tv и HLTV',
+  мотив: '<b>По мотивам BLAST.tv и HLTV:</b> у BLAST над футером — плитки игр с артом и турнирами (live / даты), у HLTV — промо-полоса «скачай приложение» и «18+ ставь ответственно» прямо в футере. Сам футер — тонкая строка ссылок и соцсетей.',
+  описание: 'Самый полезный: футер продолжает навигацию — сразу видно, какие игры есть, что идёт сейчас и что скоро. Честная игра — отдельной заметной карточкой с 18+.',
+})</script>
+</body></html>

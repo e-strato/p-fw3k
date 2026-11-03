@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_lineup.css" />
+<style>
+/* v2 · Драфт-таблица — две колонки: состав строками и таблица карт; карты — маленькие жетоны в строке */
+.v2-grid { display: grid; grid-template-columns: 520px minmax(0, 1fr); gap: 16px; align-items: start; }
+.v2-panel { padding: 18px; border-radius: 12px; background: var(--c-ui-panel); }
+.v2-ph { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.v2-ph h3 { margin: 0; font-size: 17px; }
+.v2-ph .lu-search { margin-left: auto; width: 220px; }
+.v2-slot { display: grid; grid-template-columns: 54px 64px minmax(0, 1fr) auto auto; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--c-ui-line); }
+.v2-slot:last-of-type { border-bottom: 0; }
+.v2-role b { display: block; font: 800 17px/1 var(--font-c); }
+.v2-role small { color: var(--c-caption); font-size: 11px; }
+.v2-slot .kc { --w: 64px; cursor: pointer; }
+.v2-empty { display: grid; place-items: center; width: 64px; aspect-ratio: 4 / 5; border-radius: 6px; border: 1px dashed color-mix(in srgb, var(--c-white) 18%, transparent); color: var(--c-caption); font-size: 22px; cursor: pointer; }
+.v2-who b { display: block; font-size: 15px; }
+.v2-who small { color: var(--c-caption); font-size: 12px; }
+.v2-who small.lu-out { color: var(--c-live); }
+.v2-pts { font: 700 20px var(--font-c); color: var(--c-coin); text-align: right; min-width: 44px; }
+.v2-foot { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+.v2-foot .btn { flex: 1; }
+.v2-side { display: grid; gap: 12px; }
+.v2-t { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.v2-t th { padding: 8px 8px; text-align: left; font-weight: 600; font-size: 12px; color: var(--c-caption); border-bottom: 1px solid var(--c-ui-line); white-space: nowrap; }
+.v2-t td { padding: 7px 8px; border-bottom: 1px solid var(--c-ui-line); vertical-align: middle; }
+.v2-t tr:hover td { background: var(--c-ui-item); }
+.v2-t .kc { --w: 44px; }
+.v2-t .n { font: 700 15px var(--font-c); text-align: right; }
+.v2-t .n.is-c { color: var(--c-coin); }
+.v2-t tr.is-out td { color: var(--c-caption); }
+.v2-plus { display: grid; place-items: center; width: 30px; height: 30px; border: 0; border-radius: 6px; background: var(--c-accent); color: var(--c-on-accent); font: 700 18px var(--font); cursor: pointer; }
+.v2-cell { display: flex; align-items: center; gap: 10px; }
+.v2-cell b { display: block; } .v2-cell small { color: var(--c-caption); font-size: 11.5px; }
+@container lu (max-width: 600px) {
+  .v2-grid { grid-template-columns: minmax(0, 1fr); }
+  .v2-panel { padding: 14px; }
+  .v2-slot { grid-template-columns: 40px 52px minmax(0, 1fr) auto; gap: 8px; }
+  .v2-slot .kc, .v2-empty { --w: 52px !important; width: 52px; }
+  .v2-slot .v1-x, .v2-slot [data-out].v2-rm { display: none; }
+  .v2-ph .lu-search { width: 100%; margin: 0; }
+  .v2-t .hide-m { display: none; }
+  .v2-t td, .v2-t th { padding: 6px 4px; }
+}
+</style></head>
+<body><main class="lu-page">
+  <h1>v2 · Драфт-таблица</h1>
+  <p>Как у фэнтези-спорта (NBA Fantasy, FIFA Fantasy): слева состав строками по ролям — карта, матч, прогноз, капитан; справа таблица всех твоих карт с фильтром, поиском и колонками для сравнения. «+» добавляет игрока на его позицию. Всё на одном экране, удобно сравнивать цифры.</p>
+  <p class="lu-cap">Десктоп · 1440</p><div class="lu-frame lu-frame--desk" data-lu></div>
+  <p class="lu-cap">Телефон · 390</p><div class="lu-frame lu-frame--phone" data-lu></div>
+</main>
+<script src="_lineup.js"></script>
+<script>
+LINEUP.page({
+  render: (S, h) => `${h.шапка()}<div class="lu-app hg">
+  <div class="lu-h"><div><h2>Состав</h2><p>Пятёрка на сегодня · один состав для всех игр, роли — по игре</p></div>${h.игры()}</div>
+  <div class="v2-grid">
+    <div class="v2-side">
+      <section class="v2-panel"><div class="v2-ph"><h3>Твоя пятёрка</h3><span class="lu-muted">капитан набирает ×1.5</span></div>
+        ${h.РОЛИ().map(([код, имя], i) => { const id = S.slots[i], x = id && h.п(id)
+          return `<div class="v2-slot"><span class="v2-role"><b>${код}</b><small>${имя}</small></span>
+            ${id ? `<span data-out="${id}" title="Убрать">${h.карта(id, 64)}</span>` : `<span class="v2-empty" data-slot="${i}">+</span>`}
+            <span class="v2-who">${x ? `<b>${x.ник}</b><small class="${x.матч ? '' : 'lu-out'}">${h.матч(x)}</small>` : `<b class="lu-muted">Пусто</b><small>Выбери ${имя.toLowerCase()} справа</small>`}</span>
+            ${x ? `<button class="lu-cap-b" type="button" aria-pressed="${id === S.cap}" data-cap="${id}" title="Капитан ×1.5">C</button>` : '<span></span>'}
+            <span class="v2-pts">${x ? (x.очки * (id === S.cap ? 1.5 : 1)).toFixed(1) : '—'}</span></div>` }).join('')}
+        <div class="v2-foot">${h.авто()}<button class="btn btn--quiet" type="button">Сохранить</button></div></section>
+      ${h.итог()}
+      ${h.предупреждение()}
+    </div>
+    <section class="v2-panel"><div class="v2-ph"><h3>Твои карты <span class="lu-muted">· ${h.скамейка().length}</span></h3>${h.поиск()}</div>
+      <div class="v2-ph">${h.позиции()}</div>
+      <table class="v2-t"><thead><tr><th>Игрок</th><th class="hide-m">Роль</th><th class="hide-m">Редкость</th><th>OVR</th><th>Матч сегодня</th><th>Прогноз ↓</th><th></th></tr></thead><tbody>
+        ${h.скамейка().sort((a, b) => h.п(b).очки - h.п(a).очки).map((id) => { const x = h.п(id)
+          return `<tr class="${x.матч ? '' : 'is-out'}"><td><span class="v2-cell">${h.карта(id, 44)}<span><b>${x.ник}</b><small>${h.КОМАНДЫ[x.к]}</small></span></span></td><td class="hide-m">${h.РОЛИ()[x.pos - 1][1]}</td><td class="hide-m">${h.РЕДК[x.r]}</td><td class="n">${x.ovr}</td>
+            <td>${x.матч ? h.матч(x) : '<span class="lu-out">не играет</span>'}</td><td class="n is-c">${x.очки ? x.очки.toFixed(1) : '0'}</td><td><button class="v2-plus" type="button" data-add="${id}" aria-label="В состав">+</button></td></tr>` }).join('')}
+      </tbody></table></section>
+  </div>
+</div>${h.таббар()}`,
+})
+</script>
+</body></html>

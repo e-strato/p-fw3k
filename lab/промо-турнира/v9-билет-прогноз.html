@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_промо.css" />
+<style>
+/* v9 · Билет-прогноз (правка v2 «Хрустальный шар», дирижёр 05.10: «переделать по-другому»). Идея та же — до старта угадать чемпиона,
+   финалиста и MVP (LoL Pick'Em Crystal Ball), подача другая: именной билет TI. Тап по команде — штамп её знака в строке,
+   все три строки заполнены — отрываешь корешок, билет запечатан до финала. Место — правая колонка (330). */
+.w-tk { background: none; }
+.tk { position: relative; border-radius: 16px; overflow: hidden; isolation: isolate;
+  background:
+    radial-gradient(80% 50% at 100% 0%, color-mix(in srgb, var(--c-tier-elite) 16%, transparent), transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--c-ui-panel) 80%, var(--c-tier-elite) 4%), var(--c-ui-panel)); }
+.tk::before { content: ''; position: absolute; inset: 0; z-index: -1; opacity: .06; mix-blend-mode: overlay;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.tk__h { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px 6px; }
+.tk__no { font-size: var(--fs-app-xs); color: var(--c-caption); font-variant-numeric: tabular-nums; }
+.tk h2 { margin: 0; padding: 4px 20px 14px; font-size: 28px; }
+
+/* Строки билета: вопрос → выбор → штамп */
+.row { padding: 12px 20px; border-top: 1px dashed var(--c-ui-line); }
+.row__h { display: flex; justify-content: space-between; align-items: center; min-height: 40px; }
+.row__h span { display: grid; font-size: var(--fs-app-sm); }
+.row__h small { font-size: var(--fs-app-xs); color: var(--c-caption); }
+.stamp { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; border: 1.5px dashed var(--c-ui-line); color: var(--c-caption); font-size: 18px; }
+.stamp.is-on { border: 2px solid var(--tc, var(--c-tier-elite)); rotate: -12deg; box-shadow: 0 0 18px color-mix(in srgb, var(--tc, var(--c-tier-elite)) 40%, transparent); }
+@media (prefers-reduced-motion: no-preference) { .stamp.is-on { animation: stamp .35s cubic-bezier(.3, 1.6, .5, 1); } }
+@keyframes stamp { from { scale: 1.8; opacity: 0; } }
+.stamp .team-logo, .stamp .avatar { width: 34px; height: 34px; border-radius: 50%; box-shadow: none; }
+.stamp .avatar { background: var(--img) center 15% / cover; }
+.opts { display: flex; gap: 6px; margin-top: 10px; overflow-x: auto; scrollbar-width: none; }
+.opts button { flex: none; display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 10px; background: var(--c-ui-item); cursor: pointer; }
+.opts button:hover { background: var(--c-ui-hover); }
+.opts button[aria-pressed='true'] { box-shadow: inset 0 0 0 2px var(--tc, var(--c-tier-elite)); }
+.opts .team-logo { width: 28px; height: 28px; box-shadow: none; background-color: transparent; }
+.opts .avatar { width: 32px; height: 32px; background: var(--img) center 15% / cover; }
+.w-tk.is-sealed .opts { display: none; }
+
+/* Корешок: перфорация полукружьями, отрывается кнопкой */
+.stub { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 16px 20px 18px; transition: translate .6s cubic-bezier(.4, 0, .2, 1), rotate .6s, opacity .6s;
+  background: color-mix(in srgb, var(--c-tier-elite) 10%, var(--c-ui-panel)); }
+.stub::before { content: ''; position: absolute; left: 0; right: 0; top: -6px; height: 12px;
+  background: radial-gradient(circle at 6px 6px, var(--c-ui-bg) 4px, transparent 4.5px) 0 0 / 14px 12px repeat-x; }
+.stub small { font-size: var(--fs-app-xs); color: var(--c-caption); }
+.stub b { display: block; font-size: var(--fs-app-sm); }
+.stub .btn:disabled { opacity: .35; pointer-events: none; }
+.w-tk.is-sealed .stub { translate: 30px 40px; rotate: 8deg; opacity: 0; }
+.sealed { position: absolute; right: 18px; top: 64px; padding: 6px 12px; border: 2px solid var(--c-tier-elite); border-radius: 8px; color: var(--c-tier-elite); font-weight: 800; font-size: 15px; rotate: -10deg; opacity: 0; scale: 1.6; transition: opacity .3s .4s, scale .35s .4s cubic-bezier(.3, 1.6, .5, 1); }
+.w-tk.is-sealed .sealed { opacity: .9; scale: 1; }
+.after { padding: 14px 20px 18px; font-size: var(--fs-app-sm); color: var(--c-caption); border-top: 1px dashed var(--c-ui-line); }
+.after b { color: var(--c-text); }
+.w-tk:not(.is-sealed) .after { display: none; }
+</style></head>
+<body>
+<div class="lab-wrap">
+  <div class="lab-bar">
+    <div class="lab-bar__t"><b>v9 · Билет-прогноз</b><small>Правка v2: та же идея Crystal Ball, подача — билет со штампами и корешком · правая колонка 330</small></div>
+    <div class="lab-st"><button data-go="до">Заполнить</button><button data-go="запечатан">Запечатан</button></div>
+  </div>
+  <p class="home-cap">Настоящая главная: билет — первым в правой колонке; остальное приглушено</p>
+  <div class="home" data-slot="prepend:.app-home__side">
+    <div class="ghost ghost--tall span-2"></div>
+    <section class="w-tk" id="w" aria-label="Билет-прогноз TI">
+      <div class="tk">
+        <div class="tk__h"><span class="ti-mark"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.3 8 11 4.6-1.7 8-6 8-11V5l-8-3Zm0 4.2 4 1.5V11c0 2.9-1.6 5.6-4 7-2.4-1.4-4-4.1-4-7V7.7l4-1.5Z"/></svg>TI 2026 · Шанхай</span><span class="tk__no">№ 0 048 214</span></div>
+        <h2 class="disp">Мой прогноз на TI</h2>
+        <span class="sealed">Запечатан</span>
+
+        <div class="row" data-q="champ">
+          <div class="row__h"><span>Чемпион<small>+300 очков</small></span><i class="stamp">?</i></div>
+          <div class="opts"></div>
+        </div>
+        <div class="row" data-q="final">
+          <div class="row__h"><span>Второй финалист<small>+150</small></span><i class="stamp">?</i></div>
+          <div class="opts"></div>
+        </div>
+        <div class="row" data-q="mvp">
+          <div class="row__h"><span>MVP турнира<small>+200</small></span><i class="stamp">?</i></div>
+          <div class="opts"></div>
+        </div>
+
+        <div class="stub">
+          <span><b>Все три — карта Аегиса</b><small>Одна угадана — сундук TI. Билет — значок в профиль.</small></span>
+          <button class="btn btn--ti btn--sm" id="seal" type="button" disabled>Оторвать</button>
+        </div>
+        <p class="after">Откроем после гранд-финала, <b>23 августа</b>. Тебя уже обогнали 31% — билеты с тем же чемпионом.</p>
+      </div>
+    </section>
+    <div class="ghost"></div><div class="ghost"></div><div class="ghost ghost--short"></div>
+  </div>
+</div>
+<script src="_промо.js"></script>
+<script>
+const TEAMS = [['ts', 'Team Spirit'], ['pv', 'PARIVISION'], ['tun', 'Tundra'], ['flc', 'Falcons'], ['bb', 'BetBoom'], ['gg', 'Gaimin Gladiators'], ['tl', 'Liquid'], ['aur', 'Aurora']]
+const PLAYERS = [['yatoro', 'Yatoro'], ['9class', '9Class'], ['pure', 'Pure'], ['rue', 'Rue']]
+const w = document.getElementById('w'), seal = document.getElementById('seal')
+const pick = {}
+const teamBtn = ([k, n]) => `<button class="t-${k}" data-v="${k}" title="${n}" aria-pressed="false"><i class="team-logo t-${k} is-logo"></i></button>`
+const plBtn = ([k, n]) => `<button data-v="${k}" title="${n}" aria-pressed="false"><i class="avatar" style="--img: url(/p-fw3k/site/img/players/${k}.webp)"></i></button>`
+document.querySelectorAll('.row').forEach((row) => {
+  const q = row.dataset.q, box = row.querySelector('.opts'), st = row.querySelector('.stamp')
+  box.innerHTML = q === 'mvp' ? PLAYERS.map(plBtn).join('') : TEAMS.map(teamBtn).join('')
+  box.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return
+    // Чемпион и финалист — разные команды
+    const other = q === 'champ' ? pick.final : q === 'final' ? pick.champ : null
+    if (other === b.dataset.v) return
+    box.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)))
+    pick[q] = b.dataset.v
+    st.className = 'stamp is-on' + (q === 'mvp' ? '' : ' t-' + b.dataset.v)
+    st.innerHTML = q === 'mvp' ? `<i class="avatar" style="--img: url(/p-fw3k/site/img/players/${b.dataset.v}.webp)"></i>` : `<i class="team-logo t-${b.dataset.v} is-logo"></i>`
+    seal.disabled = !(pick.champ && pick.final && pick.mvp)
+  })
+})
+const fill = () => [['champ', 'ts'], ['final', 'pv'], ['mvp', 'yatoro']].forEach(([q, v]) => !pick[q] && document.querySelector(`.row[data-q=${q}] [data-v="${v}"]`).click())
+seal.addEventListener('click', () => ПРОМО.set('запечатан'))
+document.addEventListener('промо:состояние', (e) => {
+  if (e.detail === 'запечатан') fill()
+  w.classList.toggle('is-sealed', e.detail === 'запечатан')
+})
+</script>
+</body></html>

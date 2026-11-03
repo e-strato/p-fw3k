@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_промо.css" />
+<style>
+/* v11 · Лови момент (правка v7 «Дропы в эфире», дирижёр 05.10: «идея прикольная, но хотелось бы интерактивное»).
+   Было: награда падает всем сама. Стало: в момент матча на экране появляется дроп — успей нажать за 5 секунд;
+   а до момента — угадай, что случится следующим (Рошан / кража Аегиса / рампейдж), угадал — дроп двойной.
+   Откуда: LoL Esports Drops, Twitch «забрать бонус», прогнозы на моменты в Twitch Predictions. Место — центр главной на 2 колонки. */
+.w-mo .card__b { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 20px; }
+/* Трансляция: табло, нетворс, поле, куда падают дропы */
+.tv { position: relative; min-height: 330px; border-radius: 12px; overflow: hidden; isolation: isolate;
+  background:
+    radial-gradient(60% 70% at 25% 80%, color-mix(in srgb, var(--c-team-ts) 10%, transparent), transparent 70%),
+    radial-gradient(60% 70% at 80% 20%, color-mix(in srgb, var(--c-team-pv) 16%, transparent), transparent 70%),
+    var(--c-ui-bg); }
+.tv::after { content: ''; position: absolute; inset: 0; z-index: -1; opacity: .5;
+  background: repeating-linear-gradient(45deg, transparent 0 22px, color-mix(in srgb, var(--c-white) 2%, transparent) 22px 23px); }
+.sb { position: absolute; top: 12px; left: 50%; translate: -50% 0; display: flex; align-items: center; gap: 10px; padding: 6px 12px; border-radius: 10px; background: color-mix(in srgb, var(--c-black) 55%, transparent); font-size: var(--fs-app-sm); white-space: nowrap; }
+.sb .team-logo { width: 22px; height: 22px; border-radius: 6px; }
+.sb .num { color: var(--c-muted); }
+.nw { position: absolute; left: 14px; right: 14px; bottom: 12px; display: grid; gap: 4px; font-size: var(--fs-app-xs); color: var(--c-caption); }
+.nw div { height: 4px; border-radius: 2px; background: var(--c-ui-item); position: relative; }
+.nw i { position: absolute; top: 0; bottom: 0; left: 50%; border-radius: 2px; background: var(--c-team-ts); transition: width .8s, left .8s; }
+.ev { position: absolute; left: 14px; top: 56px; display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; font-size: var(--fs-app-xs); color: var(--c-caption); }
+.ev li b { color: var(--c-text); font-weight: 500; }
+
+/* Дроп: монета-Аегис с кольцом таймера; 5 секунд на клик */
+.drop { position: absolute; z-index: 3; width: 78px; height: 78px; translate: -50% -50%; border: 0; padding: 0; border-radius: 50%; cursor: pointer; background: none; }
+.drop[hidden] { display: none; }
+.drop__ring { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(var(--c-coin) calc(var(--p, 1) * 360deg), color-mix(in srgb, var(--c-white) 10%, transparent) 0); }
+.drop__core { position: absolute; inset: 6px; border-radius: 50%; display: grid; place-items: center; overflow: hidden;
+  background: radial-gradient(circle at 35% 30%, var(--c-tier-gold-hi), var(--c-coin) 55%, var(--c-tier-gold-2)); box-shadow: 0 0 34px color-mix(in srgb, var(--c-coin) 70%, transparent); }
+.drop__core img { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: luminosity; opacity: .8; }
+.drop__t { position: absolute; top: 100%; left: 50%; translate: -50% 6px; padding: 3px 9px; border-radius: 999px; background: var(--c-coin); color: var(--c-card-dark-text); font-size: 11px; font-weight: 700; white-space: nowrap; }
+@media (prefers-reduced-motion: no-preference) { .drop:not([hidden]) { animation: drop-in .45s cubic-bezier(.3, 1.6, .5, 1); } .drop__core { animation: pulse 1s ease-in-out infinite; } }
+@keyframes drop-in { from { scale: 0; } }
+@keyframes pulse { 50% { scale: 1.06; } }
+.burst { position: absolute; z-index: 4; translate: -50% -50%; font: 800 22px/1 'Archivo', var(--font); color: var(--c-coin); pointer-events: none; animation: up 1.1s ease forwards; white-space: nowrap; }
+.burst.is-miss { color: var(--c-caption); font-size: 15px; font-family: var(--font); font-weight: 600; }
+@keyframes up { to { translate: -50% -140%; opacity: 0; } }
+
+/* Справа: угадай следующий момент + коллекция */
+.side { display: grid; align-content: start; gap: 14px; }
+.side h3 { margin: 0; font-size: var(--fs-app-sm); font-weight: 600; }
+.side h3 small { display: block; font-weight: 400; color: var(--c-caption); font-size: var(--fs-app-xs); }
+.guess { display: grid; gap: 6px; }
+.guess button { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 6px 10px 6px 6px; border: 0; border-radius: 10px; background: var(--c-ui-item); color: var(--c-text); font: inherit; font-size: var(--fs-app-sm); text-align: left; cursor: pointer; }
+.guess button:hover { background: var(--c-ui-hover); }
+.guess button[aria-pressed='true'] { background: color-mix(in srgb, var(--c-coin) 22%, var(--c-ui-item)); box-shadow: inset 0 0 0 1px var(--c-coin); }
+.guess img { width: 30px; height: 30px; border-radius: 8px; object-fit: cover; }
+.guess small { font-size: var(--fs-app-xs); color: var(--c-caption); }
+.col { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+.col span { aspect-ratio: 1; border-radius: 10px; background: var(--c-ui-item); overflow: hidden; }
+.col img { width: 100%; height: 100%; object-fit: cover; }
+.col .is-x2 { box-shadow: inset 0 0 0 2px var(--c-coin); }
+.stat { display: flex; justify-content: space-between; font-size: var(--fs-app-sm); color: var(--c-caption); }
+.stat b { color: var(--c-text); }
+@media (max-width: 1000px) { .w-mo .card__b { grid-template-columns: 1fr; } }
+</style></head>
+<body>
+<div class="lab-wrap">
+  <div class="lab-bar">
+    <div class="lab-bar__t"><b>v11 · Лови момент</b><small>Правка v7: дроп надо успеть поймать, следующий момент — угадать · центр главной на 2 колонки</small></div>
+  </div>
+  <p class="home-cap">Настоящая главная: «Лови момент» — наверху, вместо витрины; остальное приглушено</p>
+  <div class="home" data-slot="into:.app-home__showcase">
+    <section class="card card--ui w-mo span-2" aria-label="Лови момент">
+      <div class="card__h"><h2>Лови момент · TI в эфире</h2><small><span class="pill pill--live"><b>Live</b></span></small></div>
+      <div class="card__b">
+        <div class="tv" id="tv">
+          <div class="sb"><i class="team-logo t-ts is-logo"></i><b>Spirit</b><span class="num">1 : 0 · карта 2 · <span id="clk">31:12</span></span><b>PARIVISION</b><i class="team-logo t-pv is-logo"></i></div>
+          <ul class="ev" id="ev"><li><b>29:40</b> Spirit забрали Рошана</li><li><b>30:55</b> Yatoro — тройное убийство</li></ul>
+          <div class="nw"><span>Нетворс</span><div><i id="nw" style="width: 12%"></i></div></div>
+          <button class="drop" id="drop" type="button" hidden aria-label="Поймать дроп"><i class="drop__ring"></i><span class="drop__core"><img id="di" src="" alt="" /></span><span class="drop__t" id="dt">Рампейдж!</span></button>
+        </div>
+        <div class="side">
+          <h3>Что случится следующим?<small>Угадал — дроп двойной</small></h3>
+          <div class="guess" id="guess">
+            <button data-k="roshan" aria-pressed="false"><img src="/p-fw3k/site/img/heroes/beastmaster.webp" alt="" />Рошан<small>×2</small></button>
+            <button data-k="aegis" aria-pressed="false"><img src="/p-fw3k/site/img/heroes/hoodwink.webp" alt="" />Кража Аегиса<small>×2</small></button>
+            <button data-k="rampage" aria-pressed="false"><img src="/p-fw3k/site/img/heroes/faceless_void.webp" alt="" />Рампейдж<small>×2</small></button>
+          </div>
+          <h3>Твои дропы TI</h3>
+          <div class="col" id="col"></div>
+          <div class="stat"><span>Поймано <b id="gn">0</b> · упущено <b id="mn">0</b></span><span>Топ-<b id="pct">40</b>% ловкачей</span></div>
+        </div>
+      </div>
+    </section>
+    <div class="ghost ghost--tall"></div>
+    <div class="ghost"></div><div class="ghost"></div>
+  </div>
+</div>
+<script src="_промо.js"></script>
+<script>
+// Моменты: тип, подпись, герой. Каждые ~6 с момент; дроп живёт 5 с; клик — в коллекцию (×2, если момент угадан)
+const M = [
+  ['roshan', 'Рошан!', 'beastmaster', 'Spirit забрали Рошана'], ['rampage', 'Рампейдж!', 'faceless_void', 'Yatoro — рампейдж'],
+  ['aegis', 'Кража Аегиса!', 'hoodwink', '9Class украл Аегис'], ['roshan', 'Рошан!', 'mars', 'PARIVISION забрали Рошана'],
+  ['rampage', 'Рампейдж!', 'terrorblade', 'Satanic — рампейдж'], ['aegis', 'Кража Аегиса!', 'rubick', 'Miposhka украл Аегис'],
+]
+const tv = document.getElementById('tv'), drop = document.getElementById('drop'), col = document.getElementById('col')
+let n = 0, guess = null, got = 0, miss = 0, t0 = 0, raf, live = null, clk = 31 * 60 + 12
+document.getElementById('guess').addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return
+  guess = b.dataset.k
+  document.querySelectorAll('#guess button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)))
+})
+const burst = (x, y, text, missd) => {
+  const s = document.createElement('span'); s.className = 'burst' + (missd ? ' is-miss' : ''); s.textContent = text
+  s.style.left = x + '%'; s.style.top = y + '%'; tv.append(s); setTimeout(() => s.remove(), 1200)
+}
+const stats = () => {
+  document.getElementById('gn').textContent = got; document.getElementById('mn').textContent = miss
+  document.getElementById('pct').textContent = Math.max(3, 40 - got * 6 + miss * 4)
+}
+const end = (caught) => {
+  cancelAnimationFrame(raf); drop.hidden = true
+  const [k, , h] = live, x = parseFloat(drop.style.left), y = parseFloat(drop.style.top)
+  if (caught) {
+    const x2 = guess === k; got++
+    col.insertAdjacentHTML('afterbegin', `<span class="${x2 ? 'is-x2' : ''}"><img src="/p-fw3k/site/img/heroes/${h}.webp" alt="" /></span>`)
+    while (col.children.length > 12) col.lastElementChild.remove()
+    burst(x, y, x2 ? 'Угадал! ×2' : 'Пойман!')
+  } else { miss++; burst(x, y, 'Упущен — поймали 18% зрителей', true) }
+  guess = null; document.querySelectorAll('#guess button').forEach((b) => b.setAttribute('aria-pressed', 'false'))
+  live = null; stats()
+}
+const spawn = () => {
+  live = M[n++ % M.length]
+  const [, t, h, line] = live
+  document.getElementById('di').src = `/p-fw3k/site/img/heroes/${h}.webp`
+  document.getElementById('dt').textContent = t
+  drop.style.left = 18 + Math.random() * 64 + '%'; drop.style.top = 30 + Math.random() * 40 + '%'
+  drop.hidden = false; t0 = performance.now()
+  const ev = document.getElementById('ev'), m = Math.floor(clk / 60)
+  ev.insertAdjacentHTML('afterbegin', `<li><b>${m}:${String(clk % 60).padStart(2, '0')}</b> ${line}</li>`)
+  while (ev.children.length > 3) ev.lastElementChild.remove()
+  const nw = document.getElementById('nw'), v = (Math.random() - .35) * 40
+  nw.style.left = (v < 0 ? 50 + v : 50) + '%'; nw.style.width = Math.abs(v) + '%'
+  const step = (now) => {
+    const p = 1 - (now - t0) / 5000
+    drop.style.setProperty('--p', Math.max(0, p))
+    if (p <= 0) end(false); else raf = requestAnimationFrame(step)
+  }
+  raf = requestAnimationFrame(step)
+}
+drop.addEventListener('click', () => live && end(true))
+setInterval(() => { clk += 1; document.getElementById('clk').textContent = `${Math.floor(clk / 60)}:${String(clk % 60).padStart(2, '0')}` }, 1000)
+setTimeout(spawn, 1500)
+setInterval(() => { if (!live) spawn() }, 7000)
+stats()
+</script>
+</body></html>

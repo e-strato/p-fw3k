@@ -1,0 +1,151 @@
+/* Тема v8 · Терминал — поверх v2 «Унифицировано». Всё под body.th-terminal
+   Торговый терминал (OKX / Bybit, тёмный): графитовые панели, скругления 2–4, сетка 1px, плотно. Зелёный / красный — «рост / падение»
+   (LIVE, форма — свечами), числа — как котировки, шапка — вкладка панели с жёлтой чертой, сегмент — переключатель таймфрейма.
+   Жёлтый — активное и главное действие, бирюзовый — ссылки. Шрифты, размеры и логика — как в v2. */
+
+/* ——— Токены ——— */
+body.th-terminal{
+  --w-page:#08090b; --w-bg:#101216; --w-mid-bg:#15181d; --w-muted:#1e2229; --w-hover:#262b33; --w-skel:#262b33;
+  --w-border:#20242b; --w-ring:#3a404a;
+  --w-fg:#eaecef; --w-muted-fg:#848e9c; --w-primary:#f0b90b; --w-primary-fg:#0b0e11;
+  --w-up:#20b26c; --w-up-bg:rgba(32,178,108,.12); --w-up-fg:#7fe0b0;
+  --w-down:#ef454a; --w-down-bg:rgba(239,69,74,.12); --w-down-fg:#ff9a9d;
+  --w-star:#f0b90b; --w-b:#f0b90b;
+  --w-r:4px; --w-r-sm:2px;
+  --tm-acc:#f0b90b; --tm-acc-rgb:240,185,11; --tm-link:#2ed3b7;
+  --tm-hd:#13161b;                                     /* шапка панели — чуть светлее тела */
+  --tm-line:#1b1f25;                                   /* линии между строками — тише рамки */
+  --tm-num:#eaecef;                                    /* числа-котировки */
+  min-height:100vh;
+  background:
+    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px) 0 0 / 100% 32px,
+    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px) 0 0 / 32px 100%,
+    var(--w-page);
+}
+body.th-terminal .slot > b{ color:#5e6673; }
+
+/* ——— Панель: одна на все 4 — графит, рамка 1px, скругление 4, без свечения ——— */
+.th-terminal .w:not(.m6), .th-terminal .w.m6 .m6-main{ background:var(--w-bg); border:1px solid var(--w-border); border-radius:4px;
+  box-shadow:0 1px 0 rgba(255,255,255,.02) inset, 0 12px 32px -16px rgba(0,0,0,.9); }
+.th-terminal .w.m6{ background:none; }
+.th-terminal .w.m6 .m6-main{ border-radius:4px 4px 0 0; }
+
+/* ——— Шапка панели: полоса светлее, низ — линия 1px; заголовок — активная вкладка с жёлтой чертой снизу ——— */
+.th-terminal .w .t5-hd, .th-terminal .w .s6-hd, .th-terminal .w .t2-hd, .th-terminal .w .m6-hd{
+  position:relative; background:var(--tm-hd); box-shadow:inset 0 -1px 0 var(--w-border); }
+.th-terminal .t5 .t5-ttl, .th-terminal .s6-hd > b, .th-terminal .t2--sk .t2-hd b, .th-terminal .m6-hd > b{ position:relative; align-self:stretch; display:inline-flex; align-items:center; color:var(--w-fg); }
+.th-terminal .t5 .t5-ttl::after, .th-terminal .s6-hd > b::after, .th-terminal .t2--sk .t2-hd b::after, .th-terminal .m6-hd > b::after{
+  content:''; position:absolute; left:0; right:0; bottom:0; height:2px; border-radius:1px 1px 0 0; background:var(--tm-acc); }
+.th-terminal .w .t5-arch, .th-terminal .w .s6-arch, .th-terminal .w .t2-top{ color:var(--w-muted-fg); transition:color .12s; }
+.th-terminal .w .t5-arch:hover, .th-terminal .w .s6-arch:hover, .th-terminal .w .t2-top:hover{ color:var(--tm-link); }
+.th-terminal .w .t5-ib, .th-terminal .w .s6-ib{ border-radius:2px; }
+.th-terminal .w .t5-ib:hover, .th-terminal .w .s6-ib:hover{ background:var(--w-muted); color:var(--w-fg); }
+/* Подписи разделов и шапки таблиц — как шапка стакана: тихо, на полосе */
+.th-terminal .t5-lbl, .th-terminal .t2-th, .th-terminal .t5-tbl th, .th-terminal .s8-rh{ color:#5e6673; }
+.th-terminal .t5-tbl thead tr, .th-terminal .w.t2--sk .t2-th{ background:var(--tm-hd); }
+.th-terminal .w-scroll{ scrollbar-width:thin; scrollbar-color:#2a2f37 transparent; }
+
+/* ——— LIVE — красной меткой-котировкой с мигающей точкой; время и числа — светлые, табличные ——— */
+.th-terminal .u-when > b.u-live, .th-terminal .w .t5-live, .th-terminal .s3 .s6-cap .u-live, .th-terminal .s9-live--text{
+  display:inline-flex; align-items:center; gap:3px; align-self:flex-start; padding:0 3px 0 2px; border-radius:2px; color:var(--w-down); background:var(--w-down-bg); }
+.th-terminal .u-when > b.u-live::before, .th-terminal .w .t5-live::before{ content:''; width:4px; height:4px; border-radius:1px; background:currentColor; animation:tm-blink 1.4s ease-in-out infinite; }
+@keyframes tm-blink{ 50%{ opacity:.25; } }
+.th-terminal .u-when > b, .th-terminal .t6 .t6-pair b{ color:var(--tm-num); }
+.th-terminal .u-count{ color:var(--tm-num); }
+.th-terminal .t5-tbl td:last-child, .th-terminal .t5-fm__s, .th-terminal .t5-bx span b, .th-terminal .t5-fc span b{ color:var(--tm-num); font-variant-numeric:tabular-nums; }
+
+/* ——— Строки: во всю ширину, между ними сетка 1px (как стакан); наведение — как в v2 (тир / цвет команд) ——— */
+.th-terminal .w .t5-tr, .th-terminal .w .s3-r, .th-terminal .w.t2--sk .t2-r, .th-terminal .w button.s8-r, .th-terminal .w .s6-qm{ border-radius:0; transition:background .1s; }
+.th-terminal .w .t5-tr{ width:calc(100% + 24px); margin:0 -12px; padding:4px 12px; }
+.th-terminal .w .t5-tr + .t5-tr, .th-terminal .w .s3-r + .s3-r, .th-terminal .w.t2--sk .t2-r + .t2-r, .th-terminal .w .s8-r + .s8-r{ box-shadow:inset 0 1px 0 var(--tm-line); }
+.th-terminal .w.t2--sk .t2-r{ margin-top:0; min-height:50px; }             /* зазор 8 между строками — внутрь строки, под линию; высота та же */
+.th-terminal.uni .w .t5-tr:hover{ background:color-mix(in srgb, var(--tc, #fff) 9%, transparent); }
+.th-terminal .w .s3-r:not([style*='--ta']):hover, .th-terminal .w.s3 button.s8-r.is-bad:hover{ background:var(--w-mid-bg); }
+.th-terminal .w .s3-r[style*='--ta']:hover{ background:linear-gradient(90deg, color-mix(in srgb, var(--ta, #fff) 55%, transparent), color-mix(in srgb, var(--tb, #fff) 55%, transparent)); }
+.th-terminal .w.t2-rows--tint .t2-r:hover{ filter:saturate(.8); }
+/* Тир — цвет текста, приглушённее (на графите не «кричит») */
+.th-terminal .t6 .t5-tier--1{ --tc:#f0b90b; } .th-terminal .t6 .t5-tier--2{ --tc:#5fb3ff; } .th-terminal .t6 .t5-tier--3{ --tc:#c49a6c; }
+
+/* ——— Сегмент — переключатель таймфрейма: тёмная полоса без рамки, кнопки встык, активное — жёлтым текстом на светлой плашке ——— */
+.th-terminal.uni .t5-seg, .th-terminal.uni .m6-seg, .th-terminal .s6-seg{ gap:2px; padding:2px; border-radius:2px; background:var(--w-page); box-shadow:inset 0 0 0 1px var(--tm-line); }
+.th-terminal.uni .w .t5-seg button, .th-terminal.uni .w .m6-seg button, .th-terminal .w .s6-seg button{ border-radius:2px; color:var(--w-muted-fg); transition:color .12s, background .12s; }
+.th-terminal.uni .w .t5-seg button:hover:not(.is-on), .th-terminal.uni .w .m6-seg button:hover:not(.is-on), .th-terminal .w .s6-seg button:hover:not(.is-on){ color:var(--w-fg); background:var(--w-mid-bg); }
+.th-terminal.uni .w .t5-seg button.is-on, .th-terminal.uni .w .m6-seg button.is-on, .th-terminal .w .s6-seg button.is-on{ color:var(--tm-acc); background:#252a31; }
+.th-terminal .w .u-seg-hold{ color:var(--tm-acc); }
+.th-terminal.uni .m6--depth .m6-seg.m6-up{ background:rgba(8,9,11,.82); box-shadow:inset 0 0 0 1px var(--w-border), 0 8px 18px rgba(0,0,0,.6); backdrop-filter:blur(6px); }
+
+/* ——— Кнопки: главная — жёлтая заливка (как «Купить» у биржи), остальные — графит с рамкой ——— */
+.th-terminal .w .s6-btn{ border-radius:2px; border-color:var(--w-border); background:var(--w-mid-bg); transition:background .12s, border-color .12s; }
+.th-terminal .w .s6-btn:hover{ background:var(--w-muted); border-color:var(--w-ring); }
+.th-terminal .w .s6-btn--pri{ border-color:transparent; background:var(--tm-acc); color:var(--w-primary-fg); }
+.th-terminal .w .s6-btn--pri:hover{ background:#fcd535; }
+.th-terminal .w .s6-btn--ghost{ border-color:transparent; background:none; }
+.th-terminal .w .s6-btn--ghost:hover{ background:none; color:var(--w-fg); }
+.th-terminal .w .s6-lnk{ color:var(--tm-link); text-decoration-color:rgba(46,211,183,.4); }
+.th-terminal .w .s6-lnk:hover{ color:#7ff0dc; }
+.th-terminal .w.t2--sk .t2-all{ border-radius:2px; background:var(--w-mid-bg); }
+.th-terminal .w.t2--sk .t2-all:hover{ background:var(--w-muted); }
+.th-terminal .s6-ft{ border-top-color:var(--w-border); }
+.th-terminal .s6-ft--warn, .th-terminal .s6-ft--ok{ border-radius:2px; }
+.th-terminal .s6-ft--warn{ background:rgba(var(--tm-acc-rgb),.10); box-shadow:inset 0 0 0 1px rgba(var(--tm-acc-rgb),.22); }
+.th-terminal .s6-ft--ok{ box-shadow:inset 0 0 0 1px rgba(32,178,108,.25); }
+.th-terminal .s8-toast{ border-radius:2px; background:var(--w-up); color:#04130b; }
+
+/* ——— MVP: под игроком — сетка графика, кнопка «Взять» — жёлтая полоса ордера, цена — тёмной вставкой ——— */
+.th-terminal .m6-main::before{ content:''; position:absolute; inset:52px 0 0; pointer-events:none; opacity:.9;
+  background:
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 100% 28px,
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 40px 100%;
+  mask:linear-gradient(#000 40%, transparent 90%); }
+.th-terminal .m6-bg{ opacity:.05; }
+.th-terminal .m6-gl i{ background:linear-gradient(90deg, transparent, rgba(32,178,108,.35) 25%, rgba(240,185,11,.22) 60%, transparent); }
+.th-terminal .m6-fade{ background:linear-gradient(transparent, rgba(16,18,22,.88) 60%, var(--w-bg)); }
+.th-terminal .m6-floor{ background:radial-gradient(rgba(0,0,0,.7), transparent 70%); }
+.th-terminal .m6-c--br b{ color:var(--tm-num); }
+.th-terminal .w a.m6-dock{ border:1px solid var(--w-border); border-top:0; border-radius:0 0 4px 4px; background:var(--tm-hd); transition:background .12s; }
+.th-terminal .w a.m6-dock:hover{ background:#191c22; }
+.th-terminal .m6-dock--split .m6-dock__c{ border-radius:2px; color:var(--tm-acc); background:rgba(var(--tm-acc-rgb),.12); }
+.th-terminal .w a.m6-dock:hover .m6-dock__c{ color:var(--w-primary-fg); background:var(--tm-acc); }
+.th-terminal .m6-dock__c::before{ background:radial-gradient(circle at 35% 35%, #fff3c4, #d99a00 60%, #8a5a00); box-shadow:inset 0 0 0 1px rgba(0,0,0,.35); }
+.th-terminal .w a.m6-dock.is-mine{ color:var(--w-up); background:linear-gradient(0deg, var(--w-up-bg), var(--w-up-bg)), var(--tm-hd); }
+
+/* ——— Турнир: таблица — как стакан (зона — тихий фон строки и цвет места), форма — свечами, сетка — линиями 1px ——— */
+.th-terminal .t5-tbl tr.t5-z--up td{ background:rgba(32,178,108,.07); }
+.th-terminal .t5-tbl tr.t5-z--mid td{ background:rgba(240,185,11,.07); }
+.th-terminal .t5-tbl tr.t5-z--down td{ background:rgba(239,69,74,.07); }
+.th-terminal .t5--v3 .t5-tbl tbody tr + tr td{ border-top-color:var(--tm-line); }
+.th-terminal .t5-tbl tr.t5-z--up td:first-child{ color:var(--w-up); } .th-terminal .t5-tbl tr.t5-z--mid td:first-child{ color:var(--w-b); } .th-terminal .t5-tbl tr.t5-z--down td:first-child{ color:var(--w-down); }
+.th-terminal .t5-form{ gap:2px; height:14px; align-items:center; }
+.th-terminal .t5-form i{ width:4px; height:10px; border-radius:1px; }
+.th-terminal .t5-form i.is-w{ transform:translateY(-2px); } .th-terminal .t5-form i.is-l{ transform:translateY(2px); }
+.th-terminal .t5-sq{ border-radius:1px; }
+.th-terminal .t5-bx, .th-terminal .t5-fc{ border-radius:2px; background:var(--w-mid-bg); box-shadow:inset 0 0 0 1px var(--w-border); }
+.th-terminal .t5-bx.is-on{ background:rgba(var(--tm-acc-rgb),.07); box-shadow:inset 0 0 0 1px rgba(var(--tm-acc-rgb),.7); }
+.th-terminal .t5-bx span:not(.is-lose) b{ color:var(--w-up); }
+.th-terminal .t5-ln path{ stroke:#2c3139; }
+.th-terminal .t5-fm{ border-top-color:var(--w-border); }
+.th-terminal .t5-pop{ border-radius:2px; background:#0b0d10; border-color:var(--w-ring); box-shadow:0 10px 28px rgba(0,0,0,.7); }
+.th-terminal .w .t5-inf{ border-color:var(--w-ring); }
+.th-terminal .w .t5-inf:hover{ border-color:var(--tm-link); color:var(--tm-link); }
+
+/* ——— Замены: шаги — как вкладки ордера, карточки — графит с рамкой ——— */
+.th-terminal .s6-steps i{ border-radius:0; background:var(--w-muted); }
+.th-terminal .s6-steps .is-done i{ background:var(--w-up); }
+.th-terminal .s6-steps .is-on i{ background:var(--tm-acc); }
+.th-terminal .s6-who, .th-terminal .s6-sum, .th-terminal .s6-card, .th-terminal .s6-note, .th-terminal .s6-drop{ border-radius:2px; background:var(--w-mid-bg); box-shadow:inset 0 0 0 1px var(--w-border); }
+.th-terminal .s6-who--none{ background:rgba(var(--tm-acc-rgb),.08); box-shadow:inset 0 0 0 1px rgba(var(--tm-acc-rgb),.25); }
+.th-terminal .s6-av, .th-terminal .s8-p--ring{ border-radius:2px; background:var(--w-muted); }
+.th-terminal .w .s6-pl button, .th-terminal .w .s6-pp button, .th-terminal .w .s6-maps button, .th-terminal .w .s6-terms button{ border-radius:2px; background:var(--w-mid-bg); box-shadow:inset 0 0 0 1px var(--w-border); }
+.th-terminal .w .s6-pl button.is-on, .th-terminal .w .s6-pp button.is-on, .th-terminal .w .s6-maps button.is-on, .th-terminal .w .s6-terms button.is-on{ color:var(--tm-acc);
+  background:#1f232a; box-shadow:inset 0 0 0 1px rgba(var(--tm-acc-rgb),.45); }
+.th-terminal .s6-in, .th-terminal .s6-date{ border-radius:2px; background:var(--w-page); border-color:var(--w-border); }
+.th-terminal .s6-in:focus, .th-terminal .s6-date:focus{ outline:0; border-color:var(--tm-acc); }
+.th-terminal .w .s8-id{ border-radius:2px; }
+
+/* ——— Трансферы: фото — квадратом 2, стрелка — бирюзой, «куда» — светлым ——— */
+.th-terminal .t2--sk .t2-av{ border-radius:2px; }
+.th-terminal .tr5-go{ color:var(--tm-link); }
+
+@media (prefers-reduced-motion: reduce){
+  .th-terminal .u-when > b.u-live::before, .th-terminal .w .t5-live::before{ animation:none; }
+}

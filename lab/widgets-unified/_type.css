@@ -1,0 +1,80 @@
+/* Общий набор текстовых токенов виджетов (дирижёр 22.10: «примерно одинаковая стилистика»). Подобран по аудиту (lab/widgets-audit) —
+   ближе к большинству: заголовок и основной текст 13/18·600, ссылка 12/16·500, шапка таблицы 11/20·500, вторичный 11/16·400, число 14/18·700.
+   Применён ПОВЕРХ итоговых виджетов: исходные файлы виджетов не трогаем, здесь только переопределения. Сетка: шапка 52, строка списка 52, таблицы 32, отступ 12. */
+:root{
+  --t-title: 600 13px/18px var(--w-font);   /* заголовок виджета, основной текст строки (ник, команда, матч) — белый */
+  --t-link: 500 12px/16px var(--w-font);    /* ссылка в шапке (Архив, Смотреть все) — серый */
+  --t-hsub: 400 12px/16px var(--w-font);    /* подзаголовок шапки (стадия, «В этом матче») — серый */
+  --t-label: 500 11px/20px var(--w-font);   /* подпись раздела, шапка таблицы — серый (уже одинаковая у всех) */
+  --t-cell: 400 12px/16px var(--w-font);    /* текст в таблице */
+  --t-sub: 400 11px/16px var(--w-font);     /* вторичный: время, стадия в строке, роль, метка замены — серый */
+  --t-num: 700 14px/18px var(--w-font);     /* число / дата в строке */
+  --t-num-s: 600 12px/16px var(--w-font);   /* число в таблице (В–П) */
+  --t-big: 700 18px/22px var(--w-font);     /* крупная цифра (MVP) */
+  --t-live: 700 11px/16px var(--w-font);    /* LIVE — красный */
+  --t-tag: 600 10px/16px var(--w-font);     /* метка, бейдж (Tier, T1) */
+  --t-seg: 500 12px/16px var(--w-font);     /* сегмент */
+  --t-btn: 600 13px/18px var(--w-font);     /* кнопка */
+  --t-alert: 500 12px/16px var(--w-font);   /* алерт снизу */
+  --g-hd: 52px; --g-row: 52px; --g-cell: 32px; --g-pad: 12px;
+}
+
+/* ——— Турнир v6 ——— */
+.t5 .t5-ttl{ font:var(--t-title); color:var(--w-fg); }                 /* «Турниры» — как заголовки остальных */
+.w .t5-arch{ font:var(--t-link); }
+.t5-hd, .t5--v3 .t5-hd, .t5--v3 .t5-hd--list{ height:var(--g-hd); }
+.t5-hd__t .t5-tr__n b{ font:var(--t-title); }
+.t5-hd__t .t5-cap{ font:var(--t-hsub); }
+.t5-lbl, .t5--v3 .t5-lbl{ font:var(--t-label); }
+.w .t5-tr{ min-height:var(--g-row); }
+.t5-tr__n b{ font:var(--t-title); }                                      /* было 13/18·500 */
+.t5-tr .t5-cap{ font:var(--t-sub); }                                     /* было 12/16 */
+.t5-when b{ font:var(--t-num); }                                         /* даты: было 12/16·600 */
+.t5-when span{ font:var(--t-sub); }
+.t5-when b.t5-live, .t5-fm__s .t5-live{ font:var(--t-live); letter-spacing:0; }
+.t5-tier, .t5-tier.t5-tier--s{ height:16px; font:var(--t-tag); }
+.t5-tbl td{ font:var(--t-cell); }
+.t5-tbl td:last-child{ font:var(--t-num-s); }
+.w .t5-seg button{ font:var(--t-seg); }
+.t5-leg{ font:var(--t-sub); }
+
+/* ——— Замены v18 ——— */
+.s6-hd{ height:var(--g-hd); }
+.s6-hd > b, .s6-hd__m b{ font:var(--t-title); }
+.w .s6-arch{ font:var(--t-link); }
+.s6-hd__sub, .s6-hd__m .s6-cap{ font:var(--t-hsub); }
+.s6-qm__m .s6-qm__n{ font:var(--t-title); }
+.s7-t, .s6-qm__m .s6-cap{ font:var(--t-sub); }
+.s9-live--text{ font:var(--t-live); }
+.s9-b{ font:var(--t-num); }                                              /* число замен: было 13/20 */
+.s8-p b{ font:var(--t-title); }
+.s8-p small, .s8-s{ font:var(--t-sub); }                                 /* роль, метка: было 11/12 и 11/14 */
+.s8-n, .s8-n b{ font:var(--t-title); }
+.s8-id{ font:500 11px/16px var(--w-font); }
+.w .s6-seg button{ font:var(--t-seg); }
+.s6-ft--warn, .s6-ft--ok{ font:var(--t-alert); }
+.w .s6-btn{ font:var(--t-btn); }
+.s6-q{ font:var(--t-title); }
+.s6-q__s{ font:var(--t-sub); }
+.w .s6-steps button{ font:var(--t-sub); }
+
+/* ——— Трансферы v12 ——— */
+.t2--sk .t2-hd{ height:var(--g-hd); }
+.t2--sk .t2-hd b{ font:var(--t-title); }
+.w .t2-top{ font:var(--t-link); }
+.t2--sk .t2-th{ font:var(--t-label); }
+.t2--sk .t2-nm, .t2--sk .t2-r__p b{ font:var(--t-title); }
+.t2--sk .t2-r__d, .t2--sk .t2-r__d.is-new{ font:var(--t-num); }
+
+/* ——— MVP v18 (карта — свой мир, её не трогаем; только текст вокруг) ——— */
+.m18-lbl{ font:var(--t-title); }                                          /* «MVP турнира»: было 12/16, цвет золото оставляем */
+.m18-n b{ font:var(--t-big); }
+.m18-n small{ font:var(--t-sub); }
+.w .m7-cta{ font:var(--t-btn); }
+.m7-price{ font:700 13px/18px var(--w-font); }
+
+/* font: сбрасывает font-variant-numeric — у чисел возвращаем моноширинные цифры */
+.t5-when b, .t5-tbl td, .s9-b, .s8-p b, .s8-id, .t2-r__d, .m18-n b, .m7-price{ font-variant-numeric:tabular-nums; }
+.t5 .t5-tier, .t5--v3 .t5-tier{ font:var(--t-tag); } /* у «Tier 3» вес перебивался .t5--v3 */
+.s8-r--a{ height:44px; } /* состав матча влезает в 380 вместе с шапкой 52 и алертом */
+.s7 .s6-bd{ padding-bottom:8px; } /* без 2 px переполнения в составе матча */

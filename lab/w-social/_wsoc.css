@@ -1,0 +1,276 @@
+/* w-social — виджет «Кнопки сообщества» (_wsoc.js, лаба w-social v1–v3). Токены — widget-tournament/_w.css. */
+.wsc, .wsc-dlg{ font:13px/1.35 var(--w-font); color:var(--w-fg); }
+.wsc .num{ font-variant-numeric:tabular-nums; }
+.wsc button, .wsc-dlg button{ font:inherit; color:inherit; border:0; background:none; cursor:pointer; padding:0; }
+.wsc-ex{ color:#a78bfa; font-size:11px; }
+.wsc-b{ display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 10px; border-radius:16px; color:var(--w-muted-fg); transition:background .2s, color .2s; }
+.wsc-b svg{ width:18px; height:18px; flex:none; } .wsc-b em{ font-style:normal; }
+.wsc-b:hover{ background:var(--w-muted); color:var(--w-fg); }
+.wsc-b.on{ color:#f472b6; } .wsc-b[data-wsc="re"].on{ color:var(--w-up); }
+
+/* v1 строка: под графиком, во всю главную колонку */
+.wsc--row{ display:flex; align-items:center; gap:2px; padding:6px 8px; background:var(--w-bg); border:1px solid var(--w-border); border-radius:var(--w-r); }
+.wsc-sp{ flex:1; } .wsc--row .wsc-ex{ margin:0 6px; }
+body:not(.is-desk) .wsc--row .wsc-b em{ display:none; } body:not(.is-desk) .wsc--row .wsc-ex{ display:none; }
+
+/* v2 колонка: компьютер — слева от главной колонки, липнет; телефон — слева над баром (справа — кнопка трансляции) */
+.wsc--rail{ display:flex; flex-direction:column; gap:4px; }
+.wsc--rail .wsc-b{ flex-direction:column; gap:2px; width:52px; height:auto; padding:8px 0; border-radius:12px; font-size:11px; }
+.gm-rail{ position:sticky; top:132px; align-self:start; }
+body:not(.is-desk) .gm-rail{ position:fixed; left:max(8px, calc(50% - 187px)); /* v4: внутри колонки телефона (390), а не у края окна */ bottom:84px; z-index:7; top:auto; }
+body:not(.is-desk) .gm-rail .wsc--rail{ padding:4px; background:rgba(24,24,27,.92); border:1px solid var(--w-border); border-radius:16px; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+body:not(.is-desk) .gm-rail .wsc--rail{ gap:0; }
+body:not(.is-desk) .gm-rail .wsc--rail .wsc-b{ width:40px; padding:5px 0; font-size:10px; } body:not(.is-desk) .gm-rail .wsc-b svg{ width:17px; height:17px; }
+/* v4: листаешь вниз — колонка уезжает влево (как кнопки бара), вверх — возвращается */
+body:not(.is-desk) .gm-rail{ transition:transform .25s ease, opacity .25s ease; }
+body.bar-off:not(.is-desk) .gm-rail{ transform:translateX(calc(-100% - 12px)); opacity:0; pointer-events:none; }
+.is-desk .gm-cols.has-rail{ grid-template-columns:52px minmax(0,1fr) 320px; }
+
+/* v3 карточка «Обсуждение» в правой колонке */
+.wsc--card{ background:var(--w-bg); border:1px solid var(--w-border); border-radius:var(--w-r); overflow:hidden; }
+.wsc-hd{ display:flex; align-items:baseline; justify-content:space-between; padding:10px 12px 4px; } .wsc-hd b{ font-weight:600; font-size:14px; }
+.wsc-c{ padding:6px 12px; } .wsc-c b{ font-weight:600; font-size:12px; } .wsc-c small{ margin-left:6px; color:var(--w-muted-fg); font-size:11px; } .wsc-c p{ margin:2px 0 0; }
+.wsc-in{ display:block; width:calc(100% - 24px); margin:6px 12px 8px; height:36px; padding:0 12px; border:1px solid var(--w-border) !important; border-radius:10px; color:var(--w-muted-fg) !important; text-align:left; line-height:34px; }
+.wsc-ft{ display:flex; gap:2px; padding:2px 4px 6px; border-top:1px solid var(--w-border); }
+
+/* комментарии: шторка / окно */
+.wsc-dlg{ width:min(420px, 100vw); max-height:70vh; margin:auto auto 0; padding:0 0 16px; background:var(--w-bg); border:1px solid var(--w-border); border-radius:20px 20px 0 0; }
+.is-desk .wsc-dlg{ margin:auto; border-radius:var(--w-r); }
+.wsc-dlg::backdrop{ background:#000a; }
+.wsc-dlg-hd{ display:flex; align-items:center; gap:8px; padding:14px 12px 8px; } .wsc-dlg-hd b{ font-weight:600; font-size:15px; }
+.wsc-dlg-hd button{ margin-left:auto; width:32px; height:32px; border-radius:8px; font-size:20px; color:var(--w-muted-fg); } .wsc-dlg-hd button:hover{ background:var(--w-muted); }
+
+/* v5–v8 (27.10, телефон): где кнопки сообщества — GS_SOC_M, класс .rm-* на .gm-rail. Компьютер — как v4 */
+/* v5 push — колонка у левого края под шапкой, виджеты сдвинуты вправо (не перекрывает) */
+body:not(.is-desk) .gm-rail.rm-push{ top:150px; bottom:auto; left:max(4px, calc(50% - 191px)); }
+body:not(.is-desk) .gm-rail.rm-push .wsc--rail{ background:none; border:0; backdrop-filter:none; -webkit-backdrop-filter:none; padding:0; }
+body:not(.is-desk) :has(> .gm-rail.rm-push) > .gm-z{ margin-left:44px; }
+body.bar-off:not(.is-desk) .gm-rail.rm-push{ transform:none; opacity:1; pointer-events:auto; }
+/* v6 tab — свёрнуто: полупрозрачный ярлычок со стрелкой у левого края; нажал — колонка выезжает, стрелка разворачивается */
+body:not(.is-desk) .gm-rail.rm-tab{ left:max(0px, calc(50% - 195px)); bottom:auto; top:55%; display:flex; align-items:center; transform:translateX(calc(-100% + 18px)); transition:transform .3s cubic-bezier(.2,.9,.3,1); }
+body:not(.is-desk) .gm-rail.rm-tab.is-open{ transform:none; }
+body.bar-off:not(.is-desk) .gm-rail.rm-tab{ opacity:1; pointer-events:auto; }
+.rm-tab .rm-h{ order:2; display:grid; place-items:center; width:18px; height:56px; padding:0; border:1px solid rgba(255,255,255,.12); border-left:0; border-radius:0 10px 10px 0;
+  background:rgba(39,39,42,.55); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); color:#fff; cursor:pointer; }
+.rm-tab .rm-h svg{ width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; transition:transform .3s; }
+.rm-tab.is-open .rm-h svg{ transform:rotate(180deg); }
+body.is-desk .rm-tab .rm-h{ display:none; }
+/* v7–v8: строка из 4 кнопок поровну */
+.wsc--line{ display:grid; grid-template-columns:repeat(4,1fr); align-items:center; }
+.wsc--line .wsc-b{ justify-content:center; height:40px; gap:5px; font-size:12px; border-radius:12px; }
+/* v7 strip — плавающая строка над баром, как на Sports.ru: отступ от краёв, скругление, тень */
+body:not(.is-desk) .gm-rail.rm-strip{ left:max(8px, calc(50% - 187px)); right:max(8px, calc(50% - 187px)); bottom:68px; }
+body:not(.is-desk) .rm-strip .wsc--line{ padding:2px; background:rgba(24,24,27,.94); border:1px solid var(--w-border); border-radius:14px; box-shadow:0 8px 24px #0009; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+body.bar-off:not(.is-desk) .gm-rail.rm-strip{ transform:translateY(calc(100% + 80px)); }
+/* v8 merge — одним блоком с баром: та же подложка, без зазора, линия только сверху */
+body:not(.is-desk) .gm-rail.rm-merge{ left:max(0px, calc(50% - 195px)); right:max(0px, calc(50% - 195px)); bottom:60px; z-index:8; }
+body:not(.is-desk) .rm-merge .wsc--line{ padding:0 6px; background:rgba(9,9,11,.94); border-top:1px solid var(--w-border); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+body:not(.is-desk) .rm-merge .wsc--line .wsc-b{ height:36px; }
+body:not(.is-desk):has(.gm-rail.rm-merge) .tabbar{ border-top-color:transparent; }
+body.bar-off:not(.is-desk) .gm-rail.rm-merge{ transform:translateY(calc(100% + 60px)); }
+body:not(.is-desk):has(.rm-strip, .rm-merge) .app{ padding-bottom:140px; }
+/* v7–v8: кнопка и окно трансляции — выше строки кнопок, чтобы не перекрывать */
+body:not(.is-desk):has(.rm-strip) .pip-fab{ bottom:124px; } body:not(.is-desk):has(.rm-strip) .pip{ bottom:172px; }
+body:not(.is-desk):has(.rm-merge) .pip-fab{ bottom:112px; } body:not(.is-desk):has(.rm-merge) .pip{ bottom:160px; }
+
+/* v12–v14: бар и кнопки сообщества вместе */
+/* бар капсулой (v12, v14): плавает над низом экрана, стекло, скругление */
+body:not(.is-desk) .tabbar.tb-dock{ left:max(8px, calc(50% - 187px)); right:max(8px, calc(50% - 187px)); bottom:10px; max-width:none; margin:0; height:62px; padding:0 4px;
+  border:1px solid rgba(255,255,255,.09); border-radius:28px; background:rgba(28,28,32,.72); backdrop-filter:blur(20px) saturate(1.5); -webkit-backdrop-filter:blur(20px) saturate(1.5); box-shadow:0 12px 32px #000b; }
+body:not(.is-desk) .tabbar.tb-dock .wb-isl{ background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.08); }
+/* v12 dock: кнопки сообщества — капсула поменьше по центру над баром */
+body:not(.is-desk) .gm-rail.rm-dock{ left:50%; right:auto; width:236px; bottom:82px; transform:translateX(-50%); }
+body:not(.is-desk) .rm-dock .wsc--line{ border-radius:22px; background:rgba(28,28,32,.72); border-color:rgba(255,255,255,.09); backdrop-filter:blur(20px) saturate(1.5); -webkit-backdrop-filter:blur(20px) saturate(1.5); }
+body:not(.is-desk) .rm-dock .wsc--line .wsc-b{ height:38px; font-size:11px; gap:4px; } body:not(.is-desk) .rm-dock .wsc--line .wsc-b svg{ width:16px; height:16px; }
+body.bar-off:not(.is-desk) .gm-rail.rm-dock{ transform:translate(-50%, 140px); }
+body:not(.is-desk):has(.rm-dock) .pip-fab{ bottom:134px; }
+/* v13 drawer: строка спрятана за баром, на верхнем краю бара — ярлычок «Обсуждение»; нажал — выезжает из-под бара */
+body:not(.is-desk) .gm-rail.rm-drawer{ left:max(0px, calc(50% - 195px)); right:max(0px, calc(50% - 195px)); bottom:60px; z-index:7; transform:translateY(100%); transition:transform .35s cubic-bezier(.2,.9,.3,1.1), opacity .25s; }
+body:not(.is-desk) .gm-rail.rm-drawer.is-open{ transform:none; }
+body:not(.is-desk) .rm-drawer .wsc--line{ padding:4px 6px; border-radius:18px 18px 0 0; border:1px solid var(--w-border); border-bottom:0; box-shadow:none; background:rgba(18,18,21,.96); }
+.rm-drawer .rm-h{ position:absolute; left:50%; top:-24px; transform:translateX(-50%); display:flex; align-items:center; gap:6px; height:24px; padding:0 12px; border:1px solid var(--w-border); border-bottom:0;
+  border-radius:12px 12px 0 0; background:rgba(18,18,21,.96); color:var(--w-muted-fg); cursor:pointer; }
+.rm-drawer .rm-h svg{ width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; transform:rotate(-90deg); transition:transform .3s; }
+.rm-drawer.is-open .rm-h svg{ transform:rotate(90deg); }
+.rm-drawer .rm-h::before{ content:'Обсуждение'; font:500 11px/1 var(--w-font); }
+body.is-desk .rm-drawer .rm-h{ display:none; }
+body.bar-off:not(.is-desk) .gm-rail.rm-drawer{ transform:translateY(calc(100% + 90px)); }
+body:not(.is-desk):has(.rm-drawer) .pip-fab{ transition:bottom .35s; } body:not(.is-desk):has(.rm-drawer.is-open) .pip-fab{ bottom:128px; }
+/* v14 pages: в местах бара две кнопки друг на друге — навигация и сообщество; точки над островом — какая страница; смахнул по бару или нажал точки — одна уезжает, другая въезжает */
+.wsc--tb{ display:flex; height:100%; }
+.wsc--tb .wsc-b{ flex:1; flex-direction:column; justify-content:center; gap:3px; height:100%; padding:0; border-radius:0; font:500 11px/14px var(--w-font); }
+.wsc--tb .wsc-b svg{ width:22px; height:22px; } .wsc--tb .wsc-b:hover{ background:none; color:var(--w-fg); }
+.wsc--tb .wsc-b em{ display:none; } /* «Поделиться» не влезает — только значок */
+.tabbar .tb-soc{ height:100%; min-width:0; }
+.tb-cell{ display:grid; height:100%; min-width:0; overflow:hidden; } .tb-cell > *{ grid-area:1 / 1; transition:opacity .25s ease, transform .35s cubic-bezier(.2,.9,.3,1); }
+.tb-s-pages .tb-soc{ opacity:0; transform:translateX(60%); pointer-events:none; }
+.tb-s-pages.pg-soc .tb-cell > a{ opacity:0; transform:translateX(-60%); pointer-events:none; }
+.tb-s-pages.pg-soc .tb-soc{ opacity:1; transform:none; pointer-events:auto; }
+.tb-pg{ position:absolute; left:50%; top:3px; transform:translateX(-50%); display:flex; gap:4px; padding:2px 4px; border:0; background:none; cursor:pointer; }
+.tb-pg i{ width:5px; height:5px; border-radius:3px; background:#52525b; transition:background .25s, width .25s; }
+.tb-s-pages:not(.pg-soc) .tb-pg i:first-child, .tb-s-pages.pg-soc .tb-pg i + i{ width:12px; background:var(--w-fg); }
+.bh-island.bar-off .tb-s-pages .tb-soc, .bh-island.bar-off .tb-s-pages .tb-pg{ opacity:0; pointer-events:none; }
+/* v15 fan: круглая кнопка у левого края над баром; нажал — кнопки сообщества выезжают из неё веером вверх */
+body:not(.is-desk) .gm-rail.rm-fan{ left:max(12px, calc(50% - 183px)); bottom:84px; display:flex; flex-direction:column-reverse; align-items:center; gap:8px; }
+.rm-fan .rm-h{ display:grid; place-items:center; width:48px; height:48px; padding:0; border-radius:50%; border:1px solid rgba(255,255,255,.12); cursor:pointer; color:var(--w-fg);
+  background:rgba(28,28,32,.8); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:0 8px 24px #000a; transition:transform .3s, background .3s; }
+.rm-fan .rm-h svg{ width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2; stroke-linejoin:round; }
+.rm-fan.is-open .rm-h{ transform:rotate(-12deg) scale(.92); background:#4c3d7a; }
+body:not(.is-desk) .rm-fan .wsc--rail{ opacity:0; transform:translateY(24px) scale(.6); transform-origin:50% 100%; pointer-events:none; transition:opacity .2s, transform .35s cubic-bezier(.2,.9,.3,1.3); border-radius:24px; }
+body:not(.is-desk) .rm-fan.is-open .wsc--rail{ opacity:1; transform:none; pointer-events:auto; }
+body.is-desk .rm-fan .rm-h{ display:none; } body.is-desk .rm-fan .wsc--rail{ opacity:1; transform:none; pointer-events:auto; }
+/* v16 idle: строка над баром-капсулой — видна, когда перестал листать; листаешь — уходит вниз */
+body:not(.is-desk) .gm-rail.rm-idle{ bottom:82px; opacity:0; transform:translateY(24px); pointer-events:none; transition:opacity .25s, transform .3s cubic-bezier(.2,.9,.3,1.1); }
+body.soc-idle:not(.is-desk) .gm-rail.rm-idle{ opacity:1; transform:none; pointer-events:auto; }
+body:not(.is-desk):has(.rm-idle) .pip-fab{ bottom:136px; }
+/* v17 sheet: шторка «Обсуждение» за баром-капсулой; язычок над баром — нажал или потянул бар вверх — выезжает, бар становится её низом */
+body:not(.is-desk) .gm-rail.rm-sheet{ left:max(8px, calc(50% - 187px)); right:max(8px, calc(50% - 187px)); bottom:10px; z-index:7; padding-bottom:62px; border-radius:28px;
+  background:rgba(22,22,26,.96); border:1px solid rgba(255,255,255,.09); box-shadow:0 -12px 40px #000b; transform:translateY(calc(100% - 62px)); transition:transform .4s cubic-bezier(.2,.9,.3,1), opacity .25s; }
+body:not(.is-desk) .gm-rail.rm-sheet.is-open{ transform:none; }
+body:not(.is-desk) .rm-sheet .wsc--card{ background:none; border:0; }
+.rm-sheet .rm-h{ position:absolute; top:-16px; left:50%; transform:translateX(-50%); display:grid; place-items:center; width:64px; height:16px; padding:0; border:0; background:none; cursor:pointer; }
+.rm-sheet .rm-h i{ width:40px; height:5px; border-radius:3px; background:rgba(255,255,255,.4); }
+.rm-sheet.is-open .rm-h{ top:6px; }
+body.is-desk .rm-sheet .rm-h{ display:none; }
+body.bar-off:not(.is-desk) .gm-rail.rm-sheet{ transform:translateY(100%); }
+/* v17: закрыта — видно только язычок (подложка и содержимое не просвечивают под баром); открыта — кнопка трансляции прячется */
+body:not(.is-desk) .gm-rail.rm-sheet:not(.is-open){ background:transparent; border-color:transparent; box-shadow:none; }
+body:not(.is-desk) .rm-sheet [data-wd]{ transition:opacity .25s; } body:not(.is-desk) .rm-sheet:not(.is-open) [data-wd]{ opacity:0; pointer-events:none; }
+body:not(.is-desk):has(.rm-sheet.is-open) .pip-fab{ opacity:0; pointer-events:none; }
+body:not(.is-desk):has(.rm-idle) .pip-fab{ bottom:146px; }
+/* v18 two: над баром слева — капсула из двух кнопок (Нравится, Комментарии); справа остаётся кнопка трансляции */
+body:not(.is-desk) .gm-rail.rm-two{ left:max(12px, calc(50% - 183px)); bottom:72px; }
+body:not(.is-desk) .rm-two .wsc--line{ grid-template-columns:auto auto; gap:2px; padding:3px; border-radius:22px; background:rgba(24,24,27,.94); border:1px solid var(--w-border); box-shadow:0 8px 24px #0009; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+body:not(.is-desk) .rm-two .wsc--line .wsc-b{ height:38px; padding:0 14px; border-radius:19px; font-size:13px; color:var(--w-fg); }
+body:not(.is-desk) .rm-two .wsc--line .wsc-b.on{ color:#f472b6; }
+/* v19 tab5: «Комментарии» в баре — как остальные кнопки бара, число вместо подписи */
+.tabbar > .tb-soc .wsc-b{ color:var(--w-muted-fg); }
+/* окно комментариев: Нравится, Репост, Поделиться внизу */
+.wsc-dlg .wsc-ft{ display:flex; align-items:center; gap:2px; margin:4px 8px 0; padding-top:6px; border-top:1px solid var(--w-border); }
+.wsc-dlg .wsc-ft .wsc-sp{ flex:1; }
+/* v20–v22: две пилюли над баром — остров и «Обсуждение»; всегда видны. Бар — только навигация, листаешь вниз — уезжает целиком, пилюли опускаются */
+body:not(.is-desk) .tabbar.tb-pills{ transition:transform .3s ease; }
+body.bar-off:not(.is-desk) .tabbar.tb-pills{ transform:translateY(100%); }
+.pills{ position:fixed; left:0; right:0; bottom:72px; z-index:9; display:flex; justify-content:center; align-items:center; gap:8px; max-width:390px; margin:0 auto; padding:0 12px; pointer-events:none; transition:bottom .3s ease; }
+.pills > *{ pointer-events:auto; } body.bar-off .pills{ bottom:16px; } body.is-desk .pills{ display:none; }
+.pills .wb-isl{ margin:0; box-shadow:0 8px 24px #000b; }
+.wsc-pl, .wsc-rd, .wsc-sg{ display:flex; align-items:center; gap:7px; border:1px solid var(--w-border); background:#18181b; color:var(--w-fg); cursor:pointer; font:500 13px/1 var(--w-font); }
+.wsc-pl svg, .wsc-rd svg, .wsc-sg svg{ width:18px; height:18px; flex:none; } .wsc-pl .num, .wsc-sg .num{ color:var(--w-muted-fg); }
+/* v20: пилюля рядом с островом */
+.wsc-pl{ height:44px; padding:0 14px; border-radius:22px; box-shadow:0 8px 24px #000b; } .wsc-pl b{ font-weight:600; }
+/* v21: остров по центру, «Обсуждение» — круглая кнопка у левого края, число — значком */
+.pl-pillsS{ justify-content:center; } .pl-pillsS .pl-soc{ position:absolute; left:12px; }
+.wsc-rd{ position:relative; justify-content:center; width:44px; height:44px; padding:0; border-radius:50%; box-shadow:0 8px 24px #000b; }
+.wsc-rd .num{ position:absolute; top:-6px; right:-8px; min-width:20px; height:18px; padding:0 5px; border-radius:9px; background:#7c3aed; color:#fff; font-size:10px; line-height:18px; text-align:center; }
+/* v22: одна капсула на две части — остров | обсуждение */
+.pl-join{ gap:0; } .pl-join > *{ box-shadow:none; }
+.pl-join .wb-isl{ border-radius:22px 0 0 22px; border-right:0; }
+.wsc-sg{ height:44px; padding:0 14px 0 12px; border-radius:0 22px 22px 0; border-left:1px solid #3f3f46; }
+.pl-join{ filter:drop-shadow(0 8px 20px #000b); }
+/* кнопка трансляции — выше пилюль; карточка вопроса острова — над пилюлями */
+body:not(.is-desk):has(#pills) .pip-fab{ bottom:128px; transition:bottom .3s ease; } body.bar-off:not(.is-desk):has(#pills) .pip-fab{ bottom:72px; }
+body:has(#pills) .wb-layer{ --wb-bottom:128px !important; }
+/* v23–v25: половина капсулы — несколько показателей; Нравится — сразу лайк, Обсуждение — панель */
+.wsc-sg2{ gap:0; padding:0 4px 0 2px; } .wsc-sg2 .wsc-b{ height:42px; padding:0 8px; border-radius:18px; gap:5px; font-size:13px; color:var(--w-fg); }
+.wsc-sg2 .wsc-b .num{ color:var(--w-fg); } .wsc-sg2 .wsc-b.on{ color:#f472b6; } .wsc-sg2 .wsc-b svg{ width:17px; height:17px; }
+.wsc-on{ display:flex; align-items:center; gap:4px; padding:0 6px 0 8px; color:var(--w-muted-fg); font-size:12px; } .wsc-on svg{ width:15px; height:15px; }
+.wsc-on::before{ content:''; width:6px; height:6px; border-radius:50%; background:#ef4444; margin-right:2px; }
+/* общая панель над капсулой */
+.wsp-dim{ position:fixed; inset:0; z-index:8; background:#000a; animation:wb-fade .2s; }
+.wsp{ position:fixed; left:50%; bottom:128px; z-index:10; width:min(366px, calc(100vw - 24px)); max-height:min(62vh, 520px); display:flex; flex-direction:column; transform:translateX(-50%);
+  background:#141417; border:1px solid #2a2a30; border-radius:22px; box-shadow:0 20px 50px #000d; color:var(--w-fg); font:13px/1.35 var(--w-font); overflow:hidden; animation:wsp-up .3s cubic-bezier(.2,.9,.3,1.1); }
+body.bar-off .wsp{ bottom:72px; }
+@keyframes wsp-up{ from{ opacity:0; transform:translate(-50%, 24px) scale(.97); } }
+.wsp button{ font:inherit; color:inherit; border:0; background:none; cursor:pointer; padding:0; }
+.wsp-bd{ overflow:auto; padding-bottom:10px; }
+.wsp-hd{ display:flex; align-items:center; gap:8px; padding:12px 12px 6px 14px; } .wsp-hd b{ font-weight:600; font-size:15px; }
+.wsp-x{ margin-left:auto; width:32px; height:32px; border-radius:8px; font-size:20px !important; color:var(--w-muted-fg) !important; } .wsp-x:hover{ background:var(--w-muted) !important; }
+.wsp-tabs{ display:flex; align-items:center; gap:2px; padding:6px 8px 0; border-bottom:1px solid var(--w-border); }
+.wsp-tabs button:not(.wsp-x){ position:relative; height:40px; padding:0 10px; color:var(--w-muted-fg); font-weight:500; }
+.wsp-tabs button.on{ color:var(--w-fg); } .wsp-tabs button.on::after{ content:''; position:absolute; left:10px; right:10px; bottom:-1px; height:2px; border-radius:2px; background:var(--w-fg); }
+.wsp-dot{ display:inline-block; width:7px; height:7px; margin-left:2px; border-radius:50%; background:#eab308; vertical-align:1px; }
+.wsp-ev .wb-side{ padding:4px 8px 0; } .wsp-ev .wb-card{ border-radius:18px; }
+.wsp-none{ margin:6px 14px 4px; color:var(--w-muted-fg); }
+.wsp-sub{ margin:12px 14px 2px; font-weight:600; font-size:14px; }
+.wsp .wsc-c{ padding:6px 14px; } .wsp .wsc-c b{ font-weight:600; font-size:12px; } .wsp .wsc-c small{ margin-left:6px; color:var(--w-muted-fg); font-size:11px; } .wsp .wsc-c p{ margin:2px 0 0; }
+.wsp .wsc-in{ margin:6px 12px 6px; height:36px; padding:0 12px; border:1px solid var(--w-border); border-radius:10px; color:var(--w-muted-fg); line-height:34px; }
+.wsp .wsc-ft{ display:flex; align-items:center; gap:2px; margin:0 8px; padding-top:6px; border-top:1px solid var(--w-border); }
+/* v25: нажатая половина капсулы подсвечена, панель как бы растёт из неё */
+.pl-pillsO .wb-isl, .pl-pillsO .wsc-sg{ transition:background .2s, border-color .2s; }
+body[data-wsp="ev"] .pl-pillsO .wb-isl, body[data-wsp="talk"] .pl-pillsO .wsc-sg{ background:#26262c; border-color:#52525b; }
+body.wsp-open .pip-fab, body.wsp-open .pip{ opacity:0; pointer-events:none; } /* панель открыта — трансляция не лезет поверх */
+/* v26: лента событий карты в панели — значок, что случилось, время */
+.wsp-feed{ display:flex; flex-direction:column; padding:2px 8px 4px; }
+.wsp-fi{ display:grid; grid-template-columns:28px 1fr auto; align-items:center; gap:10px; padding:7px 6px; border-radius:10px; }
+.wsp-fi + .wsp-fi{ border-top:1px solid #1f1f24; } .wsp-fi.big .wsp-ftx{ color:var(--w-fg); } .wsp-ftx{ color:#c4c4cc; } .wsp-ftx b{ color:var(--w-fg); font-weight:600; }
+.wsp-fi small{ color:var(--w-muted-fg); font-size:11px; }
+.wsp-fic{ display:grid; place-items:center; width:28px; height:28px; border-radius:50%; background:#1f1f24; }
+.wsp-fic .wb-i{ width:16px; height:16px; } .wsp-fic svg{ width:16px; height:16px; }
+.wsp-fic.k-rosh{ color:#eab308; background:#2a2208; } .wsp-fic.k-kill{ color:#ef4444; background:#2a1010; } .wsp-fic.k-tower{ color:#60a5fa; background:#0f1d33; }
+.wsp-fi:first-child{ background:#1a1a1f; }
+/* v29–v31: остров и отдельные кнопки — круглые 44 px, каждая со своей тенью; число — значком сверху справа */
+.pl-panel:not(.pl-join) .pl-soc{ display:contents; }
+.wsc-r, .wsc-p2{ position:relative; display:flex; align-items:center; justify-content:center; gap:6px; height:44px; border:1px solid var(--w-border); background:#18181b; color:var(--w-fg); cursor:pointer;
+  box-shadow:0 8px 24px #000b; font:600 13px/1 var(--w-font); transition:background .2s, color .2s, transform .15s; flex:none; }
+.wsc-r{ width:44px; padding:0; border-radius:50%; } .wsc-p2{ padding:0 14px 0 12px; border-radius:22px; }
+.wsc-r svg, .wsc-p2 svg{ width:19px; height:19px; } .wsc-r:active, .wsc-p2:active{ transform:scale(.92); }
+.wsc-r .num{ position:absolute; top:-7px; right:-9px; min-width:22px; height:18px; padding:0 5px; border-radius:9px; background:#27272a; border:1px solid #3f3f46; color:var(--w-fg); font:600 10px/16px var(--w-font); text-align:center; }
+.wsc-r.on{ color:#f472b6; } .wsc-r.on .num{ background:#4a1d33; border-color:#9d174d; }
+.wsc-r[data-wsc="talk"] .num{ background:#7c3aed; border-color:#7c3aed; color:#fff; }
+/* v30: ♡ слева от острова, 💬 справа */
+.pl-pillsB .wsc-l{ order:-1; } .pl-pillsB .wsc-rt{ order:1; } .pl-pillsB{ gap:10px; }
+.pl-pillsC{ gap:8px; }
+/* v32 (дирижёр 27.10: «v31 более-менее; размытие с матовым стеклом под него — градиент, который уходит вверх, и тени у всех кнопок»):
+   под кнопками — полоса матового стекла, сверху сходит на нет; кнопки и остров — стеклянные, с мягкой двойной тенью */
+.pl-pillsG{ gap:8px; }
+.pl-pillsG::before{ content:''; position:absolute; left:0; right:0; bottom:-16px; height:118px; z-index:-1; pointer-events:none;
+  background:linear-gradient(to top, rgba(9,9,11,.82) 0%, rgba(9,9,11,.55) 45%, rgba(9,9,11,0) 100%);
+  backdrop-filter:blur(14px) saturate(1.3); -webkit-backdrop-filter:blur(14px) saturate(1.3);
+  -webkit-mask-image:linear-gradient(to top, #000 50%, transparent); mask-image:linear-gradient(to top, #000 50%, transparent); }
+.pl-pillsG .wsc-r, .pl-pillsG .wb-isl:not(.is-ev){ background:rgba(30,30,35,.72); border-color:rgba(255,255,255,.1); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); }
+.pl-pillsG .wsc-r, .pl-pillsG .wb-isl{ box-shadow:0 10px 28px rgba(0,0,0,.55), 0 2px 6px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.07); }
+.pl-pillsG .wb-isl.is-ev{ box-shadow:0 10px 28px rgba(0,0,0,.55), 0 0 18px rgba(234,179,8,.25), inset 0 1px 0 rgba(255,255,255,.07); }
+/* v33 (дирижёр 27.10: «32 норм, но у таббара пусть не будет своей подложки, стекло ещё матовее, в самом низу — вообще чёрный»):
+   бар прозрачный; под баром и кнопками — один слой матового стекла на весь низ экрана: внизу чёрный, вверх сходит на нет */
+.pl-pillsH{ gap:8px; }
+body:not(.is-desk):has(.pl-pillsH) .tabbar{ background:transparent; border-top-color:transparent; backdrop-filter:none; -webkit-backdrop-filter:none; }
+body:not(.is-desk):has(.pl-pillsH)::after{ content:''; position:fixed; left:max(0px, calc(50% - 195px)); right:max(0px, calc(50% - 195px)); bottom:0; height:200px; z-index:7; pointer-events:none;
+  background:linear-gradient(to top, #000 0%, #000 22%, rgba(0,0,0,.78) 48%, rgba(0,0,0,.35) 72%, rgba(0,0,0,0) 100%);
+  backdrop-filter:blur(22px) saturate(1.2); -webkit-backdrop-filter:blur(22px) saturate(1.2);
+  -webkit-mask-image:linear-gradient(to top, #000 60%, transparent); mask-image:linear-gradient(to top, #000 60%, transparent); transition:height .3s ease; }
+body.bar-off:not(.is-desk):has(.pl-pillsH)::after{ height:130px; }
+.pl-pillsH .wsc-r, .pl-pillsH .wb-isl:not(.is-ev){ background:rgba(30,30,35,.6); border-color:rgba(255,255,255,.1); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
+.pl-pillsH .wsc-r, .pl-pillsH .wb-isl{ box-shadow:0 10px 28px rgba(0,0,0,.6), 0 2px 6px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.08); }
+.pl-pillsH .wb-isl.is-ev{ box-shadow:0 10px 28px rgba(0,0,0,.6), 0 0 18px rgba(234,179,8,.25), inset 0 1px 0 rgba(255,255,255,.08); }
+/* v34 (дирижёр 27.10: «в 33 перебор — чисто чёрный градиент без стекла, надо ближе к стеклу»): бар прозрачный, как v33;
+   слой на весь низ — матовое стекло: сильное размытие, лёгкое затемнение, внизу темнее, но не чёрный */
+.pl-pillsI{ gap:8px; }
+body:not(.is-desk):has(.pl-pillsI) .tabbar{ background:transparent; border-top-color:transparent; backdrop-filter:none; -webkit-backdrop-filter:none; }
+body:not(.is-desk):has(.pl-pillsI)::after{ content:''; position:fixed; left:max(0px, calc(50% - 195px)); right:max(0px, calc(50% - 195px)); bottom:0; height:190px; z-index:7; pointer-events:none;
+  background:linear-gradient(to top, rgba(12,12,15,.62) 0%, rgba(14,14,18,.42) 40%, rgba(18,18,22,.18) 75%, rgba(18,18,22,0) 100%);
+  backdrop-filter:blur(26px) saturate(1.6); -webkit-backdrop-filter:blur(26px) saturate(1.6);
+  -webkit-mask-image:linear-gradient(to top, #000 55%, transparent); mask-image:linear-gradient(to top, #000 55%, transparent); transition:height .3s ease; }
+body.bar-off:not(.is-desk):has(.pl-pillsI)::after{ height:130px; }
+.pl-pillsI .wsc-r, .pl-pillsI .wb-isl:not(.is-ev){ background:rgba(40,40,46,.5); border-color:rgba(255,255,255,.12); backdrop-filter:blur(18px) saturate(1.4); -webkit-backdrop-filter:blur(18px) saturate(1.4); }
+.pl-pillsI .wsc-r, .pl-pillsI .wb-isl{ box-shadow:0 10px 28px rgba(0,0,0,.5), 0 2px 6px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.1); }
+.pl-pillsI .wb-isl.is-ev{ box-shadow:0 10px 28px rgba(0,0,0,.5), 0 0 18px rgba(234,179,8,.25), inset 0 1px 0 rgba(255,255,255,.1); }
+/* лаба w-desk (27.10): компьютер — кнопка трансляции из угла убрана, она в шапке или в группе; панель «Событие / Обсуждение» */
+body.is-desk[class*="dk-"] .pip-fab{ display:none; }
+.wsc-pip i{ font-style:normal; font-size:10px; color:#ef4444; } .wsc-pip.is-on{ background:#3b1d1d; }
+/* float: вся группа внизу по центру, как на телефоне */
+body.is-desk.dk-float .pills, body.is-desk.dk-split .pills{ display:flex; bottom:24px; max-width:none; }
+body.is-desk.dk-float .pills::before{ content:''; position:absolute; left:50%; bottom:-24px; width:640px; height:120px; transform:translateX(-50%); z-index:-1; pointer-events:none;
+  background:radial-gradient(ellipse at 50% 100%, rgba(12,12,15,.7), rgba(12,12,15,0) 70%); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+  -webkit-mask-image:radial-gradient(ellipse at 50% 100%, #000 40%, transparent 70%); mask-image:radial-gradient(ellipse at 50% 100%, #000 40%, transparent 70%); }
+/* split: кнопки и трансляция — внизу справа */
+body.is-desk.dk-split .pills{ left:auto; right:24px; justify-content:flex-end; padding:0; }
+body.is-desk .pills .wsc-r, body.is-desk .pills .wsc-p2, body.is-desk .pills .wb-isl{ background:rgba(30,30,35,.6); border-color:rgba(255,255,255,.12); backdrop-filter:blur(18px) saturate(1.4); -webkit-backdrop-filter:blur(18px) saturate(1.4);
+  box-shadow:0 10px 28px rgba(0,0,0,.5), 0 2px 6px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.1); }
+body.is-desk .pip{ bottom:84px; }
+/* панель на компьютере: head / split — под шапкой справа; float — над группой */
+body.is-desk.dk-head .wsp, body.is-desk.dk-split .wsp{ left:auto; right:max(24px, calc(50% - 696px)); top:96px; bottom:auto; transform:none; animation:wsp-dn .25s ease; }
+body.is-desk .wsp{ bottom:84px; }
+@keyframes wsp-dn{ from{ opacity:0; transform:translateY(-12px); } }
+
+/* v40 (GS_FLUID): подложка под пилюлями — на всю ширину */
+body.fluid:has(.pl-pillsI)::after, body.fluid:has(.pl-pillsH)::after{ left:0; right:0; }

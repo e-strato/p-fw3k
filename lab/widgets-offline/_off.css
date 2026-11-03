@@ -1,0 +1,78 @@
+/* Нет сети и ошибки (дирижёр 23.10) — поверх итоговых виджетов */
+.w{ position:relative; }
+.o-dim .w-scroll, .o-dim .m6-card{ opacity:.55; transition:opacity .3s; }
+.o-x{ font:500 12px/16px var(--w-font, 'Google Sans Flex', sans-serif); }
+.o-x svg{ flex:none; }
+/* top — плашка под шапкой */
+.o-bar{ display:flex; align-items:center; gap:6px; margin:0 0 8px; padding:6px 10px; border-radius:8px; background:rgba(245,165,36,.12); color:#f5c26b; }
+.o-bar--back{ background:rgba(74,222,128,.12); color:#86efac; }
+/* toast — плашка внизу виджета, поверх содержимого */
+.o-toast{ position:absolute; left:12px; right:12px; bottom:12px; z-index:5; display:flex; align-items:center; gap:6px; padding:8px 12px; border-radius:10px;
+  background:#27272a; color:var(--w-fg, #fafafa); box-shadow:0 8px 24px rgba(0,0,0,.5); }
+.o-toast svg{ color:#f5a524; } .o-toast--back svg{ color:#4ade80; }
+/* icon — значок в шапке справа */
+.o-ic{ display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; margin-left:6px; border-radius:6px; color:#f5a524; background:rgba(245,165,36,.12); }
+.o-ic--back{ color:#4ade80; background:rgba(74,222,128,.12); }
+/* stamp — «Обновлено в 14:32» в шапке */
+.o-stamp{ display:inline-flex; align-items:center; gap:4px; margin-left:8px; white-space:nowrap; color:var(--w-muted-fg, #a1a1aa); }
+.o-stamp svg{ color:#f5a524; } .o-stamp--back svg{ color:#4ade80; }
+/* err — данных нет */
+.o-err{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:40px 12px; text-align:center; color:var(--w-muted-fg, #a1a1aa); }
+.o-err > svg{ color:var(--w-fg, #fafafa); margin-bottom:4px; } /* значок белый (дирижёр 23.10) */ .o-err b{ font-size:13px; font-weight:600; color:var(--w-fg, #fafafa); }
+.o-btn{ flex:none; width:auto; box-sizing:border-box; display:inline-flex; align-items:center; gap:6px; margin-top:10px; height:28px; padding:0 10px; border:0; border-radius:8px;
+  background:none; color:var(--w-fg, #fafafa); font:inherit; white-space:nowrap; cursor:pointer; transition:background .15s; } /* как «Обновить» на плашке: текст, фон — при наведении, отступы ровные (дирижёр 23.10) */
+.o-btn:hover{ background:rgba(255,255,255,.08); }
+/* Шапка (v5–v8): заголовок рыжий / красный, справа значок и время */
+.o-hl{ --o-c:#fb923c; } .o-hl--red{ --o-c:#f87171; }
+.o-hl :is(.t5-ttl, .t5-hd b, .s6-hd > b, .t2-hd > b, .m6-hd > b){ color:var(--o-c) !important; transition:color .3s; }
+.o-hl--bg :is(.t5-hd, .s6-hd, .t2-hd, .m6-hd){ background:rgba(251,146,60,.12); border-radius:12px 12px 0 0; }
+.o-r{ display:inline-flex; align-items:center; gap:4px; margin-left:auto; white-space:nowrap; color:var(--o-c, #fb923c); font-variant-numeric:tabular-nums; }
+.o-r + *{ margin-left:8px !important; } .s6-sp + .o-r{ margin-left:0; }
+.o-r--back{ color:#4ade80; }
+/* Пустое — разные виды (каждый вариант — свой) */
+.o-em{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:40px 16px; text-align:center; color:var(--w-muted-fg, #a1a1aa); }
+.o-em b{ font-size:13px; font-weight:600; color:var(--w-fg, #fafafa); } .o-em span{ font-size:12px; line-height:16px; }
+.o-em--icon > svg{ margin-bottom:6px; opacity:.7; }
+.o-em--circle > i{ display:flex; align-items:center; justify-content:center; width:44px; height:44px; margin-bottom:8px; border-radius:50%; background:rgba(255,255,255,.06); color:var(--w-fg, #fafafa); }
+.o-em--ghost{ position:relative; justify-content:flex-start; gap:0; padding:8px 12px; }
+.o-em--ghost > i{ display:flex; align-items:center; gap:10px; width:100%; height:48px; opacity:.35; }
+.o-em--ghost > i u{ flex:none; width:24px; height:24px; border-radius:50%; background:rgba(255,255,255,.1); } .o-em--ghost > i s{ flex:1; height:10px; border-radius:5px; background:rgba(255,255,255,.08); }
+.o-em--ghost > i:nth-of-type(2) s{ flex:.7 } .o-em--ghost > i:nth-of-type(3) s{ flex:.85 } .o-em--ghost > i:nth-of-type(4){ opacity:.15 }
+.o-em--ghost > p{ position:absolute; inset:0; margin:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; background:radial-gradient(closest-side, rgba(0,0,0,.85), transparent); }
+.o-em--game > img{ width:48px; height:48px; margin-bottom:8px; opacity:.25; filter:grayscale(1); }
+.o-em--line{ flex:none; flex-direction:row; justify-content:flex-start; gap:8px; padding:12px; text-align:left; }
+.o-em--line b{ font-size:12px; }
+.o-em--dash{ margin:8px 12px 12px; padding:32px 16px; border:1px dashed rgba(255,255,255,.14); border-radius:12px; }
+.o-lnk{ margin-top:8px; font-size:12px; color:var(--w-fg, #fafafa); text-decoration:underline; text-underline-offset:3px; text-decoration-color:rgba(255,255,255,.3); }
+/* v9 — плашка из-под низа виджета, как «Взять в фэнтези» у MVP (дирижёр 23.10) */
+.w:not(.m6):has(+ .o-dock){ position:relative; z-index:1; }
+.o-dock{ position:relative; z-index:0; display:flex; align-items:center; gap:8px; width:320px; box-sizing:border-box; margin-top:-12px; padding:20px 12px 10px;
+  background:#131316; border:1px solid var(--w-border, #27272a); border-top:0; border-radius:0 0 var(--w-r, 16px) var(--w-r, 16px); color:var(--w-fg, #fafafa);
+  font:var(--t-btn, 600 13px/16px 'Google Sans Flex', sans-serif); animation:o-dock .45s cubic-bezier(.2,.8,.2,1) both; }
+.o-dock.is-still{ animation:none; }
+.slot > .w + .o-dock{ margin-top:-22px; } /* у слота gap 10 — плашка заходит под виджет на 12, как у MVP (дирижёр 23.10: «сверху гигантский отступ») */
+/* v10 — плашка красная (дирижёр 23.10) */
+.o-dock--red{ color:var(--w-down, #ef4444); } /* рамка — обычная, как у виджета (дирижёр 23.10) */
+.o-dock--red > svg{ color:var(--w-down, #ef4444); } .o-dock--red .o-dock__t{ color:var(--w-down, #ef4444); } .o-dock--red .o-dock__b{ height:28px; margin-right:-8px; padding:0 8px; border-radius:8px; background:none; color:var(--w-down, #ef4444); transition:background .15s; } /* v10: просто текст, фон — при наведении (дирижёр 23.10) */
+.o-dock--red .o-dock__b:hover{ background:rgba(239,68,68,.12); }
+.o-dock--red.o-dock--back{ background:var(--o-bg, #131316); border-color:var(--w-border, #27272a); color:var(--w-fg, #fafafa); }
+.o-dock--red.o-dock--back > svg{ color:#4ade80; } .o-dock--red.o-dock--back .o-dock__t{ color:var(--w-muted-fg, #a1a1aa); }
+@keyframes o-dock{ from{ transform:translateY(-100%); opacity:0 } }
+.o-dock > svg{ color:var(--w-down, #ef4444); } /* красный, как LIVE (дирижёр 23.10: «не рыжую, а красную») */ .o-dock--back > svg{ color:#4ade80; }
+.o-dock__t{ margin-left:auto; font:500 12px/16px var(--w-font, 'Google Sans Flex', sans-serif); color:var(--w-muted-fg, #a1a1aa); font-variant-numeric:tabular-nums; }
+.o-dock__b{ display:inline-flex; align-items:center; gap:4px; height:24px; padding:0 10px; border:0; border-radius:999px; background:var(--w-muted, #27272a); color:var(--w-fg, #fafafa); cursor:pointer; }
+.o-em--tile{ align-items:flex-start; text-align:left; padding:24px 16px; }
+.o-em--tile > i{ display:flex; align-items:center; justify-content:center; width:36px; height:36px; margin-bottom:10px; border-radius:10px; background:rgba(255,255,255,.06); color:var(--w-fg, #fafafa); }
+/* NASA-панк и Меха: рамка — прозрачная 1px + линия тенью внутри, как у самого виджета, иначе линии плашки и виджета расходятся на 1px (дирижёр 23.10) */
+/* Плашка в стилях widgets-23 — как «Взять в фэнтези» у MVP в каждом стиле; красная — поверх тонируется (дирижёр 23.10: «во всех стилистиках») */
+.o-dock--red{ background:linear-gradient(rgba(239,68,68,.05), rgba(239,68,68,.05)), var(--o-bg, #131316); }
+.th-apple{ --o-bg:var(--ios-group); } .th-skeuo{ --o-bg:linear-gradient(#26262b, #1d1d21); } .th-glow{ --o-bg:linear-gradient(180deg, #0e0e17, #0b0b12); }
+.th-terminal{ --o-bg:var(--tm-hd); } .th-nasapunk{ --o-bg:linear-gradient(180deg, #0f1114, #0d0f11); } .th-mecha{ --o-bg:rgba(8,10,12,.9); }
+.th-apple .o-dock{ height:44px; margin-top:8px; padding:0 12px 0 16px; border:0; border-radius:12px; }
+.th-apple .slot > .w + .o-dock{ margin-top:-2px; }
+.th-skeuo .o-dock{ border:1px solid #050506; border-top:0; box-shadow:inset 0 -1px 0 rgba(255,255,255,.04), 0 3px 0 #0a0a0c, 0 4px 0 #050506, 0 14px 22px -8px rgba(0,0,0,.85); text-shadow:0 1px 0 rgba(0,0,0,.7); }
+.th-glow .o-dock{ border-color:transparent; border-radius:0 0 14px 14px; }
+.th-terminal .o-dock{ border-radius:0 0 4px 4px; }
+.th-nasapunk .o-dock{ border:1px solid transparent; border-top:0; border-radius:0 0 3px 3px; box-shadow:inset 1px 0 0 var(--np-line), inset -1px 0 0 var(--np-line), inset 0 -1px 0 var(--np-line); }
+.th-mecha .o-dock{ border:1px solid transparent; border-top:0; border-radius:0; box-shadow:inset 1px 0 0 var(--mc-line), inset -1px 0 0 var(--mc-line), inset 0 -1px 0 var(--mc-line), 0 0 24px -12px rgba(255,176,0,.35); }
+.th-mecha .o-dock__b, .th-terminal .o-dock__b, .th-nasapunk .o-dock__b{ border-radius:2px !important; }

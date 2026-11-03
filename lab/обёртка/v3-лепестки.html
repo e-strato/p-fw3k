@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../бустеры/_бустер.css" />
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+</head>
+<body>
+<!-- v3 · Раскрывается лепестками. За первым разрезом сам проходит второй — поперёк, через ту же точку: пак распадается на четыре
+     лепестка, они отгибаются назад от центра, как кожура, открывая колоду, и уходят за неё. -->
+<div class="bs"></div>
+<script type="module">
+import { play, THREE } from './_обёртка.js'
+import { armPiece } from './_обёртка.js'
+play({
+  name: 'Обёртка раскрывается лепестками',
+  note: 'Второй разрез проходит сам — поперёк первого; четыре лепестка отгибаются назад от центра, как кожура, и уходят за колоду.',
+  async remove({ K, g, cutter, A, c }) {
+    await K.wait(180)
+    const m = g.localToWorld(A.mid.clone()), n = A.n.clone()
+    const pairs = cutter.cut(m.clone().addScaledVector(n, 3), m.clone().addScaledVector(n, -3))
+    pairs.flat().forEach((p) => armPiece(K, p))
+    K.sparks(c, 0.5, 0.4)
+    // Лепесток: петля на внешней стороне, внутренний угол уходит назад (от зрителя)
+    const petals = cutter.pieces.map((p) => {
+      const ctr = p.poly.reduce((s, q) => s.add(new THREE.Vector3(q.x, q.y, 0)), new THREE.Vector3()).divideScalar(p.poly.length)
+      const out = ctr.clone().sub(A.mid).setZ(0).normalize(), axis = new THREE.Vector3(-out.y, out.x, 0)
+      const at = ctr.clone().addScaledVector(out, 0.35), pv = new THREE.Group(); pv.position.copy(at); g.add(pv)
+      p.h.position.sub(at); pv.add(p.h)
+      const test = out.clone().multiplyScalar(-1).applyAxisAngle(axis, 0.3)
+      return { pv, axis, sgn: test.z < 0 ? 1 : -1, out }
+    })
+    K.tween(1300, (k) => petals.forEach(({ pv, axis, sgn, out }) => { pv.quaternion.setFromAxisAngle(axis, sgn * k * 2.5); pv.position.addScaledVector(out, 0.004) }), K.back)
+    K.wait(900).then(() => K.tween(700, (k) => petals.forEach(({ pv }) => { pv.position.z -= 0.06; pv.scale.setScalar(1 - k * 0.9) }), (k) => k * k))
+    await K.wait(700)
+  },
+})
+</script>
+</body></html>

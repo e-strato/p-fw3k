@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_matches.css" />
+<style>
+/* v6 = v5 «Вкладки» (выбор дирижёра 06.10) + «Матч дня» справа (идея v3 — виджетом). Вкладки и кнопки — свои у каждого состояния матча. */
+.mx-qv--v6 { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "tabs ft" "body body"; align-items: center; gap: 12px; padding: 0 14px 14px 132px; }
+.mx-qv--v6 .v5-tabs { grid-area: tabs; margin: 0; } .v6-ft { grid-area: ft; display: flex; gap: 8px; } .v6-body { grid-area: body; }
+.v5-tabs { display: flex; align-items: center; gap: 4px; margin-bottom: 12px; }
+.v5-tabs button { border: 0; padding: 6px 12px; border-radius: 6px; background: none; color: var(--c-ui-dim); font: 600 13px var(--font) !important; }
+.v5-tabs button[aria-selected='true'] { background: var(--c-ui-panel); color: var(--c-accent) !important; }
+.v5-p { min-height: 44px; } .v5-p[hidden] { display: none; }
+.v5-p .mx-chance, .v5-p .mx-vote2 { max-width: 460px; }
+.v6-txt { max-width: 560px; font-size: 13px; line-height: 1.5; } .v6-txt small { display: block; margin-top: 4px; color: var(--c-caption); font-size: 12px; }
+.v6-dr { display: grid; gap: 8px; }
+.v6-dr p { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12.5px; }
+.v6-dr p > b { width: 96px; color: var(--c-muted); font-weight: 600; }
+.v6-dr span { padding: 3px 8px; border-radius: 5px; background: var(--c-ui-panel); }
+.v6-dr span.is-ban { color: var(--c-ui-dim); text-decoration: line-through; }
+.v6-dr span.is-wait { color: var(--c-ui-dim); border: 1px dashed var(--c-ui-hover); background: none; }
+.v6-dr span.is-now { color: var(--c-live); background: color-mix(in srgb, var(--c-live) 10%, var(--c-ui-panel)); }
+.v6-hid { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--c-muted); }
+/* Матч дня — первая панель справа */
+.v6-md { padding: 16px; }
+.v6-md__h { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 13px; }
+.v6-md__h h3 { margin: 0 auto 0 0 !important; }
+.v6-md__h small { color: var(--c-caption); font-size: 12px; }
+.v6-md__sb { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 8px; text-align: center; }
+.v6-md__t { display: grid; justify-items: center; gap: 6px; min-width: 0; font-size: 13px; font-weight: 600; }
+.v6-md__t .mx-lg { width: 44px; height: 44px; }
+.v6-md__t span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v6-md__c b { display: block; font: 700 34px/1 var(--font-c); }
+.v6-md__c small { display: inline-flex; align-items: center; margin-top: 4px; color: var(--c-live); font-size: 12px; }
+.v6-md .mx-chance { grid-template-columns: minmax(0, 1fr); gap: 4px; margin-top: 14px; }
+.v6-md .mx-chance span:last-child { text-align: right; }
+.v6-md__ft { display: flex; gap: 8px; margin-top: 14px; } .v6-md__ft .mx-btn { flex: 1; justify-content: center; }
+.mx-tools .mx-seg { flex-wrap: wrap; width: auto; }
+.mx-row.is-open .mx-note { display: none; } /* причина задержки/паузы — во вкладке, строкой ниже не дублируем */
+@container mx (max-width: 700px) {
+  .mx-qv--v6 { grid-template-columns: minmax(0, 1fr); grid-template-areas: "tabs" "body" "ft"; gap: 10px; padding: 0 10px 12px; }
+  .v5-tabs { overflow-x: auto; scrollbar-width: none; } .v5-tabs button { flex: none; }
+  .v5-p { min-height: 0; }
+  .v6-ft .mx-btn { flex: 1; justify-content: center; }
+  .v6-body .mx-chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .v6-body .mx-chips span { flex-direction: column; justify-content: center; gap: 2px; height: auto; padding: 8px 4px; text-align: center; }
+  .v6-body .mx-chance { grid-template-columns: minmax(0, 1fr); gap: 4px; } .v6-body .mx-chance span:last-child { text-align: right; }
+  .v6-body .mx-vote2 { flex-direction: column; }
+  .v6-dr p > b { width: 100%; }
+}
+</style></head>
+<body data-v="v6"><main class="mx-page">
+  <h1>v6 · Вкладки + матч дня</h1>
+  <p>Форма раскрытия — v5 «Вкладки» (выбор дирижёра): над блоком три короткие вкладки, на экране всегда один кусочек. Вкладки и кнопки свои у каждого состояния: скоро · задержан · перенесён — кто победит, форма, личные встречи; драфт — пики и баны; в эфире · пауза · перерыв — карты, шанс победы, события; итог — карты, игрок матча, новости; счёт скрыт — ничего не выдаёт до клика; отменён — не раскрывается, причина строкой. Справа сверху — «Матч дня» (идея v3 виджетом). Переключалка ниже раскрывает пример каждого состояния.</p>
+  <div class="mx-tools"><span>Раскрыть пример:</span><div class="mx-seg">
+    <button type="button" data-show="soon">Скоро</button><button type="button" data-show="delay">Задержан</button><button type="button" data-show="moved">Перенесён</button>
+    <button type="button" data-show="draft">Драфт</button><button type="button" data-show="live">В эфире</button><button type="button" data-show="pause">Пауза</button>
+    <button type="button" data-show="break">Перерыв</button><button type="button" data-show="done">Итог</button><button type="button" data-show="hidden">Счёт скрыт</button>
+    <button type="button" data-show="cancel">Отменён</button><button type="button" data-show="none">Свернуть</button></div></div>
+  <p class="mx-cap">Десктоп · 1440 — кликни по любой строке матча (рамка уменьшена под ширину окна)</p><div class="mx-wrap"><div class="mx-frame mx-frame--desk" data-mx></div></div>
+  <p class="mx-cap">Телефон · 390 — строка раскрывается так же, тапом</p><div class="mx-frame mx-frame--phone" data-mx></div>
+</main>
+<script>
+const КАРТЫ_CS = ['Mirage', 'Inferno', 'Ancient']
+MX_ФОРМЫ = { v6: (m, k) => {
+  const K = MX.КУСКИ, а = K.имя(m.a), б = K.имя(m.b), cs = m.g === 'cs'
+  const кар = (n, txt, cls = '') => `<span class="${cls}">${cs ? КАРТЫ_CS[n - 1] : 'К' + n} ${txt}</span>`
+  const карты = {
+    live: `<div class="mx-chips">${кар(1, `${K.лого(m.a, 'sm')} <b>${cs ? '13:9' : '34:21'}</b>`, 'is-done')}${кар(2, `<i class="mx-dot"></i>${m.часы || 'идёт'} <b>${cs ? '7:5' : '18:12'}</b>`, 'is-now')}${кар(3, '—')}</div>`,
+    pause: `<div class="mx-chips">${кар(1, `${K.лого(m.b, 'sm')} <b>29:33</b>`, 'is-done')}${кар(2, `пауза <b>11:9</b>`, 'is-now')}${кар(3, '—')}</div>`,
+    break: `<div class="mx-chips">${кар(1, `${K.лого(m.a, 'sm')} <b>13:9</b>`, 'is-done')}${кар(2, `${K.лого(m.b, 'sm')} <b>11:13</b>`, 'is-done')}${кар(3, `через ${m.через}`, 'is-now')}</div>`,
+  }
+  const скоро = [['Кто победит', K.голос(m)], ['Форма', K.форма(m)], ['Личные встречи', K.встречи(m)]]
+  const напомнить = `<a class="mx-btn mx-btn--main" href="#">Страница матча</a><button class="mx-btn" type="button">★ Напомнить</button>`
+  const смотреть = `<a class="mx-btn mx-btn--main" href="#">Смотреть</a><a class="mx-btn" href="#">Страница матча</a>`
+  const П = {
+    soon: [скоро, напомнить],
+    delay: [[['Что случилось', `<p class="v6-txt">Начало сдвинули с ${m.t} на ${m.новое}.<small>Напомним за 10 минут до нового времени — если включишь ★</small></p>`], ...скоро], напомнить],
+    moved: [[['Что случилось', `<p class="v6-txt">Матч перенесён на ${m.новое}. Голоса и прогнозы сохранены.<small>Уведомим, если время снова сдвинут</small></p>`], ...скоро.slice(1)], `<a class="mx-btn mx-btn--main" href="#">Страница матча</a><button class="mx-btn" type="button">★ Следить</button>`],
+    draft: [[['Пики и баны', `<div class="v6-dr"><p><b>${а}</b><span>Azir</span><span>Lee Sin</span><span class="is-now">выбирает…</span><span class="is-wait">—</span><span class="is-wait">—</span></p><p><b>${б}</b><span>Orianna</span><span>Vi</span><span class="is-wait">—</span><span class="is-wait">—</span><span class="is-wait">—</span></p><p><b>Баны</b><span class="is-ban">Ahri</span><span class="is-ban">Kalista</span><span class="is-ban">Rumble</span><span class="is-ban">Nidalee</span></p></div>`], ['Кто победит', K.голос(m)], ['Форма', K.форма(m)]], смотреть],
+    live: [[['Карты', карты.live], ['Шанс победы', K.шанс(m)], ['События', K.события(m)]], смотреть],
+    pause: [[['Почему пауза', `<p class="v6-txt">Техническая пауза ${m.часы}: у ${а} отвалился игрок, ждут переподключения.<small>Обычно до 10 минут · счёт серии ${m.sa}:${m.sb}</small></p>`], ['Карты', карты.pause], ['Шанс победы', K.шанс(m)]], смотреть],
+    break: [[['Карты', карты.break], ['Следующая карта', `<p class="v6-txt">Карта 3 — ${cs ? 'Ancient, выбор ' + б : 'решающая'} · начало через ${m.через}.<small>Счёт серии ${m.sa}:${m.sb} — кто возьмёт карту, тот выиграет матч</small></p>`], ['Шанс победы', K.шанс(m)]], смотреть],
+    done: [[['Карты', K.карты(m, 'done')], ['Игрок матча', K.игрок(m)], ['Новости', K.новость(m)]], `<a class="mx-btn mx-btn--main" href="#">Страница матча</a><a class="mx-btn" href="#">Запись</a>`],
+    hidden: [[['Счёт скрыт', `<div class="v6-hid">Карты, счёт и игрок матча спрятаны, чтобы не испортить запись. <button class="mx-btn" type="button">Показать счёт</button></div>`], ['Запись', `<p class="v6-txt">Полная запись — 2 ч 18 мин, Twitch · RU.<small>Длительность серии не показываем: по ней угадывается счёт</small></p>`]], `<a class="mx-btn mx-btn--main" href="#">Смотреть запись</a>`],
+  }
+  const [вкл, кн] = П[m.скрыт ? 'hidden' : m.st]
+  return `<div class="v5-tabs">${вкл.map(([t], i) => `<button type="button" aria-selected="${i === 0}">${t}</button>`).join('')}</div><div class="v6-ft">${кн}</div><div class="v6-body">${вкл.map(([, b], i) => `<div class="v5-p" ${i ? 'hidden' : ''}>${b}</div>`).join('')}</div>`
+} }
+MX_ФОРМЫ.v6.после = row => {
+  const bs = row.querySelectorAll('.v5-tabs button[aria-selected]'), ps = row.querySelectorAll('.v5-p')
+  bs.forEach((b, i) => b.onclick = () => { bs.forEach((x, j) => x.setAttribute('aria-selected', i === j)); ps.forEach((p, j) => p.hidden = i !== j) })
+}
+// «Матч дня» — первой панелью справа: главный матч дня крупно, live-статус, шанс победы, кнопка «Смотреть»
+MX_ПОСЛЕ = f => {
+  const K = MX.КУСКИ, m = { a: 'ts', b: 'tun' }
+  f.querySelector('.mx-right').insertAdjacentHTML('afterbegin', `<div class="mx-pan v6-md">
+    <div class="v6-md__h"><h3>Матч дня</h3>${K.тег('dota')}<small>BLAST Slam VIII</small></div>
+    <div class="v6-md__sb"><div class="v6-md__t">${K.лого('ts')}<span>Team Spirit</span></div>
+      <div class="v6-md__c"><b>1 : 0</b><small><i class="mx-dot"></i>Карта 2 · 24:15</small></div>
+      <div class="v6-md__t">${K.лого('tun')}<span>Tundra Esports</span></div></div>
+    ${K.шанс(m)}
+    <div class="v6-md__ft"><a class="mx-btn mx-btn--main" href="#">Смотреть</a><a class="mx-btn" href="#">Страница матча</a></div>
+  </div>`)
+}
+</script>
+<script src="_matches.js"></script>
+<script>
+const fit = () => document.querySelectorAll('.mx-wrap').forEach(w => { w.firstElementChild.style.zoom = Math.min(1, w.clientWidth / 1440) })
+fit(); addEventListener('resize', fit)
+</script>
+</body></html>

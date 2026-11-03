@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../бустеры/_бустер.css" />
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<style>
+.bs::after { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(75% 70% at 50% 45%, transparent 45%, color-mix(in srgb, var(--c-black) 75%, transparent)); }
+.bs.is-slow::after { opacity: 1; }
+/* Карты сайта стоят на своих местах невидимыми; 3D-карта прилетает ровно туда, встаёт ребром — и дальше переворачивается уже настоящая */
+.bs.v8 .cs__card { translate: 0 0; scale: 1; opacity: 0; transition: none; rotate: calc((var(--i) - 1) * 5deg); }
+.bs.v8 .cs__card--best { translate: 0 -18px; z-index: 1; }
+.bs.v8 .cs__card.is-in { opacity: 1; }
+.bs.v8 .cs__card .cs__flip { transform: rotateY(-90deg); transition: transform .55s cubic-bezier(.2, 1.25, .4, 1); }
+.bs.v8 .cs__card.is-flip .cs__flip { transform: rotateY(0deg); }
+.bs.v8.is-done .cs__cards { pointer-events: auto; }
+</style>
+</head>
+<body>
+<!-- v8 · Пасть и колода (дирижёр 05.10: «колода именно внутри, пасть раскрывается, карточки потом перекручиваются в реальную карту,
+     по одной»). Голо-пак. Один разрез → замедление, створки раскрываются на ~25°, в пасти видна колода из трёх карт рубашкой,
+     она светится и выходит из пака. Время срывается — карты по одной вылетают из колоды каждая на своё место, встают ребром
+     и переворачиваются уже настоящими картами сайта; лучшая — последней. Створки смыкаются, пак уходит вниз.
+     Против лагов — как в v7: шейдеры собраны заранее, колода в сцене с начала (внутри пака), чёткость 1,25. -->
+<div class="bs v8"></div>
+<script type="module">
+import { start } from '../бустеры/_бустер.js'
+import { THREE, RAR, makePack, Trail, Cutter } from './_пак.js'
+const W = 1.6, H = 2.45, CW = 0.92, CHt = CW * 234 / 170
+const css = (t) => getComputedStyle(document.documentElement).getPropertyValue(t).trim()
+start({
+  name: 'Пасть и колода',
+  note: 'Один разрез — время замедляется, пасть раскрывается, внутри колода. Карты по одной вылетают на свои места и переворачиваются настоящими.',
+  hint: 'Проведи через пак — один разрез',
+  build(K) {
+    K.renderer.setPixelRatio(Math.min(devicePixelRatio, 1.25))
+    K.host.classList.remove('is-done', 'is-slow')
+    const html = [...K.host.querySelectorAll('.cs__card')]; html.forEach((c) => c.classList.remove('is-in', 'is-flip'))
+    const g = new THREE.Group(), P = makePack(K, { W, H, finish: 'foil', irid: 1, name: 'Голо · ' + RAR[K.rar].ru, D: 0.15 }); g.add(P.g)
+    Cutter.prewarm(P.g)
+    const trail = new Trail(K, { life: 320, width: 11 }), cutter = new Cutter(g, P.g, W, H)
+
+    // Рубашка — как у карт сайта (.cs__back): панель, косая штриховка, рамка цветом редкости, круг с F
+    const col = '#' + K.glow().getHexString()
+    const backTex = (() => { const c = document.createElement('canvas'); c.width = 340; c.height = 468; const x = c.getContext('2d')
+      x.beginPath(); x.roundRect(0, 0, 340, 468, 20); x.clip(); x.fillStyle = css('--c-ui-panel'); x.fillRect(0, 0, 340, 468)
+      x.strokeStyle = 'rgba(255,255,255,.03)'; x.lineWidth = 8; for (let i = -468; i < 468; i += 24) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i + 468, 468); x.stroke() }
+      x.strokeStyle = col; x.lineWidth = 6; x.beginPath(); x.roundRect(3, 3, 334, 462, 18); x.stroke()
+      x.fillStyle = css('--c-ui-item'); x.beginPath(); x.arc(170, 234, 75, 0, 6.28); x.fill()
+      x.fillStyle = css('--c-caption'); x.font = '700 64px Inter, sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('F', 170, 238)
+      const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t })()
+    const backMat = new THREE.MeshBasicMaterial({ map: backTex, transparent: true, alphaTest: 0.5, side: THREE.DoubleSide })
+    const edgeMat = new THREE.MeshBasicMaterial({ color: K.glow() })
+    // Колода в паке: три тонкие карты стопкой; порядок вылета — левая, правая, лучшая (центр)
+    const deck = new THREE.Group(); g.add(deck)
+    const cards = [0, 1, 2].map((i) => {
+      const m = new THREE.Group()
+      const face = new THREE.Mesh(new THREE.PlaneGeometry(CW, CHt), backMat); m.add(face)
+      const edge = new THREE.Mesh(new THREE.BoxGeometry(CW * 0.985, CHt * 0.985, 0.01), edgeMat); edge.position.z = -0.006; m.add(edge)
+      m.position.z = (1 - i) * 0.018; deck.add(m); return m
+    })
+    const deckGlow = new THREE.Sprite(new THREE.SpriteMaterial({ color: K.glow(), map: K.softTex, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }))
+    deckGlow.scale.set(2.4, 3, 1); deckGlow.position.z = -0.15; deck.add(deckGlow)
+
+    // Куда лететь карте: центр и высота её места на экране → точка и масштаб в мире на плоскости z = ZT
+    const ZT = 1.6
+    const slot = (el) => {
+      const r = el.getBoundingClientRect(), cv = K.renderer.domElement.getBoundingClientRect()
+      const e = { clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 }
+      const p = K.onPlane(e, ZT), dist = K.camera.position.distanceTo(p)
+      const visH = 2 * dist * Math.tan(THREE.MathUtils.degToRad(K.camera.fov / 2))
+      // Масштаб уточняем проекцией: верх и низ карты на экране должны совпасть с высотой места (перспектива не даёт промахнуться)
+      let sc = el.offsetHeight / cv.height * visH / CHt
+      const px = (k) => { const a = p.clone().setY(p.y + CHt * k / 2).project(K.camera), b = p.clone().setY(p.y - CHt * k / 2).project(K.camera); return (a.y - b.y) / 2 * cv.height }
+      sc *= el.offsetHeight / px(sc)
+      return { p: g.worldToLocal(p), s: sc, rz: -THREE.MathUtils.degToRad((+el.style.getPropertyValue('--i') - 1) * 5) }
+    }
+    let a = null, drawing = false, done = false
+
+    const cut = async (p1, p2) => {
+      done = true; K.hint('')
+      const [[A, B]] = cutter.cut(p1, p2)
+      const pivots = []
+      const hinge = (pc) => {
+        const pv = new THREE.Group(); pivots.push(pv); const at = A.mid.clone().addScaledVector(pc.n, 1.3)
+        pv.position.copy(at); g.add(pv); pc.h.position.sub(at); pv.add(pc.h)
+        const sgn = Math.sign(new THREE.Vector3().crossVectors(A.dir, pc.n).z) || 1
+        return (t) => pv.quaternion.setFromAxisAngle(A.dir, -sgn * t)
+      }
+      const ha = hinge(A), hb = hinge(B)
+      const c = g.localToWorld(A.mid.clone()).setZ(0.5)
+      // 1. Замедление: пасть раскрывается, колода светится и выходит из пака к зрителю
+      K.host.classList.add('is-slow'); K.timeScale = 0.07
+      K.sparks(c, 0.7, 0.3)
+      const d0 = deck.position.clone(), d1 = A.mid.clone().setZ(0.95)
+      await K.tween(1700, (k) => { const e = Math.sin(Math.min(1, k * 1.4) * Math.PI / 2); ha(e * 0.95); hb(e * 0.95); deckGlow.material.opacity = e * 0.9; deck.position.lerpVectors(d0, d1, THREE.MathUtils.smoothstep(k, 0.5, 1)); K.lightAt(c, e * 0.35, 1) }, (k) => k)
+      // 2. Время срывается: вспышка; створки смыкаются, пак уходит, колода остаётся висеть
+      K.host.classList.remove('is-slow'); K.timeScale = 1
+      K.flash(0.55); K.shock(g.localToWorld(d1.clone()), 7, 700); K.confetti(g.localToWorld(d1.clone()), 0.9, 2.2)
+      K.wait(250).then(() => K.tween(800, (k) => { ha(0.95 * (1 - k)); hb(0.95 * (1 - k)) }, (k) => k * k * (3 - 2 * k)))
+      const y0 = pivots.map((pv) => pv.position.y)
+      K.wait(500).then(() => K.tween(1500, (k) => pivots.forEach((pv, i) => { pv.position.y = y0[i] - k * k * 4.6 })))
+      K.tween(500, (k) => { K.lightAt(g.localToWorld(d1.clone()), 0.35 + k * 0.4, 1.1); K.rays(g.localToWorld(d1.clone()), k * 0.3) })
+      await K.wait(260)
+      // 3. Карты по одной: вылет на место дугой → ребром → переворачивается настоящая
+      const order = [0, 2, 1]
+      for (const [n, i] of order.entries()) {
+        const m = cards[i], el = html[i], t = slot(el)
+        const from = m.getWorldPosition(new THREE.Vector3()), p0 = g.worldToLocal(from), s0 = m.scale.x
+        deck.remove(m); g.add(m); m.position.copy(p0)
+        const best = i === 1
+        await K.tween(best ? 620 : 480, (k) => {
+          m.position.lerpVectors(p0, t.p, k); m.position.y += Math.sin(k * Math.PI) * (best ? 0.5 : 0.3)
+          m.scale.setScalar(s0 + (t.s - s0) * k); m.rotation.z = t.rz * k; m.rotation.y = 0
+        }, (k) => 1 - (1 - k) ** 3)
+        // Ребром — и подмена
+        await K.tween(best ? 200 : 150, (k) => { m.rotation.y = k * Math.PI / 2 }, (k) => k * k)
+        m.visible = false
+        el.classList.add('is-in'); void el.offsetWidth; el.classList.add('is-flip')
+        K.sparks(g.localToWorld(t.p.clone()), best ? 0.8 : 0.35, 0.4)
+        if (best) K.shock(g.localToWorld(t.p.clone()), 3.5, 600)
+        if (n < 2) await K.wait(120)
+      }
+      deckGlow.material.opacity = 0
+      K.host.classList.add('is-done', 'is-open')
+      await K.tween(1400, (k) => { K.lightAt(g.localToWorld(d1.clone()), 0.75 * (1 - k * 0.8), 1.1); K.rays(g.localToWorld(d1.clone()), 0.3 * (1 - k)) })
+    }
+    return {
+      g, open: async () => {},
+      down(e) { if (done) return; drawing = true; trail.push(trail.local(e)); a = K.onPlane(e) },
+      move(e) { if (drawing) trail.push(trail.local(e)) },
+      up(e) {
+        if (!drawing) return; drawing = false
+        const b = K.onPlane(e)
+        if (Cutter.crosses(P.g.worldToLocal(a.clone()), P.g.worldToLocal(b.clone()), W, H)) { K.open(); cut(a, b) } else K.hint('Режь через весь пак — от края до края')
+      },
+      auto() {
+        if (done) return
+        const a0 = P.g.localToWorld(new THREE.Vector3(-W * 0.9, H * 0.18, 0)), b0 = P.g.localToWorld(new THREE.Vector3(W * 0.9, -H * 0.08, 0))
+        K.tween(260, (k) => trail.push(trail.screen(a0.clone().lerp(b0, k))), (k) => k).then(() => { K.open(); cut(a0, b0) })
+      },
+      tick(dt, t) { trail.draw(); if (!done) P.g.position.y = Math.sin(t * 1.5) * 0.05; cutter.update() },
+    }
+  },
+})
+</script>
+</body></html>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>v3 · Герои: матчи в углу, винрейт полоской</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="../widgets-unified/_type.css" /><link rel="stylesheet" href="_pp.css" />
+<!-- 2.4 «Игроки по позициям» v3 — как v1, но герои понятнее: число матчей — в углу иконки героя, винрейт — полоской под иконкой (цветом) и числом; на телефоне цифры у героев видны (наведения нет), имя команды — по нажатию на лого (дирижёр 02.11: «герой, винрейт, матчи — всё в кучу»).
+     v1 — отдельный виджет (созвон 02.11 §2.4, сверено с дирижёром): позиции 1–5 сегментом со значками, как в Доте (мини-карта, подсвечена линия; у саппортов — пунктир и точка);
+     строка: место · флаг · ник, после него лого команды (имя — при наведении), отдельной колонки команды нет · 3 главных героя: иконка, винрейт (цветом), матчи · рейтинг 4 цифры, второй — мелко серым (как в «Участниках» v56).
+     На телефоне у героев только иконки, цифры — при наведении. Код — _pp.js (PP.render). Игроки — PARI Universe (Liquipedia); ‼️ рейтинги, герои, винрейты, матчи — пример. -->
+<style>
+  body{ margin:0; background:var(--w-page); color:var(--w-fg); font-family:var(--w-font); }
+  .lab-board{ padding:32px 48px; }
+  .is-phone .lab-board{ padding:32px 0; } .is-phone #w{ width:390px; margin:0 auto; }
+</style></head>
+<body><div class="lab-board"><div id="w"></div></div>
+<script src="../widget-participants/_data.js"></script><script src="_pp.js"></script>
+<script>
+  const DEV = [{ v: 'desk', label: 'Компьютер' }, { v: 'phone', label: 'Телефон' }]
+  const S = { device: 'desk' }, w = document.getElementById('w')
+  function render() { const ph = S.device === 'phone'; document.body.classList.toggle('is-phone', ph); PP.render(w, { phone: ph, hv: 'badge' }) }
+  window.LAB = { view: 'toolbar', go: (f, i) => { S.device = DEV[i].v; render() }, cur: () => ({ f: 0, i: DEV.findIndex((d) => d.v === S.device) }),
+    flows: () => [{ name: 'Экран', steps: DEV.map((d) => ({ name: d.label, what: d.label })) }],
+    axes: () => [{ key: 'device', name: 'Экран', value: S.device, options: DEV }],
+    set: (k, v) => { S[k] = v; render() },
+    caption: () => 'Позиции — значками сверху; наведи (на телефоне — нажми) на лого команды — её имя. ‼️ Рейтинги, герои, винрейты — пример' }
+  render()
+</script>
+</body></html>

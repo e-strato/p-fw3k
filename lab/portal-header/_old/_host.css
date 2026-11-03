@@ -1,0 +1,16 @@
+/* Страница варианта лабы «Шапка портала»: описание, переключалка «гость / играет», десктоп 1440 и раскадровка телефона 390 */
+.p-page { padding: 40px 32px 80px; background: var(--c-ui-bg); color: var(--c-text); font-family: var(--font); }
+.p-page > h1 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.01em; }
+.p-page > p { max-width: 100ch; margin: 8px 0 0; color: var(--c-muted); font-size: 15px; line-height: 1.5; }
+.p-cap { margin: 28px 0 10px; font-size: 13px; font-weight: 600; color: var(--c-caption); }
+.p-tools { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.p-seg { display: flex; gap: 2px; padding: 3px; border-radius: 8px; background: var(--c-ui-chip); }
+.p-seg button { border: 0; padding: 7px 12px; border-radius: 6px; background: none; color: var(--c-ui-dim); font: 600 13.5px var(--font); cursor: pointer; }
+.p-seg button[aria-pressed='true'] { background: var(--c-ui-panel); color: var(--c-accent); }
+.p-desk { width: 1440px; border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px var(--c-ui-line), 0 30px 80px -30px var(--c-black); }
+.p-desk iframe { display: block; width: 1440px; height: 720px; border: 0; }
+.p-board { display: flex; flex-wrap: wrap; gap: 36px 44px; align-items: flex-start; }
+.p-board figure { display: grid; gap: 12px; margin: 0; }
+.p-board figcaption { max-width: 392px; color: var(--c-caption); font-size: 13px; line-height: 1.45; } .p-board figcaption b { display: block; color: var(--c-text); font-size: 14px; }
+.p-phone { width: 390px; height: 844px; margin: 11px; overflow: hidden; border-radius: 42px; box-shadow: 0 0 0 10px color-mix(in srgb, var(--c-text) 8%, var(--c-ui-bg)), 0 0 0 11px var(--c-ui-line), 0 40px 90px -30px var(--c-black); }
+.p-phone iframe { display: block; width: 390px; height: 844px; border: 0; }

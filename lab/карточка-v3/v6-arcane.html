@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_v3.css" />
+<style>
+/* v6 · Arcane — заново (дирижёр 01.10: «логика арки нравится — удаляем и создаём с нуля»). Логика Arcane: портрет во весь арт,
+   полоса цвета силы справа с огромным вертикальным ником. Рейтинг — наверху полосы, в правом верхнем углу; под ним герои;
+   ник целиком, без многоточия.
+   Правки 01.10: шрифт — Google Sans Flex (заход 4, дирижёр: Archivo смотрелся странно); в полосе только рейтинг, герои и ник с отступами;
+   имя с флагом — в центр под фото; отступы ровнее; команда — широкой плашкой */
+/* Заход 3 (01.10: «ближе к v1»): больше скруглений, меньше отступов — кант тоньше; инфо разделяют линии, а не плашки */
+.a6 { --r: 1.4em; --shape: inset(0 round 1.4em); --f-disp: 'Google Sans Flex'; --f-ui: 'Google Sans Flex'; --rail: 4.6em; --gap: .22em; }
+.a6__face, .a6 .bk { font-family: 'Google Sans Flex', sans-serif; }
+.a6__face { position: absolute; inset: 0; }
+.a6__plate { position: absolute; inset: 0; border-radius: var(--r); clip-path: var(--shape); background: var(--c-card-ink-2);
+  box-shadow: 0 1.4em 2.6em -1em color-mix(in srgb, var(--c-black) 85%, transparent); }
+
+/* 3 Рамка: градиент силы под всей картой — тонкий кант вокруг арта и широкая полоса справа */
+.a6__body { position: absolute; inset: 0; border-radius: var(--r); clip-path: var(--shape); background: linear-gradient(160deg, var(--tier-hi), var(--tier) 40%, var(--tier-2)); }
+
+/* 2 Фон: окно арта — тёмный цвет силы, косые полосы, логотип команды крупно за игроком */
+.a6__art { position: absolute; top: var(--gap); left: var(--gap); bottom: var(--gap); right: calc(var(--rail) + var(--gap) * 2); overflow: hidden; border-radius: 1.2em .35em .35em 1.2em;
+  background:
+    radial-gradient(75% 45% at 50% 24%, color-mix(in srgb, var(--tier) 32%, var(--c-card-ink)), transparent 80%),
+    linear-gradient(180deg, var(--tier-2), var(--c-card-ink) 70%); }
+.a6__stripes { position: absolute; inset: 0; background: repeating-linear-gradient(115deg, transparent 0 1.3em, color-mix(in srgb, var(--c-white) 4%, transparent) 1.3em 1.36em); }
+.a6__logo { left: .4em; top: 1.8em; width: 15.4em; height: 13.5em; background: color-mix(in srgb, var(--tier) 30%, transparent); }
+
+/* 4 Эффекты: блеск на арте; с Prism — фольга на полосе; у Legend — свет бежит по полосе */
+.a6__foil { position: absolute; inset: 0; mix-blend-mode: soft-light;
+  background: repeating-linear-gradient(160deg, var(--c-rarity-holo-1) 0 6%, var(--c-rarity-holo-2) 12%, var(--c-rarity-holo-3) 18%, var(--c-rarity-holo-4) 24%, var(--c-rarity-holo-1) 30%);
+  background-size: 100% 300%; background-position: 0 calc(var(--my, 50%) + var(--drift)); animation: drift 7s ease-in-out infinite alternate; }
+.a6__run { position: absolute; left: 0; right: 0; height: 4em; top: var(--scan); mix-blend-mode: overlay;
+  background: linear-gradient(180deg, transparent, var(--c-white), transparent); animation: scan 3.4s ease-in-out infinite; }
+
+/* 5 Фото: голова выходит за верх рамки, туловище уходит в тёмную панель, свечение за головой */
+.a6__halo { position: absolute; left: 8.1em; top: 3.4em; width: 13em; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--tier-hi) 60%, transparent), color-mix(in srgb, var(--tier) 25%, transparent) 55%, transparent); }
+.a6 .ph { left: -.6em; top: -1.5em; width: 17.6em;
+  -webkit-mask: linear-gradient(180deg, var(--c-black) 66%, transparent 86%); mask: linear-gradient(180deg, var(--c-black) 66%, transparent 86%); }
+/* Над рамкой видна только часть выше окна арта (1.5em) — ниже голова идёт из арта, со своим светом; шва на лице нет (правка 01.10) */
+.a6 .ph.a6__pop { left: -.38em; top: -1.28em; z-index: 6; -webkit-mask: none; mask: none; clip-path: inset(0 0 calc(100% - 1.5em) 0); }
+.a6 .ph--sil.a6__pop { display: none; }
+
+/* 6–7 Полоса справа: рейтинг в правом верхнем углу, герои, вертикальный ник с настоящим именем */
+.a6__rail { position: absolute; top: var(--gap); right: var(--gap); bottom: var(--gap); width: var(--rail); overflow: hidden; border-radius: .35em 1.2em 1.2em .35em;
+  background: linear-gradient(180deg, var(--tier-hi), var(--tier) 40%, color-mix(in srgb, var(--tier) 70%, var(--tier-2))); }
+.a6__ovr { position: absolute; top: .55em; right: var(--gap); width: var(--rail); z-index: 7; text-align: center; color: var(--c-card-dark-text); }
+.a6__ovr b { font-weight: 700; font-size: 3.1em; line-height: .95; letter-spacing: -.02em; }
+.a6__heroes { position: absolute; top: 4.6em; right: var(--gap); width: var(--rail); z-index: 7; display: grid; gap: .6em; justify-items: center; }
+.a6__heroes div { display: grid; justify-items: center; gap: .15em; }
+.a6__heroes .hero-ic { width: 2.5em; aspect-ratio: 1; border-radius: .45em; box-shadow: 0 0 0 .1em var(--c-card-dark-text); }
+.a6__heroes small { font-size: .55em; font-weight: 800; line-height: 1.2; text-align: center; color: var(--c-card-dark-text); }
+.a6__heroes small i { font-style: normal; font-weight: 600; opacity: .75; }
+.a6__id { position: absolute; right: var(--gap); top: 17.9em; width: var(--rail); height: 9.6em; z-index: 7; display: flex; justify-content: flex-start; align-items: center;
+  writing-mode: vertical-rl; rotate: 180deg; color: var(--c-card-dark-text); overflow: hidden; }
+.a6__nick { font-weight: 700; line-height: 1; white-space: nowrap; }
+
+/* 6 Имя и флаг — в центре, под фото */
+.a6__name { top: 18.6em; }
+.a6__name span { display: flex; align-items: center; gap: .5em; font-size: .85em; font-weight: 600; color: color-mix(in srgb, var(--c-white) 80%, transparent); }
+
+/* 7 Номер карты — в арте слева сверху */
+.a6__serial { position: absolute; left: 1.2em; top: 1.1em; z-index: 7; line-height: 1.25; }
+.a6__serial b { display: block; font-size: .78em; font-weight: 800; color: var(--tier-hi); }
+.a6__serial small { display: block; font-size: .56em; font-weight: 500; color: var(--c-muted); }
+
+/* 8 Инфо: тёмная панель внизу арта — роль крупно по центру, статы строкой, команда бейджем */
+.a6__panel { position: absolute; left: 0; right: 0; bottom: 0; height: 15.5em;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--c-card-ink) 88%, transparent) 30%, var(--c-card-ink) 52%); }
+.a6__info { position: absolute; left: var(--gap); right: calc(var(--rail) + var(--gap) * 2); z-index: 6; display: flex; justify-content: center; }
+.a6__role { top: 19.8em; }
+.a6__role span { font-size: 1.5em; font-weight: 700; }
+.a6__role b { color: var(--tier); font-weight: 700; }
+/* Статы и команда — без плашек: сверху и снизу статов тонкие линии-разделители, как в v1 */
+.a6__stats { top: 23em; left: 1.2em; right: calc(var(--rail) + 1.6em); display: grid; grid-template-columns: repeat(6, 1fr); padding: .6em 0 .55em; text-align: center;
+  border-top: .06em solid color-mix(in srgb, var(--c-white) 14%, transparent); border-bottom: .06em solid color-mix(in srgb, var(--c-white) 14%, transparent); }
+.a6__stats b { display: block; font-weight: 700; font-size: 1.45em; line-height: 1; }
+.a6__stats small { display: block; margin-top: .2em; font-size: .46em; font-weight: 700; color: var(--c-muted); }
+/* Команда — крупный логотип и название, без плашки */
+.a6__team { top: 26.9em; }
+.a6__team span { display: flex; align-items: center; gap: .55em; font-size: 1em; }
+.a6__team b { font-size: 1.2em; font-weight: 700; }
+.a6__team .logo { width: 2.3em; height: 2.3em; }
+
+/* 9 Оборот: та же раскладка Arcane — полоса справа с ником и рейтингом, слева статы, герои и форма */
+.a6 .bk { box-shadow: inset 0 0 0 .22em var(--tier); padding: 1.4em calc(var(--rail) + 1.6em) 1.4em 1.3em; gap: .75em;
+  background: linear-gradient(180deg, var(--tier-2), var(--c-card-ink) 55%); }
+.a6 .bk::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: calc(var(--rail) + .8em);
+  background: linear-gradient(180deg, var(--tier-hi), var(--tier) 40%, color-mix(in srgb, var(--tier) 70%, var(--tier-2))); }
+.a6 .bk__top { grid-template-columns: auto 1fr; }
+.a6 .bk__top b { font-weight: 700; font-size: 1.8em; }
+.a6 .bk__top em { position: absolute; right: -1.824em; top: -.1em; z-index: 1; width: 1.588em; text-align: center; /* в своих em (кегль 3.4): полоса 5.4em, отступ 6.2em */
+  font-weight: 700; font-size: 3.4em; color: var(--c-card-dark-text); }
+.a6 .bk__stats b, .a6 .bk__heroes em { font-weight: 700; font-size: 1.25em; }
+.a6 .bk__btn { font-weight: 800; }
+</style></head>
+<body><section class="section v3">
+  <div class="sec-head">
+    <h2 class="sec-title">v6 · Arcane</h2>
+    <p class="sec-lead">Arcane заново. Логика прежняя: портрет на весь арт, справа полоса цвета силы с огромным вертикальным ником. Рейтинг стоит наверху полосы,
+      в правом верхнем углу, и не лезет на лицо. Под ним герои, ник читается целиком. Скругления крупные, кант тонкий, инфо разделяют линии, как в v1. Шрифт — Google Sans Flex. Имя с флагом стоит в центре.</p>
+  </div>
+  <div id="v3"></div>
+</section>
+<script src="_v3.js"></script>
+<script>
+V3.страница({
+  класс: 'a6',
+  иерархия: [
+    'Скруглённый прямоугольник, крупный радиус, без скосов.',
+    'Окно арта: тёмный цвет силы, косые полосы. За игроком крупно логотип команды.',
+    'Градиент силы под всей картой: совсем тонкий кант вокруг арта и широкая скруглённая полоса справа.',
+    'Блеск редкости на арте. С Prism полоса покрывается фольгой, у Legend по ней бежит свет.',
+    'Голова выходит за верх рамки, туловище уходит в тёмную панель, за головой свечение.',
+    'Огромный вертикальный ник в полосе, целиком: кегль подбирается под длину. Настоящее имя с флагом — в центре, под фото.',
+    'Рейтинг наверху полосы — в правом верхнем углу, без кружка. Под ним три героя: матчи и винрейт. Номер карты и сезон — в арте слева сверху.',
+    'Тёмная панель внизу арта: имя с флагом, позиция и роль крупно. Статы строкой между тонкими линиями-разделителями, ниже команда — крупный логотип и название, без плашки.',
+    'Свой оборот в той же раскладке: полоса справа с рейтингом, слева статы, герои, форма и кнопка «Страница игрока».',
+  ],
+  оборот: (п, r, h) => h.оборот(п),
+  лицо: (п, r, h) => `
+<div class="a6__face">
+  <div class="a6__plate" data-l="1"></div>
+  <div class="a6__body" data-l="3"></div>
+  <div class="a6__art" data-l="2">
+    <i class="a6__stripes"></i>
+    ${h.маска(п, 'a6__logo')}
+    <i class="a6__halo" data-l="5"></i>
+    ${h.фото(п)}
+    <div class="a6__panel" data-l="8"></div>
+    ${h.блеск(r)}
+  </div>
+  <div class="a6__rail" data-l="3">
+    <i class="a6__foil" data-l="4" data-deco="2"></i>
+    <i class="a6__run" data-l="4" data-deco="3"></i>
+  </div>
+  ${h.фото(п, 'a6__pop')}
+  <div class="a6__serial" data-l="7"><b>${h.серия(п)}</b><small>${h.СЕЗОН}</small></div>
+  <div class="a6__ovr" data-l="7"><b>${п.рейтинг}</b></div>
+  <div class="a6__heroes" data-l="7">${п.герои.map((г) => `<div>${h.герой(г)}<small>${г[2]} М<br><i>${г[3]}%</i></small></div>`).join('')}</div>
+  <div class="a6__id" data-l="6"><b class="a6__nick" style="font-size: ${Math.min(2.8, 9.2 / (п.ник.length * .6)).toFixed(2)}em">${п.ник}</b></div>
+  ${п.имя ? `<div class="a6__info a6__name" data-l="6"><span>${h.флаг(п)}${п.имя}</span></div>` : ''}
+  <div class="a6__info a6__role" data-l="8"><span><b>Pos ${п.pos}</b> · ${h.РОЛИ[п.pos]}</span></div>
+  <div class="a6__info a6__stats" data-l="8">${h.статы(п).map((с) => `<span><b data-v="${с.ур}">${с.v}</b><small>${с.к}</small></span>`).join('')}</div>
+  <div class="a6__info a6__team" data-l="8"><span>${h.лого(п)}<b>${h.команда(п)}</b></span></div>
+</div>`,
+})
+</script>
+</body></html>

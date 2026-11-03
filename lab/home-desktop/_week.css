@@ -1,0 +1,73 @@
+/* Лаба «Главная — десктоп»: общее для вариантов «Неделя» (v3, v5, v6) — постер матча, полоса 7 дней, фильтр игр.
+   Вынесено из v3, чтобы v5 и v6 брали тот же постер. Светлым и серым командам (Spirit, G2, NRG, EDG) постер красим
+   вторым цветом команды — иначе карточка выходит серой. */
+:root { --h-poster-ts: #5a6cf0; --h-poster-g2: #d8262f; --h-poster-nrg: #ff6a1a; --h-poster-edg: #3a5fd0; }
+.w-head { display: flex; align-items: flex-end; gap: 20px; }
+.w-head h1 { font: 700 48px/1 var(--font-c); letter-spacing: -.02em; }
+.w-head p { margin-bottom: 4px; color: var(--c-muted); font-size: 14px; }
+.w-head p b { color: var(--c-text); font-weight: 600; }
+.w-games { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.w-games button { display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 12px; border: 0; border-radius: 8px; background: var(--c-ui-panel); color: var(--c-muted); font-size: 13px; font-weight: 600; }
+.w-games button::before { content: ''; width: 8px; height: 8px; border-radius: 2px; background: var(--gc, var(--c-ui-dim)); }
+.w-games button[data-g='all']::before { display: none; }
+.w-games button small { color: var(--c-ui-dim); font: 600 12px var(--font-c); }
+.w-games button[aria-pressed='true'] { background: var(--c-ui-hover); color: var(--c-text); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gc, var(--c-accent)) 70%, transparent); }
+.w-cnt { display: inline-grid; place-items: center; min-width: 26px; height: 26px; margin-left: 6px; padding: 0 6px; border-radius: 13px; background: var(--c-coin); color: var(--c-card-dark-text); font: 700 13px var(--font-c); }
+
+/* Карусель постеров */
+.w-car { position: relative; }
+.w-day { margin-bottom: 10px; font-size: 15px; font-weight: 600; color: var(--c-muted); }
+.w-vp { overflow: hidden; margin: 0 -48px; padding: 6px 48px 14px; }
+.w-track { display: flex; gap: 16px; transition: transform .45s cubic-bezier(.2, .8, .2, 1); }
+.w-p { position: relative; isolation: isolate; flex: none; display: grid; align-content: space-between; width: 424px; height: 470px; padding: 16px 18px 18px; overflow: hidden; border-radius: 16px;
+  background:
+    linear-gradient(180deg, transparent 40%, color-mix(in srgb, var(--c-black) 88%, transparent) 88%),
+    linear-gradient(125deg, color-mix(in srgb, var(--ca) 70%, var(--c-ui-bg)) 0 48%, color-mix(in srgb, var(--cb) 70%, var(--c-ui-bg)) 48% 100%);
+  box-shadow: 0 24px 50px -26px var(--c-black); transition: transform .25s, box-shadow .25s; }
+.w-p:hover { transform: translateY(-4px); box-shadow: 0 0 0 2px color-mix(in srgb, var(--c-white) 70%, transparent), 0 30px 60px -26px var(--c-black); }
+/* Свет и полосы — как у постеров Compete, но без декора поверх: только свет по диагонали */
+.w-p::before { content: ''; position: absolute; inset: 0; z-index: -1;
+  background: repeating-linear-gradient(125deg, transparent 0 34px, color-mix(in srgb, var(--c-white) 5%, transparent) 34px 36px),
+    radial-gradient(60% 50% at 50% 38%, color-mix(in srgb, var(--c-white) 22%, transparent), transparent 70%); mix-blend-mode: overlay; }
+.w-p::after { content: ''; position: absolute; inset: 0; z-index: -1; opacity: .2; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.w-p__top { display: flex; align-items: center; gap: 8px; }
+.w-p__top .h-gt { background: color-mix(in srgb, var(--c-black) 55%, transparent); color: var(--c-text); }
+.w-p__top span.w-tour { font-size: 12.5px; font-weight: 600; color: color-mix(in srgb, var(--c-white) 85%, transparent); }
+.w-st { margin-left: auto; padding: 5px 10px; border-radius: 6px; background: color-mix(in srgb, var(--c-black) 55%, transparent); font-size: 12.5px; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.w-st.is-live { background: var(--c-live); color: var(--c-white); }
+.w-st.is-done { background: color-mix(in srgb, var(--c-white) 88%, transparent); color: var(--c-card-dark-text); }
+.w-logos { position: absolute; z-index: -1; inset: 70px 0 auto; display: flex; justify-content: center; align-items: center; gap: 0; }
+.w-logos .h-lg { filter: drop-shadow(0 20px 26px color-mix(in srgb, var(--c-black) 60%, transparent)); }
+.w-logos .h-lg:first-child { transform: translateX(18px) rotate(-6deg); } .w-logos .h-lg:last-child { transform: translateX(-18px) rotate(6deg); }
+.w-score { position: absolute; left: 50%; top: 168px; transform: translateX(-50%); padding: 6px 16px; border-radius: 10px; background: color-mix(in srgb, var(--c-black) 72%, transparent); backdrop-filter: blur(6px); font: 700 40px/1 var(--font-c); }
+.w-lock { position: absolute; left: 50%; top: 150px; transform: translateX(-50%); display: grid; justify-items: center; gap: 8px; width: 82%; text-align: center; }
+.w-lock i { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: color-mix(in srgb, var(--c-black) 70%, transparent); font-size: 22px; font-style: normal; }
+.w-lock span { padding: 6px 12px; border-radius: 16px; background: color-mix(in srgb, var(--c-black) 70%, transparent); font-size: 13px; font-weight: 600; }
+.w-p.is-off .w-logos { filter: grayscale(1) brightness(.6); }
+.w-p__bot { display: grid; gap: 6px; }
+.w-win { color: color-mix(in srgb, var(--c-white) 82%, transparent); font: 600 17px var(--font-c); font-variant-numeric: tabular-nums; }
+.w-p h3 { font: 700 30px/1.02 var(--font-c); letter-spacing: -.01em; }
+.w-p h3 span { color: color-mix(in srgb, var(--c-white) 55%, transparent); }
+.w-p__meta { display: flex; align-items: center; gap: 8px; font-size: 13px; color: color-mix(in srgb, var(--c-white) 75%, transparent); }
+.w-p__meta b { padding: 2px 8px; border-radius: 5px; background: color-mix(in srgb, var(--c-white) 92%, transparent); color: var(--c-card-dark-text); font-size: 12px; font-weight: 700; }
+.w-p__mine { color: var(--c-coin); font-weight: 600; }
+.w-arr { position: absolute; z-index: 3; top: 210px; display: grid; place-items: center; width: 52px; height: 52px; border: 0; border-radius: 50%; background: var(--c-accent); color: var(--c-white) !important; font-size: 24px !important; box-shadow: 0 10px 30px -8px var(--c-black); }
+.w-arr--l { left: -24px; } .w-arr--r { right: -24px; }
+.w-arr[disabled] { opacity: 0; pointer-events: none; }
+.w-empty { display: grid; place-items: center; height: 470px; border-radius: 16px; background: var(--c-ui-panel); color: var(--c-caption); }
+
+/* Полоса 7 дней */
+.w-week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)) auto; gap: 10px; align-items: end; }
+.w-d { display: grid; gap: 6px; padding: 0; border: 0; background: none; text-align: left; }
+.w-d > span { color: var(--c-muted); font-size: 13px; font-weight: 600; padding-left: 2px; }
+.w-d > div { display: grid; gap: 4px; height: 84px; padding: 12px 14px; border-radius: 10px; background: var(--c-ui-panel); transition: background .15s; }
+.w-d:hover > div { background: var(--c-ui-item); }
+.w-d b { font: 700 26px/1 var(--font-c); }
+.w-d small { display: flex; align-items: center; gap: 6px; color: var(--c-muted); font-size: 13px; }
+.w-d small i { display: flex; gap: 2px; margin-left: auto; } .w-d small i u { width: 4px; height: 12px; border-radius: 1px; background: var(--gc); text-decoration: none; }
+.w-d.is-past > div { background: color-mix(in srgb, var(--c-ui-panel) 55%, transparent); } .w-d.is-past b { color: var(--c-muted); }
+.w-d[aria-pressed='true'] > div { background: color-mix(in srgb, var(--c-coin) 8%, var(--c-ui-panel)); box-shadow: inset 0 0 0 2px var(--c-coin); }
+.w-d__top { display: flex; align-items: center; justify-content: space-between; }
+.w-d .is-live { color: var(--c-live); font-size: 12.5px; font-weight: 600; font-style: normal; }
+.w-act { display: grid; gap: 8px; }

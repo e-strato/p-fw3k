@@ -1,0 +1,45 @@
+/* Набор 25 · Их сайт (дирижёр 05.10) — раскладка набора 2 «Продукт», цвета и приёмы — с единственного скриншота их текущей страницы
+   (лента матчей: вкладки Live · Schedule · Finished). Пипеткой со скрина: фон #0e0e10, карточки #1b1c21 без рамок, плашки шапки #151419,
+   текст #eaebef / #babbbf, подписи #6e7275, акцент — фиолетовый текст вкладки #8c67eb, live — красная точка #fe445f, форма — зелёные точки #1fc88d,
+   крупное время справа — серое узкое (#6c6d71). Шрифт — Inter; цифры времени и счёта — Roboto Condensed, как у них. Капса нет (у них подписи колонок капсом — не берём). */
+body.t-trk {
+  --s-page: #0e0e10; --s-bg: #0e0e10; --s-panel: #1b1c21; --s-panel-2: #232429; --s-line: #26272c; --s-line-2: #212227;
+  --s-text: #eaebef; --s-muted: #76777c; --s-accent: #8c67eb; --s-accent-soft: #8c67eb1f; --s-on-accent: #ffffff;
+  --s-live: #fe445f; --s-coin: #e9c861; --s-win: #1fc88d; --s-lose: #fe445f; --s-track: #26272c; --s-shadow: #000000;
+  --s-team-a: var(--c-team-ts); --s-team-b: var(--c-team-tun); --s-hd-bg: #0e0e10; --s-hd-h: 56px;
+  --s-medal: linear-gradient(145deg, #c9b8f7, #8c67eb 55%, #3a2470); --s-medal-ink: #12091f;
+  --s-gold: #e9c861; --s-silver: #c9d2de; --s-bronze: #d08a55;
+  --s-font: 'Inter', system-ui, sans-serif; --s-font-h: 'Inter', system-ui, sans-serif; --s-font-num: 'Inter', system-ui, sans-serif; --s-fs: 14px;
+  --s-font-c: 'Roboto Condensed', 'Inter', sans-serif; /* узкие цифры времени и счёта */
+  --s-r: 6px; --s-r-s: 5px; --s-r-btn: 6px; --s-r-pill: 6px; --s-pad: 16px; --s-gap: 12px; --s-row-pad: 10px; --s-bar-h: 4px;
+  --s-h3: 15px; --s-h3-w: 600; --s-h1: 34px; --s-h1-w: 700; --s-track-h1: -.01em; --s-nick-w: 800; --s-num-w: 700;
+  --s-panel-edge: none; --s-btn-glow: none;
+  --s-chip: #151419; --s-band: #18191d; --s-dim: #737478; --s-text-2: #babbbf; --s-clock: #6c6d71; --s-accent-deep: #3a2470; /* свои: плашки шапки, полоса турнира, тусклый текст, серое время */
+}
+.t-trk .ap { font-feature-settings: 'tnum' 1; }
+/* Шапка: разделы — плашкой, как их вкладки Live / Schedule / Finished; текущий — фиолетовым текстом */
+.t-trk .a-nav { padding: 3px; border-radius: 8px; background: var(--s-chip); }
+.t-trk .a-nav a { padding: 6px 12px; border-radius: 6px; color: var(--s-dim); font-size: 13px; }
+.t-trk .a-nav a[aria-current] { background: var(--s-panel); color: var(--s-accent); }
+.t-trk .a-seg, .t-trk .a-coins { background: var(--s-chip); }
+.t-trk .a-coins { border-radius: 6px; color: var(--s-text-2); }
+.t-trk .a-brand__mark { border-radius: 50%; background: radial-gradient(circle at 50% 40%, var(--s-accent), var(--s-accent-deep)); }
+/* Чипы и выбор — фиолетовым текстом на тёмной плашке, без белой заливки */
+.t-trk .a-chips button { box-shadow: none; background: var(--s-chip); border-radius: 6px; color: var(--s-dim); }
+.t-trk .a-chips button[aria-pressed='true'] { background: var(--s-panel-2); color: var(--s-accent); }
+.t-trk .a-vote button[aria-pressed='true'], .t-trk .a-opt.is-on, .t-trk .a-teamt.is-on, .t-trk .a-qq__opts .is-on { background: var(--s-accent-soft); box-shadow: inset 0 0 0 1px var(--s-accent); }
+/* Панели — плоские карточки, шапка турнира — тёмной полосой, подписи приглушены */
+.t-trk .a-ph h3 { color: var(--s-text-2); }
+.t-trk .a-tour { background: var(--s-band); margin: 6px -16px 0; padding: 8px 16px; border-bottom: 0; color: var(--s-muted); }
+.t-trk .a-tour b { color: var(--s-text-2); font-weight: 600; }
+.t-trk .a-mr { border-bottom-color: var(--s-line-2); }
+.t-trk .a-mr__t b { color: var(--s-text-2); font-weight: 500; }
+/* Время матча и счёт — крупно и узко, серым; live — красным */
+.t-trk .a-mr__st { font: 700 18px var(--s-font-c); color: var(--s-clock); }
+.t-trk .a-mr--live .a-mr__st { font-size: 14px; color: var(--s-live); }
+.t-trk .a-mr__t em, .t-trk .a-feat__score b, .t-trk .a-feat__clock, .t-trk .m-sb__r em { font-family: var(--s-font-c); }
+.t-trk .a-feat__score b { font-size: 54px; font-weight: 700; }
+.t-trk .a-feat { background: var(--s-panel); }
+.t-trk .a-plh { background: radial-gradient(60% 140% at 0% 0%, color-mix(in srgb, var(--c-team-pv) 16%, transparent), transparent 60%), var(--s-panel); }
+.t-trk .a-ob__main { padding: 28px 32px; }
+.t-trk .a-dot { box-shadow: none; }

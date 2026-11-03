@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,500&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_игрок.css" />
+<style>
+/* v2 · ЖЗЛ. Страница — история игрока главами, как лонгрид: обложка, слева годы (активная глава подсвечена фоном), справа главы
+   с цитатами, цифрами, трофеями и видео внутри. Статистика и соцсети — в конце. Переход: карточка переворачивается, и её оборот
+   раскрывается в обложку на весь экран. */
+.z-serif { font-family: 'Playfair Display', Georgia, serif; }
+.z-cover { position: relative; overflow: hidden; margin-top: 8px; border-radius: 24px; min-height: 620px;
+  background: radial-gradient(90% 120% at 80% 30%, color-mix(in srgb, var(--team) 34%, var(--c-ui-panel)), var(--c-ui-bg) 70%);
+  clip-path: inset(0 round 24px); }
+.z-cover.is-anim { transition: clip-path .9s cubic-bezier(.7, 0, .2, 1); }
+.z-cover__ph { position: absolute; right: 4%; bottom: 0; height: 96%; object-fit: contain; filter: drop-shadow(0 40px 60px color-mix(in srgb, var(--c-black) 70%, transparent)); }
+.z-cover__txt { position: relative; max-width: 720px; padding: 72px 64px; }
+.z-cover h1 { margin: 0; font-size: clamp(72px, 9vw, 150px); line-height: .88; font-weight: 900; letter-spacing: -.03em; }
+.z-cover__sub { margin: 24px 0 0; font-size: 30px; line-height: 1.25; color: var(--c-text); }
+.z-cover__sub em { color: var(--team); font-style: italic; }
+.z-cover__meta { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 36px; color: var(--c-muted); }
+.z-cover__meta b { color: var(--c-text); }
+.z-cover__go { margin-top: 36px; }
+
+.z-body { display: grid; grid-template-columns: 220px minmax(0, 780px) minmax(0, 1fr); gap: 56px; margin-top: 64px; }
+.z-nav { position: sticky; top: 24px; align-self: start; display: grid; gap: 4px; }
+.z-nav a { display: grid; gap: 2px; padding: 10px 14px; border-radius: 12px; color: var(--c-caption); transition: background .2s, color .2s; }
+.z-nav a b { font-size: 15px; font-weight: 600; } .z-nav a small { font-size: var(--fs-app-sm); }
+.z-nav a:hover { background: var(--c-ui-panel); }
+.z-nav a.is-on { background: var(--c-ui-panel); color: var(--c-text); }
+
+.z-ch { padding-bottom: 72px; }
+.z-ch__y { font-size: var(--fs-small); color: var(--c-caption); }
+.z-ch h2 { margin: 8px 0 20px; font-size: 48px; line-height: 1.05; font-weight: 900; letter-spacing: -.02em; }
+.z-ch p { margin: 0 0 18px; font-size: 18px; line-height: 1.65; color: color-mix(in srgb, var(--c-text) 86%, var(--c-muted)); }
+.z-q { margin: 32px 0; font-size: 28px; line-height: 1.35; font-style: italic; font-weight: 500; }
+.z-q small { display: block; margin-top: 12px; font: 500 var(--fs-small) var(--font); color: var(--c-caption); font-style: normal; }
+.z-nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 28px 0; }
+.z-num { padding: 20px; border-radius: 16px; background: var(--c-ui-panel); }
+.z-num b { display: block; font-size: 34px; font-weight: 900; letter-spacing: -.03em; line-height: 1.05; }
+.z-num small { color: var(--c-caption); font-size: var(--fs-app-sm); }
+.z-num--team b { color: var(--team); }
+.z-cups { display: grid; gap: 8px; margin: 28px 0; }
+.z-cup { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 14px; background: var(--c-ui-panel); }
+.z-cup i { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; font-style: normal; font-weight: 900; font-size: 20px; background: var(--c-ui-item); }
+.z-cup--1 i { color: var(--c-coin); background: color-mix(in srgb, var(--c-coin) 18%, var(--c-ui-item)); } .z-cup--2 i { color: var(--c-tier-silver); } .z-cup--3 i { color: var(--c-tier-bronze); }
+.z-cup span { display: grid; } .z-cup small { color: var(--c-caption); font-size: var(--fs-app-sm); } .z-cup em { font-style: normal; font-weight: 700; }
+.z-vids { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin: 28px 0; }
+.z-vids--one { grid-template-columns: 1fr; } .z-vids--one .pl-vid b { font-size: 18px; }
+.z-tg { display: flex; gap: 12px; margin: 28px 0; }
+.z-tg span { padding: 14px 18px; border-radius: 18px 18px 18px 4px; background: #2b5278; font-size: 17px; }
+.z-tg small { display: block; margin-top: 4px; font-size: var(--fs-app-xs); color: color-mix(in srgb, var(--c-white) 60%, transparent); }
+
+.z-side { position: sticky; top: 24px; align-self: start; display: grid; gap: 12px; }
+.z-side .player-card { margin: 0 auto; }
+.z-side__row { display: flex; justify-content: space-between; padding: 12px 16px; border-radius: 12px; background: var(--c-ui-panel); font-size: var(--fs-small); color: var(--c-muted); }
+.z-side__row b { color: var(--c-text); }
+
+.z-end { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding-bottom: 80px; }
+.z-end .pl-soc + .pl-soc { margin-top: 10px; }
+
+/* Переход: карта по центру → переворот → оборот раскрывается в обложку */
+.z-body, .z-end, .ui-header { transition: opacity .6s; }
+body.z-hold .z-body, body.z-hold .z-end, body.z-hold .ui-header { opacity: 0; }
+.z-tr { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: color-mix(in srgb, var(--c-ui-bg) 94%, transparent); backdrop-filter: blur(10px); transition: opacity .5s; }
+.z-tr.is-go { opacity: 0; pointer-events: none; }
+.z-tr__card { perspective: 1400px; }
+.z-tr__flip { position: relative; transform-style: preserve-3d; transition: transform .8s cubic-bezier(.5, 0, .2, 1); }
+.z-tr__flip.is-flip { transform: rotateY(180deg); }
+.z-tr__back { position: absolute; inset: 0; display: grid; align-content: end; gap: 10px; padding: 28px; border-radius: 20px; backface-visibility: hidden; transform: rotateY(180deg);
+  background: radial-gradient(90% 120% at 80% 30%, color-mix(in srgb, var(--team) 34%, var(--c-ui-panel)), var(--c-ui-bg) 70%); }
+.z-tr__back b { font-size: 42px; font-weight: 900; line-height: 1; } .z-tr__back p { margin: 0; color: var(--c-muted); }
+.z-tr__front { backface-visibility: hidden; }
+.z-tr p.z-tr__hint { position: absolute; bottom: 5vh; left: 0; right: 0; margin: 0; text-align: center; color: var(--c-caption); font-size: var(--fs-small); }
+
+@media (max-width: 1200px) { .z-body { grid-template-columns: 180px minmax(0, 1fr); } .z-side { display: none; } }
+@media (max-width: 800px) {
+  .z-body { grid-template-columns: 1fr; } .z-nav { position: static; grid-auto-flow: column; overflow-x: auto; }
+  .z-cover__txt { padding: 40px 24px 320px; } .z-cover__ph { height: 60%; } .z-ch h2 { font-size: 36px; } .z-end { grid-template-columns: 1fr; }
+}
+</style></head>
+<body>
+<div class="pl" data-pl></div>
+<button class="btn btn--quiet btn--sm pl-replay" type="button" data-replay>Повторить переход</button>
+<script src="_игрок.js"></script>
+<script>
+(() => {
+  const П = ИГРОК, maxM = Math.max(...ГЕРОИ.map((h) => h.м))
+  const q = (t, кто = '9Class') => `<blockquote class="z-q z-serif">${t}<small>— ${кто}</small></blockquote>`
+  const nums = (arr) => `<div class="z-nums">${arr.map(([v, t, c]) => `<div class="z-num${c ? ' z-num--team' : ''}"><b>${v}</b><small>${t}</small></div>`).join('')}</div>`
+  const cups = (arr) => `<div class="z-cups">${arr.map((t) => `<div class="z-cup z-cup--${t.место}"><i>${t.место}</i><span><b>${t.турнир}</b><small>Финал ${t.финал} · ${t.дата}</small></span><em>${t.приз}</em></div>`).join('')}</div>`
+  const vids = (ids, one) => `<div class="z-vids${one ? ' z-vids--one' : ''}">${ids.map((id) => видеоПлитка(ВИДЕО.find((v) => v.id === id))).join('')}</div>`
+  const tr = (i) => ТРОФЕИ[i]
+
+  const ГЛАВЫ = [
+    { id: 'z1', годы: '2003 — 2022', имя: 'Девятый класс', html: `
+      <p>Эдгар Налтакян родился 19 июля 2003 года в России. В Dota 2 играл со школы и к девятому классу уже держал высокий рейтинг — отсюда и ник.</p>
+      ${q(ЦИТАТЫ.ник)}
+      <p>Академии звали, но он выбрал учёбу. Паблики остались: больше всего игр — на Pudge. Позже Puppey назовёт его лучшим пуджем в мире.</p>
+      ${nums([['955', 'игр на Pudge в пабликах'], ['2020', 'первый турнир: Moscow Esports, CSB']])}` },
+    { id: 'z2', годы: '2022 — 2023', имя: 'Ушёл из университета', html: `
+      <p>В декабре 2022-го — первая команда, Winter Bear, и квалификации DPC. С января 2023-го — Team Sexy: второй дивизион Восточной Европы, 3-е и 2-е место, две победы на European Pro League.</p>
+      ${q(ЦИТАТЫ.универ)}
+      <p>Команда дошла до квалификации The International 2023, но остановилась на 9–12 месте. Цель на следующий год он сформулировал скромно:</p>
+      ${q(ЦИТАТЫ.цель2023)}
+      ${nums([['12 000', 'MMR · 30.09.2023', 1], ['2', 'титула European Pro League']])}` },
+    { id: 'z3', годы: '2024', имя: 'Tundra', html: `
+      <p>В январе 2024-го — Tundra Esports и первые турниры высшего уровня: 3-е место на ESL One Birmingham, 4-е на Riyadh Masters.</p>
+      <p>Квалификацию The International 2024 команда проиграла, а осенью в Tundra вернулся Saksa. The International 2024 9Class провёл за столом аналитика — по приглашению Paragon.</p>
+      ${vids(['8QM6rCySGME'], 1)}
+      ${nums([['13 000', 'MMR · 24.02.2024', 1], ['14 000', 'MMR · 07.10.2024', 1], ['3-е', 'ESL One Birmingham']])}` },
+    { id: 'z4', годы: '2024 — 2025', имя: 'PARIVISION', html: `
+      <p>Собрать новую команду предложил No[o]ne. С 18 октября 2024-го 9Class в PARIVISION — и уже в декабре берёт первый титул высшего уровня.</p>
+      ${cups([tr(6), tr(5), tr(4)])}
+      <p>В 2025-м — ещё два титула, 3-е место на Esports World Cup и на The International. В мае он берёт 16 000 MMR — редкость для саппорта.</p>
+      ${nums([['16 000', 'MMR · 21.05.2025', 1], ['3-е', 'The International 2025']])}` },
+    { id: 'z5', годы: 'июль 2026', имя: 'Чемпион мира в день рождения', html: `
+      <p>Весной PARIVISION выигрывает DreamLeague S29, а 19 июля — Esports World Cup в Париже: финал 3:1 с BetBoom. В этот день ему исполнилось 23.</p>
+      ${q(ЦИТАТЫ.др)}
+      ${cups([tr(1), tr(2)])}
+      <p>Позже он рассказал, в чём секрет: всю жизнь играл на 2000 dpi, во время плей-офф поставил 1400 — и выиграл турнир.</p>
+      ${vids(['WEj83vr1Plo'], 1)}` },
+    { id: 'z6', годы: 'август 2026', имя: 'Финал The International', html: `
+      <p>На The International в Шанхае команда выступает как TEAM VISION: Valve не пускает на турнир спонсоров-букмекеров. Верхняя сетка — BoomBoys, Team Spirit, Team Yandex, всё 2:1.</p>
+      <div class="z-tg"><span>я в грандфинале<small>Telegram · 22.08</small></span></div>
+      <p>Гранд-финал с Team Spirit длится пять карт. Во второй — Rubick 0/13/38. В пятой Spirit забирают третий Аегис.</p>
+      ${vids(['q3bzGpyETVE', 'o3W28o7jLYo', 'y7wWO2FMlUo'])}
+      <div class="z-tg"><span>nt<small>Telegram · 23.08</small></span></div>
+      ${nums([['2:3', 'гранд-финал с Team Spirit'], ['16 из 24', 'игр выиграно на турнире', 1], ['$507 800', 'приз команды']])}` },
+    { id: 'z7', годы: 'сейчас', имя: 'Новая эра', html: `
+      ${q(ЦИТАТЫ.эра)}
+      <p>26 сентября он стал первым в таблице лидеров. Сейчас PARIVISION играет BLAST SLAM VIII: 29.09 — 2:0 над LVLUP, 30.09 — матч с LGD за первое место в группе.</p>
+      ${nums([['1-й', 'ранг в таблице лидеров · 26.09', 1], ['2:0', 'LVLUP · BLAST SLAM VIII']])}` },
+  ]
+
+  document.querySelector('[data-pl]').innerHTML = `${шапка()}
+  <main class="pl-in">
+    <section class="z-cover" data-cover>
+      <img class="z-cover__ph" src="${П.фото}" alt="${П.ник}" />
+      <div class="z-cover__txt">
+        <h1>${П.ник}</h1>
+        <p class="z-cover__sub z-serif">Путь саппорта: от <em>девятого класса</em> до финала The International</p>
+        <div class="z-cover__meta"><span><b>${П.имя}</b></span><span>${П.страна}, ${П.возраст} года</span><span>${П.команда.имя} · позиция ${П.позиция}</span><span>7 глав · 6 минут чтения</span></div>
+        <a class="btn btn--sm z-cover__go" href="#z1">Читать с начала</a>
+      </div>
+    </section>
+
+    <div class="z-body">
+      <nav class="z-nav">${ГЛАВЫ.map((g) => `<a href="#${g.id}"><b>${g.имя}</b><small>${g.годы}</small></a>`).join('')}</nav>
+      <article>${ГЛАВЫ.map((g, i) => `<section class="z-ch" id="${g.id}"><span class="z-ch__y">Глава ${i + 1} · ${g.годы}</span><h2 class="z-serif">${g.имя}</h2>${g.html}</section>`).join('')}</article>
+      <aside class="z-side">${картаИгрока(280)}
+        ${П.цифры.map((c) => `<div class="z-side__row"><span>${c.t}</span><b>${c.v}</b></div>`).join('')}
+        <button class="btn btn--sm" type="button">Следить</button>
+      </aside>
+    </div>
+
+    <section class="z-end">
+      <div class="pl-panel"><h2 class="pl-h2">Герои <small>профматчи с 2022</small></h2>${ГЕРОИ.map((h) => геройСтрока(h, maxM)).join('')}</div>
+      <div class="pl-panel"><h2 class="pl-h2">Следить за ним</h2>${П.соцсети.map(соцПлитка).join('')}</div>
+    </section>
+  </main>`
+
+  подключитьНаклон()
+
+  // Активная глава в навигации
+  const ссылки = [...document.querySelectorAll('.z-nav a')]
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) ссылки.forEach((a) => a.classList.toggle('is-on', a.hash === '#' + e.target.id)) }), { rootMargin: '-40% 0px -55% 0px' })
+  document.querySelectorAll('.z-ch').forEach((c) => io.observe(c))
+
+  // Переход: карта → переворот → оборот раскрывается в обложку
+  const обложка = document.querySelector('[data-cover]')
+  function run() {
+    scrollTo(0, 0)
+    const w = Math.min(360, innerHeight * 0.7 * 5 / 7)
+    const экран = document.createElement('div'); экран.className = 'z-tr'
+    экран.innerHTML = `<div class="z-tr__card"><div class="z-tr__flip" style="width:${w}px"><div class="z-tr__front">${картаИгрока(w)}</div><div class="z-tr__back"><b>${П.ник}</b><p>7 глав: от девятого класса до финала The International</p></div></div></div><p class="z-tr__hint">Клик по карточке в коллекции…</p>`
+    document.body.append(экран); document.body.classList.add('z-hold')
+    const flip = экран.querySelector('.z-tr__flip')
+    setTimeout(() => flip.classList.add('is-flip'), 700)
+    setTimeout(() => {
+      const r = flip.getBoundingClientRect(), c = обложка.getBoundingClientRect()
+      обложка.classList.remove('is-anim')
+      обложка.style.clipPath = `inset(${r.top - c.top}px ${c.right - r.right}px ${c.bottom - r.bottom}px ${r.left - c.left}px round 20px)`
+      экран.classList.add('is-go')
+      requestAnimationFrame(() => requestAnimationFrame(() => { обложка.classList.add('is-anim'); обложка.style.clipPath = '' }))
+      setTimeout(() => { экран.remove(); document.body.classList.remove('z-hold') }, 1000)
+    }, 1600)
+  }
+  document.querySelector('[data-replay]').addEventListener('click', run)
+  run()
+})()
+</script>
+</body></html>

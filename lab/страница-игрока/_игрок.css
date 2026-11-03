@@ -1,0 +1,66 @@
+/* Лаба «Страница игрока» — общее для трёх вариантов: фон продукта, заголовки блоков, видео, соцсети, строки матчей и героев, переход.
+   Цвета — токены сайта. Без капса, без боковых полосок, без надзаголовков. */
+:root { --team: var(--c-team-pv); --pl-max: 1480px; }
+body { background: var(--c-ui-bg); color: var(--c-text); font-family: var(--font); }
+.pl { min-height: 100vh; font-variant-numeric: tabular-nums; }
+.pl-in { max-width: var(--pl-max); margin: 0 auto; padding: 0 var(--gutter); }
+.pl a { color: inherit; text-decoration: none; }
+.pl-sec { margin-top: 56px; }
+.pl-h2 { display: flex; align-items: baseline; gap: 12px; margin: 0 0 20px; font-size: 26px; font-weight: 800; letter-spacing: -.02em; }
+.pl-h2 small { font-size: var(--fs-small); font-weight: 500; color: var(--c-caption); letter-spacing: 0; }
+.pl-panel { background: var(--c-ui-panel); border-radius: var(--radius); padding: 24px; }
+
+/* Логотип команды */
+.pl-logo { width: 40px; height: 40px; flex: none; object-fit: contain; }
+.pl-logo--mono { display: grid; place-items: center; border-radius: 10px; background: var(--c-ui-item); font-size: 13px; font-weight: 800; color: var(--c-muted); }
+
+/* Видео */
+.pl-vid { display: grid; gap: 8px; min-width: 0; }
+.pl-vid__img { position: relative; display: block; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: var(--c-ui-item); }
+.pl-vid__img img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+.pl-vid:hover .pl-vid__img img { transform: scale(1.04); }
+.pl-vid__play { position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%;
+  background: color-mix(in srgb, var(--c-black) 55%, transparent); backdrop-filter: blur(6px); }
+.pl-vid__play::after { content: ''; position: absolute; left: 22px; top: 17px; border: 11px solid transparent; border-left: 16px solid var(--c-white); border-right: 0; }
+.pl-vid b { font-size: 15px; font-weight: 600; line-height: 1.3; }
+.pl-vid small { font-size: var(--fs-app-sm); color: var(--c-caption); }
+
+/* Соцсети */
+.pl-soc { display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 14px; background: var(--c-ui-item); transition: background .2s; }
+.pl-soc:hover { background: var(--c-ui-hover); }
+.pl-soc__ic { display: grid; place-items: center; width: 44px; height: 44px; flex: none; border-radius: 12px; font-style: normal; font-size: 20px; font-weight: 800; background: var(--c-ui-hover); }
+.pl-soc--tg .pl-soc__ic { background: #2aabee; } .pl-soc--tw .pl-soc__ic { background: #9146ff; }
+.pl-soc--ig .pl-soc__ic { background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7); } .pl-soc--vk .pl-soc__ic { background: #0077ff; }
+.pl-soc span { display: grid; min-width: 0; } .pl-soc span b { font-weight: 700; } .pl-soc small { font-size: var(--fs-app-sm); color: var(--c-caption); }
+.pl-soc em { margin-left: auto; display: grid; justify-items: end; font-style: normal; } .pl-soc em b { font-size: 18px; font-weight: 800; }
+
+/* Строка матча */
+.pl-m { display: grid; grid-template-columns: 40px minmax(0, 1fr) 90px 80px 96px 44px; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; }
+.pl-m:nth-child(odd) { background: color-mix(in srgb, var(--c-ui-item) 55%, transparent); }
+.pl-m img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+.pl-m span { display: grid; min-width: 0; } .pl-m span b { font-weight: 600; } .pl-m small { font-size: var(--fs-app-sm); color: var(--c-caption); }
+.pl-m__kda { font-weight: 700; } .pl-m__gpm { display: block !important; color: var(--c-muted); }
+.pl-m__res { font-size: var(--fs-app-sm); font-weight: 700; color: var(--c-stat-low); } .pl-m.is-w .pl-m__res { color: var(--c-stat-high); }
+.pl-m__d { text-align: right; }
+
+/* Строка героя */
+.pl-h { display: grid; grid-template-columns: 44px minmax(0, 1.2fr) minmax(80px, 1fr) 96px 56px; align-items: center; gap: 14px; padding: 10px 0; }
+.pl-h + .pl-h { border-top: 1px solid var(--c-ui-line); }
+.pl-h img { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; }
+.pl-h span { display: grid; min-width: 0; } .pl-h span b { font-weight: 600; } .pl-h small { font-size: var(--fs-app-sm); color: var(--c-caption); }
+.pl-h__bar { height: 8px; border-radius: 99px; background: var(--c-ui-item); overflow: hidden; }
+.pl-h__bar i { display: block; height: 100%; width: var(--p); border-radius: inherit; background: var(--team); }
+.pl-h__n { display: block !important; text-align: right; font-weight: 700; }
+.pl-h__wr { display: block !important; text-align: right; font-weight: 800; color: var(--c-stat-mid); } .pl-h__wr.is-hi { color: var(--c-stat-high); }
+
+/* Переход «карточка → страница»: затемнение, которое тает, пока карта летит в слот */
+.pl-tr { position: fixed; inset: 0; z-index: 50; display: grid; align-items: end; justify-items: center; padding-bottom: 5vh;
+  background: color-mix(in srgb, var(--c-ui-bg) 92%, transparent); backdrop-filter: blur(10px); transition: opacity .7s .15s; }
+.pl-tr p { margin: 0; color: var(--c-caption); font-size: var(--fs-small); }
+.pl-tr.is-go { opacity: 0; pointer-events: none; }
+.pl-replay { position: fixed; right: 20px; bottom: 20px; z-index: 40; }
+
+@media (max-width: 900px) {
+  .pl-m { grid-template-columns: 36px minmax(0, 1fr) 80px 72px; } .pl-m__gpm, .pl-m__d { display: none !important; }
+  .pl-h { grid-template-columns: 40px minmax(0, 1fr) 72px 48px; } .pl-h__bar { display: none; }
+}

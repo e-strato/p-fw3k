@@ -1,0 +1,71 @@
+/* Лаба «Главная — первый экран, десктоп»: страница лабы, рамка 1440×900 и общие кусочки v1–v4.
+   Цвета — токенами сайта (/p-fw3k/site/styles.css, «Финал»). Своих токенов тут только два набора, которых на сайте нет:
+   цвета команд без логотипов (CS2, LoL, Valorant, MLBB) и оттенки 5 игр для сцены — объявлены ниже, как в лабе.
+   Без капса, без боковых полос-выделений: выделяем фоном, рамкой целиком, светом. */
+:root {
+  --h-team-vit: #f5d90a; --h-team-mgz: #d8333b; --h-team-navi: #ffe100; --h-team-mouz: #e3051b; --h-team-g2: #e8e8e8; --h-team-faze: #e43d30;
+  --h-team-t1: #e2012d; --h-team-gen: #aa8a00; --h-team-fnc: #ff5900; --h-team-blg: #3fb6ff; --h-team-sen: #ce0037; --h-team-prx: #e74b8a;
+  --h-team-loud: #5ff23b; --h-team-nrg: #f6f6f6; --h-team-edg: #2c2c2c; --h-team-onic: #ffd400; --h-team-evos: #1a6dff; --h-team-rrq: #f28c00;
+  --h-team-ae: #cf1f2f; --h-team-ive: #b9a77d;
+  --h-game-dota: #c8402b; --h-game-cs: #de9b35; --h-game-lol: #0ac8b9; --h-game-val: #ff4655; --h-game-mlbb: #4c7dff;
+}
+
+body { margin: 0; background: var(--c-ui-bg); color: var(--c-text); font-family: var(--font); }
+.h-page { padding: 40px 32px 80px; }
+.h-page > h1 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.01em; }
+.h-page > p { max-width: 100ch; margin: 8px 0 0; color: var(--c-muted); font-size: 15px; line-height: 1.5; }
+.h-cap { margin: 28px 0 12px; font-size: 13px; font-weight: 600; color: var(--c-caption); }
+.h-wrap { width: 100%; }
+
+/* Рамка: первый экран 1440 × 900 */
+.h-frame { position: relative; width: 1440px; min-height: 900px; overflow: hidden; border-radius: 14px; background: var(--c-ui-bg);
+  box-shadow: 0 0 0 1px var(--c-ui-line), 0 30px 80px -30px var(--c-black); --gutter: 48px; }
+.h-frame * { box-sizing: border-box; }
+.h-frame button { font: inherit; color: inherit; cursor: pointer; }
+.h-frame h1, .h-frame h2, .h-frame h3, .h-frame h4, .h-frame p { margin: 0; }
+.h-frame a { color: inherit; text-decoration: none; }
+.h-frame .ui-header__in { padding-top: 20px; }
+.h-frame .ui-header { position: relative; z-index: 2; }
+.h-body { max-width: 1480px; margin: 0 auto; padding: 24px var(--gutter) 40px; }
+
+/* Логотип: картинка или монограмма в цвете команды */
+.h-lg { width: var(--s); height: var(--s); flex: none; object-fit: contain; }
+.h-lg--mono { display: inline-grid; place-content: center; border-radius: calc(var(--s) * .24);
+  background: linear-gradient(150deg, color-mix(in srgb, var(--tc) 38%, var(--c-ui-item)), color-mix(in srgb, var(--tc) 12%, var(--c-ui-panel)));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tc) 40%, transparent);
+  color: color-mix(in srgb, var(--tc) 35%, var(--c-white)); font: 700 calc(var(--s) * .3)/1 var(--font-c); letter-spacing: -.01em; }
+
+/* Тег игры */
+.h-gt { display: inline-flex; align-items: center; gap: 6px; height: 20px; padding: 0 7px; border-radius: 5px; background: var(--c-ui-chip); color: var(--c-muted); font: 600 11.5px var(--font); white-space: nowrap; }
+.h-gt::before { content: ''; width: 6px; height: 6px; border-radius: 2px; background: var(--gc); }
+.h-gt--dota { --gc: var(--h-game-dota); } .h-gt--cs { --gc: var(--h-game-cs); } .h-gt--lol { --gc: var(--h-game-lol); } .h-gt--val { --gc: var(--h-game-val); } .h-gt--mlbb { --gc: var(--h-game-mlbb); }
+
+.h-dot { display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: var(--c-live); vertical-align: 1px; animation: h-pulse 1.6s ease-in-out infinite; }
+@keyframes h-pulse { 50% { opacity: .35; } }
+.h-live { color: var(--c-live); font-weight: 600; }
+.h-warn { color: var(--c-stat-mid); font-weight: 600; }
+.h-mut { color: var(--c-caption); }
+
+/* Кнопки */
+.h-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 18px; border: 0; border-radius: 8px;
+  background: var(--c-ui-hover); color: var(--c-text); font: 600 14px var(--font); white-space: nowrap; transition: background .15s, transform .15s; }
+.h-btn:hover { background: color-mix(in srgb, var(--c-white) 12%, var(--c-ui-hover)); }
+.h-btn--main { background: var(--c-accent); color: var(--c-on-accent); box-shadow: 0 10px 30px -12px var(--c-accent); }
+.h-btn--main:hover { background: color-mix(in srgb, var(--c-accent) 85%, var(--c-white)); }
+.h-btn[aria-pressed='true'] { background: color-mix(in srgb, var(--c-accent) 22%, var(--c-ui-hover)); color: var(--c-text); }
+.h-btn--sm { height: 32px; padding: 0 12px; font-size: 13px; }
+
+/* Панель */
+.h-pan { border-radius: 12px; background: var(--c-ui-panel); }
+.h-pan > h3 { display: flex; align-items: center; gap: 8px; padding: 16px 16px 10px; font-size: 14px; font-weight: 600; color: var(--c-muted); }
+.h-pan > h3 small { margin-left: auto; color: var(--c-caption); font-size: 12px; font-weight: 500; }
+
+/* Строка «идёт сейчас» — компактная, для правых колонок */
+.h-air { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 10px; padding: 10px 16px; border-top: 1px solid var(--c-ui-line); font-size: 13px; }
+.h-air__t { display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 600; }
+.h-air__t span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.h-air__s { font: 700 15px var(--font-c); text-align: right; }
+.h-air__m { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; color: var(--c-caption); font-size: 12px; }
+
+/* Цифры — узкий шрифт */
+.h-num { font-family: var(--font-c); font-variant-numeric: tabular-nums; }

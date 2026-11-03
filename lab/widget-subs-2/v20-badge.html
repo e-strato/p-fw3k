@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<base href="../widget-tournament-4/" />
+<title>v20 · Игра в углу логотипов</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="../widget-subs-2/_s2.css" /><link rel="stylesheet" href="../widget-subs-2/_s6v6.css" /><link rel="stylesheet" href="../widget-subs-2/_s8.css" />
+<style>.lab-board{ padding:32px 48px; } .z2{ zoom:2; }</style></head>
+<!-- Решение 29, концепция «roster» (_s2.js). Подача v13: на странице только виджет, «Экран» — под кадром лабы (window.LAB). <base> — в папку виджета турнира ради логотипов -->
+<body><div class="lab-board"><div class="z2"><div id="w"></div></div></div>
+<script src="_data.js"></script><script src="../widget-subs-2/_data.js"></script><script src="../widget-subs-2/_games.js"></script><script src="../widget-subs-2/_s2.js"></script>
+<script>
+  const K = [{ id: 'home', name: 'На главной', why: 'Матчи за ночь и сегодня с числом расхождений; нажми матч — его составы по позициям, жёлтая строка — расхождение, поиск игрока прямо в строке', o: {} },
+    { id: 'match', name: 'В матче', why: 'Открыт матч Power Rangers — Inner Circle (идёт 2-я карта): только его замены — 3 в обеих командах, одного игрока нет в базе', o: { match: 'm1' } },
+    { id: 'map', name: 'Замена на карту', why: 'Cloud Dawning выпустили Nikobaby со 2-й карты серии — срок «на карту»', o: { match: 'm2' } },
+    { id: 'none', name: 'Замен нет', why: 'Yellow Submarine — The Bot$: составы совпадают с базой', o: { match: 'm5' } }]
+  const w = document.getElementById('w'); let cur = 0
+  const go = (f, i) => { cur = i; S6.render(w, { ...K[i].o, mode: 'rstep', noSeq: true, list: 'mono', cap: true, rs: 'a', posRow: true, lv: 'badge', gv: 'badge' }) }
+  window.LAB = { view: 'toolbar', flows: () => [{ name: 'Экраны', steps: K.map(k => ({ name: k.name, what: k.why })) }], go, cur: () => ({ f: 0, i: cur }),
+    axes: () => [{ key: 'screen', name: 'Экран', value: K[cur].id, options: K.map(k => ({ v: k.id, label: k.name })) }],
+    set: (k, v) => go(0, K.findIndex(x => x.id === v)), caption: () => K[cur].why }
+  go(0, 0)
+</script>
+</body></html>

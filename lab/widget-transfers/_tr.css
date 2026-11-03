@@ -1,0 +1,293 @@
+/* Виджет трансферов (созвон 21.10): 320×320, минимум рамок и контролов, отступы кратны 4.
+   Токены, .w, .w-scroll — ../widget-tournament/_w.css; язык — как у виджета турнира (widget-tournament-4/_t4.css). */
+.tr{ position:relative; height:320px; display:flex; flex-direction:column; }
+.tr-bd{ padding:0 12px 12px; }
+.tr-cap{ font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+.tr-nm{ min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* Логотипы и фото — настоящие картинки; нет файла — буквы */
+.tr-lg{ width:16px; height:16px; flex:none; object-fit:contain; border-radius:4px; }
+.tr-lg--24{ width:20px; height:20px; }
+.tr-game{ width:16px; height:16px; flex:none; object-fit:contain; opacity:.8; margin-left:4px; }
+.tr-av{ width:36px; height:36px; flex:none; border-radius:50%; object-fit:cover; object-position:50% 20%; background:var(--w-muted); }
+.tr-ini{ display:inline-grid; place-items:center; border-radius:6px; background:var(--w-muted); font-size:8px; font-weight:600; color:var(--w-muted-fg); }
+.tr-av.tr-ini{ border-radius:50%; font-size:12px; }
+
+/* Шапка без нижней линии */
+.tr-hd{ display:flex; align-items:center; gap:8px; flex:none; height:48px; padding:0 12px 0 8px; }
+.tr-hd__t{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.tr-hd__t b{ font-size:13px; line-height:18px; font-weight:600; }
+.w .tr-ib{ display:grid; place-items:center; width:28px; height:28px; flex:none; border-radius:var(--w-r-sm); color:var(--w-muted-fg); }
+.w .tr-ib:hover{ background:var(--w-muted); color:var(--w-fg); }
+
+/* Лента: дата — заголовок группы, строка без линий */
+.tr-lbl{ margin:12px 0 4px; font-size:12px; line-height:16px; font-weight:500; color:var(--w-muted-fg); }
+.tr-bd > .tr-lbl:first-child{ margin-top:4px; }
+.w .tr-r{ display:flex; align-items:center; gap:12px; width:calc(100% + 16px); height:48px; margin:0 -8px; padding:0 8px; border-radius:var(--w-r-sm); }
+.w .tr-r:hover{ background:var(--w-mid-bg); }
+.tr-r__m{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.tr-r__m b{ display:flex; align-items:center; gap:6px; font-size:13px; line-height:18px; font-weight:600; }
+.tr-r__m .tr-cap{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tr-mv{ display:flex; align-items:center; gap:4px; flex:none; color:var(--w-muted-fg); }
+.tr-mv i{ display:grid; }
+.tr-chip{ display:inline-flex; align-items:center; height:16px; padding:0 4px; border-radius:4px; background:var(--w-muted); font-size:11px; font-weight:500; color:var(--w-muted-fg); }
+
+/* В матче: команда — своя точка, как в виджете турнира */
+.tr-tm{ display:flex; align-items:center; gap:8px; margin:12px 0 0; font-size:13px; font-weight:600; }
+.tr-bd > .tr-tm:first-child{ margin-top:4px; }
+.tr-tm + .tr-lbl{ margin-top:4px; }
+.tr-cd{ width:8px; height:8px; flex:none; border-radius:50%; }
+.tr-cd--a{ background:var(--w-a); } .tr-cd--b{ background:var(--w-b); }
+.tr-none{ margin:4px 0 0; font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+
+/* Карточка игрока: фото во всю ширину, ник поверх */
+.tr--card .w-scroll{ margin-top:-48px; }
+.tr--card .tr-hd{ position:relative; z-index:1; }
+.tr-ph{ position:relative; height:152px; }
+.tr-ph__img{ width:100%; height:100%; object-fit:cover; object-position:50% 25%; display:block; }
+.tr-ph__img.tr-ini{ display:grid; border-radius:0; font-size:32px; }
+.tr-ph::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(9,9,11,.7) 0, rgba(9,9,11,0) 40%, rgba(9,9,11,0) 50%, var(--w-bg) 100%); }
+.tr-ph__n{ position:absolute; z-index:1; left:12px; right:12px; bottom:4px; display:flex; flex-direction:column; }
+.tr-ph__n b{ font-size:20px; line-height:28px; font-weight:700; }
+.tr-ph__n span{ font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+.tr-way{ display:flex; align-items:center; gap:8px; margin:12px 0 0; font-size:13px; font-weight:500; }
+.tr-way > span{ flex:1; min-width:0; display:flex; align-items:center; gap:8px; }
+.tr-way > span:last-child{ justify-content:flex-end; }
+.tr-way i{ display:grid; flex:none; color:var(--w-muted-fg); }
+.tr-f{ display:grid; grid-template-columns:1fr 1fr; gap:12px 16px; margin:16px 0 0; }
+.tr-f div{ min-width:0; }
+.tr-f dt{ font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+.tr-f dd{ margin:0; font-size:13px; line-height:20px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tr-f dd b{ font-size:15px; font-weight:600; }
+.tr-src{ color:var(--w-muted-fg); }
+
+/* v2 «Цена игрока»: герой сверху (фото справа, цена крупно), остальные — строками; карточка — график цены и путь */
+.t2-hero{ position:relative; display:flex; flex:none; height:148px; margin:0 12px; border-radius:var(--w-r-sm); overflow:hidden; background:var(--w-mid-bg); text-align:left; }
+.t2-hero__img{ position:absolute; right:0; top:0; width:58%; height:100%; object-fit:cover; object-position:50% 20%; }
+.t2-hero__img.tr-ini{ display:grid; border-radius:0; font-size:28px; }
+.t2-hero::after{ content:''; position:absolute; inset:0; background:linear-gradient(90deg, var(--w-mid-bg) 38%, rgba(24,24,27,.6) 60%, rgba(24,24,27,0) 85%); }
+.t2-hero__m{ position:relative; z-index:1; display:flex; flex-direction:column; justify-content:center; gap:2px; width:62%; padding:0 12px; }
+.t2-hero__n{ font-size:20px; line-height:26px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t2-way{ display:flex; align-items:center; gap:4px; min-width:0; font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+.t2-way i{ display:grid; }
+.t2-price{ display:flex; align-items:baseline; gap:8px; margin-top:8px; }
+.t2-price b{ font-size:24px; line-height:28px; font-weight:700; font-variant-numeric:tabular-nums; }
+.t2-price__l{ font-size:11px; line-height:14px; color:var(--w-muted-fg); }
+.w .t2-hero:hover{ box-shadow:inset 0 0 0 1px var(--w-ring); }
+.t2-d{ flex:none; font-size:12px; font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.t2-d--up{ color:var(--w-up-fg); } .t2-d--down{ color:var(--w-down-fg); }
+.t2-d--lg{ font-size:15px; }
+.t2-list{ padding:4px 12px 8px; }
+.w .t2-r{ display:flex; align-items:center; gap:8px; width:calc(100% + 8px); height:36px; margin:0 -4px; padding:0 4px; border-radius:var(--w-r-sm); }
+.w .t2-r:hover{ background:var(--w-mid-bg); }
+.t2-av{ width:24px; height:24px; flex:none; border-radius:50%; object-fit:cover; object-position:50% 20%; background:var(--w-muted); }
+.t2-av.tr-ini{ border-radius:50%; font-size:9px; }
+.t2-r__m{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.t2-r__m b{ font-size:13px; line-height:16px; font-weight:600; }
+.t2-r__m .tr-cap{ font-size:11px; line-height:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t2-r .t2-d{ width:36px; text-align:right; }
+/* Карточка */
+.t2-pv{ display:flex; align-items:flex-end; justify-content:space-between; margin:16px 0 4px; }
+.t2-pv div{ display:flex; flex-direction:column; }
+.t2-pv b{ font-size:20px; line-height:28px; font-weight:700; font-variant-numeric:tabular-nums; }
+.t2-ch{ display:block; }
+.t2-ch__t{ font:400 10px var(--w-font); fill:var(--w-muted-fg); }
+.t2-lbl{ margin:16px 0 4px; font-size:12px; line-height:16px; font-weight:500; color:var(--w-muted-fg); }
+.t2-path{ list-style:none; margin:0; padding:0; }
+.t2-path li{ display:flex; align-items:center; gap:8px; height:28px; font-size:13px; color:var(--w-muted-fg); }
+.t2-path li .tr-cap{ margin-left:auto; flex:none; }
+.t2-path li.is-now{ color:var(--w-fg); font-weight:600; }
+.w .t2-go{ display:flex; align-items:center; justify-content:center; width:100%; height:36px; margin-top:16px; border-radius:var(--w-r-sm); background:var(--w-primary); color:var(--w-primary-fg); font-size:13px; font-weight:600; }
+.t2-src{ margin-top:8px; text-align:center; }
+
+/* Заход 3: только список. Шапка — игра иконками справа, под ней период сегментом */
+.t3-hd{ padding-left:12px; }
+.t3-g{ display:flex; gap:2px; padding:2px; border-radius:var(--w-r-sm); background:var(--w-mid-bg); }
+.w .t3-g button{ display:grid; place-items:center; min-width:28px; height:24px; padding:0 6px; border-radius:6px; font-size:11px; font-weight:600; color:var(--w-muted-fg); }
+.w .t3-g button.is-on{ background:var(--w-muted); color:var(--w-fg); }
+.t3-g img{ width:16px; height:16px; object-fit:contain; }
+.t3-seg{ display:flex; gap:4px; flex:none; padding:0 12px 8px; }
+.w .t3-seg button{ height:24px; padding:0 10px; border-radius:999px; font-size:12px; font-weight:500; color:var(--w-muted-fg); }
+.w .t3-seg button.is-on{ background:var(--w-muted); color:var(--w-fg); }
+.t3-list{ padding:0 8px 8px; }
+.t3-none{ padding:24px 4px; text-align:center; font-size:12px; color:var(--w-muted-fg); }
+.w .t3-r{ display:flex; align-items:center; gap:10px; width:100%; min-height:56px; padding:0 8px; border-radius:var(--w-r-sm); }
+.w .t3-r:hover{ background:var(--w-mid-bg); }
+/* Топ-3: место цветом, первый — мягкий фон */
+.t3-n{ width:16px; flex:none; text-align:center; font-size:13px; font-weight:600; color:var(--w-muted-fg); font-variant-numeric:tabular-nums; }
+.t3-top--1 .t3-n{ color:#fcd34d; } .t3-top--2 .t3-n{ color:#e4e4e7; } .t3-top--3 .t3-n{ color:#fdba74; }
+.w .t3-r.t3-top--1{ background:linear-gradient(90deg, rgba(252,211,77,.10), rgba(252,211,77,0) 70%); }
+.t3--way .t3-top .t3-m b::after, .t3--bar .t3-top .t3-m b::after{ content:'топ'; margin-left:6px; padding:0 4px; border-radius:4px; background:rgba(252,211,77,.14); color:#fcd34d; font-size:10px; font-weight:600; vertical-align:2px; }
+/* Аватар 40 и лого новой команды значком */
+.t3-avw{ position:relative; flex:none; }
+.t3-av{ display:block; width:40px; height:40px; border-radius:50%; object-fit:cover; object-position:50% 20%; background:var(--w-muted); }
+.t3-av.tr-ini{ display:grid; border-radius:50%; font-size:12px; }
+.t3-av--sm{ width:32px; height:32px; flex:none; } .t3-av--lg{ width:56px; height:56px; flex:none; }
+.t3-badge{ position:absolute; right:-4px; bottom:-4px; width:20px; height:20px; padding:2px; border-radius:6px; background:var(--w-bg); object-fit:contain; }
+.t3-badge.tr-ini{ display:grid; font-size:7px; background:var(--w-muted); box-shadow:0 0 0 2px var(--w-bg); }
+.t3-m{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.t3-m b{ font-size:14px; line-height:20px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t3-m .tr-cap{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* Цена: число крупно, сдвиг под ним */
+.t3-pr{ display:flex; flex-direction:column; align-items:flex-end; flex:none; }
+.t3-pr b{ font-size:17px; line-height:22px; font-weight:700; font-variant-numeric:tabular-nums; }
+.t3-d{ font-size:11px; line-height:14px; font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.t3-d--up{ color:var(--w-up-fg); } .t3-d--down{ color:var(--w-down-fg); }
+/* way: лого команд крупно */
+.t3-way{ display:flex; align-items:center; gap:2px; flex:none; color:var(--w-muted-fg); }
+.t3-way i{ display:grid; }
+.t3-tl{ width:28px; height:28px; flex:none; object-fit:contain; border-radius:6px; }
+.t3-tl.tr-ini{ font-size:9px; }
+/* bar: цена полосой от самой дорогой */
+.t3-m--bar{ gap:4px; }
+.t3-bt{ display:flex; align-items:center; gap:8px; }
+.t3-bt b{ flex:1; min-width:0; }
+.t3-pr--in{ flex-direction:row; align-items:baseline; gap:6px; }
+.t3-pr--in b{ flex:none; font-size:14px; line-height:20px; }
+.t3-bar{ display:block; height:4px; border-radius:2px; background:var(--w-muted); overflow:hidden; }
+.t3-bar i{ display:block; height:100%; border-radius:2px; background:var(--w-muted-fg); }
+.t3-top--1 .t3-bar i{ background:#fcd34d; } .t3-top--2 .t3-bar i, .t3-top--3 .t3-bar i{ background:var(--w-fg); }
+/* Карточка */
+.t3-card{ padding-top:4px; }
+.t3-ch{ display:flex; align-items:center; gap:12px; }
+.t3-pv{ display:flex; align-items:flex-end; justify-content:space-between; margin:16px 0 4px; }
+.t3-pv div{ display:flex; flex-direction:column; } .t3-pv b{ font-size:20px; line-height:28px; font-weight:700; }
+.t3-sp{ display:block; } .t3-sp__t{ font:400 10px var(--w-font); fill:var(--w-muted-fg); }
+.w .t3-go{ display:flex; align-items:center; justify-content:center; width:100%; height:36px; margin-top:16px; border-radius:var(--w-r-sm); background:var(--w-primary); color:var(--w-primary-fg); font-size:13px; font-weight:600; }
+/* v4: команда, откуда ушёл, — чёрно-белая (дирижёр 21.10) */
+.t3-tl--old{ filter:grayscale(1); opacity:.55; }
+.t3-pr b{ font-size:15px; }
+
+/* v6 «Карточки»: 2 в ряд, как фэнтези-карточка */
+.t6-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:0 12px 12px; }
+.w .t6-grid .t3-r{ flex-direction:column; align-items:stretch; gap:2px; min-height:0; padding:8px; background:var(--w-mid-bg); text-align:left; }
+.w .t6-grid .t3-r:hover{ background:var(--w-muted); }
+.w .t6-grid .t3-r.t3-top--1{ background:var(--w-mid-bg); box-shadow:inset 0 0 0 1px #fcd34d; }
+.t6-ph{ position:relative; display:block; height:72px; margin-bottom:6px; border-radius:6px; overflow:hidden; background:var(--w-muted); }
+.t6-img{ display:block; width:100%; height:100%; object-fit:cover; object-position:50% 25%; }
+.t6-img.tr-ini{ display:grid; border-radius:0; font-size:18px; }
+.t6-g{ position:absolute; left:4px; top:4px; }
+.t6-gi{ display:block; width:16px; height:16px; object-fit:contain; }
+.t6-n{ position:absolute; right:4px; top:4px; display:grid; place-items:center; width:18px; height:18px; border-radius:50%; background:rgba(0,0,0,.6); font-size:11px; font-weight:700; }
+.t3-top--1 .t6-n{ background:#fcd34d; color:#18181b; } .t3-top--2 .t6-n{ background:#e4e4e7; color:#18181b; } .t3-top--3 .t6-n{ background:#fdba74; color:#18181b; }
+.t6-nk{ font-size:13px; line-height:18px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t6-w{ display:flex; align-items:center; gap:4px; color:var(--w-muted-fg); }
+.t6-w i{ display:grid; }
+.t6-pr{ display:flex; align-items:baseline; gap:6px; margin-top:4px; }
+.t6-pr b{ font-size:14px; font-weight:700; font-variant-numeric:tabular-nums; }
+/* v7 «Таблица» */
+.t3--table .t3-r{ min-height:48px; gap:8px; }
+.t7-cr{ margin-right:4px; color:#fcd34d; font-size:11px; }
+.t7-gl{ display:inline-block; width:12px; height:12px; margin-right:4px; vertical-align:-2px; }
+.t7-tl{ width:22px; height:22px; }
+.t7-pr{ width:72px; }
+/* v8 «Рост» */
+.t8-sp{ flex:none; }
+
+/* Заход 4 (дирижёр 21.10): главное — куда; «из …» и дата мелко; аватар — игровой (Steam), квадрат со скруглением */
+.t3-av, .t3-av.tr-ini{ border-radius:8px; object-position:50% 50%; }
+.t3-av--sm{ border-radius:6px; }
+.t3 .t3-r{ min-height:64px; }
+.t9-to{ display:flex; align-items:center; gap:6px; min-width:0; font-size:12px; line-height:16px; font-weight:500; color:var(--w-fg); }
+.t9-sub{ display:block; font-size:11px; line-height:14px; color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t9-sub--hi{ font-size:12px; line-height:16px; font-weight:500; color:var(--w-fg); }
+.t9-big{ width:36px; height:36px; }
+.t9-line{ display:flex; flex-direction:column; }
+.t6-grid .t9-to{ margin-top:2px; }
+.t6-ph{ height:96px; }
+.t3--table .t3-r{ min-height:52px; }
+
+/* Заход 5 (дирижёр 21.10): аватар меньше, цена в одну строку, подпись шапки в одну строку, строка — ссылка */
+.t3-av{ width:32px; height:32px; } .t3-av--sm{ width:28px; height:28px; }
+.t3 .t3-r{ min-height:56px; text-decoration:none; color:inherit; }
+.t3-pr b{ white-space:nowrap; }
+.t7-pr{ width:auto; }
+.t3-hd .tr-hd__t .tr-cap{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t3-hd{ height:auto; min-height:48px; padding-top:8px; padding-bottom:8px; }
+
+/* Заход 6 (дирижёр 21.10): дата «15.10» у ника; переход одной строкой «старое серым → новое ярко»; плашка «Все трансферы» внизу */
+.t9-nk{ display:flex; align-items:center; gap:6px; min-width:0; }
+.t9-nk .tr-nm{ flex:0 1 auto; }
+.t9-dt{ flex:none; font-size:11px; font-weight:400; color:var(--w-muted-fg); font-variant-numeric:tabular-nums; }
+.t9-to{ gap:4px; }
+.t9-old{ width:14px; height:14px; filter:grayscale(1); opacity:.5; }
+.t9-ar{ display:grid; flex:none; color:var(--w-muted-fg); }
+.t9-to .tr-chip{ margin-left:2px; }
+.t7-gl{ height:12px; width:auto; margin:0; vertical-align:0; }
+.t7-gl[src*="cs2"]{ height:9px; }
+/* Значок CS2 — вордмарк, шире квадрата */
+.w .t3-g img[src*="cs2"]{ width:28px; height:12px; }
+/* Плашка внизу — как строка LIVE у виджета турнира */
+.w a.t3-all{ display:flex; align-items:center; gap:8px; flex:none; height:40px; padding:0 12px; border-top:1px solid var(--w-border); font-size:13px; font-weight:500; color:var(--w-fg); text-decoration:none; }
+.w a.t3-all:hover{ background:var(--w-mid-bg); }
+.t3-all svg{ flex:none; color:var(--w-muted-fg); }
+.t3-all .tr-cap{ margin-left:auto; }
+/* v9 — график фоном строки */
+.t3-list--bg .t3-r{ position:relative; overflow:hidden; }
+.t9-bg{ position:absolute; left:0; right:0; bottom:0; width:100%; height:100%; pointer-events:none; }
+.t3-list--bg .t3-r > :not(.t9-bg){ position:relative; }
+/* v10 — график во всю ширину под строкой */
+.t3-list--under .t3-r{ flex-direction:column; align-items:stretch; gap:4px; padding-top:8px; padding-bottom:8px; }
+.t10-top{ display:flex; align-items:center; gap:10px; }
+.t10-sp{ display:block; width:100%; }
+/* Старое лого — серое, но читаемое; в v4 метку «топ» у ника убрали — ник с датой не влезал */
+.t9-old{ width:16px; height:16px; opacity:.75; }
+.t3--way .t3-top .t3-m b::after{ content:none; }
+
+/* Плашка «Все трансферы» — как .t4-dock виджета турнира: квадрат 320 сверху, плашка заходит под его нижний край */
+.tr.t3--dock{ height:auto; background:none; border:0; overflow:visible; }
+.t3--dock > .t3-main{ position:relative; z-index:1; display:flex; flex-direction:column; height:320px; background:var(--w-bg); border:1px solid var(--w-border); border-radius:var(--w-r); overflow:hidden; }
+.t3-main{ display:flex; flex-direction:column; height:100%; min-height:0; }
+.w a.t3-dock{ position:relative; z-index:0; display:flex; align-items:center; gap:8px; margin:-12px 0 0; padding:20px 12px 10px; background:#131316; border:1px solid var(--w-border); border-top:0; border-radius:0 0 var(--w-r) var(--w-r); font-size:13px; font-weight:500; color:var(--w-fg); text-decoration:none; }
+.w a.t3-dock:hover{ background:#1c1c20; }
+.t3-dock svg{ flex:none; color:var(--w-muted-fg); }
+.t3-dock .tr-cap{ margin-left:auto; }
+
+/* v7 — компактнее (дирижёр 21.10: v3 и v7 стали похожи): строка 40, аватар 24, всё мельче, сдвиг рядом с ценой */
+.t3--table .t3-r{ min-height:40px; gap:8px; padding:0 6px; }
+.t3--table .t3-av--sm{ width:24px; height:24px; border-radius:5px; }
+.t3--table .t3-m b{ font-size:13px; line-height:16px; }
+.t3--table .t9-to{ font-size:11px; line-height:14px; }
+.t3--table .t9-to .tr-lg, .t3--table .t9-old{ width:12px; height:12px; }
+.t3--table .t3-pr{ flex-direction:row; align-items:baseline; gap:6px; }
+.t3--table .t3-pr b{ font-size:13px; line-height:16px; }
+.t3--table .t3-n{ font-size:12px; width:14px; }
+/* v10 — каждая строка своей заливкой, между строками зазор */
+.t3-list--under{ display:flex; flex-direction:column; gap:4px; }
+.w .t3-list--under .t3-r{ background:var(--w-mid-bg); }
+.w .t3-list--under .t3-r:hover{ background:var(--w-muted); }
+
+/* v11 — таблица v7 с воздухом: строка 48, аватар 28, отступы шире, лёгкая заливка строки */
+.t3--tableair .t3-list{ display:flex; flex-direction:column; gap:2px; padding:0 12px 8px; }
+.w.t3--tableair .t3-r{ min-height:48px; gap:10px; padding:0 10px; }
+.w.t3--tableair .t3-r:nth-child(odd){ background:rgba(255,255,255,.025); }
+.t3--tableair .t3-av--sm{ width:28px; height:28px; border-radius:6px; }
+.t3--tableair .t3-m{ gap:2px; }
+.t3--tableair .t3-m b{ font-size:13px; line-height:18px; }
+.t3--tableair .t9-to{ font-size:12px; line-height:16px; }
+.t3--tableair .t3-pr{ flex-direction:row; align-items:baseline; gap:6px; }
+.t3--tableair .t3-pr b{ font-size:14px; line-height:18px; }
+.t3--tableair .t3-n{ font-size:12px; width:14px; }
+
+/* v7, v11: цена и сдвиг — друг под другом, колонка фиксированной ширины — строки не «гуляют» (дирижёр 21.10) */
+.t3--table .t3-pr, .t3--tableair .t3-pr{ flex-direction:column; align-items:flex-end; gap:0; width:76px; }
+.t3--table .t3-pr .t3-d{ font-size:10px; line-height:12px; }
+
+/* v12 — как v11, но строки во всю ширину без отступов по краям и без скруглений; строки ниже, зазор между ними больше */
+.t3--tableflat .t3-list{ display:flex; flex-direction:column; gap:4px; padding:0 0 8px; }
+.w.t3--tableflat .t3-r{ min-height:42px; gap:10px; padding:0 12px; border-radius:0; background:rgba(255,255,255,.03); }
+.w.t3--tableflat .t3-r:hover{ background:var(--w-mid-bg); }
+.w.t3--tableflat .t3-r.t3-top--1{ background:linear-gradient(90deg, rgba(252,211,77,.10), rgba(255,255,255,.03) 70%); }
+.t3--tableflat .t3-av--sm{ width:28px; height:28px; border-radius:6px; }
+.t3--tableflat .t3-m b{ font-size:13px; line-height:18px; }
+.t3--tableflat .t9-to{ font-size:12px; line-height:16px; }
+.t3--tableflat .t3-pr{ flex-direction:column; align-items:flex-end; gap:0; width:76px; }
+.t3--tableflat .t3-pr b{ font-size:14px; line-height:18px; }
+.t3--tableflat .t3-n{ font-size:12px; width:14px; }
+
+/* v11, v12: строки без заливки, кроме первой; выделение — только при наведении (дирижёр 21.10) */
+.w.t3--tableflat .t3-r, .w.t3--tableair .t3-r, .w.t3--tableair .t3-r:nth-child(odd){ background:none; }
+.w.t3--tableflat .t3-r.t3-top--1, .w.t3--tableair .t3-r.t3-top--1{ background:linear-gradient(90deg, rgba(252,211,77,.10), rgba(252,211,77,0) 70%); }
+.w.t3--tableflat .t3-r:hover, .w.t3--tableair .t3-r:hover{ background:var(--w-mid-bg); }
+/* v11, v12: зазор между строками больше (дирижёр 21.10) */
+.t3--tableflat .t3-list, .t3--tableair .t3-list{ gap:8px; }

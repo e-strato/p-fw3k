@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_бустер.css" />
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+</head>
+<body>
+<!-- v3 · Конверт с печатью. Плотная бумага (Base — крафт, Holo — перламутр, Prism — фиолетовая, Legend — чёрная с золотым краем),
+     клапан запечатан сургучом с F цветом редкости. Клик по печати — она трескается: первый клик — трещина и свет из неё,
+     второй — печать раскалывается на две половины, клапан откидывается, из конверта свет, карты выезжают вверх. -->
+<div class="bs"></div>
+<script type="module">
+import { start, THREE, RAR } from './_бустер.js'
+const W = 2.5, H = 1.65, T = 0.05, FL = H * 0.62
+const css = (t) => getComputedStyle(document.documentElement).getPropertyValue(t).trim()
+// Бумага по редкости: фон, волокна, кромка
+const PAPER = { base: ['--c-card-paper', '--c-tier-bronze', 0], holo: ['--c-tier-silver-hi', '--c-rarity-holo-4', 1], prism: ['--c-card-from', '--c-rarity-holo-5', 0.6], legend: ['--c-card-ink', '--c-tier-gold', 0] }
+const paperTex = (r, flap) => {
+  const [bg, edge] = PAPER[r], c = document.createElement('canvas'); c.width = 1024; c.height = 680; const g = c.getContext('2d')
+  g.fillStyle = css(bg); g.fillRect(0, 0, 1024, 680)
+  // Волокна бумаги
+  for (let i = 0; i < 2600; i++) { g.strokeStyle = `rgba(${r === 'legend' ? '255,255,255' : '0,0,0'},${Math.random() * 0.05})`; g.lineWidth = 1; const x = Math.random() * 1024, y = Math.random() * 680, a = Math.random() * 6.28, l = 4 + Math.random() * 14; g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke() }
+  // Кромка цветом редкости
+  g.strokeStyle = css(edge); g.lineWidth = r === 'legend' ? 14 : 8; g.strokeRect(10, 10, 1004, 660)
+  if (!flap) { g.fillStyle = css(edge); g.globalAlpha = 0.8; g.font = '600 30px Inter, sans-serif'; g.textAlign = 'left'; g.fillText('Fantasy · Dota 2', 54, 610); g.textAlign = 'right'; g.fillText(RAR[r].ru + ' · 3 карты', 970, 610); g.globalAlpha = 1 }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t
+}
+const sealTex = (r, cracks) => {
+  const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d'), col = css(RAR[r].glow === '--c-muted' ? '--c-flag-ru-red' : RAR[r].main)
+  const gr = g.createRadialGradient(110, 100, 10, 128, 128, 128); gr.addColorStop(0, '#ffffff55'); gr.addColorStop(0.2, col); gr.addColorStop(1, '#00000088'); g.fillStyle = gr; g.fillRect(0, 0, 256, 256)
+  g.fillStyle = col; g.fillRect(0, 0, 256, 256); g.globalCompositeOperation = 'multiply'; g.fillStyle = gr; g.fillRect(0, 0, 256, 256); g.globalCompositeOperation = 'source-over'
+  g.strokeStyle = 'rgba(0,0,0,.35)'; g.lineWidth = 6; g.beginPath(); g.arc(128, 128, 92, 0, 6.28); g.stroke()
+  g.fillStyle = 'rgba(0,0,0,.35)'; g.font = '900 120px Inter, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('F', 132, 136)
+  g.fillStyle = 'rgba(255,255,255,.35)'; g.fillText('F', 126, 130)
+  if (cracks) { g.strokeStyle = '#fff'; g.lineWidth = 5; g.shadowColor = '#fff'; g.shadowBlur = 12; g.beginPath(); g.moveTo(128, 6); g.lineTo(116, 70); g.lineTo(140, 120); g.lineTo(118, 180); g.lineTo(134, 250); g.moveTo(140, 120); g.lineTo(200, 140); g.stroke() }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t
+}
+start({
+  name: 'Конверт с печатью',
+  note: 'Плотная бумага и сургуч цветом редкости. Первый клик по печати — трещина и свет, второй — печать раскалывается, клапан откидывается, карты выезжают.',
+  hint: 'Нажми на печать',
+  build(K) {
+    const g = new THREE.Group(), env = new THREE.Group(); g.add(env)
+    const irid = PAPER[K.rar][2]
+    const paper = new THREE.MeshPhysicalMaterial({ map: paperTex(K.rar), roughness: 0.85, metalness: 0, iridescence: irid, iridescenceIOR: 1.3, sheen: 0.4, emissive: K.glow(), emissiveIntensity: 0 })
+    const flapMat = new THREE.MeshPhysicalMaterial({ map: paperTex(K.rar, true), roughness: 0.85, iridescence: irid, iridescenceIOR: 1.3, side: THREE.DoubleSide })
+    env.add(new THREE.Mesh(new THREE.BoxGeometry(W, H, T), paper))
+    // Клапан: треугольник со скруглённым концом, петля по верхнему краю
+    const sh = new THREE.Shape(); sh.moveTo(-W / 2, 0); sh.lineTo(W / 2, 0); sh.lineTo(0.16, -FL + 0.06); sh.quadraticCurveTo(0, -FL - 0.04, -0.16, -FL + 0.06); sh.lineTo(-W / 2, 0)
+    const fgeo = new THREE.ShapeGeometry(sh); const fp = fgeo.attributes.position, fuv = fgeo.attributes.uv
+    for (let i = 0; i < fp.count; i++) fuv.setXY(i, (fp.getX(i) + W / 2) / W, 1 + fp.getY(i) / H)
+    const hinge = new THREE.Group(); hinge.position.set(0, H / 2, T / 2 + 0.004); env.add(hinge)
+    const flap = new THREE.Mesh(fgeo, flapMat); hinge.add(flap)
+    // Свет из щели под клапаном
+    const slit = new THREE.Mesh(new THREE.PlaneGeometry(W * 0.94, 0.05), new THREE.MeshBasicMaterial({ color: K.glow(), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }))
+    slit.position.set(0, H / 2 - 0.03, T / 2 + 0.01); env.add(slit)
+    // Печать: две половины диска — раскалываются по вертикали
+    const sealM = new THREE.MeshStandardMaterial({ map: sealTex(K.rar), roughness: 0.35, metalness: 0.1 })
+    const seal = new THREE.Group(); seal.position.set(0, H / 2 - FL + 0.12, T / 2 + 0.04); env.add(seal)
+    const halves = [0, 1].map((s) => { const geo = new THREE.CylinderGeometry(0.27, 0.29, 0.07, 48, 1, false, s * Math.PI, Math.PI); geo.rotateX(Math.PI / 2); const m = new THREE.Mesh(geo, [new THREE.MeshStandardMaterial({ color: K.col(RAR[K.rar].glow === '--c-muted' ? '--c-flag-ru-red' : RAR[K.rar].main), roughness: 0.4 }), sealM, sealM]); seal.add(m); return m })
+    // Капли сургуча по краю печати
+    for (let i = 0; i < 7; i++) { const a = i / 7 * Math.PI * 2 + 0.3, b = new THREE.Mesh(new THREE.SphereGeometry(0.05 + Math.random() * 0.03, 12, 8), halves[0].material[0]); b.scale.z = 0.4; b.position.set(Math.cos(a) * 0.29, Math.sin(a) * 0.29, -0.01); seal.add(b) }
+    env.rotation.x = -0.12
+
+    let hits = 0, done = false
+    const crack = () => {
+      hits = 1; K.hint('Ещё раз')
+      sealM.map = sealTex(K.rar, true); sealM.needsUpdate = true; sealM.emissive = K.glow(); sealM.emissiveMap = sealM.map; sealM.emissiveIntensity = 0.6
+      K.tween(260, (k) => { seal.scale.setScalar(1 + Math.sin(k * Math.PI) * 0.12); env.rotation.z = Math.sin(k * 20) * 0.02 * (1 - k) }, (k) => k)
+      K.sparks(seal.getWorldPosition(new THREE.Vector3()), 0.25, 0.4)
+      K.tween(400, (k) => { slit.material.opacity = k * 0.5 })
+    }
+    const go = async () => {
+      done = true; K.hint('')
+      const sp = seal.getWorldPosition(new THREE.Vector3())
+      K.flash(0.4); K.sparks(sp, 0.6, 0.8)
+      // Половины печати отлетают в стороны и падают
+      halves.forEach((m, s) => { const d = s ? -1 : 1; K.tween(1100, (k) => { m.position.set(d * k * 1.3, k * 0.4 - k * k * 2.6, k * 0.6); m.rotation.set(k * 3 * d, k * 2, k * 4 * d) }) })
+      seal.children.slice(2).forEach((b) => b.visible = false)
+      await K.wait(180)
+      // Клапан откидывается назад-вверх
+      await K.tween(650, (k) => { hinge.rotation.x = -k * 2.9; slit.material.opacity = 0.5 + k * 0.5 }, K.back)
+      const mouth = new THREE.Vector3(0, H / 2 + 0.05, 0.3)
+      K.shock(mouth, 7); K.confetti(mouth, 0.8, 3); K.sparks(mouth, 0.9, 2.5)
+      await K.tween(400, (k) => { K.lightAt(mouth, k, 1.1); K.rays(mouth, k); paper.emissiveIntensity = k * 0.15 })
+      K.reveal(38)
+      K.tween(900, (k) => { env.position.y = -k * 3.8; env.rotation.x = -0.12 - k * 0.5 }, (k) => k * k)
+      await K.tween(1600, (k) => { K.lightAt(mouth, 1 - k * 0.7, 1.1); K.rays(mouth, 1 - k * 0.6) })
+    }
+    return {
+      g, open: go,
+      down(e) { if (done) return; if (hits === 0) crack(); else K.open() },
+      auto() { crack(); setTimeout(() => K.open(), 650) },
+      tick(dt, t) { if (!done) { env.position.y = Math.sin(t * 1.3) * 0.05; if (hits) slit.material.opacity = 0.35 + Math.sin(t * 6) * 0.15 } },
+    }
+  },
+})
+</script>
+</body></html>

@@ -1,0 +1,14 @@
+/* v2 · Унифицировано (дирижёр 23.10): поверх итоговых виджетов, только для этой страницы (body.uni). Исходные лабы не меняются.
+   1) шрифт даты — уже общий (_cons.css); 2) значок игры — 12, как в заменах и трансферах; 3) лого команд в строках — 20, в шапках и подписях — 16;
+   4) сегмент — один вид: кнопки 28, скругление 6, подложка mid. Ссылки в шапке («Архив» / «Смотреть все») и наведение (заливка цветом команды у трансферов) — как есть: у них разный смысл */
+.uni .t6 .t5-game{ width:12px; height:12px; border-radius:3px; opacity:1; }
+.uni .t6 .t5-tbl .t5-lg, .uni .t6 .t5-pt .t5-lg{ width:20px; height:20px; }      /* турнир: таблица, участники */
+.uni .w.tr5 .tr5-tm .t2-lg{ width:20px; height:20px; }                            /* трансферы: откуда » куда */
+.uni .s3--big .s3-lg{ width:20px; height:20px; }                                  /* замены: список — уже 20 */
+.uni .t6 .t5-fm .t5-lg, .uni .s3--phd .s3-team .s3-lg, .uni .m6-tm img{ width:16px; height:16px; } /* шапки и подписи — 16 */
+.uni .t5-seg, .uni .m6-seg{ gap:2px; padding:2px; border-radius:var(--w-r-sm); background:var(--w-mid-bg); }
+.uni .w .t5-seg button, .uni .w .m6-seg button{ height:28px; padding:0 8px; border:0; border-radius:6px; background:none; font:var(--t-seg); text-align:center; color:var(--w-muted-fg); }
+.uni .w .t5-seg button.is-on, .uni .w .m6-seg button.is-on{ background:var(--w-muted); color:var(--w-fg); }
+/* 5) турнир: наведение на строку — цветом тира (1 — золото, 2 — голубой, 3 — бронза), как у замен и трансферов цветом команд (дирижёр 23.10) */
+.uni .w .t5-tr:has(.t5-tier--1){ --tc:#facc15; } .uni .w .t5-tr:has(.t5-tier--2){ --tc:#93c5fd; } .uni .w .t5-tr:has(.t5-tier--3){ --tc:#d6a77a; }
+.uni .w .t5-tr:hover{ background:color-mix(in srgb, var(--tc, #fff) 14%, transparent); }

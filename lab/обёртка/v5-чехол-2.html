@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../бустеры/_бустер.css" /><link rel="stylesheet" href="_обёртка.css" />
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+</head>
+<body>
+<!-- v5 · Чехол 2.0 (дирижёр 05.10, правка v2): обе части обёртки кувырком улетают вниз за экран — верхняя тоже;
+     и карты — те же самые: колода раскладывается веером ровно по местам карт сайта, делает круг, и каждая 3D-карта встаёт
+     ребром и доворачивается уже настоящей картой. По одной, лучшая — последней. -->
+<div class="bs swap"></div>
+<script type="module">
+import { play } from './_обёртка.js'
+play({
+  name: 'Чехол 2.0',
+  note: 'Обе части обёртки кувырком улетают вниз. Те же карты из колоды раскладываются по местам и по одной переворачиваются настоящими.',
+  swap: true,
+  async remove({ K, A, B }) {
+    const top = A.n.y > 0 ? A : B, low = top === A ? B : A
+    // Верх: подскок, кувырок к зрителю и вниз за экран — всегда перед колодой, не за ней
+    K.tween(1300, (k) => { top.h.position.set(k * 0.5, Math.sin(k * Math.PI) * 0.7 - k * k * 5.5, 0.2 + k * 1.6); top.h.rotation.set(k * 4.2, k * 0.6, k * 0.8) }, (k) => k)
+    // Низ: чехол съезжает с трением, потом падает, чуть проворачиваясь
+    K.tween(1400, (k) => { low.h.position.y = -(k < 0.3 ? k * 0.5 + Math.sin(k * 40) * 0.01 : 0.15 + (k - 0.3) ** 2 * 10); low.h.position.z = 0.15 * Math.min(1, k * 4); low.h.rotation.set(-k * k * 1.2, 0, Math.sin(k * 9) * 0.03 * (1 - k) - k * k * 0.4) }, (k) => k)
+    await K.wait(450)
+  },
+})
+</script>
+</body></html>

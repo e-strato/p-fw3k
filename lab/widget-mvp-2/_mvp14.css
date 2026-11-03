@@ -1,0 +1,5 @@
+/* v14 — как v12, но кнопка обычная (дирижёр 22.10: «версию с более обычными кнопками»): скругление 8, без скосов и градиента */
+.w .m7-cta{ height:40px; padding:0 12px 0 16px; border-radius:var(--w-r-sm); clip-path:none; background:var(--gold); box-shadow:none; font-size:14px; }
+.w .m7-cta:hover{ filter:none; background:#f6cf6a; }
+.w .m7-cta.is-mine{ background:rgba(34,197,94,.14); box-shadow:inset 0 0 0 1px rgba(34,197,94,.35); }
+.w .m7-cta.is-mine::before{ display:none; }

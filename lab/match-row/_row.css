@@ -1,0 +1,80 @@
+/* Лаба «Строка матча» — общее: страница (переключалки, две рамки), полоса турнира и кусочки раскрытия. Токены — /p-fw3k/site/styles.css («Финал»).
+   Рамки — container query «row»: колонка матчей 1000 px и телефон 390 px, одна разметка. Выделение — фоном, без боковых полос; капса нет. */
+body { margin: 0; background: var(--c-ui-bg); color: var(--c-text); font-family: var(--font); }
+.r-page { padding: 40px 32px 80px; }
+.r-page > h1 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.01em; }
+.r-page > p { max-width: 96ch; margin: 8px 0 0; color: var(--c-muted); font-size: 15px; line-height: 1.5; }
+.r-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin: 22px 0 6px; }
+.r-seg { display: flex; flex-wrap: wrap; gap: 2px; padding: 3px; border-radius: 8px; background: var(--c-ui-chip); }
+.r-seg button { border: 0; padding: 7px 12px; border-radius: 6px; background: none; color: var(--c-ui-dim); font: 600 13.5px var(--font); cursor: pointer; }
+.r-seg button[aria-pressed='true'] { background: var(--c-ui-panel); color: var(--c-accent); }
+.r-cap { margin: 26px 0 10px; font-size: 13px; font-weight: 600; color: var(--c-caption); }
+.r-frames { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; }
+.r-frame { container: row / inline-size; }
+.r-frames > div:first-child { flex: 0 1 1000px; min-width: 0; } /* без этого обёртка сжималась и «колонка 1000» была узкой */
+.r-frame--col { width: 100%; }
+.r-frame--phone { width: 390px; padding: 14px 12px; border-radius: 32px; background: var(--c-ui-bg); box-shadow: 0 0 0 10px color-mix(in srgb, var(--c-text) 8%, var(--c-ui-bg)), 0 0 0 11px var(--c-ui-line); margin-left: 11px; }
+.r-frame * { box-sizing: border-box; }
+.r-frame button { font: inherit; color: inherit; cursor: pointer; }
+.r-frame h4, .r-frame p { margin: 0; }
+.r-frame a { color: inherit; text-decoration: none; }
+.r-frame button:focus:not(:focus-visible) { outline: none; }
+.r-frame [hidden] { display: none !important; }
+
+/* Полоса турнира и обёртка */
+.r-tour { border-radius: 10px; background: var(--c-ui-panel); overflow: hidden; }
+.r-tb { display: flex; align-items: center; gap: 8px; padding: 9px 14px; background: var(--c-ui-band); font-size: 13px; }
+.r-tb b { font-weight: 600; } .r-tb span:last-child { color: var(--c-caption); font-size: 12.5px; }
+
+/* Общие кусочки */
+.r-dot { display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: var(--c-live); vertical-align: 1px; }
+.r-gt { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; border-radius: 4px; background: var(--c-ui-chip); color: var(--c-muted); font: 600 11px var(--font); white-space: nowrap; }
+.r-lg { width: 24px; height: 24px; object-fit: contain; flex: none; }
+.r-lg.sm { width: 18px; height: 18px; } .r-lg.lg { width: 40px; height: 40px; }
+.r-lg--mono { display: inline-grid; place-content: center; width: auto; min-width: 24px; padding: 0 3px; border-radius: 5px; background: var(--c-ui-item); color: var(--c-caption); font: 700 8.5px var(--font); }
+.r-lg--mono.sm { min-width: 18px; } .r-lg--mono.lg { min-width: 40px; }
+.r-lg--mono.sm { font-size: 7px; } .r-lg--mono.lg { font-size: 12px; border-radius: 9px; }
+.r-form { display: inline-flex; gap: 3px; } .r-form i { width: 8px; height: 8px; border-radius: 50%; background: var(--c-live); } .r-form i.w { background: var(--c-stat-high); }
+.r-bar { display: flex; height: 6px; border-radius: 3px; overflow: hidden; background: var(--c-ui-hover); } .r-bar i { width: var(--p); background: var(--c-accent); }
+.r-bar--win { background: color-mix(in srgb, var(--c-live) 70%, var(--c-ui-hover)); } .r-bar--win i { background: var(--c-stat-high); }
+.r-chance { display: grid; grid-template-columns: auto minmax(80px, 1fr) auto; align-items: center; gap: 12px; max-width: 520px; font-size: 13px; color: var(--c-muted); }
+.r-chance b { color: var(--c-text); font: 700 16px var(--font-c); }
+.r-vote { display: flex; gap: 6px; max-width: 520px; }
+.r-vote button { flex: 1; display: flex; align-items: center; gap: 8px; min-width: 0; padding: 9px 12px; border: 0; border-radius: 7px; background: var(--c-ui-item); font-size: 13.5px; }
+.r-vote button span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; }
+.r-vote button b { font: 700 16px var(--font-c); }
+.r-vote button.is-on { background: color-mix(in srgb, var(--c-accent) 16%, var(--c-ui-item)); color: var(--c-accent); }
+.r-forms { display: grid; gap: 8px; max-width: 420px; }
+.r-forms p { display: flex; align-items: center; gap: 10px; font-size: 13.5px; }
+.r-forms span { flex: 1; } .r-forms b { color: var(--c-caption); font: 600 13px var(--font-c); }
+.r-ev { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 13.5px; }
+.r-ev time { display: inline-block; width: 46px; color: var(--c-caption); font: 600 13px var(--font-c); }
+.r-pl { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+.r-pl img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; object-position: top; background: var(--c-ui-item); }
+.r-pl small { display: block; color: var(--c-caption); font-size: 12px; }
+.r-nw { display: block; font-size: 14px; } .r-nw small { display: block; margin-top: 2px; color: var(--c-caption); font-size: 12px; }
+.r-txt { max-width: 560px; font-size: 14px; line-height: 1.5; } .r-txt small { display: block; margin-top: 4px; color: var(--c-caption); font-size: 12.5px; }
+.r-maps { display: flex; flex-wrap: wrap; gap: 8px; }
+.r-maps > span { display: grid; gap: 2px; min-width: 110px; padding: 8px 12px; border-radius: 8px; background: var(--c-ui-item); }
+.r-maps small { color: var(--c-caption); font-size: 11.5px; }
+.r-mv { display: flex; align-items: center; gap: 6px; font-style: normal; }
+.r-maps b { display: flex; align-items: center; font: 700 17px var(--font-c); }
+.r-maps .is-now { background: color-mix(in srgb, var(--c-live) 10%, var(--c-ui-item)); } .r-maps .is-now small { color: var(--c-live); }
+.r-maps > span:not(.is-done):not(.is-now) b { color: var(--c-ui-dim); }
+.r-dr { display: grid; gap: 8px; }
+.r-dr p { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 13px; }
+.r-dr p > b { width: 90px; color: var(--c-muted); font-weight: 600; }
+.r-dr span { padding: 3px 8px; border-radius: 5px; background: var(--c-ui-item); }
+.r-dr .is-ban { color: var(--c-ui-dim); text-decoration: line-through; } .r-dr .is-wait { color: var(--c-ui-dim); background: none; box-shadow: inset 0 0 0 1px var(--c-ui-hover); }
+.r-dr .is-now { color: var(--c-live); background: color-mix(in srgb, var(--c-live) 10%, var(--c-ui-item)); }
+.r-hid { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 14px; color: var(--c-muted); }
+.r-btn { display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 0 16px; border: 0; border-radius: 7px; background: var(--c-ui-hover); color: var(--c-text); font: 600 13.5px var(--font); white-space: nowrap; }
+.r-btn--main { background: var(--c-accent); color: var(--c-on-accent); }
+.r-fav { border: 0; background: none; padding: 2px 4px; color: var(--c-ui-dim); font-size: 16px; line-height: 1; } .r-fav.is-on { color: var(--c-coin); }
+.r-bo { padding: 2px 6px; border-radius: 4px; background: var(--c-ui-chip); color: var(--c-ui-dim); font: 700 11.5px var(--font-c); }
+.r-st b { display: block; font: 700 18px/1.15 var(--font-c); color: var(--c-ui-clock); white-space: nowrap; }
+.r-st small { display: block; color: var(--c-caption); font-size: 11.5px; }
+.r-st.is-live b { color: var(--c-live); font-size: 15px; } .r-st.is-pause b { color: var(--c-coin); font-size: 15px; } .r-st.is-muted b { font-size: 15px; color: var(--c-muted); }
+.r-st.is-warn b { color: var(--c-text); } .r-st.is-warn small { color: var(--c-coin); }
+.r-note { color: var(--c-caption); font-size: 12.5px; }
+.r-off { opacity: .55; } .r-off .r-nm { text-decoration: line-through; }

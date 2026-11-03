@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_row.css" /><link rel="stylesheet" href="_rich.css" /></head>
+<body><main class="r-page">
+  <h1>v4 · Быстрый взгляд (как cyberscore)</h1>
+  <p>Открытая строка — мини-обзор матча прямо в списке, без вкладок: всё главное сразу, но разложено по аккуратным плиткам. До матча — форма и три кольца-показателя у каждой команды (dltv), личные встречи, прогноз счёта. В эфире — карты серии, график золота по минутам, драфт героями, таблицы игроков (cyberscore Quick view). Итог — карты, таблицы, игрок матча, новости.</p>
+  <div class="r-tools"><div class="r-seg" data-states></div><div class="r-seg"><button type="button" data-open="0">Закрыта</button><button type="button" data-open="1">Открыта</button></div></div>
+  <div class="r-frames">
+    <div><p class="r-cap">Колонка матчей · 1000 — клик по строке открывает и закрывает</p><div class="r-frame r-frame--col" data-row></div></div>
+    <div><p class="r-cap">Телефон · 390</p><div class="r-frame r-frame--phone" data-row></div></div>
+  </div>
+</main>
+<script src="_rich.js"></script>
+<script>
+window.ROW = {}
+const R = RICH, сек = R.сек
+// Общее: что случилось (задержка / перенос / пауза), кнопки состояния, вкладка-кусочек с сайта по имени
+const случилось = (m, h) => m.заметка && ['delay', 'moved', 'pause'].includes(m.вид) ? сек('Что случилось', `<p class="r-txt">${m.вид === 'delay' ? `Начало сдвинули с ${m.t} на ${m.новое}.` : m.вид === 'moved' ? `Матч перенесён на ${m.новое}.` : `Пауза ${m.часы}.`}<small>${m.заметка}</small></p>`) : ''
+const кнопки = (m, h, крючок = '') => `<div class="x-ft">${крючок ? `<p>${крючок}</p>` : ''}${h.кнопки(h.кусочки(m.вид, m)[1])}</div>`
+const кусок = (m, h, имя) => (h.кусочки(m.вид, m)[0].find(([t]) => t === имя) || [, ''])[1]
+const крюк = 'В матче 2 твоих игрока · <a href="#">собрать состав</a>'
+const картыСерии = (m, h) => {
+  const cs = m.g === 'cs', n = i => cs ? ['Mirage', 'Inferno', 'Ancient'][i] : 'Карта ' + (i + 1)
+  return { live: [[n(0) + ' · 38:12', 'a', '34 : 21', ''], [n(1) + ' · ' + (m.часы || ''), '', '18 : 12', 'is-now', 'идёт'], [n(2), '', '—', 'is-wait', 'если понадобится']],
+    pause: [[n(0), 'b', '29 : 33', ''], [n(1) + ' · пауза', '', '11 : 9', 'is-now', 'пауза'], [n(2), '', '—', 'is-wait', 'если понадобится']],
+    break: [[n(0), 'a', '13 : 9', ''], [n(1), 'b', '11 : 13', ''], [n(2) + ' · через ' + m.через, '', '—', 'is-now', 'выбор ' + h.имя(m.b)]],
+    done: [[n(0) + ' · 38 мин', 'a', '31 : 18', ''], [n(1) + ' · 44 мин', 'a', '27 : 20', '']],
+    pre: [[n(0), '', '—', 'is-wait', 'вето за 15 мин до начала'], [n(1), '', '—', 'is-wait', 'вето за 15 мин до начала'], [n(2), '', '—', 'is-wait', 'если понадобится']] }
+}
+ROW.вариант = (m, open, h) => {
+  const g = R.группа(m), к = картыСерии(m, h)
+  const тело = {
+    pre: () => `${случилось(m, h)}${сек('Перед матчем', R.показатели(m, h))}<div class="x-g2">${сек('Личные встречи', R.встречи(m, h))}${сек('Прогноз зрителей', R.прогноз(m, h))}</div>${кнопки(m, h, крюк)}`,
+    draft: () => `<div class="x-g21">${сек('Драфт · идёт выбор', кусок(m, h, 'Пики и баны'))}${сек('Кто победит', R.прогноз(m, h, 1))}</div>${сек('Составы', R.составы(m, h))}${кнопки(m, h)}`,
+    live: () => `${случилось(m, h)}${сек('Карты серии', R.карты(m, h, к[m.вид]))}<div class="x-g2">${m.g === 'dota' ? сек('Золото · карта ' + m.карта, R.график(m, h)) : сек('Шанс победы', кусок(m, h, 'Шанс победы'))}${сек('Драфт', R.составы(m, h))}</div><div class="x-g2">${сек('', R.таблица(m, h, 'a'))}${сек('', R.таблица(m, h, 'b'))}</div>${кнопки(m, h, m.fav ? 'Yatoro · +12.4 очка' : '')}`,
+    done: () => `${сек('Карты серии', R.карты(m, h, к.done))}<div class="x-g2">${сек('', R.таблица(m, h, 'a'))}${сек('', R.таблица(m, h, 'b'))}</div><div class="x-g2">${сек('', R.игрокМатча(m, h))}${сек('Новости матча', R.новости(m, h))}</div>${кнопки(m, h)}`,
+    hidden: () => R.скрыто(h), cancel: () => '',
+  }[g]()
+  return R.строка(m, open, h, тело)
+}
+</script>
+<script src="_row.js"></script>
+</body></html>

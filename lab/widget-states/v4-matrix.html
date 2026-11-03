@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<base href="../widget-tournament-4/" />
+<title>v4 · Таблица</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="_t4.css" /><link rel="stylesheet" href="../widget-states/_s.css" /></head>
+<body><div class="lab-board">
+  <h1>Состояния виджета · v4 · Таблица</h1>
+  <p class="lab-board__lead">Три экрана строками: экран · зачем · что можно сделать · виджет. Подсказки не на виджете, а в таблице — как спецификация.</p>
+  <div class="s-tbl4" id="t"></div>
+</div>
+<script src="_data.js"></script><script src="_t4.js"></script><script src="../widget-states/_states.js"></script>
+<script>
+  document.getElementById('t').innerHTML = '<div class="h">Экран</div><div class="h">Зачем</div><div class="h">Что можно сделать</div><div class="h">Виджет</div>'
+    + S.key.map(k => `<div class="r">${k.name}</div><div class="s-why">${k.why}</div><div class="s-why">${k.hints.map(([, a, r]) => `<div><b>${a}</b> — ${r}</div>`).join('')}</div><div><div data-k="${k.id}"></div></div>`).join('')
+  document.querySelectorAll('[data-k]').forEach(el => S.mount(el, S.by(el.dataset.k), { hint: 'none' }))
+</script>
+</body></html>

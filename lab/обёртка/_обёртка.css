@@ -1,0 +1,7 @@
+/* Лаба «Обёртка», режим swap (v5): карты сайта стоят на местах невидимыми; 3D-карта встаёт ребром — подмена — доворачивается настоящая */
+.bs.swap .cs__card { translate: 0 0; scale: 1; opacity: 0; transition: none; rotate: calc((var(--i) - 1) * 5deg); }
+.bs.swap .cs__card--best { translate: 0 -18px; z-index: 1; }
+.bs.swap .cs__card.is-in { opacity: 1; }
+.bs.swap .cs__card .cs__flip { transform: rotateY(-90deg); transition: transform .5s cubic-bezier(.2, 1.25, .4, 1); }
+.bs.swap .cs__card.is-flip .cs__flip { transform: rotateY(0deg); }
+.bs.swap.is-done .cs__cards { pointer-events: auto; }

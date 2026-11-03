@@ -1,0 +1,13 @@
+/* Лаба «Стадии матча»: оболочка страницы варианта — пульт стадий и телефон. */
+.p-page { padding: 40px 32px 80px; }
+.p-page > h1 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.01em; }
+.p-page > p { max-width: 100ch; margin: 8px 0 0; color: var(--c-muted); font-size: 15px; line-height: 1.5; }
+.p-cap { margin: 28px 0 10px; font-size: 13px; font-weight: 600; color: var(--c-caption); }
+.p-tools { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 18px -32px 0; padding: 10px 32px; background: color-mix(in srgb, var(--c-ui-bg) 92%, transparent); backdrop-filter: blur(8px); }
+.p-seg { display: flex; flex-wrap: wrap; gap: 2px; padding: 3px; border-radius: 8px; background: var(--c-ui-chip); }
+.p-seg button, .p-play { border: 0; padding: 7px 12px; border-radius: 6px; background: none; color: var(--c-ui-dim); font: 600 13.5px var(--font); cursor: pointer; }
+.p-seg button[aria-pressed='true'] { background: var(--c-ui-panel); color: var(--c-accent); }
+.p-play { background: var(--c-ui-chip); color: var(--c-text); }
+.p-play[aria-pressed='true'] { color: var(--c-accent); }
+.p-phone { flex: none; width: 390px; height: 844px; margin: 11px; overflow: hidden; border-radius: 42px; box-shadow: 0 0 0 10px color-mix(in srgb, var(--c-text) 8%, var(--c-ui-bg)), 0 0 0 11px var(--c-ui-line), 0 40px 90px -30px var(--c-black); }
+.p-phone iframe { display: block; width: 390px; height: 844px; border: 0; }

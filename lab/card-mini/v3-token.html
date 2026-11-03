@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="../карточка-v3/_v3.css" /><link rel="stylesheet" href="_mini.css" />
+<style>
+/* v3 · Жетон — короче полной (4:5), для строк «мои игроки» и пятёрки: голова крупно, рейтинг в углу, ник — лентой во всю ширину
+   с позицией на краю, логотип — язычком слева. Форма и кант — Хайперглитча. 1em = ширина / 16 */
+.m3 { aspect-ratio: 4 / 5; --shape: polygon(1.4em 0, 100% 0, 100% calc(100% - 1.9em), calc(100% - 1.9em) 100%, 0 100%, 0 1.4em); --r: 0; }
+.m3 .mk-logo { left: 1.6em; top: 1em; width: 12.8em; height: 11em; }
+.m3 .mk-halo { left: 1.6em; top: -.6em; width: 13em; height: 11em; }
+.m3 .ph { left: -.4em; top: .6em; width: 16.8em; -webkit-mask: linear-gradient(180deg, var(--c-black) 62%, transparent 80%); mask: linear-gradient(180deg, var(--c-black) 62%, transparent 80%); }
+.m3__tab { position: absolute; left: 0; top: 2em; width: 2.2em; height: 5.6em; z-index: 9; display: grid; place-items: center;
+  clip-path: polygon(0 0, 100% .6em, 100% calc(100% - .6em), 0 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--tier) 30%, var(--c-card-ink)), var(--c-card-ink)); }
+.m3__tab .logo { width: 1.4em; height: 1.4em; }
+.m3__ovr { position: absolute; right: 0; top: 0; z-index: 9; display: grid; place-content: center; width: 5.6em; height: 4.4em; padding-left: .4em;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 1.1em 100%, 0 calc(100% - 1.1em)); background: linear-gradient(200deg, color-mix(in srgb, var(--tier) 30%, var(--c-card-ink)), var(--c-card-ink)); }
+.m3__ovr b { font-family: 'Archivo', sans-serif; font-weight: 900; font-size: 2.9em; line-height: 1; letter-spacing: -.04em; color: var(--c-white); }
+/* Лента с ником: во всю ширину, позиция — плашкой цвета силы на левом краю */
+.m3__band { position: absolute; left: 0; right: 0; bottom: 2.4em; z-index: 7; display: flex; align-items: stretch; height: 3.6em;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tier-2) 70%, var(--c-card-ink)), var(--c-card-ink)); }
+.m3__pos { display: grid; place-content: center; padding: 0 .55em 0 .7em; font-family: 'Archivo', sans-serif; font-weight: 900; font-size: 1.15em; color: var(--c-card-ink); background: var(--tier-hi);
+  clip-path: polygon(0 0, 100% 0, calc(100% - .5em) 100%, 0 100%); }
+.m3__nick { align-self: center; min-width: 0; padding: 0 .7em 0 .5em; font-family: 'Archivo', sans-serif; font-stretch: 108%; font-weight: 900; font-size: 1.8em; line-height: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.m3__foot { position: absolute; left: 0; right: 0; bottom: 0; height: 2.4em; z-index: 6; display: flex; align-items: center; padding-left: 1em; font-size: 1.05em; font-weight: 700; color: var(--c-muted);
+  background: var(--c-card-ink); }
+.m3__foot b { color: var(--c-text); font-weight: 800; }
+</style></head>
+<body><section class="section v3">
+  <div class="sec-head"><h2 class="sec-title">v3 · Жетон</h2>
+    <p class="sec-lead">Короче полной карты (4:5) — для строк «мои игроки» и пятёрки. Голова крупно, рейтинг в углу. Ник — лентой во всю ширину, позиция — плашкой цвета силы на её краю. Под лентой — команда, слева язычок с логотипом.</p></div>
+  <div id="mini"></div>
+</section>
+<script src="../карточка-v3/_v3.js"></script><script src="_mini.js"></script>
+<script>
+MINI.страница({
+  класс: 'm3',
+  лицо: (п, r, h) => `
+<div class="mk-plate">
+  ${h.маска(п, 'mk-logo')}${h.маска(п, 'mk-logo mk-logo--a').replace('<i ', '<i data-deco="2" ')}${h.маска(п, 'mk-logo mk-logo--b').replace('<i ', '<i data-deco="2" ')}
+  <i class="mk-pix" data-deco="1"></i><i class="mk-halo"></i>${h.фото(п)}<i class="mk-scan" data-deco="3"></i>${h.блеск(r)}
+  <div class="m3__band"><span class="m3__pos">P${п.pos}</span><span class="m3__nick">${п.ник}</span></div>
+  <div class="m3__foot"><b>${h.команда(п)}</b></div>
+</div>
+<svg class="mk-frame" viewBox="0 0 160 200" preserveAspectRatio="none" aria-hidden="true"><polygon points="14,1 159,1 159,181 140,199 1,199 1,14" /></svg>
+<div class="m3__tab">${h.лого(п)}</div>
+<div class="m3__ovr"><b>${п.рейтинг}</b></div>`,
+})
+</script>
+</body></html>

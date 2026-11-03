@@ -1,0 +1,84 @@
+/* Шаг 3 лабы gs-match-2: график + пики (код — _dr3.js). Всё внутри окна вкладок: без своих рамок, разделитель — линия. */
+.d3{ display:flex; flex-direction:column; }
+.d3 .gw{ border:0 !important; background:none !important; }
+.d3-row{ display:flex; align-items:center; gap:12px; padding:10px 12px 12px; border-top:1px solid var(--w-border); }
+.d3-five{ display:flex; align-items:center; gap:8px; flex:1; min-width:0; }
+.d3-five.b{ justify-content:flex-end; }
+.d3-hs{ display:flex; gap:6px; flex:1; min-width:0; }
+.d3-five.b .d3-hs{ justify-content:flex-end; }
+.d3-tm{ display:inline-grid; place-items:center; width:24px; height:24px; flex:none; font:var(--t-tag); color:var(--w-muted-fg); }
+.d3-tm img{ width:22px; height:22px; object-fit:contain; }
+
+/* Герой: мини-иконка с позицией, ник, KDA */
+.d3-h{ display:flex; flex-direction:column; align-items:center; gap:2px; width:64px; min-width:0; }
+.d3-i{ position:relative; display:block; width:40px; height:40px; }
+.d3-i img{ width:40px; height:40px; border-radius:8px; background:var(--w-muted); image-rendering:auto; }
+.d3-i b{ position:absolute; right:-4px; bottom:-4px; display:grid; place-items:center; min-width:16px; height:16px; padding:0 3px; border-radius:5px; background:var(--w-fg); color:var(--w-primary-fg); font:700 10px/1 var(--w-font); }
+.d3-n{ max-width:100%; font:600 11px/14px var(--w-font); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:4px; }
+.d3-k{ font:var(--t-sub); color:var(--w-muted-fg); }
+
+/* Середина: счёт по убийствам и перевес по золоту */
+.d3-mid{ display:flex; flex-direction:column; align-items:center; flex:none; min-width:84px; }
+.d3-sc{ display:flex; gap:4px; font:700 20px/24px var(--w-font); } .d3-sc i{ font-style:normal; color:var(--w-muted-fg); }
+.d3-mid small{ font:400 10px/12px var(--w-font); color:var(--w-muted-fg); }
+.d3-gd{ display:inline-flex; align-items:center; gap:4px; margin-top:6px; font:var(--t-num-s); } .d3-gd img{ width:14px; height:14px; object-fit:contain; }
+.d3-gd.a{ color:var(--w-up); } .d3-gd.b{ color:var(--w-down); }
+
+/* sides — колонки слева и справа от графика */
+.d3--sides{ flex-direction:row; align-items:stretch; }
+.d3-col{ display:flex; flex-direction:column; align-items:center; justify-content:space-around; gap:4px; width:84px; flex:none; padding:8px 4px; }
+.d3-col.a{ border-right:1px solid var(--w-border); } .d3-col.b{ border-left:1px solid var(--w-border); }
+.d3-g{ flex:1; min-width:0; }
+.d3-under{ display:flex; justify-content:center; padding:8px 0 12px; border-top:1px solid var(--w-border); }
+.d3-under .d3-mid{ flex-direction:row; gap:8px; } .d3-under .d3-gd{ margin:0 0 0 12px; }
+
+/* top — мелко строкой над графиком */
+.d3--top .d3-row{ border-top:0; border-bottom:1px solid var(--w-border); padding:8px 12px; }
+.d3-h.sm{ width:auto; flex-direction:row; gap:6px; }
+.d3-h.sm .d3-i, .d3-h.sm .d3-i img{ width:28px; height:28px; border-radius:6px; }
+.d3-h.sm .d3-n{ display:none; } .d3-h.sm .d3-k{ font:400 10px/12px var(--w-font); writing-mode:horizontal-tb; }
+.d3--top .d3-five{ gap:10px; }
+
+/* телефон: пятёрки друг под другом, счёт сверху между ними */
+body:not(.is-desk) .d3-row{ flex-direction:column; align-items:stretch; gap:8px; padding:8px; }
+body:not(.is-desk) .d3-five, body:not(.is-desk) .d3-five.b{ justify-content:space-between; }
+body:not(.is-desk) .d3-five.b{ flex-direction:row-reverse; }
+body:not(.is-desk) .d3-mid{ order:-1; flex-direction:row; justify-content:center; gap:8px; } body:not(.is-desk) .d3-gd{ margin:0 0 0 8px; }
+body:not(.is-desk) .d3-h{ width:56px; } body:not(.is-desk) .d3-i, body:not(.is-desk) .d3-i img{ width:34px; height:34px; }
+body:not(.is-desk) .d3-h.sm .d3-k{ display:none; }
+
+/* v24–v25: KDA тремя числами цветом */
+.d3-k i{ font-style:normal; } .d3-k i + i::before{ content:'/'; color:var(--w-ring); margin:0 1px; }
+.d3-k .kk{ color:var(--w-up); } .d3-k .kd{ color:var(--w-down); } .d3-k .ka{ color:var(--w-muted-fg); }
+/* v24: пятёрки над и под графиком */
+.d3-row--top{ border-top:0; border-bottom:1px solid var(--w-border); }
+.d3--around .d3-hs{ justify-content:flex-start; gap:10px; }
+.d3-mid--ghost{ visibility:hidden; }
+/* v25: стакан — время сверху вниз, перевес влево / вправо */
+.sk{ padding:10px 12px 4px; }
+.sk-hd{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+.sk-tm{ display:inline-flex; align-items:center; gap:8px; flex:1; min-width:0; font:600 15px/20px var(--w-font); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .sk-tm img{ width:22px; height:22px; object-fit:contain; }
+.sk-tm.b{ justify-content:flex-end; } .sk-cap{ flex:none; font:var(--t-sub); color:var(--w-muted-fg); }
+body:not(.is-desk) .sk-cap{ display:none; } body:not(.is-desk) .sk-tm{ font-size:13px; }
+.sk-svg{ display:block; height:auto; max-height:420px; }
+.sk-g{ stroke:#1f1f23; stroke-width:1; } .sk-0{ stroke:#3f3f46; stroke-width:1; stroke-dasharray:3 3; }
+.sk-t{ fill:#71717a; font:10px var(--w-font); text-anchor:middle; } .sk-svg text[x="4"]{ text-anchor:start; }
+.sk-a{ fill:rgba(34,197,94,.22); } .sk-b{ fill:rgba(239,68,68,.22); }
+.sk-l{ fill:none; stroke:#e5e5e5; stroke-width:1.5; } .sk-dot{ fill:#fff; }
+.sk-now{ display:flex; justify-content:center; gap:8px; padding:4px 0 6px; font:var(--t-num-s); color:var(--w-muted-fg); }
+.sk-now b.a{ color:var(--w-up); } .sk-now b.b{ color:var(--w-down); }
+/* v31: герой кликается — панель игрока */
+.d3-h.is-pl{ cursor:pointer; border-radius:8px; padding:2px 0; } .d3-h.is-pl:hover{ background:var(--w-muted); }
+/* v32: карточка игрока при наведении (ПК) */
+.d3-h[data-hc]{ cursor:default; border-radius:8px; padding:2px 0; } .d3-h[data-hc]:hover{ background:var(--w-muted); }
+.d3-hc{ position:fixed; z-index:50; width:280px; padding:12px; border:1px solid var(--w-border); border-radius:var(--w-r-sm, 10px); background:var(--w-page); box-shadow:0 8px 24px rgba(0,0,0,.4); pointer-events:none; opacity:0; transition:opacity .12s; }
+.d3-hc.on{ opacity:1; }
+.hc-hd{ display:flex; align-items:center; gap:10px; margin-bottom:10px; } .hc-av{ width:40px; height:40px; border-radius:50%; object-fit:cover; }
+.hc-hd b{ display:block; font:600 15px/20px var(--w-font); } .hc-hd small{ display:flex; align-items:center; gap:6px; font:var(--t-sub); color:var(--w-muted-fg); } .hc-hd small img{ width:16px; height:16px; object-fit:contain; }
+.hc-hero{ display:flex; align-items:center; gap:10px; padding:8px; border-radius:8px; background:var(--w-muted); }
+.hc-hero img{ width:56px; height:32px; border-radius:4px; object-fit:cover; } .hc-hero b{ display:block; font:600 13px/18px var(--w-font); } .hc-hero small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.hc-st{ display:grid; grid-template-columns:repeat(4,1fr); margin-top:8px; border:1px solid var(--w-border); border-radius:8px; }
+.hc-st div{ padding:6px 4px; text-align:center; } .hc-st div + div{ border-left:1px solid var(--w-border); }
+.hc-st b{ display:block; font:var(--t-num-s); } .hc-st small{ font:400 10px/12px var(--w-font); color:var(--w-muted-fg); }
+.hc-st .kk{ color:var(--w-up); } .hc-st .kd{ color:var(--w-down); }
+.hc-it{ display:flex; flex-wrap:wrap; gap:4px; margin-top:8px; } .hc-it img{ width:36px; height:26px; border-radius:3px; object-fit:cover; }

@@ -1,0 +1,175 @@
+/* Лаба widget-disc-2 — «Факты и эфир» вместо «Обсуждения» (созвон 02.11 §1.2). Карточка .w, токены ../widgets-unified/_type.css. */
+.dc2-host { display: block !important; }
+.w.dc2 { width: 100%; height: auto; overflow: hidden; }
+.dc2 .num { font-variant-numeric: tabular-nums; }
+.dc2 button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+.dc2-hd { display: flex; align-items: center; gap: 8px; height: var(--g-hd, 52px); padding: 0 var(--g-pad, 12px); }
+.dc2-hd b { font: var(--t-title); color: var(--w-fg); }
+.dc2-hd small { margin-left: auto; font: var(--t-hsub); color: var(--w-muted-fg); }
+
+/* Карточка-факт: арт героя, скан-линии, как экран; число крупно моношрифтом */
+.dc2-fact { position: relative; height: 196px; margin: 0 var(--g-pad, 12px); border-radius: var(--w-r-sm, 8px); overflow: hidden; background: #000; }
+.dc2-art { position: absolute; inset: 0; background: var(--art) 70% 30% / cover; filter: saturate(1.1) brightness(.7); }
+.dc2-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.92) 20%, rgba(0,0,0,.35) 75%, rgba(0,0,0,.1)); }
+.dc2-scan { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 3px); pointer-events: none; }
+.dc2-bars { position: absolute; z-index: 2; top: 8px; left: 10px; right: 10px; display: flex; gap: 3px; }
+.dc2-bars i { flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,.22); overflow: hidden; position: relative; }
+.dc2-bars i.done { background: rgba(255,255,255,.75); }
+.dc2-bars i.on b { position: absolute; left: 0; top: 0; bottom: 0; background: #fff; transition: width .1s linear; } /* ширину ведёт таймер в _dc2.js */
+@keyframes dc2-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.dc2-txt { position: absolute; z-index: 1; left: 14px; right: 14px; bottom: 14px; display: flex; flex-direction: column; gap: 2px; animation: dc2-in .4s ease-out; }
+@keyframes dc2-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.dc2-k { font: var(--t-label); color: #facc15; }
+.dc2-big { font: 700 34px/38px 'JetBrains Mono', ui-monospace, monospace; color: #fff; letter-spacing: -.02em; }
+.dc2-big small { margin-left: 6px; font: 500 13px/18px var(--w-font); color: rgba(255,255,255,.7); letter-spacing: 0; }
+.dc2-who { font: var(--t-title); color: #fff; }
+.dc2-sub { font: var(--t-sub); color: rgba(255,255,255,.6); }
+.dc2-nav { position: absolute; z-index: 2; top: 0; bottom: 0; width: 50%; }
+.dc2-nav--l { left: 0; } .dc2-nav--r { right: 0; }
+
+/* Эфир: свёрнут — строка-кнопка, открыт — кадр 16:9 */
+.dc2-watch { display: flex !important; align-items: center; gap: 10px; width: calc(100% - 2 * var(--g-pad, 12px)); margin: 8px var(--g-pad, 12px) var(--g-pad, 12px) !important; padding: 8px 10px !important; border-radius: var(--w-r-sm, 8px); background: var(--w-mid-bg, #18181b) !important; text-align: left; }
+.dc2-watch:hover { background: var(--w-muted, #27272a) !important; }
+.dc2-watch > i { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--w-fg); color: var(--w-bg); font-style: normal; font-size: 11px; }
+.dc2-watch span { display: flex; flex-direction: column; min-width: 0; }
+.dc2-watch b { font: var(--t-title); color: var(--w-fg); }
+.dc2-watch small { font: var(--t-sub); color: var(--w-muted-fg); }
+.dc2-live { margin-left: auto; padding: 0 6px; border-radius: 4px; background: #ef4444; color: #fff; font: var(--t-live); font-style: normal; }
+.dc2-tv { position: relative; margin: 8px var(--g-pad, 12px) var(--g-pad, 12px); aspect-ratio: 16 / 9; border-radius: var(--w-r-sm, 8px); overflow: hidden; background: #000; }
+.dc2-tv img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.8); }
+.dc2-tv .dc2-live { position: absolute; top: 8px; left: 8px; margin: 0; }
+.dc2-src { position: absolute; left: 8px; bottom: 8px; font: var(--t-sub); color: #fff; text-shadow: 0 1px 4px #000; }
+.dc2-x { position: absolute; top: 6px; right: 6px; width: 24px; height: 24px; border-radius: 50%; background: rgba(0,0,0,.6) !important; color: #fff; font-size: 16px; line-height: 24px; }
+
+/* ——— v3–v6 · телевизор «Обсуждения» с фактами-сторис + мини-эфир (стили экрана — ../widget-promo/_disc.css) ——— */
+.dc2-in { padding: 0 var(--g-pad, 12px) var(--g-pad, 12px); display: flex; flex-direction: column; gap: 8px; }
+.dc2-hd small { display: flex; align-items: center; gap: 6px; }
+.dc2-dot { width: 6px; height: 6px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+.dc2-tv2 { position: relative; }
+.dc2-top { margin-bottom: -4px; }
+.dc2-bars--tv { position: static; flex: 1; }
+.dc2-tk { font: 700 11px/14px 'JetBrains Mono', monospace; letter-spacing: .06em; text-transform: uppercase; color: #ffb020; text-shadow: 0 0 6px rgba(255,176,32,.7); }
+.dc2-led { animation: dc2-in .35s ease-out; }
+.dc2-st { display: flex; align-items: baseline; gap: 8px; font-size: 13px !important; }
+.dc2-num { font: 700 30px/32px 'JetBrains Mono', monospace; letter-spacing: -.01em; }
+.dc2-by { display: flex; align-items: center; gap: 6px; min-width: 0; font: 500 11px/14px 'JetBrains Mono', monospace; color: #ffcf7a; }
+.dc2-by img { width: 18px; height: 18px; border-radius: 3px; flex: none; }
+.dc2-by b { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dc2-by span { margin-left: auto; color: rgba(255,176,32,.6); white-space: nowrap; }
+.dc2-tv2 .dc2-nav { top: 0; bottom: 0; width: 50%; z-index: 5; cursor: pointer; } /* левая половина — назад, правая — вперёд */
+
+/* Мини-окно эфира */
+.dc2-mini { display: flex !important; align-items: center; gap: 10px; text-align: left; }
+.dc2-mv { position: relative; flex: none; display: block; width: 112px; aspect-ratio: 16 / 9; border-radius: 6px; overflow: hidden; background: #000; box-shadow: 0 0 0 1px var(--w-border); }
+.dc2-mv img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.75); transition: transform 8s linear; }
+.dc2-mini.is-play .dc2-mv img { transform: scale(1.12); filter: brightness(.95); }
+.dc2-pl { position: absolute; inset: 0; display: grid; place-items: center; font-style: normal; font-size: 12px; color: #fff; text-shadow: 0 1px 6px #000; }
+.dc2-mini.is-play .dc2-pl { opacity: 0; } .dc2-mini.is-play:hover .dc2-pl { opacity: 1; }
+.dc2-lv { position: absolute; left: 4px; top: 4px; padding: 0 4px; border-radius: 3px; background: #dc2626; color: #fff; font: 700 9px/13px 'JetBrains Mono', monospace; font-style: normal; }
+.dc2-mi { display: flex; flex-direction: column; min-width: 0; }
+.dc2-mi b { font: var(--t-title); color: var(--w-fg); }
+.dc2-mi small { font: var(--t-sub); color: var(--w-muted-fg); }
+/* v4 · эфир в углу телевизора (картинка в картинке) */
+.dc2-mini--pip { position: absolute; z-index: 6; top: 34px; right: 10px; }
+.dc2-mini--pip .dc2-mv { width: 96px; box-shadow: 0 0 0 1px rgba(255,255,255,.25), 0 4px 12px rgba(0,0,0,.6); }
+/* v5 · эфир сверху крупнее */
+.dc2-mini--dock .dc2-mv { width: 140px; }
+
+/* v6 · разные подложки фактов */
+.dc2-bgt { display: flex; align-items: center; justify-content: center; gap: 14px; background: radial-gradient(circle at 50% 40%, #1f2937, #050505) !important; filter: none !important; }
+.dc2-bgt img { width: 72px; height: 72px; object-fit: contain; opacity: .55; filter: grayscale(.3); }
+.dc2-bgt i { font: 700 14px 'JetBrains Mono', monospace; font-style: normal; color: rgba(255,176,32,.5); }
+.dc2-bgg { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; padding: 6px; background: #050505 !important; filter: none !important; opacity: .45; }
+.dc2-bgg img { width: 100%; aspect-ratio: 1; border-radius: 4px; filter: grayscale(.5); }
+
+/* v7–v8 · у каждого факта картинка; эфир — отдельный сторис; «Посмотреть момент» */
+.dc2-bgp { gap: 10px; }
+.dc2-bgp img { opacity: .5; }
+.dc2-hart { width: 112px !important; height: 63px !important; object-fit: cover; border-radius: 6px; filter: grayscale(.2) !important; opacity: .55 !important; }
+.dc2-hart--big { width: 200px !important; height: 112px !important; opacity: .45 !important; }
+.dc2-bgp i { font: 700 18px 'JetBrains Mono', monospace; font-style: normal; color: rgba(255,176,32,.5); }
+.dc2-bgl { filter: saturate(1) contrast(1.05) brightness(.8) !important; }
+.dc2-bars i.live { background: rgba(239,68,68,.45); } .dc2-bars i.live.done, .dc2-bars i.live b { background: #ef4444; }
+.dc2-tv2.is-live { box-shadow: inset 0 0 0 2px #ef4444, inset 0 0 40px rgba(0,0,0,.6) !important; }
+.dc2-tk--live { color: #ff5a4d !important; text-shadow: 0 0 6px rgba(239,68,68,.8) !important; }
+.dc2-led--live .dc2-num { color: #ff5a4d; text-shadow: 0 0 6px #ef4444, 0 0 14px rgba(239,68,68,.6); }
+.dc2-cta, .dc2-mom { position: relative; z-index: 7; align-self: flex-start; display: inline-flex !important; align-items: center; gap: 6px; height: 26px; padding: 0 10px !important; border-radius: 4px;
+  font: 700 11px/26px 'JetBrains Mono', monospace !important; letter-spacing: .03em; text-transform: uppercase; }
+.dc2-cta { background: #dc2626 !important; color: #fff !important; box-shadow: 0 0 12px rgba(220,38,38,.5); }
+.dc2-cta:hover { background: #ef4444 !important; }
+.dc2-mom { height: 22px; margin-top: 2px; background: rgba(255,176,32,.12) !important; color: #ffb020 !important; box-shadow: inset 0 0 0 1px rgba(255,176,32,.35); font-size: 10px !important; line-height: 22px !important; }
+.dc2-mom:hover { background: rgba(255,176,32,.22) !important; }
+
+/* Размеры текста в телевизоре — явно и мельче: стили экрана «Обсуждения» раздували подпись (дирижёр 02.11: «меньше текста, чтобы влезало») */
+.dc2-tv2 .dc2-num { font-size: 24px !important; line-height: 28px !important; }
+.dc2-tv2 .dc2-st { font-size: 12px !important; line-height: 16px !important; }
+.dc2-tv2 .dc2-by, .dc2-tv2 .dc2-by b, .dc2-tv2 .dc2-by span { font-size: 11px !important; line-height: 14px !important; letter-spacing: 0 !important; text-transform: none !important; }
+.dc2-tv2 .dc2-by b { font-weight: 700 !important; }
+.dc2-tv2 .dc2-by img { width: 16px !important; height: 16px !important; }
+.dc2-tv2 .dc2-tk { font-size: 10px !important; line-height: 14px !important; }
+.dc2-tv2 .dc2-mom, .dc2-tv2 .dc2-cta { white-space: nowrap; font-size: 10px !important; }
+.dc2-tv2 .dc2-cta { font-size: 11px !important; }
+.dc2-tv2 .mx-live { font-size: 9px !important; line-height: 13px !important; }
+
+/* v9–v10 · только телевизор: у карточки виджета нет рамки и фона */
+.w.dc2.dc2--bare { background: none !important; border: 0 !important; box-shadow: none !important; }
+.dc2--bare .dc2-hd { padding: 0 2px; }
+.dc2--bare .dc2-in { padding: 0; }
+
+/* Читаемость (дирижёр 02.11: «размытие чуть меньше — текст сложно читать»): LED-сетка поверх текста реже и бледнее, свечение текста слабее */
+.dc2-tv2 .dc2-led::after { opacity: .35; }
+.dc2-tv2 .dc2-st, .dc2-tv2 .dc2-num { text-shadow: 0 0 3px rgba(255,176,32,.55) !important; }
+.dc2-tv2 .dc2-by, .dc2-tv2 .dc2-by b, .dc2-tv2 .dc2-by span { text-shadow: none !important; color: #ffd28a; }
+.dc2-tv2 .dc2-by span { color: rgba(255,210,138,.7) !important; }
+.dc2-tv2 .dc2-tk { text-shadow: 0 0 3px rgba(255,176,32,.5) !important; }
+.dc2-tv2 .dc2-led { background: rgba(11,7,3,.92) !important; }
+
+/* v13 · рубрика внутри LED-блока; полоска эфира видна (красная заливка по серой дорожке, как у остальных) */
+.dc2-cnt { justify-content: flex-end; }
+.dc2-led .dc2-tk { display: block; margin-bottom: 2px; }
+.dc2-bars i.live { background: rgba(255,255,255,.22) !important; }
+
+/* v13 · правки дирижёра 02.11 */
+/* Пройденный сторис эфира — красный (раньше серая дорожка перебивала «пройдено») */
+.dc2-bars i.live.done { background: #ef4444 !important; }
+/* Под полосками — затемнение сверху вниз, чтобы полоски и счётчик читались на любой картинке */
+.dc2-tv2::after { content: ''; position: absolute; z-index: 1; left: 0; right: 0; top: 0; height: 56%; pointer-events: none; animation: none !important;
+  background: linear-gradient(180deg, rgba(0,0,0,.85), rgba(0,0,0,.45) 45%, transparent) !important; border-radius: inherit; }
+/* Низ корпуса телевизора — видно, где кончается: светлая кромка и тень снизу */
+.dc2--tv .mx-body { box-shadow: inset 0 1px 0 rgba(255,255,255,.12), inset 0 -2px 0 rgba(255,255,255,.14), 0 8px 18px rgba(0,0,0,.55) !important; border-bottom: 1px solid rgba(255,255,255,.18); }
+
+/* v14 · картинка факта — в верхней части экрана, между полосками и инфоблоком */
+.dc2-up .dc2-bgt { align-items: flex-start !important; padding-top: 40px; }
+.dc2-up .dc2-bgt img { width: 56px; height: 56px; opacity: .8; }
+.dc2-up .dc2-hart { width: 104px !important; height: 58px !important; opacity: .85 !important; }
+.dc2-up .dc2-hart--big { width: 136px !important; height: 76px !important; }
+.dc2-up.dc2-tv2::after { height: 32%; }
+/* v15 · инфоблок компактнее — картинка видна */
+.dc2-slim .dc2-led { gap: 2px !important; padding: 6px 8px !important; }
+.dc2-slim .dc2-num { font-size: 20px !important; line-height: 22px !important; }
+.dc2-slim .dc2-led .dc2-tk { margin-bottom: 0; }
+.dc2-slim .dc2-mom { height: 20px; line-height: 20px !important; }
+.dc2-slim .dc2-bgt { align-items: flex-start !important; padding-top: 34px; }
+.dc2-slim .dc2-bgt img, .dc2-slim .dc2-hart { opacity: .8 !important; }
+.dc2-slim.dc2-tv2::after { height: 30%; }
+/* Сторис эфира — Twitch */
+.dc2-twm.is-live .dc2-bgl { filter: none !important; }
+.dc2-twm.is-live.dc2-tv2::after { height: 30%; }
+.dc2-tw { background: #9146ff !important; box-shadow: 0 0 12px rgba(145,70,255,.55) !important; text-transform: none !important; letter-spacing: 0 !important; font: 700 12px/26px var(--w-font) !important; }
+.dc2-tw:hover { background: #a970ff !important; }
+
+/* v16 · картинка — средней строкой экрана, ровно между полосками и инфоблоком */
+.dc2-midm.dc2-tv2::after { display: none; }
+.dc2-midm .dc2-bgnone { background: radial-gradient(circle at 50% 45%, #18181b, #050505) !important; filter: none !important; }
+.dc2-mid { position: relative; z-index: 2; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 4px 0; }
+.dc2-mid i { font: 700 14px 'JetBrains Mono', monospace; font-style: normal; color: rgba(255,176,32,.6); }
+.dc2-mlogo { height: 100%; max-height: 64px; width: auto; max-width: 30%; object-fit: contain; }
+.dc2-mhero { height: 100%; max-height: 80px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 6px; }
+.dc2-mid--live { padding: 2px 0; }
+.dc2-mstream { height: 100%; aspect-ratio: 16 / 9; max-width: 100%; object-fit: cover; border-radius: 6px; box-shadow: 0 0 0 2px #9146ff; }
+.dc2-midm .mx-led { margin-top: 0 !important; }
+
+/* v17 · кнопки во всю ширину инфоблока; эфир — кадром на весь экран */
+.dc2-wide .dc2-cta, .dc2-wide .dc2-mom { align-self: stretch !important; justify-content: center; width: 100%; }
+.dc2-wide.is-live .dc2-bgl { filter: none !important; }
+.dc2-wide.is-live::after { display: block; height: 34%; }

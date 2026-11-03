@@ -1,0 +1,450 @@
+/* Виджет турнира, заход 4 (созвон 21.10): минимум рамок и контролов, 320×320, отступы кратны 4.
+   Токены, .w, .w-scroll, доска — ../widget-tournament/_w.css. */
+.t4{ position:relative; height:320px; display:flex; flex-direction:column; }
+.t4 .w-scroll{ position:relative; }
+.t4-bd{ padding:4px 12px 12px; }
+.t4-cap{ font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+.t4-nm{ min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t4-up{ color:var(--w-up-fg); font-weight:500; } .t4-mid{ color:#fcd34d; font-weight:500; } .t4-down{ color:var(--w-down-fg); font-weight:500; }
+
+/* Логотипы — настоящие картинки; нет файла — буквы */
+.t4-lg{ width:16px; height:16px; flex:none; object-fit:contain; border-radius:4px; }
+.t4-lg--16{ width:14px; height:14px; } .t4-lg--24{ width:20px; height:20px; } .t4-lg--40{ width:32px; height:32px; }
+.t4-tl{ width:24px; height:24px; flex:none; object-fit:contain; }
+.t4-game{ width:16px; height:16px; flex:none; object-fit:contain; opacity:.8; }
+.t4-ini{ display:inline-grid; place-items:center; border-radius:6px; background:var(--w-muted); font-size:8px; font-weight:600; color:var(--w-muted-fg); }
+.t4-lg--40.t4-ini{ font-size:13px; border-radius:10px; }
+
+/* Шапка без нижней линии */
+.t4-hd{ display:flex; align-items:center; gap:8px; flex:none; height:48px; padding:0 12px 0 8px; }
+.t4-hd__t{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.t4-hd__t b{ font-size:13px; line-height:18px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t4-hd__t .t4-cap{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.w .t4-ib{ display:grid; place-items:center; width:28px; height:28px; flex:none; border-radius:var(--w-r-sm); color:var(--w-muted-fg); }
+.w .t4-ib:hover, .w .t4-ib.is-on{ background:var(--w-muted); color:var(--w-fg); }
+.w .t4-ib:disabled{ opacity:.3; cursor:default; background:none; }
+
+/* Список турниров */
+.t4-lbl{ display:flex; align-items:center; gap:8px; margin:12px 0 4px; font-size:12px; line-height:16px; font-weight:500; color:var(--w-muted-fg); }
+.t4-lbl:first-child{ margin-top:4px; }
+.t4-dot{ width:6px; height:6px; border-radius:50%; background:var(--w-down); }
+.w .t4-tr{ display:flex; align-items:center; gap:8px; width:calc(100% + 16px); min-height:40px; margin:0 -8px; padding:0 8px; border-radius:var(--w-r-sm); }
+.w .t4-tr:hover{ background:var(--w-mid-bg); }
+.t4-tr__m{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.t4-tr__m b{ font-size:13px; line-height:18px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t4-tr__m .t4-cap{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.w .t4-arch{ display:flex; align-items:center; gap:4px; margin-top:12px; font-size:13px; color:var(--w-muted-fg); }
+.w .t4-arch:hover{ color:var(--w-fg); }
+
+/* Группы табами — текстом, без рамок */
+.t4-tabs{ display:flex; gap:4px; margin:0 0 8px; }
+.w .t4-tabs button{ height:24px; padding:0 10px; border-radius:999px; font-size:12px; font-weight:500; color:var(--w-muted-fg); }
+.w .t4-tabs button.is-on{ background:var(--w-muted); color:var(--w-fg); }
+
+/* Таблица без линий; зона выхода / вылета — фоном строки */
+.t4-tbl{ width:100%; border-collapse:collapse; table-layout:fixed; font-size:12px; line-height:20px; }
+.t4-tbl th{ height:20px; font-size:12px; font-weight:500; color:var(--w-muted-fg); text-align:right; padding:0 4px 0 0; }
+.t4-tbl th:first-child{ width:28px; } .t4-tbl th:last-child{ width:48px; }
+.t4-tbl td{ height:28px; padding:0; text-align:right; font-variant-numeric:tabular-nums; }
+.t4-tbl td:first-child{ text-align:left; color:var(--w-muted-fg); padding-left:8px; border-radius:6px 0 0 6px; }
+.t4-tbl td:nth-child(2){ text-align:left; }
+.t4-tbl td:last-child{ padding-right:8px; border-radius:0 6px 6px 0; }
+.t4-tm{ display:flex; align-items:center; gap:8px; min-width:0; }
+.t4-tbl tr[data-team]{ cursor:pointer; }
+.t4-tbl tr.t4-z--up td{ background:var(--w-up-bg); }
+.t4-tbl tr.t4-z--down td{ background:var(--w-down-bg); }
+.t4-tbl tr.t4-z--mid td{ background:rgba(245,158,11,.12); }
+.t4-tbl tr[data-team]:hover td{ background:var(--w-muted); }
+.t4-leg{ display:flex; gap:12px; margin-top:8px; font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+.t4-leg span{ display:inline-flex; align-items:center; gap:6px; }
+.t4-sq{ display:inline-block; width:10px; height:10px; border-radius:2px; }
+.t4-sq.t4-z--up{ background:var(--w-up-bg); box-shadow:inset 0 0 0 1px var(--w-up); }
+.t4-sq.t4-z--mid{ background:rgba(245,158,11,.12); box-shadow:inset 0 0 0 1px var(--w-b); }
+.t4-sq.t4-z--down{ background:var(--w-down-bg); box-shadow:inset 0 0 0 1px var(--w-down); }
+div.t4-bd > .t4-rule{ margin-top:8px; }
+
+/* Контекст страницы: команды открытого матча — своя точка и выделенная строка */
+.t4-cd{ width:8px; height:8px; flex:none; border-radius:50%; }
+.t4-cd--a{ background:var(--w-a); } .t4-cd--b{ background:var(--w-b); }
+.t4-tbl tr.t4-ctx td{ font-weight:600; color:var(--w-fg); }
+.t4-tbl tr.t4-ctx--a td{ box-shadow:inset 0 1px 0 var(--w-a), inset 0 -1px 0 var(--w-a); }
+.t4-tbl tr.t4-ctx--b td{ box-shadow:inset 0 1px 0 var(--w-b), inset 0 -1px 0 var(--w-b); }
+.t4-tbl tr.t4-ctx--a td:first-child{ box-shadow:inset 1px 1px 0 var(--w-a), inset 0 -1px 0 var(--w-a); } .t4-tbl tr.t4-ctx--a td:last-child{ box-shadow:inset -1px 1px 0 var(--w-a), inset 0 -1px 0 var(--w-a); }
+.t4-tbl tr.t4-ctx--b td:first-child{ box-shadow:inset 1px 1px 0 var(--w-b), inset 0 -1px 0 var(--w-b); } .t4-tbl tr.t4-ctx--b td:last-child{ box-shadow:inset -1px 1px 0 var(--w-b), inset 0 -1px 0 var(--w-b); }
+
+/* Предстоящий турнир */
+.t4-pass{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:4px 0 4px; }
+.t4-pass div{ display:flex; flex-direction:column; }
+.t4-pass b{ font-weight:500; }
+.t4-pt{ display:flex; align-items:center; gap:8px; height:28px; font-size:12px; cursor:pointer; }
+.t4-pt.t4-ctx{ font-weight:600; }
+
+/* Сетка: один матч крупно */
+.t4-bm{ padding-top:8px; }
+.t4-bm__cap{ margin-bottom:8px; font-size:12px; font-weight:500; color:var(--w-muted-fg); }
+.t4-bm__card{ display:flex; flex-direction:column; gap:4px; }
+.t4-bm__r{ display:flex; align-items:center; gap:8px; height:36px; padding:0 10px; border-radius:var(--w-r-sm); background:var(--w-mid-bg); font-size:13px; font-weight:500; cursor:pointer; }
+.t4-bm__r b{ margin-left:auto; font-size:15px; font-weight:600; font-variant-numeric:tabular-nums; }
+.t4-bm__r.is-lose{ color:var(--w-muted-fg); }
+.t4-bm__r.t4-ctx--a{ box-shadow:inset 0 0 0 1px var(--w-a); } .t4-bm__r.t4-ctx--b{ box-shadow:inset 0 0 0 1px var(--w-b); }
+.t4-bm__when{ margin-top:12px; }
+.t4-chip{ display:inline-flex; align-items:center; flex:none; height:20px; padding:0 6px; border-radius:5px; background:var(--w-muted); font-size:12px; font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.t4-chip--live{ background:var(--w-down); color:var(--w-fg); letter-spacing:.02em; }
+.t4-chip--today{ background:var(--w-up-bg); color:var(--w-up-fg); }
+/* Низ сетки: ‹ матч N из M › и «Вся сетка» */
+.t4-bar{ display:flex; align-items:center; gap:4px; flex:none; height:40px; padding:0 8px; }
+.t4-bar__n{ flex:1; text-align:center; white-space:nowrap; }
+.t4-bar > .t4-cap:first-child{ flex:1; padding-left:4px; }
+.w .t4-zb{ display:flex; align-items:center; gap:6px; flex:none; height:28px; margin-left:8px; padding:0 8px; border-radius:var(--w-r-sm); background:var(--w-muted); font-size:12px; font-weight:500; }
+.w .t4-zb:hover{ background:var(--w-hover); }
+/* Вся сетка — ужата по ширине (zoom из _t4.js) */
+.t4-ball{ display:flex; flex-direction:column; gap:12px; width:max-content; padding-top:4px; }
+.t4-bb__n{ margin-bottom:4px; font-size:12px; font-weight:500; color:var(--w-muted-fg); }
+.t4-bb__cols{ display:flex; gap:12px; }
+.t4-bc{ display:flex; flex-direction:column; justify-content:space-around; gap:8px; }
+.t4-bc__r{ font-size:11px; line-height:16px; color:var(--w-muted-fg); white-space:nowrap; }
+.w .t4-bx{ display:flex; flex-direction:column; gap:2px; width:64px; padding:4px 6px; border-radius:6px; background:var(--w-mid-bg); }
+.w .t4-bx:not(:disabled):hover{ background:var(--w-muted); }
+.w .t4-bx:disabled{ cursor:default; opacity:.5; }
+.t4-bx span{ display:flex; align-items:center; gap:6px; font-size:12px; }
+.t4-bx span b{ margin-left:auto; font-weight:600; }
+.t4-bx span.is-lose{ opacity:.45; }
+.w .t4-bx.is-hl{ box-shadow:inset 0 0 0 1px var(--w-fg); }
+.w .t4-bx.is-live{ box-shadow:inset 0 0 0 1px var(--w-down); }
+
+/* Карточка команды по клику — под строкой, поверх затемнения */
+.t4-ov{ position:absolute; inset:0; z-index:2; background:rgba(0,0,0,.6); cursor:pointer; }
+.t4-card{ position:absolute; z-index:3; left:8px; right:8px; padding:12px; border-radius:var(--w-r); background:var(--w-bg); box-shadow:0 0 0 1px var(--w-border), 0 12px 32px rgba(0,0,0,.6); }
+.t4-card__top{ display:flex; align-items:center; gap:12px; }
+.t4-card__n{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.t4-card__n b{ font-size:14px; line-height:20px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t4-form{ display:inline-flex; gap:3px; }
+.t4-form i{ width:8px; height:8px; border-radius:50%; background:var(--w-ring); }
+.t4-form i.W{ background:var(--w-up); } .t4-form i.L{ background:var(--w-down); }
+.t4-card__l{ margin-top:8px; font-size:12px; line-height:20px; color:var(--w-muted-fg); }
+.t4-card__m{ display:flex; align-items:center; gap:8px; margin-top:8px; font-size:12px; color:var(--w-muted-fg); }
+.t4-card__m b{ color:var(--w-fg); font-weight:600; }
+.w a.t4-go{ margin-left:auto; color:var(--w-fg); text-decoration:none; }
+
+/* Отметка зон: 'cut' — линия-граница с подписью, 'num' — цвет места */
+.t4-cut td{ height:12px; padding:0; }
+.t4-cut span{ display:flex; align-items:center; gap:8px; font-size:11px; line-height:12px; color:var(--w-muted-fg); }
+.t4-cut span::after{ content:''; flex:1; border-top:1px dashed var(--w-ring); }
+.t4-cut--up span{ color:var(--w-up-fg); } .t4-cut--up span::after{ border-color:var(--w-up); }
+.t4-cut--mid span{ color:#fcd34d; } .t4-cut--mid span::after{ border-color:var(--w-b); }
+.t4-pn{ display:inline-grid; place-items:center; width:20px; height:20px; border-radius:6px; color:var(--w-muted-fg); }
+.t4-pn--up{ background:var(--w-up-bg); color:var(--w-up-fg); } .t4-pn--mid{ background:rgba(245,158,11,.14); color:#fcd34d; } .t4-pn--down{ background:var(--w-down-bg); color:var(--w-down-fg); }
+.t4-tbl--num td:first-child{ padding-left:4px; }
+
+/* Что на кону: вердикт, стрелки сдвига, «если победит», полоса, блок в карточке */
+.t4-vd{ display:inline-flex; align-items:center; height:20px; padding:0 6px; border-radius:5px; font-size:12px; font-weight:600; white-space:nowrap; background:var(--w-muted); color:var(--w-fg); }
+.t4-vd--up{ background:var(--w-up-bg); color:var(--w-up-fg); } .t4-vd--down{ background:var(--w-down-bg); color:var(--w-down-fg); } .t4-vd--mute{ color:var(--w-muted-fg); }
+.t4-dl{ flex:none; font-size:11px; font-style:normal; font-weight:600; }
+.t4-dl--up{ color:var(--w-up-fg); } .t4-dl--down{ color:var(--w-down-fg); }
+.t4-wi{ display:flex; gap:4px; margin:0 0 4px; }
+.w .t4-wi button{ display:flex; align-items:center; gap:6px; min-width:0; height:24px; padding:0 8px; border-radius:999px; font-size:12px; font-weight:500; color:var(--w-muted-fg); }
+.w .t4-wi button:first-child{ flex:none; }
+.w .t4-wi button.is-on{ background:var(--w-muted); color:var(--w-fg); }
+.t4-wi__c{ margin-bottom:4px; }
+.t4-sk{ display:flex; flex-direction:column; gap:4px; margin:0 0 8px; }
+.t4-sk__r{ display:flex; align-items:center; gap:8px; height:24px; font-size:12px; }
+.t4-sk__o{ display:flex; gap:8px; margin-left:auto; font-weight:600; white-space:nowrap; }
+.t4-cs{ margin-top:12px; padding-top:12px; border-top:1px solid var(--w-border); }
+.t4-cs__h{ display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
+.t4-cs__r{ display:flex; justify-content:space-between; font-size:12px; line-height:20px; color:var(--w-muted-fg); }
+
+/* v5: квадрат 320×320 — шапка и содержимое; идущие матчи — строками под ним, виджет растёт вниз */
+.t4.t4--grow{ height:auto; }
+.t4--grow > .w-scroll{ flex:none; height:272px; }
+.t4--grow > .w-scroll:has(+ .t4-bar){ height:232px; }
+.t4-now{ flex:none; padding:4px 8px; border-top:1px solid var(--w-border); }
+.w a.t4-now__r{ display:flex; align-items:center; gap:8px; height:32px; padding:0 4px; border-radius:var(--w-r-sm); font-size:12px; color:var(--w-muted-fg); text-decoration:none; }
+.w a.t4-now__r:hover{ background:var(--w-mid-bg); }
+.w a.t4-now__r.is-own{ background:var(--w-mid-bg); color:var(--w-fg); font-weight:600; }
+.t4-now__r .t4-nm{ flex:0 1 auto; }
+.t4-now__r svg{ flex:none; margin-left:auto; color:var(--w-muted-fg); }
+
+/* v6: таблица без скролла — строки ниже, легенда зон в строке табов */
+.t4--compact .t4-tbl td{ height:22px; }
+.t4--compact .t4-tbl th{ height:18px; }
+.t4--compact .t4-tabs{ margin-bottom:4px; }
+.t4-zk{ display:inline-flex; gap:10px; font-size:11px; }
+.t4-zk span{ display:inline-flex; align-items:center; gap:4px; }
+.t4-zk i{ width:8px; height:8px; border-radius:2px; }
+.t4-zk__b.t4-zk--up{ background:var(--w-up-bg); box-shadow:inset 0 0 0 1px var(--w-up); } .t4-zk__b.t4-zk--mid{ background:rgba(245,158,11,.12); box-shadow:inset 0 0 0 1px var(--w-b); } .t4-zk__b.t4-zk--down{ background:var(--w-down-bg); box-shadow:inset 0 0 0 1px var(--w-down); }
+.t4-zk__n.t4-zk--up{ background:var(--w-up-fg); } .t4-zk__n.t4-zk--mid{ background:#fcd34d; } .t4-zk__n.t4-zk--down{ background:var(--w-down-fg); }
+.t4--compact .t4-pn{ width:18px; height:18px; }
+.t4--compact .t4-cut td{ height:8px; }
+.t4--compact .t4-cut span{ font-size:10px; line-height:8px; }
+
+/* Табло матча: команды, LIVE, вердикт под каждой; v6 — сверху, v9 — внизу на каждый идущий матч */
+.t4-hero{ display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:4px; margin:0 0 6px; padding:6px; border-radius:var(--w-r-sm); background:linear-gradient(90deg, rgba(96,165,250,.14), rgba(255,255,255,.03) 50%, rgba(245,158,11,.14)); }
+.t4-hero__s{ position:relative; display:flex; flex-direction:column; align-items:center; gap:4px; min-width:0; font-size:12px; cursor:pointer; }
+.t4-hero__n{ display:flex; align-items:center; gap:6px; max-width:100%; min-width:0; }
+.t4-hero__s b{ min-width:0; font-weight:600; }
+.t4-hero__s .t4-vd{ height:18px; font-size:11px; }
+.t4-hero__s .t4-cd{ position:absolute; top:-2px; right:0; }
+.t4-hero__c{ display:flex; flex-direction:column; align-items:center; gap:4px; }
+/* v9: табло внизу — под квадратом 320, по одному на идущий матч; открытый на странице — с рамкой */
+.t4-now--hero{ display:flex; flex-direction:column; gap:4px; padding:6px 8px 8px; }
+.t4-now--hero .t4-hero{ margin:0; text-decoration:none; color:var(--w-fg); }
+.t4-now--hero .t4-hero:hover{ filter:brightness(1.15); }
+.t4-now--hero .t4-hero.is-own{ box-shadow:inset 0 0 0 1px var(--w-ring); }
+
+/* v10: плашка матча «прилипает» снизу на всю ширину, заходит под край виджета; основной квадрат — .t4-main */
+.t4.t4--dock{ height:auto; background:none; border:0; overflow:visible; }
+.t4--dock > .t4-main{ position:relative; z-index:1; display:flex; flex-direction:column; height:320px; background:var(--w-bg); border:1px solid var(--w-border); border-radius:var(--w-r); overflow:hidden; }
+.t4-dock{ position:relative; z-index:0; display:flex; flex-direction:column; gap:4px; margin:-12px 0 0; padding:18px 10px 8px; background:#131316; border:1px solid var(--w-border); border-top:0; border-radius:0 0 var(--w-r) var(--w-r); }
+.t4-dk__h{ display:flex; align-items:center; gap:2px; }
+.t4-dk__h > .t4-cap:first-child{ flex:1; }
+.w a.t4-dk__m{ display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:6px; padding:2px 0; color:var(--w-fg); text-decoration:none; }
+.t4-dk__s{ display:flex; align-items:center; gap:8px; min-width:0; }
+.t4-dk__s.is-r{ flex-direction:row-reverse; text-align:right; }
+.t4-dk__n{ display:flex; flex-direction:column; min-width:0; }
+.t4-oc{ font-size:11px; line-height:15px; font-weight:500; color:var(--w-muted-fg); }
+.t4-oc--up{ color:var(--w-up-fg); } .t4-oc--mid{ color:#fcd34d; } .t4-oc--down{ color:var(--w-down-fg); }
+.t4-lg.t4-lg--36{ width:36px; height:36px; }
+.t4-lg--36.t4-ini{ font-size:12px; border-radius:10px; }
+
+/* v9: команды открытого — яркие, остальные приглушены; без рамок и точек */
+.t4--dim .t4-cd{ display:none; }
+.t4--dim .t4-tbl tr.t4-ctx td{ box-shadow:none !important; }
+.t4--dim .t4-tbl tr[data-team]:not(.t4-ctx){ opacity:.4; }
+.t4--dim .t4-bm__r.t4-ctx--a, .t4--dim .t4-bm__r.t4-ctx--b{ box-shadow:none; }
+.t4--dim .t4-pt:not(.t4-ctx){ opacity:.4; }
+
+/* v9: сетка списком — раунд · команда · счёт · команда */
+.t4-pl{ margin:4px 0 4px; font-size:12px; font-weight:500; color:var(--w-muted-fg); }
+.t4-pr{ display:grid; grid-template-columns:64px 1fr 36px 1fr; align-items:center; gap:6px; height:34px; font-size:12px; }
+.t4-pr__r{ font-size:11px; color:var(--w-muted-fg); white-space:nowrap; }
+.t4-pr__t{ display:flex; align-items:center; gap:6px; min-width:0; cursor:pointer; }
+.t4-pr__t.is-r{ flex-direction:row-reverse; text-align:right; }
+.t4-pr__t.is-lose{ opacity:.45; }
+.t4-pr__s{ text-align:center; font-size:14px; font-weight:600; font-variant-numeric:tabular-nums; }
+.t4-pr__s .t4-chip{ font-size:11px; }
+
+/* v9: больше воздуха — логотипы крупнее, без лишних подложек и рамок */
+.t4--air .t4-tbl .t4-lg{ width:20px; height:20px; }
+.t4--air .t4-tabs button.is-on{ background:none; color:var(--w-fg); font-weight:600; }
+.t4-tabs__one{ height:24px; padding:0 10px; font-size:12px; line-height:24px; font-weight:600; color:var(--w-fg); }
+.t4--air .t4-sq{ box-shadow:none !important; }
+.w.t4--air .t4-zb{ background:none; color:var(--w-muted-fg); }
+.w.t4--air .t4-zb:hover{ color:var(--w-fg); background:none; }
+
+/* Легенда зон в строке табов (compact) */
+.t4-tabs .t4-zk{ margin-left:auto; align-self:center; }
+.t4-dk__s .t4-lg{ flex:none; }
+/* v10: «В–П» в строке табов вместо строки-заголовка таблицы; фраза «почему так» в конце пути */
+.t4-wl{ margin-left:auto; align-self:center; padding-right:8px; font-size:12px; font-weight:500; color:var(--w-muted-fg); }
+.t4--air .t4-tabs{ margin-bottom:4px; }
+.t4-story{ margin-top:8px; font-size:12px; line-height:17px; color:var(--w-muted-fg); }
+
+/* v11–v13: плашка — только крупные логотипы */
+.t4-lg.t4-lg--44{ width:44px; height:44px; } .t4-lg--44.t4-ini{ font-size:13px; border-radius:12px; }
+.t4-lg.t4-lg--20{ width:20px; height:20px; }
+.t4-dkl{ display:inline-flex; }
+.w a.t4-dk__m.t4-dk--pills{ grid-template-columns:1fr auto 1fr; }
+.t4-dkc{ display:flex; align-items:center; gap:8px; }
+.t4-dkc.is-r{ flex-direction:row-reverse; }
+.t4-lg.t4-lg--28{ width:28px; height:28px; }
+.t4-pp{ display:flex; flex-direction:column; gap:2px; }
+.t4-pp i{ height:18px; padding:0 6px; border-radius:999px; background:var(--w-muted); font-size:11px; line-height:18px; font-style:normal; font-weight:600; white-space:nowrap; color:var(--w-muted-fg); }
+.t4-pp--up{ background:var(--w-up-bg) !important; color:var(--w-up-fg) !important; } .t4-pp--mid{ background:rgba(245,158,11,.14) !important; color:#fcd34d !important; } .t4-pp--down{ background:var(--w-down-bg) !important; color:var(--w-down-fg) !important; }
+.w a.t4-dk--phrase, .w a.t4-dk--scen{ display:flex; flex-direction:column; align-items:stretch; gap:6px; }
+.t4-dkt{ display:flex; align-items:center; justify-content:space-between; padding:0 8px; }
+.t4-dkp{ display:flex; align-items:center; gap:8px; font-size:12px; line-height:16px; color:var(--w-fg); }
+.t4-dkp .t4-lg{ flex:none; }
+.t4-dks{ display:flex; align-items:center; justify-content:space-between; gap:8px; height:22px; font-size:12px; color:var(--w-muted-fg); }
+.t4-dks__w{ display:flex; align-items:center; gap:6px; }
+.t4-dks__r{ display:flex; align-items:center; gap:10px; font-weight:600; }
+.t4-dks__r > span{ display:flex; align-items:center; gap:4px; }
+.t4-dk__sc{ font-size:16px; font-weight:700; font-variant-numeric:tabular-nums; }
+
+/* v11–v13: «Вся сетка» — по сеткам табами · раунды строками · дерево без счёта */
+.t4-ball--tabs{ width:100%; }
+.t4-ball--tabs .t4-bb__cols{ display:grid; grid-template-columns:repeat(var(--c), 1fr); gap:8px; }
+.t4-ball--tabs .t4-bb__cols{ align-items:stretch; }
+.t4-ball--tabs .t4-bc{ min-width:0; justify-content:flex-start; gap:8px; }
+.t4-ball--tabs .t4-bc__ms{ flex:1; display:flex; flex-direction:column; justify-content:space-around; gap:16px; }
+.w .t4-ball--tabs .t4-bx{ width:64px; gap:10px; padding:10px 8px; }
+.t4-ball--tabs .t4-bx span{ font-size:13px; }
+.t4-ball--logos .t4-bx{ width:34px; padding:4px; }
+.t4-ball--logos .t4-bx span{ justify-content:center; }
+.t4-rl__h{ margin:6px 0 2px; font-size:11px; font-weight:600; color:var(--w-fg); } .t4-rl__h:first-child{ margin-top:0; }
+.t4-rm .is-lose{ opacity:.35; }
+.t4-rl{ display:grid; grid-template-columns:64px 1fr; align-items:center; gap:6px; height:24px; }
+.t4-rl__r{ font-size:11px; color:var(--w-muted-fg); white-space:nowrap; }
+.t4-rl__ms{ display:flex; gap:6px; }
+.w .t4-rm{ display:flex; align-items:center; gap:6px; height:22px; padding:0 6px; border-radius:var(--w-r-sm); background:var(--w-mid-bg); font-size:12px; }
+.w .t4-rm b{ font-variant-numeric:tabular-nums; }
+.t4--dim .t4-rm:not(.is-hl){ opacity:.45; }
+
+/* air: пояснения — в кнопке «i» с поп-овером */
+.w .t4-inf{ display:inline-grid; place-items:center; width:16px; height:16px; flex:none; margin-left:6px; border-radius:50%; box-shadow:inset 0 0 0 1px var(--w-ring); font:italic 600 10px/1 Georgia, serif; color:var(--w-muted-fg); vertical-align:middle; }
+.w .t4-inf:hover{ color:var(--w-fg); box-shadow:inset 0 0 0 1px var(--w-muted-fg); }
+.t4-pop{ position:absolute; z-index:5; left:12px; right:12px; padding:8px 10px; border-radius:var(--w-r-sm); background:#18181b; color:var(--w-fg); border:1px solid var(--w-ring); font-size:12px; line-height:16px; box-shadow:0 8px 24px rgba(0,0,0,.5); }
+.t4-dock > .t4-inf{ position:absolute; top:16px; right:8px; z-index:1; }
+.t4-sp{ flex:1; }
+.t4-pl{ display:flex; align-items:center; }
+
+/* v14–v17: строка матча; раскрытие команды (data-open = a | b, из _t4.js), вид — data-fx. Плашка при раскрытии светлеет */
+.t4-mx{ position:relative; display:flex; align-items:center; gap:8px; min-height:40px; transition:padding .3s cubic-bezier(.2,.8,.2,1); }
+.t4-mx__s{ display:flex; align-items:center; gap:8px; flex:1 1 0; min-width:0; outline:none; cursor:default; transition:flex-grow .35s cubic-bezier(.2,.8,.2,1); }
+.t4-mx__s.is-r{ flex-direction:row-reverse; text-align:right; }
+.t4-mx__s > .t4-lg{ flex:none; transition:width .35s cubic-bezier(.2,.8,.2,1), height .35s cubic-bezier(.2,.8,.2,1), opacity .25s ease; }
+.t4-mx__n{ display:flex; flex-direction:column; min-width:0; max-width:160px; transition:opacity .2s ease, max-width .35s cubic-bezier(.2,.8,.2,1), transform .3s cubic-bezier(.2,.8,.2,1); }
+.t4-mx__n b{ font-size:12px; line-height:16px; font-weight:600; }
+.t4-mx__w{ font-size:11px; line-height:14px; font-weight:500; white-space:nowrap; color:var(--w-muted-fg); }
+.w a.t4-mx__c{ flex:none; max-width:60px; overflow:hidden; text-decoration:none; color:var(--w-fg); transition:max-width .35s cubic-bezier(.2,.8,.2,1), opacity .2s ease; }
+.t4-mx__oc{ display:flex; flex-direction:column; flex:none; font-size:12px; line-height:16px; font-weight:600; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .25s ease .12s, transform .3s cubic-bezier(.2,.8,.2,1) .08s; }
+.t4-mx__wp{ display:none; }
+.t4-dock{ transition:background .25s ease; }
+.t4-dock.is-open{ background:#222226; }
+/* Открытая сторона (o) и соперник (x) */
+.t4-mx[data-open="a"] > .t4-mx__s:not(.is-r) .t4-mx__oc, .t4-mx[data-open="b"] > .t4-mx__s.is-r .t4-mx__oc{ opacity:1; }
+
+/* grow — раздвигание: сторона растёт, соперник — маленький логотип, граница — линия */
+.t4-mx[data-fx="grow"] .t4-mx__s{ position:relative; }
+.t4-mx[data-fx="grow"] .t4-mx__oc{ max-width:0; margin-left:auto; overflow:hidden; text-align:right; transition:opacity .25s ease .1s, max-width .35s cubic-bezier(.2,.8,.2,1); }
+.t4-mx[data-fx="grow"] .t4-mx__s.is-r .t4-mx__oc{ margin-left:0; margin-right:auto; text-align:left; }
+.t4-mx[data-fx="grow"][data-open="a"] > .t4-mx__s:not(.is-r) .t4-mx__oc, .t4-mx[data-fx="grow"][data-open="b"] > .t4-mx__s.is-r .t4-mx__oc{ max-width:160px; }
+.t4-mx[data-fx="grow"][data-open] > .t4-mx__c{ max-width:0; opacity:0; }
+.t4-mx[data-fx="grow"][data-open="a"] > .t4-mx__s:not(.is-r), .t4-mx[data-fx="grow"][data-open="b"] > .t4-mx__s.is-r{ flex-grow:12; }
+.t4-mx[data-fx="grow"][data-open="a"] > .t4-mx__s.is-r, .t4-mx[data-fx="grow"][data-open="b"] > .t4-mx__s:not(.is-r){ flex-grow:0; flex-basis:30px; }
+.t4-mx[data-fx="grow"][data-open="a"] > .t4-mx__s.is-r .t4-mx__n, .t4-mx[data-fx="grow"][data-open="b"] > .t4-mx__s:not(.is-r) .t4-mx__n{ max-width:0; opacity:0; }
+.t4-mx[data-fx="grow"][data-open="a"] > .t4-mx__s.is-r > .t4-lg, .t4-mx[data-fx="grow"][data-open="b"] > .t4-mx__s:not(.is-r) > .t4-lg{ width:22px; height:22px; opacity:.6; cursor:pointer; }
+.t4-mx[data-fx="grow"] .t4-mx__s::before{ content:''; position:absolute; top:6px; bottom:6px; width:1px; background:var(--w-ring); opacity:0; transition:opacity .25s ease; }
+.t4-mx[data-fx="grow"] .t4-mx__s:not(.is-r)::before{ left:-5px; } .t4-mx[data-fx="grow"] .t4-mx__s.is-r::before{ right:-5px; }
+.t4-mx[data-fx="grow"][data-open="a"] > .t4-mx__s.is-r::before, .t4-mx[data-fx="grow"][data-open="b"] > .t4-mx__s:not(.is-r)::before{ opacity:1; }
+
+/* wipe — шторка: от стороны команды через всю строку едет светлая полоса с линией на краю; соперник — маленький логотип поверх */
+.t4-mx[data-fx="wipe"] .t4-mx__s > :not(.t4-mx__wp):not(.t4-mx__oc){ position:relative; z-index:2; }
+.t4-mx[data-fx="wipe"] .t4-mx__wp{ display:block; position:absolute; z-index:1; top:-4px; bottom:-4px; width:0; border-radius:var(--w-r-sm); background:#2c2c32; transition:width .45s cubic-bezier(.2,.8,.2,1); }
+.t4-mx[data-fx="wipe"] .t4-mx__s:not(.is-r) .t4-mx__wp{ left:-6px; box-shadow:inset -1px 0 0 var(--w-muted-fg); }
+.t4-mx[data-fx="wipe"] .t4-mx__s.is-r .t4-mx__wp{ right:-6px; box-shadow:inset 1px 0 0 var(--w-muted-fg); }
+.t4-mx[data-fx="wipe"][data-open="a"] > .t4-mx__s:not(.is-r) .t4-mx__wp, .t4-mx[data-fx="wipe"][data-open="b"] > .t4-mx__s.is-r .t4-mx__wp{ width:calc(100% + 12px); }
+.t4-mx[data-fx="wipe"] .t4-mx__oc{ position:absolute; z-index:2; top:50%; transform:translateY(-50%); }
+.t4-mx[data-fx="wipe"] .t4-mx__s:not(.is-r) .t4-mx__oc{ right:36px; text-align:right; } .t4-mx[data-fx="wipe"] .t4-mx__s.is-r .t4-mx__oc{ left:36px; }
+.t4-mx[data-fx="wipe"][data-open] > .t4-mx__c{ opacity:0; }
+.t4-mx[data-fx="wipe"][data-open="a"] > .t4-mx__s.is-r .t4-mx__n, .t4-mx[data-fx="wipe"][data-open="b"] > .t4-mx__s:not(.is-r) .t4-mx__n{ opacity:0; }
+.t4-mx[data-fx="wipe"][data-open="a"] > .t4-mx__s.is-r > .t4-lg, .t4-mx[data-fx="wipe"][data-open="b"] > .t4-mx__s:not(.is-r) > .t4-lg{ width:22px; height:22px; opacity:.7; z-index:3; cursor:pointer; }
+
+/* drop — строка вниз: строка не двигается, под ней плавно открывается Win / Lose; соперник просто бледнеет */
+.t4-mx[data-fx="drop"][data-open]{ padding-bottom:26px; }
+.t4-mx[data-fx="drop"] .t4-mx__oc{ position:absolute; bottom:2px; flex-direction:row; gap:12px; transform:translateY(-6px); }
+.t4-mx[data-fx="drop"] .t4-mx__s:not(.is-r) .t4-mx__oc{ left:36px; } .t4-mx[data-fx="drop"] .t4-mx__s.is-r .t4-mx__oc{ right:36px; }
+.t4-mx[data-fx="drop"][data-open="a"] > .t4-mx__s:not(.is-r) .t4-mx__oc, .t4-mx[data-fx="drop"][data-open="b"] > .t4-mx__s.is-r .t4-mx__oc{ transform:none; }
+.t4-mx[data-fx="drop"][data-open="a"] > .t4-mx__s.is-r, .t4-mx[data-fx="drop"][data-open="b"] > .t4-mx__s:not(.is-r){ opacity:.4; cursor:pointer; }
+.t4-mx[data-fx="drop"] .t4-mx__s{ transition:opacity .25s ease; }
+
+/* swap — смена: название соперника уезжает к краю, на его место снизу вверх въезжают Win / Lose; логотип соперника сжимается */
+.t4-mx[data-fx="swap"] .t4-mx__oc{ position:absolute; top:50%; transform:translateY(calc(-50% + 10px)); }
+.t4-mx[data-fx="swap"] .t4-mx__s:not(.is-r) .t4-mx__oc{ right:32px; text-align:right; } .t4-mx[data-fx="swap"] .t4-mx__s.is-r .t4-mx__oc{ left:32px; }
+.t4-mx[data-fx="swap"][data-open="a"] > .t4-mx__s:not(.is-r) .t4-mx__oc, .t4-mx[data-fx="swap"][data-open="b"] > .t4-mx__s.is-r .t4-mx__oc{ transform:translateY(-50%); }
+.t4-mx[data-fx="swap"][data-open] > .t4-mx__c{ opacity:0; }
+.t4-mx[data-fx="swap"][data-open="a"] > .t4-mx__s.is-r .t4-mx__n{ opacity:0; transform:translateX(16px); }
+.t4-mx[data-fx="swap"][data-open="b"] > .t4-mx__s:not(.is-r) .t4-mx__n{ opacity:0; transform:translateX(-16px); }
+.t4-mx[data-fx="swap"][data-open="a"] > .t4-mx__s.is-r > .t4-lg, .t4-mx[data-fx="swap"][data-open="b"] > .t4-mx__s:not(.is-r) > .t4-lg{ width:22px; height:22px; opacity:.6; cursor:pointer; }
+
+/* Шапка плашки: заголовок слева, переключатель справа */
+.t4-dk__t{ font-size:12px; font-weight:600; color:var(--w-fg); }
+/* Переключение идущих (только клик): v15 точки · v16 мини-пары · v17 список по клику */
+.t4-dk__dots{ display:flex; justify-content:center; gap:6px; padding-top:6px; }
+.w .t4-dk__dots button{ width:6px; height:6px; border-radius:50%; background:var(--w-ring); transition:width .2s ease, background .2s ease; }
+.w .t4-dk__dots button.is-on{ width:16px; border-radius:3px; background:var(--w-fg); }
+.t4-dk__chips{ display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; }
+.w .t4-dk__pair{ display:flex; align-items:center; gap:2px; height:26px; padding:0 6px; border-radius:var(--w-r-sm); opacity:.45; transition:opacity .2s ease, background .2s ease; }
+.w .t4-dk__pair.is-on{ opacity:1; background:var(--w-muted); }
+.w .t4-dk__more{ display:flex; align-items:center; gap:4px; height:24px; padding:0 8px; border-radius:var(--w-r-sm); font-size:12px; color:var(--w-muted-fg); }
+.w .t4-dk__more:hover, .w .t4-dk__more.is-on{ background:var(--w-muted); color:var(--w-fg); }
+.t4-dk__list{ display:flex; flex-direction:column; gap:2px; }
+.w .t4-dk__list button{ display:flex; align-items:center; gap:8px; height:32px; padding:0 8px; border-radius:var(--w-r-sm); font-size:12px; }
+.w .t4-dk__list button:hover, .w .t4-dk__list button.is-on{ background:var(--w-muted); }
+.t4-dk__list .t4-nm{ flex:1; }
+.t4-dk__list .t4-nm + .t4-cap + .t4-nm{ text-align:right; }
+
+/* v18–v20: раскрытие от края блока команды (--ea / --eb — где кончается логотип + название, из _t4.js) */
+.t4-mx:is([data-fx="edge"], [data-fx="fill"]) .t4-mx__s > :not(.t4-mx__wp):not(.t4-mx__oc), .t4-mx[data-fx="ride"] .t4-mx__s > :not(.t4-mx__wp){ position:relative; z-index:2; }
+.t4-mx:is([data-fx="edge"], [data-fx="ride"], [data-fx="fill"]) .t4-mx__wp{ display:flex; align-items:center; position:absolute; z-index:1; top:-4px; bottom:-4px; width:0; overflow:hidden; transition:width .5s cubic-bezier(.2,.8,.2,1); }
+.t4-mx:is([data-fx="edge"], [data-fx="ride"], [data-fx="fill"]) .t4-mx__s:not(.is-r) .t4-mx__wp{ left:var(--ea, 50%); justify-content:flex-end; border-radius:0 8px 8px 0; }
+.t4-mx:is([data-fx="edge"], [data-fx="ride"], [data-fx="fill"]) .t4-mx__s.is-r .t4-mx__wp{ right:var(--eb, 50%); justify-content:flex-start; border-radius:8px 0 0 8px; }
+.t4-mx:is([data-fx="edge"], [data-fx="ride"], [data-fx="fill"])[data-open="a"] > .t4-mx__s:not(.is-r) .t4-mx__wp{ width:calc(100% - var(--ea, 50%) + 6px); }
+.t4-mx:is([data-fx="edge"], [data-fx="ride"], [data-fx="fill"])[data-open="b"] > .t4-mx__s.is-r .t4-mx__wp{ width:calc(100% - var(--eb, 50%) + 6px); }
+/* edge — шторка с линией на переднем крае, Win / Lose у дальнего края */
+.t4-mx[data-fx="edge"] .t4-mx__wp{ background:#2c2c32; }
+.t4-mx:is([data-fx="edge"], [data-fx="ride"]) .t4-mx__s:not(.is-r) .t4-mx__wp{ box-shadow:inset -2px 0 0 var(--w-fg); }
+.t4-mx:is([data-fx="edge"], [data-fx="ride"]) .t4-mx__s.is-r .t4-mx__wp{ box-shadow:inset 2px 0 0 var(--w-fg); }
+.t4-mx:is([data-fx="edge"], [data-fx="fill"]) .t4-mx__oc{ position:absolute; z-index:2; top:50%; transform:translateY(-50%); transition:opacity .25s ease .3s; }
+.t4-mx:is([data-fx="edge"], [data-fx="fill"]) .t4-mx__s:not(.is-r) .t4-mx__oc{ right:34px; text-align:right; }
+.t4-mx:is([data-fx="edge"], [data-fx="fill"]) .t4-mx__s.is-r .t4-mx__oc{ left:34px; }
+/* ride — Win / Lose сидят на переднем крае шторки и едут вместе с ним */
+.t4-mx[data-fx="ride"] .t4-mx__s:not(.is-r) .t4-mx__wp{ background:linear-gradient(90deg, transparent, #2c2c32 50%); }
+.t4-mx[data-fx="ride"] .t4-mx__s.is-r .t4-mx__wp{ background:linear-gradient(270deg, transparent, #2c2c32 50%); }
+.t4-mx[data-fx="ride"] .t4-mx__wp .t4-mx__oc{ padding:0 10px; opacity:1; transition:none; }
+.t4-mx[data-fx="ride"] .t4-mx__s:not(.is-r) .t4-mx__wp .t4-mx__oc{ text-align:right; }
+/* fill — фон заливается от края блока без линии, название соперника уезжает к краю */
+.t4-mx[data-fx="fill"] .t4-mx__s:not(.is-r) .t4-mx__wp{ background:linear-gradient(90deg, rgba(255,255,255,.02), rgba(255,255,255,.1)); }
+.t4-mx[data-fx="fill"] .t4-mx__s.is-r .t4-mx__wp{ background:linear-gradient(270deg, rgba(255,255,255,.02), rgba(255,255,255,.1)); }
+.t4-mx[data-fx="fill"][data-open="a"] > .t4-mx__s.is-r .t4-mx__n{ opacity:0; transform:translateX(24px); }
+.t4-mx[data-fx="fill"][data-open="b"] > .t4-mx__s:not(.is-r) .t4-mx__n{ opacity:0; transform:translateX(-24px); }
+/* Общее для трёх: LIVE гаснет, соперник — маленький логотип поверх шторки (наведи — переключится) */
+.t4-mx:is([data-fx="edge"], [data-fx="ride"], [data-fx="fill"])[data-open] > .t4-mx__c{ opacity:0; }
+.t4-mx:is([data-fx="edge"], [data-fx="ride"])[data-open="a"] > .t4-mx__s.is-r .t4-mx__n, .t4-mx:is([data-fx="edge"], [data-fx="ride"])[data-open="b"] > .t4-mx__s:not(.is-r) .t4-mx__n{ opacity:0; }
+.t4-mx:is([data-fx="edge"], [data-fx="ride"], [data-fx="fill"])[data-open="a"] > .t4-mx__s.is-r > .t4-lg, .t4-mx:is([data-fx="edge"], [data-fx="ride"], [data-fx="fill"])[data-open="b"] > .t4-mx__s:not(.is-r) > .t4-lg{ width:22px; height:22px; opacity:.7; z-index:3; cursor:pointer; }
+
+/* v18–v20: переключатель сбоку — строка матча и кнопки / точки рядом */
+.t4-dk__row{ display:flex; align-items:center; gap:4px; }
+.t4-dk__win{ flex:1; min-width:0; overflow:clip; overflow-clip-margin:12px; } /* clip-margin — подложка строки (v23–v24) выходит к краям плашки, «часы» всё равно обрезаны */
+.t4-dk__v{ display:flex; flex-direction:column; align-items:center; flex:none; }
+.t4-dk__v .t4-cap{ font-size:10px; line-height:12px; }
+.w .t4-dk__v .t4-ib{ width:24px; height:20px; }
+.t4-dk__vd{ gap:5px; padding:0 4px; }
+.w .t4-dk__vd button{ width:6px; height:6px; border-radius:50%; background:var(--w-ring); transition:height .2s ease, background .2s ease; }
+.w .t4-dk__vd button.is-on{ height:14px; border-radius:3px; background:var(--w-fg); }
+/* «Часы»: новый матч въезжает снизу (▼) или сверху (▲) */
+.t4-roll > *{ animation:t4-roll .32s cubic-bezier(.2,.8,.2,1); }
+.t4-roll--up > *{ animation-name:t4-roll-up; }
+@keyframes t4-roll{ from{ transform:translateY(100%); opacity:0; } }
+@keyframes t4-roll-up{ from{ transform:translateY(-100%); opacity:0; } }
+
+/* v21–v23 slide: три зоны — команда · LIVE · команда. Раскрытие: подложка зоны команды растягивается до соперника (у него остаётся
+   только логотип на своём месте), LIVE гаснет, Win / Lose — на подложке. Ничего не перестраивается, двигается только подложка */
+.t4-mx[data-fx="slide"]{ min-height:44px; }
+.t4-mx[data-fx="slide"] .t4-mx__s > :not(.t4-mx__wp):not(.t4-mx__oc){ position:relative; z-index:2; transition:opacity .2s ease; }
+.t4-mx[data-fx="slide"] .t4-mx__wp{ display:block; position:absolute; z-index:1; top:-2px; bottom:-2px; width:calc(50% - 20px); border-radius:var(--w-r-sm); background:rgba(255,255,255,.08); opacity:0;
+  transition:width .4s cubic-bezier(.2,.8,.2,1), opacity .2s ease, background .3s ease; }
+.t4-mx[data-fx="slide"] .t4-mx__s:not(.is-r) .t4-mx__wp{ left:-8px; } .t4-mx[data-fx="slide"] .t4-mx__s.is-r .t4-mx__wp{ right:-8px; }
+.t4-mx[data-fx="slide"][data-open="a"] > .t4-mx__s:not(.is-r) .t4-mx__wp, .t4-mx[data-fx="slide"][data-open="b"] > .t4-mx__s.is-r .t4-mx__wp{ width:calc(100% - 28px); opacity:1; }
+.t4-mx[data-fx="slide"][data-fxv="tone"] .t4-mx__wp{ background:var(--tone, rgba(255,255,255,.08)); }
+.t4-mx[data-fx="slide"] .t4-mx__oc{ position:absolute; z-index:2; top:50%; transform:translateY(-50%); transition:opacity .25s ease .15s, transform .4s cubic-bezier(.2,.8,.2,1); }
+.t4-mx[data-fx="slide"] .t4-mx__s:not(.is-r) .t4-mx__oc{ right:40px; text-align:right; } .t4-mx[data-fx="slide"] .t4-mx__s.is-r .t4-mx__oc{ left:40px; }
+.t4-mx[data-fx="slide"][data-fxv="move"] .t4-mx__s:not(.is-r) .t4-mx__oc{ transform:translate(-60px, -50%); }
+.t4-mx[data-fx="slide"][data-fxv="move"] .t4-mx__s.is-r .t4-mx__oc{ transform:translate(60px, -50%); }
+.t4-mx[data-fx="slide"][data-fxv="move"][data-open="a"] > .t4-mx__s:not(.is-r) .t4-mx__oc, .t4-mx[data-fx="slide"][data-fxv="move"][data-open="b"] > .t4-mx__s.is-r .t4-mx__oc{ transform:translate(0, -50%); }
+.t4-mx[data-fx="slide"][data-open] > .t4-mx__c{ opacity:0; }
+.t4-mx[data-fx="slide"][data-open="a"] > .t4-mx__s.is-r .t4-mx__n, .t4-mx[data-fx="slide"][data-open="b"] > .t4-mx__s:not(.is-r) .t4-mx__n{ opacity:0; }
+.t4-mx[data-fx="slide"][data-open="a"] > .t4-mx__s.is-r > .t4-lg, .t4-mx[data-fx="slide"][data-open="b"] > .t4-mx__s:not(.is-r) > .t4-lg{ z-index:3; cursor:pointer; }
+.t4-dock:has(.t4-mx[data-fx="slide"]).is-open{ background:#131316; } /* в slide цвет меняет подложка, не вся плашка */
+/* v24: подложка на всю высоту плашки — от нижнего края виджета до низа плашки, прижата к её боковому краю */
+.t4-mx[data-fx="slide"][data-full] .t4-mx__wp{ top:-6px; bottom:-8px; }
+.t4-mx[data-fx="slide"][data-full] .t4-mx__s:not(.is-r) .t4-mx__wp{ left:-10px; border-radius:0 8px 0 var(--w-r); }
+.t4-mx[data-fx="slide"][data-full] .t4-mx__s.is-r .t4-mx__wp{ right:-10px; border-radius:8px 0 var(--w-r) 0; }
+.t4-mx[data-fx="slide"][data-full][data-open="a"] > .t4-mx__s:not(.is-r) .t4-mx__wp, .t4-mx[data-fx="slide"][data-full][data-open="b"] > .t4-mx__s.is-r .t4-mx__wp{ width:calc(100% - 26px); }
+/* v25–v26: подложки нет — цвет команды на фоне плашки. Два слоя (.is-a / .is-b), каждый закреплён за своим краем и до логотипа
+   соперника (46px = отступ плашки 10 + логотип 28 + зазор 8); граница скруглена сверху и снизу; Win / Lose — в 16px от неё.
+   top: --bgt — от верха строки матча (над ней может быть шапка «Идут сейчас»), из _t4.js */
+.t4-dk__bg{ position:absolute; top:var(--bgt, 12px); bottom:0; z-index:0; opacity:0; pointer-events:none; transition:opacity .3s ease; }
+.t4-dk__bg.is-a{ left:0; right:46px; border-radius:0 10px 10px var(--w-r); background:var(--dk-a, rgba(255,255,255,.08)); }
+.t4-dk__bg.is-b{ left:46px; right:0; border-radius:10px 0 var(--w-r) 10px; background:var(--dk-b, rgba(255,255,255,.08)); }
+.t4-dock > :not(.t4-dk__bg):not(.t4-inf){ position:relative; z-index:1; }
+.t4-dock.is-open[data-side="a"]:has(.t4-mx:is([data-fxv="tint"], [data-fxv="tslide"])) .t4-dk__bg.is-a,
+.t4-dock.is-open[data-side="b"]:has(.t4-mx:is([data-fxv="tint"], [data-fxv="tslide"])) .t4-dk__bg.is-b{ opacity:1; }
+.t4-mx[data-fx="slide"]:is([data-fxv="tint"], [data-fxv="tslide"]) .t4-mx__wp{ display:none; }
+.t4-mx[data-fx="slide"]:is([data-fxv="tint"], [data-fxv="tslide"]) .t4-mx__s:not(.is-r) .t4-mx__oc{ right:52px; } .t4-mx[data-fx="slide"]:is([data-fxv="tint"], [data-fxv="tslide"]) .t4-mx__s.is-r .t4-mx__oc{ left:52px; }
+/* v26 tslide: слой заливается от своего края (левого / правого) до соперника, цвет набирается из прозрачности */
+.t4-dock:has(.t4-mx[data-fxv="tslide"]) .t4-dk__bg{ transition:clip-path .45s cubic-bezier(.2,.8,.2,1), opacity .45s ease; }
+.t4-dock:has(.t4-mx[data-fxv="tslide"]) .t4-dk__bg.is-a{ clip-path:inset(0 100% 0 0 round 0 10px 10px var(--w-r)); }
+.t4-dock:has(.t4-mx[data-fxv="tslide"]) .t4-dk__bg.is-b{ clip-path:inset(0 0 0 100% round 10px 0 var(--w-r) 10px); }
+.t4-dock.is-open[data-side="a"]:has(.t4-mx[data-fxv="tslide"]) .t4-dk__bg.is-a{ clip-path:inset(0 0 0 0 round 0 10px 10px var(--w-r)); }
+.t4-dock.is-open[data-side="b"]:has(.t4-mx[data-fxv="tslide"]) .t4-dk__bg.is-b{ clip-path:inset(0 0 0 0 round 10px 0 var(--w-r) 10px); }
+

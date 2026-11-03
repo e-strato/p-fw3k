@@ -1,0 +1,10 @@
+/* Лаба «Страница матча + блоки»: блоки 07.10 под плитками. Свои стили у блоков — _old.css; здесь — только раскладка по правилу виджетов (решение 19). */
+.mpo { margin-top: 8px; }
+@media (max-width: 1300px) {
+  .mpo .mp5-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .mpo .mp5-main { grid-column: 1 / -1; }
+  .mpo .mp5-side { grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+}
+@media (max-width: 860px) {
+  .mpo .mp5-grid, .mpo .mp5-side { grid-template-columns: minmax(0, 1fr); }
+}

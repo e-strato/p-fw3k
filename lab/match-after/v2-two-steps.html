@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../match-page/_page.css" /><link rel="stylesheet" href="_after.css" />
+<style>
+/* Два шага, как пост-матч Rocket League: 1 — спотлайт победителей с титулами из данных, 2 — таблица и «что дальше» с отсчётом */
+[data-step] { display: none; } [data-step].is-on { display: grid; }
+.v2-steps { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.v2-steps button { display: flex; align-items: center; gap: 8px; border: 0; padding: 8px 14px; border-radius: 20px; background: var(--c-ui-chip); color: var(--c-ui-dim); font: 600 13.5px var(--font); }
+.v2-steps button i { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--c-ui-hover); font-style: normal; font-size: 12px; }
+.v2-steps button[aria-current='true'] { color: var(--c-text); } .v2-steps button[aria-current='true'] i { background: var(--tw); color: var(--c-card-ink); }
+.v2-steps span { width: 34px; height: 2px; background: var(--c-ui-hover); }
+
+/* Шаг 1 — арена */
+.v2-arena { position: relative; isolation: isolate; overflow: hidden; gap: 0; justify-items: center; min-height: 820px; padding: 34px 32px 30px; border-radius: 18px;
+  background: radial-gradient(50% 40% at 50% 100%, color-mix(in srgb, var(--tw) 34%, transparent), transparent 75%), radial-gradient(45% 50% at 50% 0%, color-mix(in srgb, var(--tw) 16%, transparent), transparent 70%), linear-gradient(180deg, var(--c-ui-band), var(--c-ui-bg)); }
+.v2-arena::before { content: ''; position: absolute; left: -10%; right: -10%; bottom: -30px; height: 330px; z-index: -1; background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--tw) 10%, transparent) 0 1px, transparent 1px 90px), repeating-linear-gradient(0deg, color-mix(in srgb, var(--tw) 10%, transparent) 0 1px, transparent 1px 44px); transform: perspective(500px) rotateX(58deg); transform-origin: bottom; mask: linear-gradient(transparent, #000 60%); }
+.v2-arena::after { content: ''; position: absolute; top: -40%; left: 50%; z-index: -1; width: 1100px; height: 900px; translate: -50% 0; background: conic-gradient(from 160deg at 50% 0%, transparent 0deg, color-mix(in srgb, var(--tw) 14%, transparent) 14deg, transparent 22deg, transparent 338deg, color-mix(in srgb, var(--tw) 14%, transparent) 346deg, transparent 360deg); mask: radial-gradient(50% 100% at 50% 0%, #000 45%, transparent); }
+.v2-win { display: grid; justify-items: center; gap: 4px; }
+.v2-win small { color: color-mix(in srgb, var(--tw) 70%, var(--c-text)); font: 600 22px var(--font-c); }
+.v2-win b { display: flex; align-items: center; gap: 18px; font: 700 96px/1 var(--font-c); letter-spacing: -.01em; text-shadow: 0 0 60px color-mix(in srgb, var(--tw) 45%, transparent); }
+.v2-win b .r-lg { width: 84px; height: 84px; } .v2-win p { padding-top: 8px; color: var(--c-muted); font-size: 15px; } .v2-win p em { font: 700 18px var(--font-c); font-style: normal; color: var(--c-text); }
+.v2-five { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; width: 100%; max-width: 1240px; margin-top: 46px; }
+.v2-p { display: grid; justify-items: center; align-content: start; gap: 10px; text-align: center; }
+.v2-p__ph { position: relative; width: 150px; height: 150px; } .v2-p__ph img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; background: var(--c-ui-item); box-shadow: 0 0 0 3px color-mix(in srgb, var(--tw) 70%, transparent), 0 24px 50px -16px color-mix(in srgb, var(--tw) 60%, transparent); }
+.v2-p__ph .a-hero { position: absolute; bottom: -4px; right: -10px; width: 58px; height: 33px; border-radius: 6px; box-shadow: 0 0 0 3px var(--c-ui-bg); }
+.v2-p__plate { display: grid; gap: 1px; min-width: 190px; padding: 9px 16px; border-radius: 10px; background: linear-gradient(90deg, color-mix(in srgb, var(--tw) 26%, var(--c-ui-panel)), var(--c-ui-panel)); }
+.v2-p__plate b { font-size: 18px; } .v2-p__plate small { color: var(--c-caption); font-size: 12px; }
+.v2-p .a-title { margin-top: 4px; } .v2-p .a-title b { font-size: 19px; }
+.v2-p.is-mvp .v2-p__ph { width: 176px; height: 176px; margin-top: -26px; }
+.v2-loser { padding-top: 26px; text-align: center; color: var(--c-caption); font-size: 13.5px; } .v2-loser b { color: var(--c-muted); }
+.v2-go { display: flex; gap: 10px; margin-top: 24px; }
+
+/* Шаг 2 — таблица + действия слева (как в RL: вертикальный список действий и таймер следующего матча) */
+.v2-two { grid-template-columns: 330px minmax(0, 1fr); gap: 20px; align-items: start; }
+.v2-acts { display: grid; gap: 14px; position: sticky; top: 0; }
+.v2-acts .a-next__t em { font-size: 34px; }
+.v2-list { display: grid; gap: 4px; padding: 6px; border-radius: 12px; background: var(--c-ui-panel); }
+.v2-list a { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; } .v2-list a:hover { background: var(--c-ui-hover); } .v2-list a small { color: var(--c-caption); font-weight: 500; }
+.v2-main { display: grid; gap: 20px; min-width: 0; }
+.v2-head { display: flex; align-items: center; gap: 16px; padding: 16px 18px; border-radius: 12px; background: linear-gradient(90deg, color-mix(in srgb, var(--tw) 16%, var(--c-ui-panel)), var(--c-ui-panel) 60%); }
+.v2-head b { font: 700 40px/1 var(--font-c); } .v2-head span { display: grid; } .v2-head small { color: var(--c-caption); font-size: 13px; } .v2-head .a-btn { margin-left: auto; }
+@container row (max-width: 700px) {
+  .v2-arena { min-height: 0; padding: 22px 12px 20px; border-radius: 14px; }
+  .v2-win small { font-size: 16px; } .v2-win b { gap: 10px; font-size: 40px; } .v2-win b .r-lg { width: 40px; height: 40px; } .v2-win p { font-size: 13px; text-align: center; }
+  .v2-five { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 8px; margin-top: 26px; } .v2-p.is-mvp { grid-column: 1 / -1; order: -1; }
+  .v2-p__ph, .v2-p.is-mvp .v2-p__ph { width: 92px; height: 92px; margin-top: 0; } .v2-p.is-mvp .v2-p__ph { width: 120px; height: 120px; }
+  .v2-p__ph .a-hero { width: 40px; height: 23px; right: -8px; }
+  .v2-p__plate { min-width: 0; width: 100%; padding: 7px 8px; } .v2-p__plate b { font-size: 15px; } .v2-p .a-title b { font-size: 15px; } .v2-p .a-title small { font-size: 11.5px; }
+  .v2-go { flex-wrap: wrap; justify-content: center; } .v2-go .a-btn { height: 38px; padding: 0 14px; font-size: 13px; }
+  .v2-two { grid-template-columns: minmax(0, 1fr); gap: 12px; } .v2-acts { position: static; order: 2; } .v2-main { gap: 12px; }
+  .v2-head { flex-wrap: wrap; gap: 10px; } .v2-head b { font-size: 30px; } .v2-head .a-btn { margin-left: 0; width: 100%; }
+  .v2-steps button { padding: 6px 10px; font-size: 12.5px; } .v2-steps span { width: 14px; }
+}
+</style></head>
+<body><main class="p-page">
+  <h1>v2 · Два шага</h1>
+  <p>Как пост-матч Rocket League. Шаг 1 — эмоция: «Победитель» и имя команды крупно в её свете, пятёрка победителей на арене, под каждым — титулы из данных серии («Больше всех убийств», «Лучший GPM», «Ни одной смерти»). Кнопка «Таблица серии» → шаг 2 — цифры: обе таблицы, карты, а слева, как у RL, вертикальный список действий и «Что дальше» — следующий матч победителя с живым отсчётом и прогнозы на следующий раунд (кнопки голосования кликаются). Шаги переключаются точками сверху.</p>
+  <div class="p-tools"><div class="p-seg"><button type="button" data-g="dota">Dota 2 · Spirit — Tundra 2 : 1</button><button type="button" data-g="cs">CS2 · G2 — FaZe 2 : 0</button></div></div>
+  <p class="p-cap">Десктоп · 1440 (рамка уменьшена под ширину окна)</p><div class="p-wrap"><div class="p-frame p-frame--desk" data-ma></div></div>
+  <p class="p-cap">Телефон · 390 — листается внутри рамки</p><div class="p-frame p-frame--phone" data-ma></div>
+</main>
+<script>
+window.MA = {}
+MA.вариант = (m, x) => {
+  const w = x.поб(m), l = w === 'a' ? 'b' : 'a', [sw, sl] = w === 'a' ? m.серия : [...m.серия].reverse(), cs = m.g === 'cs'
+  const ид = m.игроки[w].findIndex((p) => p[0] === m.mvp[0]), rest = [0, 1, 2, 3, 4].filter((i) => i !== ид)
+  const порядок = [rest[0], rest[1], ид, rest[2], rest[3]]
+  const лучшийL = m.игроки[l][0]
+  const игрок = (i) => {
+    const p = m.игроки[w][i]
+    return `<div class="v2-p ${p[0] === m.mvp[0] ? 'is-mvp' : ''}"><span class="v2-p__ph"><img src="${x.фото(p[0])}" alt="" />${cs ? '' : x.гер(p[2][2])}</span>
+      <p class="v2-p__plate"><b>${p[0]}</b><small>${x.имя(m[w])} · ${p[1]}</small></p>${x.титулы(m, p[0])}</div>`
+  }
+  const шаги = (n) => `<nav class="v2-steps"><button type="button" data-go="1" data-dot="1" aria-current="${n === 1}"><i>1</i>Победители</button><span></span><button type="button" data-go="2" data-dot="2" aria-current="${n === 2}"><i>2</i>Таблица и что дальше</button></nav>`
+  return `
+  ${шаги(1)}
+  <section class="v2-arena is-on" data-step="1">
+    <div class="v2-win"><small>Победитель серии</small><b>${x.лого(m[w])}${x.имя(m[w])}</b><p><em>${sw} : ${sl}</em> против ${x.имя(m[l])} · ${m.тур} · ${m.стадия}</p></div>
+    <div class="v2-five">${порядок.map(игрок).join('')}</div>
+    <p class="v2-loser">Лучший у ${x.имя(m[l])}: <b>${лучшийL[0]}</b> · ${cs ? лучшийL[3] + '–' + лучшийL[4] + ', рейтинг ' + лучшийL[8].toFixed(2) : лучшийL[3] + ' / ' + лучшийL[4] + ' / ' + лучшийL[5] + ', ' + лучшийL[6] + ' GPM'}</p>
+    <div class="v2-go"><button class="a-btn a-btn--main" type="button" data-go="2">Таблица серии →</button><a class="a-btn a-btn--ghost" href="#">▶ Лучшие моменты · 4:12</a></div>
+  </section>
+  <section class="v2-two" data-step="2">
+    <aside class="v2-acts">
+      ${x.дальше(m, 0)}
+      <div class="v2-list"><a href="#">▶ Запись серии<small>${m.длит}</small></a><a href="#">Лучшие моменты<small>4:12</small></a><a href="#">Сетка турнира<small>›</small></a><a href="#">★ Следить за ${x.имя(m[w])}<small></small></a><button type="button" data-go="1" style="all:unset;display:flex;justify-content:space-between;padding:12px 14px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">← Победители<small style="color:var(--c-caption)"></small></button></div>
+      ${x.сек('Прогнозы на следующий раунд', x.прогнозы(m))}
+      ${x.сек('Твой матч', x.мои(m))}
+    </aside>
+    <div class="v2-main">
+      <div class="v2-head">${x.лого(m[w], 'lg')}<b>${sw} : ${sl}</b>${x.лого(m[l], 'lg')}<span><b style="font:600 16px var(--font)">${x.имя(m[w])} — ${x.имя(m[l])}</b><small>${m.тур} · ${m.стадия} · ${m.длит}</small></span></div>
+      ${x.карты(m)}
+      ${x.сек('', x.таблица(m, w))}
+      ${x.сек('', x.таблица(m, l))}
+      ${x.сек('Что дальше у проигравших', x.дальше(m, 1))}
+    </div>
+  </section>`
+}
+</script>
+<script src="_after.js"></script>
+</body></html>

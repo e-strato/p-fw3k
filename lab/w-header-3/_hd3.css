@@ -1,0 +1,132 @@
+/* Лаба w-header-3 — «Шапка и табы» (созвон 02.11 §1.4). Поверх ../gs-match-2/_hd2.css (.bw-bar — серая полоса окна главной колонки). */
+.h3 { display: flex; align-items: center; gap: 12px; padding: 10px 12px !important; }
+.h3-b { display: inline-grid; place-items: center; width: 30px; height: 30px; flex: none; align-self: flex-start; border: 0; border-radius: 8px; background: rgba(255,255,255,.05); color: var(--w-muted-fg); cursor: pointer; }
+.h3-b:hover { background: rgba(255,255,255,.1); color: var(--w-fg); } .h3-b svg { display: block; }
+.h3-sp { width: 30px; flex: none; }  /* пара к «назад» — чтобы центр был по центру */
+.h3-c { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+.h3-c > small { font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.h3-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 14px; width: 100%; }
+.h3-t { display: inline-flex; align-items: center; justify-content: flex-end; gap: 8px; min-width: 0; }
+.h3-t--b { justify-content: flex-start; }
+.h3-t b { font: 600 16px/22px var(--w-font); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.h3-t.is-lose b { color: var(--w-muted-fg); } .h3-t.is-lose .h3-lg { opacity: .5; }
+.h3-lg { width: 26px; height: 26px; flex: none; object-fit: contain; }
+.h3-lg--t { display: inline-grid; place-items: center; border-radius: 6px; background: var(--w-muted); font: 600 9px/1 var(--w-font); }
+.h3-sc { display: inline-flex; gap: 6px; font: 700 26px/30px var(--w-font); color: var(--w-fg); font-variant-numeric: tabular-nums; }
+.h3-sc i { font-style: normal; color: var(--w-muted-fg); }
+.h3-st { display: inline-flex; align-items: center; gap: 6px; height: 20px; padding: 0 8px; border-radius: 999px; font: 500 11px/1 var(--w-font); color: var(--w-muted-fg); background: rgba(255,255,255,.05); }
+.h3-st.is-live { color: var(--w-fg); }
+.h3-st i { width: 6px; height: 6px; border-radius: 50%; background: var(--w-down); animation: h3-blink 1.4s ease-in-out infinite; }
+@keyframes h3-blink { 50% { opacity: .35; } }
+
+/* v3 · табло: логотипы крупно над названиями, в середине счёт и статус */
+.h3--big .h3-row { grid-template-columns: 1fr auto 1fr; gap: 10px; }
+.h3--big .h3-t { flex-direction: column; justify-content: center; gap: 6px; }
+.h3--big .h3-lg { width: 40px; height: 40px; }
+.h3--big .h3-t b { font: 600 14px/18px var(--w-font); max-width: 100%; }
+.h3--big .h3-mid { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.h3--big .h3-sc { font: 700 32px/36px var(--w-font); }
+
+/* Табы — одна низкая строка 32: подложка-полоса, активная — светлее; липнут сверху, как прежние */
+.bw > .h3-tabs { position: sticky; top: 0; z-index: 6; }
+.h3-tabs { display: flex; gap: 2px; padding: 0 6px 6px; background: color-mix(in srgb, var(--w-muted) 70%, var(--w-page)); overflow-x: auto; scrollbar-width: none; }
+.h3-tabs::-webkit-scrollbar { display: none; }
+.h3-tab { flex: 1; min-width: 0; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; padding: 0 10px; border: 0; border-radius: 8px; background: none; color: var(--w-muted-fg); cursor: pointer; white-space: nowrap; }
+.h3-tab span { font: 600 12px/16px var(--w-font); }
+.h3-tab img { width: 14px; height: 14px; object-fit: contain; }
+.h3-tab small { font: 500 11px/1 var(--w-font); color: var(--w-down); }
+.h3-tab .h3-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--w-down); }
+.h3-tab:hover:not(:disabled) { color: var(--w-fg); background: rgba(255,255,255,.05); }
+.h3-tab.on { color: var(--w-fg); background: var(--w-bg); }
+.h3-tab:disabled { opacity: .35; cursor: default; }
+
+/* v4 · табы внутри шапки, под счётом: пилюли, без отдельной строки */
+.h3--inline .h3-c { gap: 6px; }
+.h3-tabs--in { width: 100%; max-width: 460px; margin-top: 4px; padding: 3px; border-radius: 10px; background: rgba(0,0,0,.25); }
+.h3-tabs--in .h3-tab { height: 28px; }
+
+/* 1.4.4 — строки «Золото · карта 3 · сейчас 33:30» над графиком нет; 1.4.5 — «Поделиться» среди значков графика */
+.g2-cap--mx { display: none !important; }
+.g2-ic .h3-share { width: 30px; height: 30px; display: grid; place-items: center; border: 0; border-radius: 8px; background: none; color: #52525b; cursor: pointer; }
+.g2-ic .h3-share:hover { color: var(--w-fg); background: var(--w-muted); }
+
+/* v5 · v4 плотнее: отступы 6, турнир 10, названия 14, логотипы 20, счёт 20, табы 26 */
+.h3--tight { padding: 6px 10px !important; gap: 10px; }
+.h3--tight .h3-b { width: 26px; height: 26px; }
+.h3--tight .h3-sp { width: 26px; }
+.h3--tight .h3-c { gap: 2px; }
+.h3--tight .h3-c > small { font: 400 10px/14px var(--w-font); }
+.h3--tight .h3-row { gap: 10px; }
+.h3--tight .h3-t b { font: 600 14px/18px var(--w-font); }
+.h3--tight .h3-lg { width: 20px; height: 20px; }
+.h3--tight .h3-sc { font: 700 20px/24px var(--w-font); gap: 4px; }
+.h3--tight .h3-tabs--in { margin-top: 4px; padding: 2px; border-radius: 8px; }
+.h3--tight .h3-tabs--in .h3-tab { height: 26px; border-radius: 6px; }
+
+/* v6 · как v5, но турнир — в строке с «назад», слева; по центру только команды, счёт и табы */
+.h3--row { position: relative; padding: 6px 10px !important; align-items: flex-start; }
+.h3--row .h3-b { width: 26px; height: 26px; }
+.h3--row .h3-tour { position: absolute; left: 44px; top: 12px; max-width: calc(50% - 170px); font: 400 10px/14px var(--w-font); color: var(--w-muted-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.h3--row .h3-sp { width: 26px; }
+.h3--row .h3-c { gap: 4px; }
+.h3--row .h3-row { gap: 10px; }
+.h3--row .h3-t b { font: 600 14px/18px var(--w-font); }
+.h3--row .h3-lg { width: 20px; height: 20px; }
+.h3--row .h3-sc { font: 700 20px/24px var(--w-font); gap: 4px; }
+.h3--row .h3-tabs--in { margin-top: 0; padding: 2px; border-radius: 8px; }
+.h3--row .h3-tabs--in .h3-tab { height: 26px; border-radius: 6px; }
+
+/* v7 · размеры v4, плотнее только отступы: полоса 6 сверху и снизу, между строками 2 */
+.h3--air { padding: 6px 12px !important; }
+.h3--air .h3-c { gap: 2px; }
+.h3--air .h3-tabs--in { margin-top: 2px; }
+/* v8 · размеры v4, турнир слева в строке с «назад» */
+.h3--row4 { position: relative; padding: 8px 12px !important; align-items: flex-start; }
+.h3--row4 .h3-tour { position: absolute; left: 50px; top: 14px; max-width: calc(50% - 200px); font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.h3--row4 .h3-tabs--in { margin-top: 2px; }
+/* v9 · размеры v4, без строки турнира */
+.h3--notour { padding: 8px 12px !important; }
+.h3--notour .h3-tabs--in { margin-top: 2px; }
+
+/* скрытая копия старой шапки — только для пути над страницей (_sbh.js): не display:none — путь ищет матч по положению на экране */
+.bj-t.h3-sr { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* v11 · плашка выбранного таба переезжает (как w-maps) */
+.h3-tabs--sl { position: relative; }
+.h3-thumb { position: absolute; top: 3px; bottom: 3px; left: 0; border-radius: 8px; background: var(--w-bg); box-shadow: 0 1px 0 #ffffff14 inset, 0 4px 12px #0006;
+  transition: transform .35s cubic-bezier(.3,1.3,.5,1), width .35s cubic-bezier(.3,1.3,.5,1); }
+.h3-thumb.no-anim { transition: none; }
+.h3-tabs--sl .h3-tab { position: relative; z-index: 1; transition: color .25s; }
+.h3-tabs--sl .h3-tab.on { background: none; }
+.h3-tabs--sl .h3-tab:hover:not(:disabled) { background: none; }
+
+/* ——— v12–v15 · липкая шапка ——— */
+.h3-stk .bw { overflow: clip; }  /* hidden делал окно «прокручиваемым» — sticky внутри не лип к странице */
+/* v12 · липнет вся шапка */
+.h3-stk--all .bw-bar.h3 { position: sticky; top: var(--h3-top, 0px); z-index: 7; }
+/* v13–v15 · строка-прилипала: высота 0 под шапкой, видна, когда шапка ушла (.bw.is-stuck) */
+.h3-mini { position: sticky; top: var(--h3-top, 0px); z-index: 7; height: 0; }
+.h3-mini-in { position: absolute; left: 0; right: 0; top: 0; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 6px 12px;
+  background: color-mix(in srgb, var(--w-muted) 70%, var(--w-page)); border-bottom: 1px solid var(--w-border); box-shadow: 0 8px 16px -8px #000a;
+  opacity: 0; transform: translateY(-8px); pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
+.bw.is-stuck .h3-mini-in { opacity: 1; transform: none; pointer-events: auto; }
+.h3-mini .h3-tabs--in { margin: 0; max-width: 460px; }
+/* v14 · одной строкой: команды и счёт слева, табы справа */
+.h3-mini--line .h3-mini-in { justify-content: space-between; }
+.h3-mt { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.h3-mt b { font: 600 13px/18px var(--w-font); color: var(--w-fg); }
+.h3-mt em { font: 700 15px/18px var(--w-font); font-style: normal; color: var(--w-fg); } .h3-mt em i { font-style: normal; color: var(--w-muted-fg); margin: 0 2px; }
+.h3-mt .h3-lg { width: 20px; height: 20px; }
+.h3-mini--line .h3-tabs--in { flex: 0 1 420px; }
+/* v15 · матч — первым «табом» перед картами */
+.h3-pinrow { display: flex; align-items: center; gap: 4px; width: 100%; max-width: 560px; padding: 3px; border-radius: 10px; background: rgba(0,0,0,.25); }
+.h3-pinrow .h3-tabs--in { flex: 1; padding: 0; background: none; max-width: none; }
+.h3-mt--pin { gap: 6px; height: 28px; padding: 0 10px; border-radius: 8px; background: rgba(255,255,255,.06); }
+.h3-mt--pin .h3-lg { width: 18px; height: 18px; }
+
+/* v16 · табы — своей строкой под командами, обычный sticky: команды уезжают, пилюля остаётся сверху */
+.h3--nt { padding-bottom: 4px !important; }
+.h3-tabrow { position: sticky; top: var(--h3-top, 0px); z-index: 7; display: flex; justify-content: center; padding: 2px 12px 8px;
+  background: color-mix(in srgb, var(--w-muted) 70%, var(--w-page)); transition: box-shadow .2s ease; }
+.h3-tabrow .h3-tabs--in { margin: 0; }
+.bw.is-stuck .h3-tabrow { box-shadow: 0 1px 0 var(--w-border), 0 8px 16px -8px #000a; }

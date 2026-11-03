@@ -1,0 +1,137 @@
+/* Виджет турнира, заход 5 (созвон 22.10, решение 29). 320×320, отступы кратны 4.
+   Токены, .w, .w-scroll — ../widget-tournament/_w.css. */
+.t5{ position:relative; height:320px; display:flex; flex-direction:column; }
+.t5 .w-scroll{ position:relative; }
+.t5-bd{ padding:0 12px 12px; }
+.t5-cap{ font-size:12px; line-height:16px; color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t5-nm{ min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* Логотипы — картинки; нет файла — буквы */
+.t5-lg{ width:16px; height:16px; flex:none; object-fit:contain; border-radius:4px; }
+.t5-lg--20{ width:20px; height:20px; }
+.t5-game{ width:12px; height:12px; flex:none; object-fit:contain; opacity:.7; }
+.t5-ini{ display:inline-grid; place-items:center; border-radius:4px; background:var(--w-muted); font-size:8px; font-weight:600; color:var(--w-muted-fg); }
+
+/* Шапка: в списке — мелкий заголовок и архив; в турнире — стрелка назад и название */
+.t5-hd{ display:flex; align-items:center; gap:4px; flex:none; height:48px; padding:0 12px 0 4px; }
+.t5-hd--list{ height:36px; padding:0 12px; justify-content:space-between; }
+.t5-ttl{ font-size:12px; line-height:16px; font-weight:500; color:var(--w-muted-fg); }
+.w .t5-arch{ display:inline-flex; align-items:center; gap:2px; font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+.w .t5-arch:hover{ color:var(--w-fg); }
+.t5-hd__t{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.w .t5-ib{ display:grid; place-items:center; width:28px; height:28px; flex:none; border-radius:var(--w-r-sm); color:var(--w-muted-fg); }
+.w .t5-ib:hover{ background:var(--w-muted); color:var(--w-fg); }
+
+/* Строка турнира: дата / статус слева, иконка игры + название + тир, ниже день и стадия */
+.t5-lbl{ margin:12px 0 4px; font-size:12px; line-height:16px; font-weight:500; color:var(--w-muted-fg); }
+.t5-bd > .t5-lbl:first-child{ margin-top:0; }
+.w .t5-tr{ display:flex; align-items:center; gap:12px; width:calc(100% + 16px); min-height:44px; margin:0 -8px; padding:4px 8px; border-radius:var(--w-r-sm); }
+.w .t5-tr:hover{ background:var(--w-mid-bg); }
+.t5-when{ display:flex; flex-direction:column; width:44px; flex:none; }
+.t5-when b{ font-size:12px; line-height:16px; font-weight:600; font-variant-numeric:tabular-nums; }
+.t5-when span{ font-size:11px; line-height:16px; color:var(--w-muted-fg); white-space:nowrap; }
+.t5-live{ color:var(--w-down); letter-spacing:.02em; }
+.t5-tr__m{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.t5-tr__n{ display:flex; align-items:center; gap:6px; min-width:0; }
+.t5-tr__n b{ min-width:0; font-size:13px; line-height:18px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t5-hd__t .t5-tr__n b{ font-weight:600; }
+.t5-tier{ flex:none; height:16px; padding:0 4px; border-radius:4px; background:var(--w-muted); font-size:10px; line-height:16px; font-weight:600; color:var(--w-muted-fg); }
+
+/* Сегмент-контрол: группы и сетки — отдельно от шапки таблицы */
+.t5-seg{ display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:2px; margin:0 0 8px; padding:2px; border-radius:var(--w-r-sm); background:var(--w-mid-bg); }
+.w .t5-seg button{ height:24px; border-radius:6px; font-size:12px; font-weight:500; text-align:center; color:var(--w-muted-fg); }
+.w .t5-seg button.is-on{ background:var(--w-muted); color:var(--w-fg); }
+
+/* Таблица: маленькая шапка, зоны фоном строки, форма точками */
+.t5-tbl{ width:100%; border-collapse:collapse; table-layout:fixed; font-size:12px; line-height:20px; }
+.t5-tbl th{ height:20px; padding:0; font-size:11px; font-weight:500; color:var(--w-muted-fg); text-align:right; }
+.t5-tbl th:nth-child(1){ width:24px; text-align:left; padding-left:8px; } .t5-tbl th:nth-child(2){ text-align:left; }
+.t5-tbl th:nth-child(3){ width:52px; text-align:center; } .t5-tbl th:nth-child(4){ width:40px; padding-right:8px; }
+.t5-tbl td{ height:28px; padding:0; text-align:right; font-variant-numeric:tabular-nums; }
+.t5-tbl td:first-child{ text-align:left; padding-left:8px; color:var(--w-muted-fg); border-radius:6px 0 0 6px; }
+.t5-tbl td:nth-child(2){ text-align:left; }
+.t5-tbl td:nth-child(3){ text-align:center; }
+.t5-tbl td:last-child{ padding-right:8px; border-radius:0 6px 6px 0; }
+.t5-tm{ display:flex; align-items:center; gap:8px; min-width:0; }
+.t5-tbl tr.t5-z--up td{ background:var(--w-up-bg); }
+.t5-tbl tr.t5-z--mid td{ background:rgba(245,158,11,.12); }
+.t5-tbl tr.t5-z--down td{ background:var(--w-down-bg); }
+.t5-form{ display:inline-flex; gap:3px; vertical-align:middle; }
+.t5-form i{ width:6px; height:6px; border-radius:50%; }
+.t5-form i.is-w{ background:var(--w-up); } .t5-form i.is-l{ background:var(--w-down); }
+/* Открыт матч / команда: её строки яркие, остальные приглушены */
+.t5--ctx .t5-tbl tbody tr:not(.is-ctx), .t5--ctx .t5-pt:not(.is-ctx){ opacity:.45; }
+.t5-tbl tr.is-ctx td{ font-weight:600; color:var(--w-fg); }
+
+/* Легенда зон + «i» (1.14 — вид ещё ищем) */
+.t5-leg{ display:flex; align-items:center; gap:12px; margin-top:8px; font-size:11px; line-height:16px; color:var(--w-muted-fg); }
+.t5-leg span{ display:inline-flex; align-items:center; gap:6px; }
+.t5-sq{ width:8px; height:8px; border-radius:2px; }
+.t5-sq.t5-z--up{ background:var(--w-up); } .t5-sq.t5-z--mid{ background:var(--w-b); } .t5-sq.t5-z--down{ background:var(--w-down); }
+.w .t5-inf{ display:grid; place-items:center; width:16px; height:16px; margin-left:auto; border-radius:50%; border:1px solid var(--w-ring); font-size:10px; font-weight:600; color:var(--w-muted-fg); }
+.t5-pop{ position:absolute; left:12px; right:12px; z-index:5; padding:8px 12px; border-radius:var(--w-r-sm); background:#000; border:1px solid var(--w-border); font-size:12px; line-height:16px; color:var(--w-fg); }
+
+/* Сетка целиком: колонки раундов, ячейки — логотипы и счёт; матч страницы — в рамке, названия — строкой под сеткой */
+.t5-bk{ display:grid; grid-template-columns:repeat(var(--c), 1fr); gap:8px; }
+.t5-bk__c{ display:flex; flex-direction:column; min-width:0; }
+.t5-bk__r{ margin-bottom:6px; font-size:11px; line-height:16px; color:var(--w-muted-fg); }
+.t5-bk__ms{ flex:1; display:flex; flex-direction:column; justify-content:space-around; gap:12px; }
+.t5-bx{ display:flex; flex-direction:column; gap:8px; padding:8px; border-radius:var(--w-r-sm); background:var(--w-mid-bg); }
+.t5-bx span{ display:flex; align-items:center; gap:6px; font-size:13px; }
+.t5-bx span b{ margin-left:auto; font-weight:600; font-variant-numeric:tabular-nums; }
+.t5-bx span.is-lose{ opacity:.45; }
+.t5-bx.is-on{ box-shadow:inset 0 0 0 1px var(--w-fg); }
+.t5-fm{ display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:4px 8px; margin-top:12px; padding-top:8px; border-top:1px solid var(--w-border); }
+.t5-fm > .t5-cap{ grid-column:1 / -1; }
+.t5-fm__t{ display:flex; align-items:center; gap:6px; min-width:0; font-size:12px; font-weight:600; }
+.t5-fm__t.is-r{ flex-direction:row-reverse; }
+.t5-fm__t.is-lose{ opacity:.55; }
+.t5-fm__s{ font-size:13px; font-variant-numeric:tabular-nums; }
+
+/* Предстоящий турнир */
+.t5-pass{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:0 0 4px; }
+.t5-pass div{ display:flex; flex-direction:column; }
+.t5-pass b{ font-weight:500; }
+.t5-pt{ display:flex; align-items:center; gap:8px; height:28px; font-size:12px; }
+.t5-pt.is-ctx{ font-weight:600; }
+
+/* v3–v5 (дирижёр 22.10): шапки одной высоты, таблица во всю ширину, «Тир 1» словом, линии в сетке, виды финала */
+.t5--v3 .t5-hd, .t5--v3 .t5-hd--list{ height:52px; }
+.t5--v3 .t5-ttl{ font-size:13px; line-height:18px; }
+.t5--v3 .t5-tier{ padding:0 6px; font-weight:500; }
+.t5--v3 .t5-tbl{ width:calc(100% + 24px); margin:0 -12px; }
+.t5--v3 .t5-tbl th:nth-child(1){ width:32px; padding-left:12px; } .t5--v3 .t5-tbl th:nth-child(4){ width:48px; padding-right:12px; }
+.t5--v3 .t5-tbl td{ border-radius:0 !important; height:32px; }
+.t5--v3 .t5-tbl td:first-child{ padding-left:12px; } .t5--v3 .t5-tbl td:last-child{ padding-right:12px; }
+.t5--v3 .t5-tbl tbody tr + tr td{ border-top:1px solid var(--w-bg); }
+.t5--v3 .t5-leg{ margin-top:12px; }
+.t5--v3 .t5-bk{ position:relative; gap:16px; }
+.t5-ln{ position:absolute; left:0; top:0; pointer-events:none; overflow:visible; }
+.t5-ln path{ fill:none; stroke:var(--w-ring); stroke-width:1; }
+.t5--v3 .t5-bx{ position:relative; z-index:1; }
+.t5-lg--24{ width:24px; height:24px; } .t5-lg--48{ width:48px; height:48px; }
+/* Финал карточкой */
+.t5-fc{ display:flex; flex-direction:column; gap:12px; padding:12px; border-radius:var(--w-r-sm); background:var(--w-mid-bg); }
+.t5-fc span{ display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; }
+.t5-fc span b{ margin-left:auto; font-size:15px; font-variant-numeric:tabular-nums; }
+.t5-fc span.is-lose{ opacity:.5; }
+/* Чемпион */
+.t5-ch{ display:flex; flex-direction:column; align-items:center; gap:4px; padding:12px 0 16px; text-align:center; }
+.t5-ch__n{ margin-top:4px; font-size:16px; line-height:22px; font-weight:600; }
+.t5-ch__ru{ display:flex; flex-direction:column; gap:6px; padding-top:12px; border-top:1px solid var(--w-border); }
+.t5-ch__m{ display:flex; align-items:center; gap:8px; font-size:12px; }
+.t5-ch__m b{ font-size:13px; font-variant-numeric:tabular-nums; }
+.t5-ch__m .t5-cap{ margin-left:auto; }
+/* Подпись раздела списка — как шапка таблицы: тот же размер и то же место, что «#» (дирижёр 22.10) */
+.t5--v3 .t5-lbl{ height:20px; margin:12px 0 0; font-size:11px; line-height:20px; }
+.t5--v3 .t5-bd > .t5-lbl:first-child{ margin-top:0; }
+/* Тир — три подписи на выбор: color цветом по тиру · fill залитый · en по-английски */
+.t5-tier--1{ --tc:#facc15; } .t5-tier--2{ --tc:#93c5fd; } .t5-tier--3{ --tc:#d6a77a; }
+.t5-tier--color{ background:color-mix(in srgb, var(--tc) 16%, transparent); color:var(--tc); }
+.t5-tier--fill{ background:var(--tc); color:#09090b; font-weight:600; }
+/* v6: в списке тир коротко и меньше */
+.t5-tier.t5-tier--s{ height:14px; padding:0 3px; font-size:9px; line-height:14px; }
+/* Общая высота виджетов турнира, замен и трансферов — 380 (дирижёр 22.10) */
+.t5.t5--v3{ height:380px; }
+/* Без лишнего скролла: список влезает в 380, нижний отступ 8 (было 12 — давал 2 px переполнения) */
+.t5--v3 .t5-bd{ padding-bottom:8px; }

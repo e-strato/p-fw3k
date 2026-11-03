@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<base href="../widget-tournament-4/" />
+<title>v3 · Сценарий</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="_t4.css" /><link rel="stylesheet" href="../widget-states/_s.css" /></head>
+<body><div class="lab-board">
+  <h1>Состояния виджета · v3 · Сценарий</h1>
+  <p class="lab-board__lead">Три шага: главная → матч → команда. Слева шаг и зачем, справа виджет крупно. Подсказка — точка с подписью у главного действия. ‹ › или ← →.</p>
+  <div class="s-sc"><div><div class="s-steps" id="steps"></div><div class="s-nav"><button id="prev">‹ Назад</button><span class="s-cap" id="cnt"></span><button id="next">Дальше ›</button></div></div><div class="s-z2"><div><div id="w"></div></div></div></div>
+</div>
+<script src="_data.js"></script><script src="_t4.js"></script><script src="../widget-states/_states.js"></script>
+<script>
+  let i = 0
+  const show = () => { const k = S.key[i]
+    document.getElementById('steps').innerHTML = S.key.map((x, j) => `<button class="s-st ${j === i ? 'is-on' : ''}" data-j="${j}"><span class="s-n">${j + 1}</span><span class="s-st__t"><b>${x.name}</b><span class="s-cap">${x.why}</span></span></button>`).join('')
+    document.querySelectorAll('[data-j]').forEach(b => b.onclick = () => { i = +b.dataset.j; show() })
+    document.getElementById('cnt').textContent = `Шаг ${i + 1} из ${S.key.length}`
+    document.getElementById('prev').disabled = i === 0; document.getElementById('next').disabled = i === S.key.length - 1
+    S.mount(document.getElementById('w'), k, { hint: 'label' }) }
+  document.getElementById('prev').onclick = () => { i = Math.max(0, i - 1); show() }
+  document.getElementById('next').onclick = () => { i = Math.min(S.key.length - 1, i + 1); show() }
+  addEventListener('keydown', e => { if (e.key === 'ArrowLeft') document.getElementById('prev').click(); if (e.key === 'ArrowRight') document.getElementById('next').click() })
+  show()
+</script>
+</body></html>

@@ -1,0 +1,7 @@
+/* Шаг 4 лабы gs-match-2: компактный турнир (код — _tc.js). Свёрнут — только строки двух команд матча, без групп и легенды */
+.tc{ display:flex; flex-direction:column; background:var(--w-bg); border:1px solid var(--w-border); border-radius:var(--w-r); overflow:hidden; }
+.tc > .w{ width:100%; border:0; border-radius:0; } /* T4 ставит свой класс на внутренний узел — .tc-in затирается */
+.tc:not(.tc--open) .t5-tbl tbody tr:not(.is-ctx), .tc:not(.tc--open) .t5-seg, .tc:not(.tc--open) .t5-leg{ display:none; }
+.tc:not(.tc--open) .w-scroll, .tc:not(.tc--open) > .w{ height:auto !important; max-height:none !important; }
+.tc-more{ display:block; width:100%; padding:10px 12px; border:0; border-top:1px solid var(--w-border); background:none; color:var(--w-muted-fg); font:500 13px/18px var(--w-font); cursor:pointer; text-align:center; }
+.tc-more:hover{ color:var(--w-fg); background:var(--w-muted); }

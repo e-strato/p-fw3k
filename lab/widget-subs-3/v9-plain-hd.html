@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<base href="../widget-tournament-4/" />
+<title>v9 · Шапка матча без лого</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&family=Inter:wght@500;600&display=swap" />
+<link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="../widget-subs-2/_s2.css" /><link rel="stylesheet" href="../widget-subs-2/_s6v6.css" /><link rel="stylesheet" href="../widget-subs-2/_s8.css" />
+<link rel="stylesheet" href="../widgets-unified/_type.css" /><link rel="stylesheet" href="../widgets-unified/_cons.css" /><link rel="stylesheet" href="../widget-subs-3/_s3.css" />
+<style>.lab-board{ padding:32px 48px; } .z2{ zoom:2; }</style></head>
+<!-- v9 — как v8, но в матче шапка без лого (как v1), у заголовков команд лого 16 (дирижёр 23.10). v8 — как v6, но лого команд 20 вместо 16 (дирижёр 23.10: «16 мало, 24 сильно много»). v6 — как v2, но значок у второй строки даты: «LIVE / Map 2», «03:00 / Сегодня» (дирижёр 23.10). v2 — по правкам 23.10: дата слева (U.when), значок игры 16, лого 16 у тега (PR — IC), число серым без подложки; в матче без табов — команды друг под другом, только игроки с заменой, без ID-чипов и плашки «не сверены»; роли и Map по-английски; второй состав Nemiga (CS2) — пример -->
+<body><div class="lab-board"><div class="z2"><div id="w"></div></div></div>
+<script src="_data.js"></script><script src="../widget-subs-2/_data.js"></script><script src="../widget-subs-2/_games.js"></script><script src="../widget-subs-3/_s3data.js"></script>
+<script src="../widgets-unified/_cons.js"></script><script src="../widget-subs-3/_s3.js"></script>
+<script>
+  const K = [{ id: 'home', name: 'На главной', why: 'Матчи с новыми заменами: дата слева, значок игры, теги команд, число замен серым. У Nemiga две строки — матч по Dota 2 и матч по CS2 (пример); нажми матч — его замены по командам', o: {} },
+    { id: 'match', name: 'В матче', why: 'Открыт матч PR — IC (идёт Map 2): команды друг под другом, только игроки с заменой — Shiro → fading, Kz → ? (нет в базе), Dukalis → Yamich; нажми строку — шаги Кто → Позиция → Срок → Проверь', o: { match: 'm1' } },
+    { id: 'map', name: 'Замена на карту', why: 'CD выпустили Nikobaby с Map 2 серии — срок «на карту»', o: { match: 'm2' } },
+    { id: 'none', name: 'Замен нет', why: 'YS — Bot$: составы совпадают с базой', o: { match: 'm5' } }]
+  const w = document.getElementById('w'); let cur = 0
+  const go = (f, i) => { cur = i; S3.render(w, { ...K[i].o, game: 'when', big: true, plainHd: true }) }
+  window.LAB = { view: 'toolbar', flows: () => [{ name: 'Экраны', steps: K.map(k => ({ name: k.name, what: k.why })) }], go, cur: () => ({ f: 0, i: cur }),
+    axes: () => [{ key: 'screen', name: 'Экран', value: K[cur].id, options: K.map(k => ({ v: k.id, label: k.name })) }],
+    set: (k, v) => go(0, K.findIndex(x => x.id === v)), caption: () => K[cur].why }
+  go(0, 0)
+</script>
+</body></html>

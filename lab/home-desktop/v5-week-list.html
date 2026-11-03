@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_home.css" /><link rel="stylesheet" href="_week.css" />
+<style>
+/* v5 «Неделя + список» — v3, но постеры компактнее и одной строкой, полоса дней над ними,
+   а в первый экран уже заходит начало списка матчей дня — экран сразу полезен, а не только витрина. */
+.w5 { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.w5 .w-head h1 { font-size: 38px; }
+/* Полоса дней — компактная, над постерами */
+.w5 .w-week { gap: 8px; }
+.w5 .w-d { gap: 0; }
+.w5 .w-d > span { display: none; }
+.w5 .w-d > div { grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 2px 10px; height: 58px; padding: 8px 12px; }
+.w5 .w-d__top { display: contents; }
+.w5 .w-d b { grid-row: 1 / 3; font-size: 24px; }
+.w5 .w-d__name { color: var(--c-muted); font-size: 12.5px; font-weight: 600; }
+.w5 .w-d .is-live { display: none; }
+.w5 .w-d small { font-size: 12px; }
+.w5 .w-act { grid-template-columns: auto; }
+.w5 .w-act .h-btn { height: 58px; }
+/* Постеры — компактные, 5 в ряд */
+.w5 .w-vp { padding: 4px 48px 10px; }
+.w5 .w-track { gap: 14px; }
+.w-p--s { width: 258px; height: 262px; padding: 12px 14px 14px; border-radius: 14px; }
+.w-p--s .w-logos { inset: 46px 0 auto; }
+.w-p--s .w-logos .h-lg:first-child { transform: translateX(10px) rotate(-6deg); } .w-p--s .w-logos .h-lg:last-child { transform: translateX(-10px) rotate(6deg); }
+.w-p--s .w-score { top: 96px; padding: 4px 12px; font-size: 28px; }
+.w-p--s .w-lock { top: 76px; gap: 6px; } .w-p--s .w-lock i { width: 38px; height: 38px; font-size: 17px; } .w-p--s .w-lock span { font-size: 11.5px; padding: 5px 10px; }
+.w-p--s .w-p__top { gap: 6px; } .w-p--s span.w-tour { display: none; }
+.w-p--s .w-st { padding: 4px 8px; font-size: 11.5px; }
+.w-p--s .w-win { font-size: 14px; }
+.w-p--s h3 { font-size: 19px; }
+.w-p--s .w-p__meta { font-size: 12px; } .w-p--s .w-p__meta b { font-size: 11px; }
+.w-p--s .w-p__meta span:nth-child(3) { display: none; }
+.w5 .w-arr { top: 104px; width: 44px; height: 44px; font-size: 20px !important; }
+.w5 .w-empty { height: 262px; }
+
+/* Список матчей дня — две колонки компактных строк по времени */
+.w-list__head { display: flex; align-items: baseline; gap: 12px; }
+.w-list__head h2 { font: 700 22px var(--font-c); }
+.w-list__head p { color: var(--c-caption); font-size: 13px; }
+.w-list__head a { margin-left: auto; color: var(--c-accent); font-size: 13px; font-weight: 600; }
+.w-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 16px; }
+.w-r { display: grid; grid-template-columns: 100px 64px minmax(0, 1fr) 40px minmax(0, 1fr) 92px; align-items: center; gap: 10px; height: 46px; padding: 0 14px; border-radius: 10px; background: var(--c-ui-panel); font-size: 13.5px; transition: background .15s; }
+.w-r:hover { background: var(--c-ui-item); }
+.w-r.is-air { background: linear-gradient(90deg, color-mix(in srgb, var(--c-live) 12%, var(--c-ui-panel)), var(--c-ui-panel) 60%); }
+.w-r.is-off { opacity: .55; }
+.w-r__t { font: 700 15px var(--font-c); font-variant-numeric: tabular-nums; }
+.w-r__t small { display: block; color: var(--c-caption); font: 500 11px var(--font); }
+.w-r__t.is-live { color: var(--c-live); }
+.w-r__a, .w-r__b { display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 600; }
+.w-r__a { justify-content: flex-end; text-align: right; }
+.w-r__a span, .w-r__b span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.w-r__a.is-lose span, .w-r__b.is-lose span { color: var(--c-muted); font-weight: 500; }
+.w-r__s { font: 700 16px var(--font-c); text-align: center; font-variant-numeric: tabular-nums; }
+.w-r__s.is-vs { color: var(--c-caption); font-size: 13px; font-weight: 600; }
+.w-r__m { color: var(--c-caption); font-size: 12px; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.w-r__m.is-warn { color: var(--c-stat-mid); }
+
+/* Граница первого экрана — пометка лабы */
+.w-fold { position: absolute; left: 0; right: 0; top: 900px; z-index: 5; height: 0; border-top: 1px dashed color-mix(in srgb, var(--c-coin) 60%, transparent); pointer-events: none; }
+.w-fold span { position: absolute; right: 12px; top: -22px; padding: 2px 8px; border-radius: 5px; background: color-mix(in srgb, var(--c-coin) 18%, var(--c-ui-bg)); color: var(--c-coin); font-size: 11.5px; font-weight: 600; }
+</style></head>
+<body><main class="h-page">
+  <h1>v5 · Неделя + список</h1>
+  <p>v3, собранный плотнее: полоса 7 дней сверху, под ней постеры главных матчей одной строкой (5 в ряд, листаются), а ниже уже начинается список всех матчей дня — по времени, в две колонки, по всем 5 играм. Первый экран сразу отвечает «что сегодня и когда», а постеры остаются витриной главного. Кликается всё: дни, игры, стрелки; таймеры тикают.</p>
+  <p class="h-cap">Десктоп · 1440 — первый экран до пунктирной линии (900 px), ниже — продолжение страницы</p>
+  <div class="h-wrap"><div class="h-frame" id="f"></div></div>
+</main>
+<script src="_home.js"></script><script src="_week.js"></script>
+<script>
+const { ИГРЫ, ЭФИР, время, доСтарта, имя, лого, тег, шапка } = H
+const { ДНИ, ДНИ_НЕД, ИГРЫ_ДНЯ, сегодня, постер } = W
+let день = 1, игры = new Set(), сдвиг = 0
+
+// Строка списка: время или статус · игра · команды и счёт · стадия
+const статус = (m, d) => {
+  if (m.st === 'live') return `<span class="w-r__t is-live">Карта ${m.карта}<small>${m.часы}</small></span>`
+  if (m.st === 'draft') return `<span class="w-r__t is-live">Драфт<small>карта ${m.карта}</small></span>`
+  if (m.st === 'pause') return `<span class="w-r__t" style="color:var(--c-stat-mid)">Пауза<small>${m.часы}</small></span>`
+  if (m.st === 'break') return `<span class="w-r__t" style="color:var(--c-stat-mid)">Перерыв<small>карта ${m.карта} · ${m.через}</small></span>`
+  if (m.st === 'done') return `<span class="w-r__t">Итог<small>${время(m.t)}</small></span>`
+  if (m.st === 'cancel') return `<span class="w-r__t">—<small>отменён</small></span>`
+  if (m.st === 'moved') return `<span class="w-r__t">${время(m.t)}<small style="color:var(--c-stat-mid)">перенесён</small></span>`
+  if (d.today && доСтарта(m.t).s < 3600) return `<span class="w-r__t">${время(m.t)}<small data-tick="${m.t}">${доСтарта(m.t).txt}</small></span>`
+  return `<span class="w-r__t">${время(m.t)}<small>${m.st === 'delay' ? 'задержан' : d.today ? доСтарта(m.t).txt : ''}</small></span>`
+}
+const строка = (m, d) => {
+  const итог = m.st === 'done', эф = ЭФИР.includes(m.st), выкл = m.st === 'moved' || m.st === 'cancel' || m.перенос
+  const сторона = (k, cls) => { const s = m['s' + k], o = m[k === 'a' ? 'sb' : 'sa']
+    return `<span class="${cls} ${итог && s < o ? 'is-lose' : ''}">${k === 'a' ? `<span>${имя(m.a)}</span>${лого(m.a, 22)}` : `${лого(m.b, 22)}<span>${имя(m.b)}</span>`}</span>` }
+  const счёт = m.sa != null && (итог || эф) ? `<span class="w-r__s">${m.sa}:${m.sb}</span>` : `<span class="w-r__s is-vs">vs</span>`
+  const мета = m.st === 'moved' ? `<span class="w-r__m is-warn">на ${m.новое}</span>` : m.st === 'delay' ? `<span class="w-r__m is-warn">было ${m.было}</span>` : `<span class="w-r__m">${m.bo} · ${m.стадия}</span>`
+  return `<a class="w-r ${эф ? 'is-air' : ''} ${выкл ? 'is-off' : ''}" href="#">${статус(m, d)}${тег(m.g)}${сторона('a', 'w-r__a')}${счёт}${сторона('b', 'w-r__b')}${мета}</a>`
+}
+
+const f = document.getElementById('f')
+const рисовать = () => {
+  const d = ДНИ[день], c = ИГРЫ_ДНЯ(d)
+  const список = d.м.filter(m => !игры.size || игры.has(m.g))
+  const поВремени = [...список].sort((a, b) => a.t - b.t)
+  const видно = 5
+  f.innerHTML = `${шапка('Матчи')}<div class="h-body"><div class="w5">
+    <div class="w-head"><h1>Октябрь</h1><p>${d.today ? 'Сегодня, ' : ''}<b>${ДНИ_НЕД[день]}, ${d.n} октября</b> · ${d.k} матчей</p>
+      <div class="w-games"><button type="button" data-g="all" aria-pressed="${!игры.size}">Все игры<small>${d.м.length}</small></button>
+        ${Object.keys(ИГРЫ).map(g => `<button type="button" data-g="${g}" style="--gc:var(--h-game-${g})" aria-pressed="${игры.has(g)}">${ИГРЫ[g]}<small>${c[g] || 0}</small></button>`).join('')}
+        <span class="w-cnt" title="Включено игр">${игры.size || 5}</span></div></div>
+    <div class="w-week">${ДНИ.map((x, i) => { const cg = ИГРЫ_ДНЯ(x)
+      return `<button class="w-d ${x.past ? 'is-past' : ''}" type="button" data-d="${i}" aria-pressed="${i === день}"><span></span>
+        <div><p class="w-d__top"><b>${x.n}</b><span class="w-d__name">${x.today ? 'Сегодня' : x.past ? 'Вчера' : x.d}</span></p><small>${x.k} матчей<i>${Object.keys(cg).map(g => `<u style="--gc:var(--h-game-${g})"></u>`).join('')}</i></small></div></button>` }).join('')}
+      <div class="w-act"><a class="h-btn" href="#">★ Мои матчи · 4</a></div></div>
+    <div class="w-car">
+      <div class="w-vp"><div class="w-track" style="transform:translateX(${-сдвиг * 272}px)">${список.length ? список.map(m => постер(m, d, 'w-p--s', 96)).join('') : '<div class="w-empty" style="width:100%">В этот день матчей выбранных игр нет</div>'}</div></div>
+      <button class="w-arr w-arr--l" type="button" data-arr="-1" ${сдвиг <= 0 ? 'disabled' : ''}>‹</button>
+      <button class="w-arr w-arr--r" type="button" data-arr="1" ${сдвиг >= список.length - видно ? 'disabled' : ''}>›</button>
+    </div>
+    <div class="w-list__head"><h2>Все матчи дня</h2><p>${поВремени.length} из ${d.k} · по времени${d.today ? ' · сейчас 15:35' : ''}</p><a href="#">Только мои команды</a></div>
+    <div class="w-list">${поВремени.length ? поВремени.map(m => строка(m, d)).join('') : '<p class="h-mut">Нет матчей выбранных игр</p>'}</div>
+  </div></div><div class="w-fold"><span>граница первого экрана · 900 px</span></div>`
+  H.тик()
+}
+f.addEventListener('click', e => {
+  if (e.target.closest('a')) e.preventDefault()
+  const dd = e.target.closest('[data-d]'); if (dd) { день = +dd.dataset.d; сдвиг = 0; рисовать(); return }
+  const g = e.target.closest('[data-g]'); if (g) { const k = g.dataset.g; if (k === 'all') игры.clear(); else игры.has(k) ? игры.delete(k) : игры.add(k); if (игры.size === 5) игры.clear(); сдвиг = 0; рисовать(); return }
+  const a = e.target.closest('[data-arr]'); if (a) { сдвиг += +a.dataset.arr; рисовать() }
+})
+// Сегодня строка постеров начинается с первого матча в эфире
+сдвиг = Math.max(0, Math.min(сегодня.findIndex(m => ЭФИР.includes(m.st)), сегодня.length - 5))
+рисовать(); H.вписать()
+</script>
+</body></html>

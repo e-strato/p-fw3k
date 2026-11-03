@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../бустеры/_бустер.css" />
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+</head>
+<body>
+<!-- v6 · Зажми 2.0: трещины света. Развитие «Фольга: зажми и сорви» из лабы «Бустеры». Пак — глянцевый хром, повыше.
+     Держишь — пак надувается от давления, из центра по фольге бегут светящиеся трещины-молнии, ветвятся к краям; отпустил —
+     трещины медленно гаснут. Трещины дошли до шва — верх выбивает вверх, трещины вспыхивают целиком, карты. -->
+<div class="bs"></div>
+<script type="module">
+import { start } from '../бустеры/_бустер.js'
+import { THREE, RAR, packFace, foil, crimpMat, pillow } from './_пак.js'
+const W = 1.5, H = 2.6, D = 0.14, CH = 0.1, TEAR = H / 2 - 0.3
+const zig = (x) => Math.sin(x * 37) * 0.018 + Math.sin(x * 91 + 1.3) * 0.012
+// Трещины: дерево отрезков из центра эмблемы к краям, у каждого — «время» появления 0..1
+const tree = (() => {
+  const seg = [], walk = (x, y, a, t, depth) => {
+    let len = 0
+    while (len < 1 && x > 8 && x < 504 && y > 8 && y < 760) {
+      const step = 10 + Math.random() * 10, nx = x + Math.cos(a) * step, ny = y + Math.sin(a) * step
+      seg.push({ x, y, nx, ny, t, w: Math.max(1, 4 - depth) }); x = nx; y = ny; a += (Math.random() - 0.5) * 0.8; t += 0.018; len += 0.05
+      if (depth < 3 && Math.random() < 0.09) walk(x, y, a + (Math.random() < 0.5 ? -1 : 1) * (0.5 + Math.random() * 0.6), t, depth + 1)
+    }
+  }
+  for (let i = 0; i < 7; i++) walk(256, 323, i / 7 * Math.PI * 2 + Math.random() * 0.4, 0, 0)
+  const max = Math.max(...seg.map((s) => s.t)); seg.forEach((s) => (s.t /= max)); return seg
+})()
+start({
+  name: 'Зажми 2.0: трещины света',
+  note: 'Глянцевый хром. Держишь — пак надувается, из центра по фольге бегут светящиеся трещины к краям; отпустил — гаснут. Дошли до шва — верх выбивает.',
+  hint: 'Зажми пак',
+  build(K) {
+    const g = new THREE.Group(), pack = new THREE.Group(); g.add(pack)
+    // Карта свечения трещин — перерисовываем по заряду
+    const cc = document.createElement('canvas'); cc.width = 512; cc.height = 768; const cx = cc.getContext('2d')
+    const crackTex = new THREE.CanvasTexture(cc); crackTex.colorSpace = THREE.SRGBColorSpace
+    let drawn = -1
+    const drawCracks = (k) => {
+      const q = Math.round(k * 60); if (q === drawn) return; drawn = q
+      cx.fillStyle = '#000'; cx.fillRect(0, 0, 512, 768); cx.strokeStyle = '#fff'; cx.lineCap = 'round'; cx.shadowColor = '#fff'; cx.shadowBlur = 8
+      for (const s of tree) if (s.t <= k) { cx.lineWidth = s.w; cx.beginPath(); cx.moveTo(s.x, s.y); cx.lineTo(s.nx, s.ny); cx.stroke() }
+      crackTex.needsUpdate = true
+    }
+    drawCracks(0)
+    const front = foil(K.rar, packFace(K.rar, { name: 'Хром · ' + RAR[K.rar].ru })), back = foil(K.rar, packFace(K.rar, { back: true }))
+    Object.assign(front, { metalness: 0.95, roughness: 0.1, bumpScale: 0.7, emissiveMap: crackTex, emissiveIntensity: 2.4 })
+    Object.assign(back, { metalness: 0.95, roughness: 0.1, bumpScale: 0.7 })
+    const cm = crimpMat(K.rar)
+    const part = (y0, y1, z0, z1) => { const p = new THREE.Group(); p.add(new THREE.Mesh(pillow(W, H, D, { y0, y1, zig0: z0, zig1: z1 }), front)); const b = new THREE.Mesh(pillow(W, H, D, { y0, y1, zig0: z0, zig1: z1, back: true }), back); b.rotation.y = Math.PI; p.add(b); return p }
+    const body = part(-H / 2, TEAR, null, zig), top = part(TEAR, H / 2, zig, null)
+    const crimp = (y) => { const m = new THREE.Mesh(new THREE.BoxGeometry(W * 1.01, CH, 0.024), cm); m.position.y = y; return m }
+    body.add(crimp(-H / 2 + CH / 2)); top.add(crimp(H / 2 - CH / 2)); pack.add(body, top)
+
+    let charge = 0, holding = false, auto = false, done = false
+    const go = async () => {
+      done = true; K.hint(''); drawCracks(1)
+      const m = pack.localToWorld(new THREE.Vector3(0, TEAR, 0.2))
+      K.flash(0.9)
+      K.tween(1100, (k) => { top.position.set(k * 0.4, k * 3.6 - k * k * 0.6, k * 0.8); top.rotation.set(-k * 3, k * 0.6, k * 1.4) })
+      K.shock(m, 9); K.sparks(m, 1.2, 3); K.confetti(m, 1.1, 3.6)
+      await K.tween(450, (k) => { K.lightAt(m, 0.5 + k * 0.5, 1.3); K.rays(m, k); front.emissiveIntensity = 2.4 + k * 3 })
+      K.reveal(40)
+      K.tween(900, (k) => { pack.position.y = -k * 4.4; pack.rotation.z = k * 0.2 }, (k) => k * k)
+      await K.tween(1600, (k) => { K.lightAt(m, 1 - k * 0.7, 1.3); K.rays(m, 1 - k * 0.6) })
+    }
+    return {
+      g, open: go,
+      down() { if (!done) holding = true },
+      up() { holding = false },
+      auto() { auto = true },
+      tick(dt, t) {
+        if (done) return
+        const on = holding || auto
+        // Заряд растёт медленнее к концу — трещины «доползают» до шва; отпустил — гаснут не сразу
+        charge = THREE.MathUtils.clamp(charge + (on ? dt / (1.1 + charge * 0.8) : -dt * 0.5), 0, 1)
+        drawCracks(charge)
+        const sh = charge ** 3 * 0.045
+        pack.position.set((Math.random() - 0.5) * sh, Math.sin(t * 1.5) * 0.05 * (1 - charge) + (Math.random() - 0.5) * sh, 0)
+        pack.rotation.z = Math.sin(t * 1) * 0.03 * (1 - charge)
+        // Надувается: толще и чуть короче
+        pack.scale.set(1 + charge * 0.04, 1 - charge * 0.03, 1 + charge * 1.1)
+        K.lightAt(pack.localToWorld(new THREE.Vector3(0, 0.1, -0.3)), charge * 0.4, 1.3)
+        K.hint(charge > 0.02 ? (charge < 1 ? 'Держи — трещины ползут к шву' : '') : 'Зажми пак')
+        if (charge >= 1) K.open()
+      },
+    }
+  },
+})
+</script>
+</body></html>

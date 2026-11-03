@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../бустеры/_бустер.css" />
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+</head>
+<body>
+<!-- v1 · Сгорает от разреза. Разрез загорается: фольга выгорает от линии к краям рваной светящейся кромкой цвета редкости,
+     как бумага в огне; по линии сыплются искры. Обёртки не остаётся — в воздухе висит колода, дальше веер и переворот. -->
+<div class="bs"></div>
+<script type="module">
+import { play, THREE } from './_обёртка.js'
+play({
+  name: 'Обёртка сгорает',
+  note: 'Разрез загорается — фольга выгорает от линии к краям светящейся рваной кромкой. В воздухе остаётся колода.',
+  async remove({ K, A, B, c }) {
+    // Половины чуть расходятся, кромка горит наружу
+    K.tween(500, (k) => [A, B].forEach((p, i) => p.h.position.copy(A.n).multiplyScalar((i ? -1 : 1) * k * 0.06)))
+    let sp = 0
+    K.tween(1900, (k) => {
+      ;[A, B].forEach((p) => { p.U.uP.value.copy(A.mid); p.U.uN.value.copy(A.n); p.U.uBurn.value = -0.02 + k * 1.9 })
+      if ((sp += 1) % 9 === 0) K.sparks(c.clone().add(new THREE.Vector3((Math.random() - 0.5) * 1.6, (Math.random() - 0.5) * 1.2, 0)), 0.2, 0.5)
+    }, (k) => k)
+    await K.wait(900)
+  },
+})
+</script>
+</body></html>

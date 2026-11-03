@@ -1,0 +1,223 @@
+/* Набор 6 «Эфир» — вёрстка раскладки efir (_р-эфир.js). На токенах --s-* темы (_т-эфир.css), как _раскладки.css Claude-A.
+   Приёмы эфира: клинья цвета команды (clip-path), титры-плашки, счёт-баг, тикер, «вайп» заливки при наведении. */
+
+/* Общее: вайп — заливка проезжает слева направо при наведении */
+.l6-wipe { position: relative; isolation: isolate; overflow: hidden; }
+.l6-wipe::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--s-text); transform: scaleX(0); transform-origin: 0 50%; transition: transform .28s cubic-bezier(.7, 0, .2, 1); }
+.l6-wipe:hover { color: var(--s-bg); }
+.l6-wipe:hover::before { transform: scaleX(1); }
+.l6-count { font: 700 20px/1 var(--s-font-num); font-variant-numeric: tabular-nums; }
+
+/* Тикер под шапкой */
+.l6-ticker { height: 34px; overflow: hidden; background: var(--s-panel); border-bottom: 1px solid var(--s-line); }
+.l6-ticker__run { display: flex; width: max-content; animation: l6-run 48s linear infinite; }
+.l6-ticker:hover .l6-ticker__run { animation-play-state: paused; }
+@keyframes l6-run { to { transform: translateX(-50%); } }
+.l6-tk { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 22px; border-right: 1px solid var(--s-line-2); font-size: 12.5px; white-space: nowrap; }
+.l6-tk small { display: inline-flex; align-items: center; margin-right: 6px; color: var(--s-muted); font: 600 13px var(--s-font-num); }
+.l6-tk--live small { color: var(--s-live); }
+.l6-tk .a-logo { width: 18px; height: 18px; }
+.l6-tk em { min-width: 34px; text-align: center; font: 700 14px var(--s-font-num); font-style: normal; }
+@media (prefers-reduced-motion: reduce) { .l6-ticker__run { animation: none; } }
+
+/* ══════ Главная ══════ */
+.l6-home { display: grid; gap: var(--s-gap); }
+/* Эфир: два клина цвета команд сходятся к центру, сверху слева — счёт-баг */
+.l6-air { position: relative; display: grid; grid-template-rows: auto 1fr auto; min-height: 400px; padding: 20px 24px 22px; overflow: hidden; isolation: isolate;
+  background: radial-gradient(60% 80% at 50% 120%, #ff6a2b22, transparent 70%), #0b0b0f; box-shadow: var(--s-panel-edge); }
+.l6-air::before, .l6-air::after { content: ''; position: absolute; top: 0; bottom: 0; width: 46%; z-index: -1; opacity: .9; }
+.l6-air::before { left: 0; background: linear-gradient(100deg, color-mix(in srgb, var(--ta) 34%, transparent), color-mix(in srgb, var(--ta) 6%, transparent) 75%, transparent); clip-path: polygon(0 0, 100% 0, 78% 100%, 0 100%); }
+.l6-air::after { right: 0; background: linear-gradient(260deg, color-mix(in srgb, var(--tb) 34%, transparent), color-mix(in srgb, var(--tb) 6%, transparent) 75%, transparent); clip-path: polygon(22% 0, 100% 0, 100% 100%, 0 100%); }
+.l6-air__bug { display: inline-flex; align-items: stretch; justify-self: start; height: 38px; background: #000; box-shadow: inset 0 0 0 1px var(--s-line); }
+.l6-bug__t { display: flex; align-items: center; gap: 8px; padding: 0 12px; font: 700 17px var(--s-font-h); }
+.l6-bug__t .a-logo { width: 22px; height: 22px; }
+.l6-bug__s { display: flex; }
+.l6-bug__s b { display: grid; place-content: center; width: 34px; font: 800 20px var(--s-font-num); background: var(--s-text); color: var(--s-bg); }
+.l6-bug__s b + b { background: #d6d6dc; }
+.l6-bug__m { display: flex; align-items: center; padding: 0 14px; background: var(--s-live); color: #fff; font: 700 14px var(--s-font-num); }
+.l6-bug__m .a-dot { background: #fff; box-shadow: none; }
+.l6-air__league { position: absolute; top: 28px; right: 26px; color: var(--s-muted); font-size: 13px; }
+.l6-air__main { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 40px; }
+.l6-air__team { display: flex; align-items: center; gap: 22px; }
+.l6-air__team .a-logo { width: 96px; height: 96px; filter: drop-shadow(0 10px 30px #000); }
+.l6-air__team b { font: 800 45px/.9 var(--s-font-h); letter-spacing: -.01em; }
+.l6-air__team--r { justify-content: flex-end; text-align: right; }
+.l6-air__score { display: flex; align-items: baseline; gap: 14px; }
+.l6-air__score b { font: 800 94px/.85 var(--s-font-num); }
+.l6-air__score i { font: 600 55px/1 var(--s-font-num); font-style: normal; color: var(--s-muted); }
+.l6-air__foot { display: grid; grid-template-columns: minmax(0, 1fr) 440px; align-items: end; gap: 24px; }
+.l6-air__lts { display: grid; gap: 8px; }
+/* Титр игрока: фото, ник, KDA и очки; фон — затухающая заливка цвета команды */
+.l6-lt { display: grid; grid-template-columns: 54px minmax(0, 1fr) 90px 72px; align-items: center; gap: 14px; height: 58px; max-width: 560px; padding-right: 16px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tc) 30%, #000), #0d0d11 65%); clip-path: polygon(0 0, 100% 0, calc(100% - 16px) 100%, 0 100%);
+  transition: translate .3s; }
+.l6-lt:hover { translate: 6px 0; }
+.l6-lt__ph { height: 58px; overflow: hidden; background: color-mix(in srgb, var(--tc) 50%, #000); }
+.l6-lt__ph img { width: 100%; height: 150%; object-fit: cover; object-position: 50% 0; }
+.l6-lt__who b { display: block; font: 800 20px/1 var(--s-font-h); }
+.l6-lt__who small { color: var(--s-muted); font-size: 12px; }
+.l6-lt__n small { display: block; color: var(--s-muted); font-size: 11px; }
+.l6-lt__n b { font: 700 18px/1.1 var(--s-font-num); }
+.l6-air__vote { display: grid; gap: 12px; }
+.l6-split { display: flex; height: 34px; background: color-mix(in srgb, var(--tb) 75%, #000); }
+.l6-split span { display: flex; align-items: center; padding: 0 12px; flex: 1; justify-content: flex-end; font: 700 15px var(--s-font-num); color: #000; }
+.l6-split span[style] { flex: 0 0 var(--p); justify-content: flex-start; background: var(--ta); clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%); }
+.l6-air__acts { display: flex; gap: 10px; justify-content: flex-end; }
+
+.l6-home__grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--s-gap); align-items: start; }
+.l6-home__main, .l6-studio { display: grid; gap: var(--s-gap); }
+/* Программа дня: сетка по часам */
+.l6-prog__grid { position: relative; display: grid; gap: 6px; --lab: 170px; }
+.l6-prog__hrs { display: grid; grid-template-columns: var(--lab) 1fr; height: 22px; }
+.l6-prog__hrs > div { position: relative; }
+.l6-prog__hrs i { position: absolute; top: 0; font: 600 13px var(--s-font-num); font-style: normal; color: var(--s-muted); translate: -50% 0; }
+.l6-prog__hrs i:first-child { translate: 0 0; }
+.l6-prog__row { display: grid; grid-template-columns: var(--lab) 1fr; align-items: stretch; min-height: 64px; }
+.l6-prog__t { display: grid; align-content: center; padding-right: 12px; }
+.l6-prog__t b { font: 700 16px/1.1 var(--s-font-h); }
+.l6-prog__t small { color: var(--s-muted); font-size: 11.5px; }
+.l6-prog__lane { position: relative; background: repeating-linear-gradient(90deg, var(--s-line-2) 0 1px, transparent 1px calc(100% / 12)), #0a0a0d; }
+.l6-slot { position: absolute; top: 5px; bottom: 5px; display: grid; align-content: center; gap: 3px; padding: 0 10px; overflow: hidden; background: var(--s-panel-2); cursor: pointer;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%); transition: background .2s; }
+.l6-slot:hover { background: #2a2a32; }
+.l6-slot small { display: flex; align-items: center; color: var(--s-muted); font: 600 12.5px var(--s-font-num); white-space: nowrap; }
+.l6-slot small .a-star { margin: 0 3px 0 4px; }
+.l6-slot span { display: flex; align-items: center; gap: 6px; white-space: nowrap; font: 700 14px var(--s-font-h); }
+.l6-slot .a-logo { width: 18px; height: 18px; }
+.l6-slot .a-logo--mono { font-size: 7px; }
+.l6-slot em { padding: 0 4px; font: 800 15px var(--s-font-num); font-style: normal; }
+.l6-slot--live { background: color-mix(in srgb, var(--s-live) 22%, var(--s-panel-2)); }
+.l6-slot--live small { color: #ffb3bf; }
+.l6-slot--ft { opacity: .55; }
+.l6-slot.is-mine { box-shadow: inset 0 0 0 1px var(--s-accent); }
+.l6-prog__now { position: absolute; top: 0; bottom: 0; left: calc(var(--lab) + (100% - var(--lab)) * var(--x)); width: 2px; background: var(--s-live); pointer-events: none; }
+.l6-prog__now small { position: absolute; top: -2px; left: 4px; padding: 1px 5px; background: var(--s-live); color: #fff; font: 700 12px var(--s-font-num); }
+.l6-five__row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; justify-items: center; }
+.l6-five__c { display: grid; justify-items: center; gap: 8px; }
+.l6-five__c small { display: inline-flex; align-items: center; color: var(--s-muted); font: 600 14px var(--s-font-num); }
+.l6-five__c small.is-live { color: var(--s-live); }
+/* Студия: отсчёт до следующего матча */
+.l6-next__m { display: grid; grid-template-columns: 32px minmax(0, 1fr) 32px; align-items: center; gap: 10px; }
+.l6-next__m .a-logo { width: 32px; height: 32px; }
+.l6-next__m b { display: block; font: 700 17px/1.1 var(--s-font-h); }
+.l6-next__m small { color: var(--s-muted); font-size: 12px; }
+.l6-next__t { display: flex; align-items: baseline; justify-content: space-between; margin: 14px 0; padding: 10px 12px; background: #000; }
+.l6-next__t span { color: var(--s-muted); font-size: 12.5px; }
+.l6-next .a-btn { width: 100%; }
+
+/* ══════ Галерея: драфт ══════ */
+.l6-draft { display: grid; gap: 16px; }
+.l6-draft__head { display: flex; align-items: center; gap: 20px; }
+.l6-draft__head .a-seg { margin-left: auto; }
+.l6-board { display: flex; background: #000; box-shadow: inset 0 0 0 1px var(--s-line); }
+.l6-board__i { all: unset; cursor: pointer; display: grid; padding: 6px 16px; border-right: 1px solid var(--s-line); }
+.l6-board__i small { color: var(--s-muted); font-size: 11px; }
+.l6-board__i b { font: 700 16px/1.15 var(--s-font-h); }
+.l6-board__i:hover b { color: var(--s-accent); }
+.l6-draft__body { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: var(--s-gap); align-items: start; }
+.l6-picks { display: grid; gap: 8px; }
+.l6-pick-row { display: grid; grid-template-columns: 120px minmax(0, 1fr); align-items: center; gap: 16px; padding: 10px 16px 10px 0; background: var(--s-panel); box-shadow: var(--s-panel-edge); }
+.l6-pick-row__pos { display: grid; justify-items: center; align-self: stretch; align-content: center; background: #000; clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%); }
+.l6-pick-row__pos b { font: 800 50px/.9 var(--s-font-num); }
+.l6-pick-row__pos small { color: var(--s-muted); font-size: 12px; }
+.l6-pick-row__cards { display: flex; gap: 18px; }
+.l6-pk { display: grid; justify-items: center; gap: 6px; padding: 6px; transition: background .2s; }
+.l6-pk:hover { background: var(--s-panel-2); }
+.l6-pk.is-on { background: var(--s-accent-soft); box-shadow: inset 0 0 0 2px var(--s-accent); }
+.l6-side { display: grid; gap: var(--s-gap); }
+/* Представление игрока: карта на клине цвета команды, титр, стат-карта */
+.l6-intro { position: relative; display: grid; gap: 14px; overflow: hidden; isolation: isolate; }
+.l6-intro::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 270px; z-index: -1; background: linear-gradient(160deg, color-mix(in srgb, var(--tc) 55%, #000), transparent 80%); clip-path: polygon(0 0, 100% 0, 100% 72%, 0 100%); }
+.l6-intro__art { display: grid; justify-items: center; padding-top: 6px; }
+.l6-intro__lt { display: grid; gap: 4px; padding: 10px 14px; background: #000; clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%); }
+.l6-intro__lt b { font: 800 31px/.95 var(--s-font-h); }
+.l6-intro__lt small { display: flex; align-items: center; gap: 6px; color: var(--s-muted); font-size: 12.5px; }
+.l6-intro__lt .a-logo { width: 18px; height: 18px; }
+.l6-sc { display: grid; gap: 8px; }
+.l6-sc__r { display: grid; grid-template-columns: 120px 1fr 34px; align-items: center; gap: 10px; }
+.l6-sc__r b { font: 700 14px var(--s-font-num); }
+.l6-sc__r small { margin-left: 6px; color: var(--s-muted); font-size: 12px; }
+.l6-sc__r em { font: 700 17px var(--s-font-num); font-style: normal; text-align: right; }
+.l6-intro__buy { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.l6-intro__buy .a-gc__price { font-size: 22px; }
+
+/* ══════ Страница игрока: интро ══════ */
+.l6-pl { display: grid; gap: var(--s-gap); }
+.l6-plh { position: relative; display: grid; grid-template-columns: 330px minmax(0, 1fr) auto; align-items: end; gap: 28px; min-height: 380px; padding: 0 32px 0 0; overflow: hidden; isolation: isolate; background: #0b0b0f; }
+.l6-plh::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 62%; z-index: -1; background: linear-gradient(110deg, color-mix(in srgb, var(--tc) 70%, #000), color-mix(in srgb, var(--tc) 18%, #000) 70%); clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%); }
+.l6-plh::after { content: ''; position: absolute; inset: 0; z-index: -1; background: repeating-linear-gradient(115deg, #ffffff06 0 2px, transparent 2px 22px); }
+.l6-plh__ph { align-self: end; width: 330px; height: 380px; object-fit: cover; object-position: 50% 8%; filter: drop-shadow(0 20px 30px #000); }
+.l6-plh__txt { align-self: center; display: grid; gap: 16px; padding: 28px 0; }
+.l6-plh__nick { font: 800 117px/.82 var(--s-font-h); letter-spacing: -.02em; }
+.l6-plh__lt { display: flex; align-self: start; width: max-content; background: #000; clip-path: polygon(0 0, 100% 0, calc(100% - 16px) 100%, 0 100%); }
+.l6-plh__lt span { display: flex; align-items: center; gap: 8px; padding: 10px 16px; font-size: 14px; border-right: 1px solid var(--s-line); }
+.l6-plh__lt span:last-child { padding-right: 30px; border-right: 0; color: var(--s-muted); }
+.l6-plh__lt b { font: 700 17px var(--s-font-h); }
+.l6-plh__lt .a-logo { width: 22px; height: 22px; }
+.l6-plh__acts { display: flex; align-items: center; gap: 10px; }
+.l6-plh__card { align-self: center; padding: 20px 0; }
+.l6-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 2fr); gap: 2px; background: var(--s-line-2); }
+.l6-stat { display: grid; align-content: center; gap: 4px; padding: 18px 20px; background: var(--s-panel); }
+.l6-stat > b { font: 800 39px/.9 var(--s-font-num); }
+.l6-stat > small { color: var(--s-muted); font-size: 13px; }
+.l6-stat--cmp { gap: 7px; }
+.l6-cmp { display: grid; grid-template-columns: 70px 1fr 54px; align-items: center; gap: 12px; font-size: 13px; }
+.l6-cmp__bar { position: relative; height: 10px; background: var(--s-track); }
+.l6-cmp__bar i { position: absolute; inset: 0 auto 0 0; width: var(--p); background: var(--s-accent); clip-path: polygon(0 0, 100% 0, calc(100% - 5px) 100%, 0 100%); }
+.l6-cmp__bar u { position: absolute; top: -3px; bottom: -3px; left: var(--p); width: 2px; background: var(--s-text); }
+.l6-cmp b { font: 700 17px var(--s-font-num); text-align: right; }
+.l6-cmp b.is-up { color: var(--s-win); } .l6-cmp b.is-down { color: var(--s-lose); }
+.l6-pl__grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: var(--s-gap); align-items: start; }
+.l6-pl__main, .l6-pl__side { display: grid; gap: var(--s-gap); }
+/* Путь — хронометраж: строки как график эфира */
+.l6-path { list-style: none; margin: 0; padding: 0; display: grid; }
+.l6-path li { display: grid; grid-template-columns: 150px 220px minmax(0, 1fr); align-items: center; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--s-line-2); }
+.l6-path li:last-child { border-bottom: 0; }
+.l6-path__d { font: 600 15px var(--s-font-num); color: var(--s-muted); }
+.l6-path__t { display: flex; align-items: center; gap: 10px; }
+.l6-path__t b { font: 700 18px var(--s-font-h); }
+.l6-path__t .a-logo { width: 26px; height: 26px; }
+.l6-path small { color: var(--s-muted); font-size: 12.5px; line-height: 1.4; }
+.l6-path .is-now { background: var(--s-accent-soft); padding-inline: 12px; margin-inline: -12px; }
+.l6-path .is-now .l6-path__d { color: var(--s-accent); }
+.l6-hr { display: grid; grid-template-columns: 44px minmax(0, 1fr) 70px 40px; align-items: center; gap: 10px; padding: 7px 0; }
+.l6-hr b { display: block; font-size: 13.5px; }
+.l6-hr small { color: var(--s-muted); font-size: 11.5px; }
+.l6-hr em { font: 700 15px var(--s-font-num); font-style: normal; text-align: right; }
+.l6-facts { display: grid; gap: 8px; }
+.l6-fact { display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 12px; padding: 10px 12px; background: var(--s-panel-2); }
+.l6-fact b { font: 800 19px/1 var(--s-font-num); color: var(--s-accent); }
+.l6-fact small { color: var(--s-muted); font-size: 12px; line-height: 1.4; }
+
+/* ══════ Онбординг: предматчевое шоу ══════ */
+.l6-ob { position: relative; display: grid; grid-template-rows: auto auto 1fr auto; min-height: 860px; overflow: hidden; isolation: isolate;
+  background: radial-gradient(50% 60% at 100% 0%, #ff6a2b1c, transparent 70%), var(--s-bg); }
+.l6-ob::before { content: ''; position: absolute; right: -80px; bottom: 0; width: 520px; height: 100%; z-index: -1; background: linear-gradient(200deg, #ff6a2b12, transparent 60%); clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%); }
+.l6-ob__cd { display: flex; align-items: center; gap: 10px; padding: 4px 12px; background: #000; }
+.l6-ob__cd small { color: var(--s-muted); font-size: 12px; }
+.l6-ob__cd .l6-count { font-size: 22px; }
+/* Рандаун: 5 сегментов шоу */
+.l6-run { list-style: none; margin: 0; padding: 0 28px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; border-bottom: 1px solid var(--s-line); }
+.l6-run li { display: flex; align-items: center; gap: 12px; padding: 14px 16px; color: var(--s-muted); background: var(--s-panel); clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%); }
+.l6-run__n { font: 800 23px/1 var(--s-font-num); min-width: 20px; }
+.l6-run b { display: block; font: 700 16px/1.15 var(--s-font-h); color: var(--s-text); }
+.l6-run small { font-size: 11.5px; }
+.l6-run .is-done { background: var(--s-panel-2); }
+.l6-run .is-done .l6-run__n { color: var(--s-win); }
+.l6-run .is-now { background: var(--s-accent); color: var(--s-on-accent); }
+.l6-run .is-now b { color: var(--s-on-accent); }
+.l6-ob__main { display: flex; flex-direction: column; padding: 30px 40px 10px; }
+.l6-ob__title { display: flex; align-items: center; gap: 28px; }
+.l6-ob__seg { display: grid; justify-items: center; flex: none; padding: 6px 18px 10px; background: #000; clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%); }
+.l6-ob__seg b { font: 800 75px/.85 var(--s-font-num); color: var(--s-accent); }
+.l6-ob__seg small { color: var(--s-muted); font-size: 13px; }
+.l6-ob__title .a-h1 { margin-top: 0 !important; }
+.l6-ob__body { margin-top: 26px; }
+/* Низ: «далее в эфире» титром, награда, кнопка */
+.l6-ob__foot { display: flex; align-items: center; gap: 18px; padding: 16px 40px 18px; background: #000; border-top: 1px solid var(--s-line); }
+.l6-ob__foot > small { color: var(--s-muted); font-size: 13px; }
+.l6-ob__foot .a-btn { margin-left: auto; }
+.l6-ob__nx { display: grid; grid-template-columns: auto auto; column-gap: 12px; align-items: baseline; padding: 8px 26px 8px 14px; background: var(--s-panel-2); clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%); }
+.l6-ob__nx small { grid-column: 1 / -1; color: var(--s-muted); font-size: 11.5px; }
+.l6-ob__nx b { font: 700 18px/1.1 var(--s-font-h); }
+.l6-ob__nx em { font-style: normal; color: var(--s-accent); font-size: 12.5px; font-weight: 600; }

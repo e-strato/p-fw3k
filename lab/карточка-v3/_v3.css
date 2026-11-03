@@ -1,0 +1,218 @@
+/* Общее для разбора «карточка-v3»: страница варианта, карта (наклон, оборот), слои редкости, раскадровка, оборот.
+   Цвета — токены сайта (/p-fw3k/site/styles.css :root): --c-tier-*, --c-rarity-*, --c-stat-*, --c-card-ink*.
+   Размеры карты — в em: 22em × 30.8em (5:7), 1em = ширина / 22. Вариант задаёт --shape (clip-path) и --r (скругление). */
+
+@property --drift { syntax: '<percentage>'; inherits: true; initial-value: 0%; }
+@property --spin { syntax: '<angle>'; inherits: true; initial-value: 0deg; }
+@property --scan { syntax: '<percentage>'; inherits: true; initial-value: -20%; }
+
+:root {
+  /* Свои цвета лабы: глитч-сдвиг каналов (v1), тёмное стекло (v3) */
+  --c-glitch-a: #ff3df0;
+  --c-glitch-b: #2ef2ff;
+  --c-glass: #ffffff14;
+  --c-glass-line: #ffffff2e;
+}
+
+body { background: var(--c-bg); color: var(--c-text); font-family: 'Inter', var(--font); }
+.v3 .sec-lead { color: var(--c-muted); max-width: 70ch; }
+
+/* ── Страница варианта ───────────────────────────────────── */
+.v3-hero { display: grid; grid-template-columns: auto minmax(0, 420px); gap: 72px; justify-content: center; align-items: center; margin-top: 72px; }
+.v3-hero .kc { --w: 440px; }
+.v3 figure { margin: 0; display: grid; gap: 18px; justify-items: center; }
+.v3 figcaption { font-size: var(--fs-small); color: var(--c-caption); text-align: center; }
+.v3-tree { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.v3-tree li { display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: baseline; }
+.v3-tree li > b { display: grid; place-content: center; width: 28px; height: 28px; border-radius: 50%; background: var(--c-surface);
+  box-shadow: inset 0 0 0 1px var(--c-line); font-size: 13px; font-weight: 600; color: var(--c-muted); }
+.v3-tree strong { display: block; font-weight: 600; color: var(--c-text); }
+.v3-tree span { font-size: 14px; line-height: 1.45; color: var(--c-muted); }
+.v3-h { margin: 112px 0 40px; text-align: center; font-size: 20px; font-weight: 600; }
+.v3-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 56px 32px; }
+.v3-row .kc { --w: 260px; }
+.v3-story { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px 20px; padding-bottom: 96px; }
+.v3-story .kc { --w: 176px; }
+.v3-story figcaption b { margin-right: 6px; color: var(--c-text); }
+
+@media (max-width: 1000px) {
+  .v3-hero { grid-template-columns: 1fr; justify-items: center; gap: 40px; }
+  .v3-hero .kc { --w: min(440px, calc(100vw - 32px)); }
+}
+
+/* ── Карта: наклон и оборот ──────────────────────────────── */
+.kc { --w: 312px; position: relative; width: var(--w); aspect-ratio: 5 / 7; font-size: calc(var(--w) / 22);
+  perspective: 60em; line-height: 1.2; color: var(--c-text); -webkit-font-smoothing: antialiased; cursor: pointer; }
+.kc[data-step] { cursor: default; }
+.kc:hover { z-index: 3; }
+.kc__in { position: relative; width: 100%; height: 100%; transform-style: preserve-3d;
+  transform: rotateX(calc(var(--dy, 0) * -16deg)) rotateY(calc(var(--dx, 0) * 20deg)) scale(var(--lift, 1));
+  transition: transform .6s cubic-bezier(.2, .9, .25, 1); }
+.kc.is-on { --lift: 1.03; }
+.kc.is-on .kc__in { transition: transform .12s linear; }
+.kc__flip { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .8s cubic-bezier(.3, .9, .3, 1); }
+.kc__flip.is-flip { transform: rotateY(180deg); }
+.kc__face, .kc__back { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.kc__back { transform: rotateY(180deg); }
+.kc img { display: block; }
+
+/* Ступени силы — цвет рамки */
+.kc--bronze { --tier: var(--c-tier-bronze); --tier-2: var(--c-tier-bronze-2); --tier-hi: var(--c-tier-bronze-hi); }
+.kc--silver { --tier: var(--c-tier-silver); --tier-2: var(--c-tier-silver-2); --tier-hi: var(--c-tier-silver-hi); }
+.kc--gold   { --tier: var(--c-tier-gold);   --tier-2: var(--c-tier-gold-2);   --tier-hi: var(--c-tier-gold-hi); }
+.kc--elite  { --tier: var(--c-tier-elite);  --tier-2: var(--c-tier-elite-2);  --tier-hi: var(--c-tier-elite-hi); }
+
+/* Форма «один скос справа снизу» (дирижёр 01.10) — общая для v6–v8: скругление + срез; контур — h.контур() в _v3.js */
+.kc-cut { --r: .9em; --shape: polygon(0 0, 100% 0, 100% calc(100% - 3em), calc(100% - 3em) 100%, 0 100%); }
+.cut-frame { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 8; fill: none; }
+.cut-frame .out { stroke: var(--tier); stroke-width: 1.4; }
+.cut-frame .in { stroke: color-mix(in srgb, var(--tier) 30%, transparent); stroke-width: .6; }
+
+/* Раскадровка: слой старше шага спрятан */
+.is-later { visibility: hidden !important; }
+
+/* Украшения по редкости: data-deco 1 — с Holo, 2 — с Prism, 3 — только Legend */
+.kc--base [data-deco], .kc--holo [data-deco='2'], .kc--holo [data-deco='3'], .kc--prism [data-deco='3'] { display: none !important; }
+
+/* Портрет: параллакс за курсором */
+.ph { position: absolute; pointer-events: none; transform: translate(calc(var(--dx, 0) * -1em), calc(var(--dy, 0) * -.5em));
+  transition: transform .6s cubic-bezier(.2, .9, .25, 1); }
+.kc.is-on .ph { transition-duration: .12s; }
+
+/* Логотип команды маской: вариант задаёт размер, место и заливку (background) */
+.logo-mask { position: absolute; pointer-events: none;
+  -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat; }
+.logo { width: 1.6em; height: 1.6em; object-fit: contain; flex: none; }
+
+/* Иконка героя (у CDN Dota 2 — 16:9) */
+.hero-ic { width: 2.6em; aspect-ratio: 16 / 9; object-fit: cover; flex: none; }
+
+/* Флаг */
+.flag { display: inline-block; width: 1.4em; height: .94em; border-radius: .12em; flex: none;
+  box-shadow: 0 0 0 .06em color-mix(in srgb, var(--c-black) 30%, transparent); }
+.flag--ru { background: linear-gradient(var(--c-flag-white) 0 33.4%, var(--c-flag-ru-blue) 0 66.7%, var(--c-flag-ru-red) 0); }
+.flag--ua { background: linear-gradient(var(--c-flag-ua-blue) 0 50%, var(--c-flag-ua-yellow) 0); }
+
+/* Цвет значения стата */
+[data-v='hi'] { color: var(--c-stat-high); }
+[data-v='mid'] { color: var(--c-stat-mid); }
+[data-v='lo'] { color: var(--c-stat-low); }
+
+/* ── Слои редкости ───────────────────────────────────────── */
+.fx { position: absolute; inset: 0; pointer-events: none; }
+.fx-shine { display: none; }
+
+/* Holo — радужный перелив, дышит сам и идёт за курсором */
+.kc--holo .fx-shine, .kc--prism .fx-shine { display: block; mix-blend-mode: screen; opacity: var(--shine-o, .28);
+  background:
+    repeating-linear-gradient(115deg, var(--c-rarity-holo-1) 0%, var(--c-rarity-holo-2) 7%, var(--c-rarity-holo-3) 14%,
+      var(--c-rarity-holo-4) 21%, var(--c-rarity-holo-5) 28%, var(--c-rarity-holo-1) 35%);
+  background-size: 400% 400%;
+  background-position: calc(var(--mx, 50%) + var(--drift)) calc(var(--my, 50%) + var(--drift));
+  animation: drift 9s ease-in-out infinite alternate; transition: opacity .4s; }
+.kc--holo.is-on .fx-shine, .kc--prism.is-on .fx-shine { opacity: var(--shine-o-on, .5); }
+
+/* Prism — радуга + грани */
+.kc--prism .fx-shine {
+  background:
+    repeating-linear-gradient(60deg, transparent 0 1.1em, color-mix(in srgb, var(--c-white) 26%, transparent) 1.1em 1.17em),
+    repeating-linear-gradient(-60deg, transparent 0 1.1em, color-mix(in srgb, var(--c-white) 26%, transparent) 1.1em 1.17em),
+    conic-gradient(from calc(var(--dx, 0) * 220deg + var(--spin)) at var(--mx, 50%) var(--my, 50%),
+      var(--c-rarity-holo-1), var(--c-rarity-holo-2), var(--c-rarity-holo-3), var(--c-rarity-holo-4), var(--c-rarity-holo-5), var(--c-rarity-holo-1));
+  background-size: auto, auto, 100% 100%;
+  animation: spin 14s linear infinite; }
+
+/* Legend — фольга: полоса света по карте + свечение сзади */
+.kc--legend .fx-shine { display: block; mix-blend-mode: screen; opacity: var(--foil-o, .5);
+  background:
+    linear-gradient(118deg, transparent 32%, color-mix(in srgb, var(--c-rarity-foil-1) 70%, transparent) 44%,
+      var(--c-rarity-foil-3) 50%, color-mix(in srgb, var(--c-rarity-foil-2) 70%, transparent) 56%, transparent 68%),
+    repeating-linear-gradient(118deg, transparent 0 .6em, color-mix(in srgb, var(--c-rarity-foil-1) 12%, transparent) .6em .7em);
+  background-size: 300% 100%, auto;
+  background-position: calc(100% - var(--mx, 0%) - var(--drift) * 2) 0, 0 0;
+  animation: drift 5s ease-in-out infinite alternate; }
+.kc--legend::before { content: ''; position: absolute; inset: -6% -8%; z-index: -1; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--legend-glow, var(--tier)) 55%, transparent), transparent);
+  filter: blur(1.6em); animation: pulse 3.2s ease-in-out infinite; }
+.kc[data-step]:not([data-step='9']).kc--legend::before { display: none; }
+
+/* Искры — Prism и Legend */
+.fx-spark b { position: absolute; width: 1em; aspect-ratio: 1; background: var(--c-white);
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+  filter: drop-shadow(0 0 .3em var(--c-white)); animation: twinkle 2.4s ease-in-out infinite; opacity: 0; }
+.fx-spark b:nth-child(1) { left: 12%; top: 18%; animation-delay: 0s; }
+.fx-spark b:nth-child(2) { left: 62%; top: 9%; animation-delay: .5s; width: .7em; }
+.fx-spark b:nth-child(3) { left: 66%; top: 44%; animation-delay: 1.1s; }
+.fx-spark b:nth-child(4) { left: 8%;  top: 50%; animation-delay: 1.6s; width: .6em; }
+.fx-spark b:nth-child(5) { left: 40%; top: 24%; animation-delay: .8s; width: .5em; }
+.fx-spark b:nth-child(6) { left: 20%; top: 36%; animation-delay: 2s; width: .8em; }
+
+/* Блик за курсором — на всех редкостях */
+.fx-glare { z-index: 20; border-radius: var(--r, 1em); clip-path: var(--shape, none); opacity: 0; transition: opacity .35s; mix-blend-mode: overlay;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--c-white) 70%, transparent) 0%,
+    color-mix(in srgb, var(--c-white) 16%, transparent) 22%, transparent 55%); }
+.kc.is-on .fx-glare { opacity: 1; }
+
+@keyframes drift { from { --drift: -18%; } to { --drift: 18%; } }
+@keyframes spin { to { --spin: 360deg; } }
+@keyframes scan { from { --scan: -20%; } to { --scan: 120%; } }
+@keyframes pulse { 0%, 100% { opacity: .5; transform: scale(.97); } 50% { opacity: .9; transform: scale(1.03); } }
+@keyframes twinkle { 0%, 100% { opacity: 0; transform: scale(.3) rotate(0deg); } 50% { opacity: 1; transform: scale(1) rotate(45deg); } }
+
+/* ── Диаграмма статов (h.радар в _v3.js; v13–v15) — размеры в единицах сетки svg ── */
+.rd { position: absolute; overflow: visible; }
+.rd .grid { fill: none; stroke: color-mix(in srgb, var(--c-white) 12%, transparent); stroke-width: .6; }
+.rd .axis { stroke: color-mix(in srgb, var(--c-white) 8%, transparent); stroke-width: .5; }
+.rd .shape { fill: color-mix(in srgb, var(--tier) 32%, transparent); stroke: var(--tier-hi); stroke-width: 1.4; stroke-linejoin: round; }
+.rd .dot { fill: var(--tier-hi); }
+.rd .k { font-size: 6.2px; font-weight: 600; fill: var(--c-muted); }
+.rd .v { font-size: 11px; font-weight: 700; }
+.rd .v[data-v='hi'] { fill: var(--c-stat-high); }
+.rd .v[data-v='mid'] { fill: var(--c-stat-mid); }
+.rd .v[data-v='lo'] { fill: var(--c-stat-low); }
+.rd .rd__glow { stroke: var(--tier); stroke-width: .8; filter: drop-shadow(0 0 2px color-mix(in srgb, var(--tier) 70%, transparent)); }
+.rd .rd__holo { mix-blend-mode: screen; opacity: .5; }
+.rd .ray { stroke: color-mix(in srgb, var(--c-white) 14%, transparent); stroke-width: .5; }
+.rd .lead { stroke: color-mix(in srgb, var(--tier-hi) 45%, transparent); stroke-width: .7; stroke-dasharray: 1.5 2; }
+/* Паук в 3D: двигается за курсором, как фото, и чуть поворачивается — глубже карты (дирижёр 01.10) */
+.rd--3d { transform: perspective(40em) translate(calc(var(--dx, 0) * -1.6em), calc(var(--dy, 0) * -.8em)) rotateY(calc(var(--dx, 0) * 22deg)) rotateX(calc(var(--dy, 0) * -16deg));
+  transition: transform .6s cubic-bezier(.2, .9, .25, 1); }
+.kc.is-on .rd--3d { transition-duration: .12s; }
+
+/* ── Оборот (общий, вариант красит шрифтами и формой) ───── */
+.bk { position: absolute; inset: 0; display: flex; flex-direction: column; gap: .75em; padding: 1.4em 1.4em 1.3em; overflow: hidden;
+  border-radius: var(--r, 1em); clip-path: var(--shape, none); font-family: var(--f-ui, 'Inter'), sans-serif;
+  background:
+    radial-gradient(90% 50% at 50% 0%, color-mix(in srgb, var(--tier) 26%, transparent), transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--tier-2) 60%, var(--c-card-ink)), var(--c-card-ink) 60%);
+  box-shadow: inset 0 0 0 .14em color-mix(in srgb, var(--tier) 70%, transparent); }
+.bk__mask { right: -3em; top: 5em; width: 18em; height: 18em; opacity: .07; background: var(--tier-hi); }
+.bk > :not(.bk__mask) { position: relative; }
+.bk__top { display: grid; grid-template-columns: auto 1fr auto; gap: .7em; align-items: center; }
+.bk__top .logo { width: 2.4em; height: 2.4em; }
+.bk__top b { display: block; font-family: var(--f-disp, 'Inter'), sans-serif; font-size: 1.5em; font-weight: 800; line-height: 1; }
+.bk__top small { display: block; margin-top: .3em; font-size: .62em; color: var(--c-muted); }
+.bk__top em { font-family: var(--f-disp, 'Inter'), sans-serif; font-style: normal; font-size: 2.4em; font-weight: 800; line-height: 1; color: var(--tier-hi); }
+.bk__stats { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: .55em 1em; }
+.bk__stats li { display: grid; grid-template-columns: 1fr auto; gap: .25em; font-size: .7em; }
+.bk__stats span { color: var(--c-muted); }
+.bk__stats b { font-weight: 800; }
+.bk__stats i { grid-column: 1 / -1; height: .3em; border-radius: 1em; background: color-mix(in srgb, var(--c-white) 10%, transparent); position: relative; overflow: hidden; }
+.bk__stats i::after { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--v); border-radius: inherit; background: var(--tier); }
+.bk__heroes { list-style: none; margin: 0; padding: 0; display: grid; gap: .4em; }
+.bk__heroes li { display: grid; grid-template-columns: auto 1fr auto; gap: .6em; align-items: center; }
+.bk__heroes .hero-ic { width: 2.6em; border-radius: .25em; }
+.bk__heroes b { display: block; font-size: .78em; font-weight: 700; }
+.bk__heroes small { display: block; font-size: .6em; color: var(--c-muted); }
+.bk__heroes em { font-style: normal; font-weight: 800; font-size: .9em; color: var(--tier-hi); }
+.bk__lbl { margin: 0; font-size: .6em; color: var(--c-muted); }
+.bk__form { list-style: none; margin: -.4em 0 0; padding: 0; display: grid; grid-template-columns: repeat(10, 1fr); gap: .25em; }
+.bk__form li { display: grid; place-content: center; height: 1.5em; border-radius: .25em; font-size: .6em; font-weight: 800;
+  background: color-mix(in srgb, var(--c-stat-low) 22%, transparent); color: var(--c-stat-low); }
+.bk__form li[data-w='true'] { background: color-mix(in srgb, var(--c-stat-high) 20%, transparent); color: var(--c-stat-high); }
+.bk__btn { margin-top: auto; display: grid; place-content: center; height: 2.4em; border-radius: .5em; font-size: .78em; font-weight: 700;
+  background: var(--tier); color: var(--c-card-dark-text); }
+
+@media (prefers-reduced-motion: reduce) {
+  .kc *, .kc::before, .kc::after { animation: none !important; transition: none !important; }
+}

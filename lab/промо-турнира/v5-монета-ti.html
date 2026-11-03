@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_промо.css" />
+<style>
+/* v5 · Монета TI. Откуда: Viewer Pass CS2 Major — монета турнира растёт бронза → серебро → золото → алмаз за верные прогнозы;
+   TI 2026 у Valve — без Battle Pass, вместо него награды за действия во время турнира. У нас монета растёт за задания TI.
+   Место — правая колонка (330), вместо квестов дня на время турнира. Монета остаётся в профиле навсегда. */
+.w-coin { --m: var(--c-tier-bronze); --m2: var(--c-tier-bronze-2); --mh: var(--c-tier-bronze-hi); overflow: hidden; }
+.w-coin[data-lv='1'] { --m: var(--c-tier-silver); --m2: var(--c-tier-silver-2); --mh: var(--c-tier-silver-hi); }
+.w-coin[data-lv='2'] { --m: var(--c-tier-gold); --m2: var(--c-tier-gold-2); --mh: var(--c-tier-gold-hi); }
+.w-coin[data-lv='3'] { --m: var(--c-tier-elite); --m2: var(--c-tier-elite-2); --mh: var(--c-tier-elite-hi); }
+.w-coin .card__b { display: grid; gap: 16px; }
+.coin-stage { position: relative; display: grid; justify-items: center; gap: 10px; padding: 10px 0 4px;
+  background: radial-gradient(50% 60% at 50% 40%, color-mix(in srgb, var(--m) 22%, transparent), transparent 70%); }
+.coin { position: relative; width: 150px; aspect-ratio: 1; border-radius: 50%; transform-style: preserve-3d;
+  background:
+    radial-gradient(60% 50% at 35% 25%, color-mix(in srgb, var(--mh) 80%, transparent), transparent 60%),
+    conic-gradient(from 210deg, var(--m), var(--mh), var(--m), var(--m2), var(--m));
+  box-shadow: inset 0 0 0 8px color-mix(in srgb, var(--m2) 70%, transparent), inset 0 0 0 10px color-mix(in srgb, var(--mh) 50%, transparent),
+    0 18px 40px -8px color-mix(in srgb, var(--m) 50%, transparent); }
+.coin svg { position: absolute; inset: 28%; width: 44%; height: 44%; color: var(--m2); filter: drop-shadow(0 1px 0 color-mix(in srgb, var(--mh) 70%, transparent)); }
+.coin.is-up { animation: flip .9s cubic-bezier(.3, .8, .3, 1); }
+@keyframes flip { 0% { transform: rotateY(0) scale(1); } 50% { transform: rotateY(540deg) scale(1.12); } 100% { transform: rotateY(720deg) scale(1); } }
+.coin-stage b { font-size: 22px; }
+.coin-stage small { font-size: var(--fs-app-sm); color: var(--c-caption); }
+
+/* Шкала 4 ступеней: точки материала */
+.lv { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin: 0; padding: 0; list-style: none; }
+.lv li { display: grid; justify-items: center; gap: 6px; font-size: var(--fs-app-xs); color: var(--c-caption); }
+.lv li::before { content: ''; width: 100%; height: 6px; border-radius: 3px; background: var(--c-ui-item); }
+.lv li.is-on::before { background: var(--c); }
+.lv li.is-on { color: var(--c-text); }
+
+.tasks { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.tasks button { width: 100%; display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 10px 12px; border: 0; border-radius: 10px;
+  background: var(--c-ui-item); color: var(--c-text); font: inherit; font-size: var(--fs-app-sm); text-align: left; cursor: pointer; }
+.tasks button:hover { background: var(--c-ui-hover); }
+.tasks i { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--c-ui-bg); font-style: normal; font-size: 13px; }
+.tasks small { font-size: var(--fs-app-xs); color: var(--c-caption); }
+.tasks span small { display: block; }
+.tasks .is-done { background: color-mix(in srgb, var(--m) 12%, var(--c-ui-item)); cursor: default; }
+.tasks .is-done i { background: var(--m); color: var(--c-card-dark-text); }
+.tasks .is-done > small { color: var(--c-text); }
+.w-coin .foot { font-size: var(--fs-app-xs); color: var(--c-caption); text-align: center; }
+</style></head>
+<body>
+<div class="lab-wrap">
+  <div class="lab-bar">
+    <div class="lab-bar__t"><b>v5 · Монета TI: растёт за задания</b><small>Viewer Pass CS2 Major, награды TI 2026 · правая колонка 330</small></div>
+    <div class="lab-st"><button data-go="0">Бронза</button><button data-go="1">Серебро</button><button data-go="2">Золото</button><button data-go="3">Алмаз</button></div>
+  </div>
+  <p class="home-cap">Настоящая главная: монета — на месте квестов дня, сразу под витриной; остальное приглушено</p>
+  <div class="home" data-slot="into:.app-home__quests">
+    <div class="ghost ghost--tall span-2"></div>
+    <section class="card card--ui w-coin" id="w" data-lv="0" aria-label="Монета TI">
+      <div class="card__h"><h2>Монета TI 2026</h2><small id="pts">0 / 12 заданий</small></div>
+      <div class="card__b">
+        <div class="coin-stage">
+          <div class="coin" id="coin"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.3 8 11 4.6-1.7 8-6 8-11V5l-8-3Zm0 4.2 4 1.5V11c0 2.9-1.6 5.6-4 7-2.4-1.4-4-4.1-4-7V7.7l4-1.5Z"/></svg></div>
+          <b class="disp" id="lvn">Бронза</b><small id="lvs">ещё 3 задания до серебра</small>
+        </div>
+        <ul class="lv" id="lv">
+          <li style="--c: var(--c-tier-bronze)">Бронза</li><li style="--c: var(--c-tier-silver)">Серебро</li><li style="--c: var(--c-tier-gold)">Золото</li><li style="--c: var(--c-tier-elite)">Алмаз</li>
+        </ul>
+        <ul class="tasks" id="tasks">
+          <li><button type="button"><i>1</i><span>Собрать пятёрку на TI<small>до 13 августа</small></span><small>+1</small></button></li>
+          <li><button type="button"><i>2</i><span>Угадать 3 карты подряд<small>прогнозы на матчи TI</small></span><small>+2</small></button></li>
+          <li><button type="button"><i>3</i><span>Посмотреть матч у нас целиком<small>с картой нетворса</small></span><small>+1</small></button></li>
+          <li><button type="button"><i>4</i><span>Капитан набрал 60+ очков<small>за один день</small></span><small>+2</small></button></li>
+          <li><button type="button"><i>5</i><span>Позвать друга в лигу TI<small>фан-лига на турнир</small></span><small>+3</small></button></li>
+          <li><button type="button"><i>6</i><span>Зайти 5 дней турнира подряд<small>2 из 5</small></span><small>+3</small></button></li>
+        </ul>
+        <p class="foot">Каждая ступень — сундук TI. Алмаз — карта Аегиса и монета в профиле навсегда.</p>
+      </div>
+    </section>
+    <div class="ghost"></div><div class="ghost"></div><div class="ghost ghost--short"></div>
+  </div>
+</div>
+<script src="_промо.js"></script>
+<script>
+// 12 очков заданий: серебро с 3, золото с 7, алмаз с 12
+const STEPS = [0, 3, 7, 12], NAMES = ['Бронза', 'Серебро', 'Золото', 'Алмаз']
+const w = document.getElementById('w'), coin = document.getElementById('coin')
+const btns = [...document.querySelectorAll('#tasks button')]
+const val = (b) => +b.lastElementChild.textContent.replace('+', '')
+let lv = 0
+const draw = (silent) => {
+  const pts = btns.filter((b) => b.classList.contains('is-done')).reduce((a, b) => a + val(b), 0)
+  const nl = STEPS.filter((s) => pts >= s).length - 1
+  if (nl > lv && !silent) { coin.classList.remove('is-up'); void coin.offsetWidth; coin.classList.add('is-up') }
+  lv = nl; w.dataset.lv = lv
+  document.getElementById('pts').textContent = `${pts} / 12 очков`
+  document.getElementById('lvn').textContent = NAMES[lv]
+  document.getElementById('lvs').textContent = lv < 3 ? `ещё ${STEPS[lv + 1] - pts} до: ${NAMES[lv + 1].toLowerCase()}` : 'высшая ступень — карта Аегиса твоя'
+  document.querySelectorAll('#lv li').forEach((li, i) => li.classList.toggle('is-on', i <= lv))
+}
+const mark = (b, on) => { b.classList.toggle('is-done', on); b.querySelector('i').textContent = on ? '✓' : btns.indexOf(b) + 1 }
+btns.forEach((b) => b.addEventListener('click', () => { if (!b.classList.contains('is-done')) { mark(b, true); draw() } }))
+// Переключатель лабы: отмечаем задания по порядку, пока не наберём ступень
+document.addEventListener('промо:состояние', (e) => {
+  const need = STEPS[+e.detail]; let s = 0
+  btns.forEach((b) => { const on = s < need; mark(b, on); if (on) s += val(b) })
+  lv = 0; draw(true)
+})
+</script>
+</body></html>

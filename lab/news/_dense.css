@@ -1,0 +1,60 @@
+/* news v19–v21 — плотная лента под цветными линиями (_dense.js) поверх _news.css. Акцент — цвет темы: линия сверху блока и название темы; без боковых полос и капса. */
+.z-top{ display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 16px; margin:4px 0 20px; } .z-top > span{ color:var(--w-muted-fg); font-size:13px; }
+.z-h1{ margin:0; font-size:28px; line-height:34px; font-weight:800; letter-spacing:-.02em; } .is-desk .z-h1{ font-size:40px; line-height:44px; }
+.z-h{ margin:0; font-size:17px; line-height:22px; font-weight:400; color:var(--w-muted-fg); } .z-h b{ color:var(--c); font-weight:800; }
+.z-h.is-big{ font-size:20px; line-height:26px; } .is-desk .z-h.is-big{ font-size:24px; line-height:30px; }
+.z-h.is-xl{ font-size:28px; line-height:34px; letter-spacing:-.02em; } .is-desk .z-h.is-xl{ font-size:44px; line-height:50px; } .z-h.is-xl span{ font-weight:600; }
+.z-hm{ margin:4px 0 14px; font-size:12px; line-height:16px; color:#71717a; }
+.z-st{ display:inline-flex; align-items:center; gap:4px; font-size:12px; line-height:16px; color:#71717a; white-space:nowrap; } .z-st svg{ opacity:.8; }
+.z-st i{ display:inline-flex; align-items:center; gap:4px; margin-left:6px; font-style:normal; } .z-st.is-hot{ color:#fb923c; }
+.z-meta{ display:flex; flex-wrap:wrap; align-items:center; gap:4px 10px; font-size:12px; line-height:16px; color:#71717a; }
+.z-pic{ display:block; overflow:hidden; background:#18181b; } .z-pic img{ display:block; width:100%; height:100%; object-fit:cover; }
+.z-more{ display:inline-block; margin-top:10px; font-size:13px; font-weight:600; color:var(--c); } .z-more:hover{ text-decoration:underline; }
+
+/* строка: время · заголовок · просмотры */
+.z-row{ display:grid; grid-template-columns:48px 1fr auto; gap:10px; align-items:baseline; padding:8px 0; border-top:1px solid #1f1f23; }
+.z-row time{ font-size:12px; color:#71717a; } .z-row span:not(.z-st){ font-size:14px; line-height:19px; color:#e4e4e7; }
+.z-row.is-hot span:not(.z-st){ color:#fff; font-weight:600; } .z-row:hover span:not(.z-st){ color:#fff; text-decoration:underline; text-underline-offset:3px; text-decoration-color:#52525b; }
+
+/* главная темы */
+.z-lead{ display:flex; flex-direction:column; gap:10px; } .z-lt{ display:flex; flex-direction:column; gap:6px; }
+.z-lead b{ font-size:18px; line-height:23px; font-weight:800; letter-spacing:-.01em; } .z-lead p{ margin:0; font-size:14px; line-height:20px; color:#a1a1aa; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.z-lead .z-pic{ aspect-ratio:16/9; border-radius:6px; } .z-lead:hover b{ text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:2px; }
+.z-lead.is-col{ padding-bottom:10px; }
+
+/* v19 — темы колонками */
+.z-cols{ display:flex; flex-direction:column; gap:28px; } .is-desk .z-cols{ display:block; column-count:3; column-gap:32px; }
+.z-blk{ break-inside:avoid; padding-top:12px; border-top:3px solid var(--c); } .is-desk .z-blk{ display:inline-block; width:100%; margin-bottom:36px; }
+.is-desk .z-blk .z-lead .z-pic{ aspect-ratio:16/8; }
+
+/* v20 — лента по времени */
+.z-day{ position:sticky; top:52px; z-index:2; display:flex; align-items:baseline; gap:8px; margin:0; padding:14px 0 8px; background:var(--w-page); font-size:15px; font-weight:800; border-bottom:1px solid var(--w-border); }
+.z-day span{ font-size:12px; font-weight:500; color:#71717a; }
+.z-rv{ display:grid; grid-template-columns:44px 1fr; gap:10px; padding:9px 0; border-bottom:1px solid #1f1f23; } .z-rv time{ font-size:12px; line-height:19px; color:#71717a; }
+.z-rvt{ display:flex; flex-direction:column; gap:3px; min-width:0; } .z-rvt em{ font-style:normal; font-size:12px; line-height:16px; font-weight:700; }
+.z-rvt b{ font-size:14px; line-height:19px; font-weight:500; color:#e4e4e7; } .z-rvt p{ margin:2px 0 2px; font-size:13px; line-height:18px; color:#a1a1aa; }
+.z-rv:hover b{ color:#fff; text-decoration:underline; text-underline-offset:3px; text-decoration-color:#52525b; }
+.z-rv.is-hot{ grid-template-columns:44px 1fr 120px; padding:14px 0; } .z-rv.is-hot b{ font-size:17px; line-height:23px; font-weight:800; color:#fff; }
+.z-rv.is-hot .z-pic{ grid-column:3; grid-row:1; width:120px; height:80px; border-radius:6px; } .is-desk .z-rv.is-hot{ grid-template-columns:44px 1fr 200px; } .is-desk .z-rv.is-hot .z-pic{ width:200px; height:112px; }
+.is-desk .z-rv{ grid-template-columns:56px 1fr; } .is-desk .z-rv.is-hot{ grid-template-columns:56px 1fr 200px; }
+.z-idx{ display:flex; flex-direction:column; gap:18px; } .is-phone .z-idx{ display:none; }
+.z-ixh{ font-size:13px; font-weight:700; color:var(--w-muted-fg); }
+.z-ix{ display:flex; flex-direction:column; gap:2px; padding-top:8px; border-top:3px solid var(--c); } .z-ix b{ color:var(--c); font-weight:800; } .z-ix span{ font-size:13px; line-height:18px; color:#d4d4d8; } .z-ix small{ font-size:12px; color:#71717a; }
+.z-ix:hover span{ color:#fff; }
+
+/* v21 — темы-полосы */
+.z-band{ margin-bottom:44px; padding-top:12px; border-top:3px solid var(--c); }
+.z-bin{ display:flex; flex-direction:column; gap:16px; } .is-desk .z-bin{ display:grid; grid-template-columns:420px 1fr; gap:32px; align-items:start; }
+.z-lead.is-band b{ font-size:22px; line-height:27px; } .is-desk .z-lead.is-band b{ font-size:26px; line-height:31px; }
+.z-bl{ display:flex; flex-direction:column; } .is-desk .z-bl{ display:grid; grid-template-columns:1fr 1fr; column-gap:28px; align-content:start; }
+.is-desk .z-bl .z-row:nth-child(-n+2), .is-desk .z-bl .z-bs:nth-child(-n+2){ border-top:0; }
+.z-bs{ display:flex; gap:12px; padding:8px 0 12px; border-top:1px solid #1f1f23; } .z-bs .z-pic{ flex:none; width:96px; height:64px; border-radius:6px; }
+.z-bs > span:last-child{ display:flex; flex-direction:column; gap:6px; } .z-bs b{ font-size:15px; line-height:20px; font-weight:700; } .z-bs:hover b{ text-decoration:underline; text-underline-offset:3px; }
+
+/* тема */
+.z-topic{ padding-top:14px; border-top:4px solid var(--c); } .z-topic .z-hm{ margin-bottom:24px; }
+.z-tl{ margin-top:20px; } .z-tl .z-day{ top:52px; }
+.z-tr{ display:grid; grid-template-columns:48px 1fr; gap:12px; padding:12px 0; border-bottom:1px solid #1f1f23; } .z-tr time{ font-size:12px; line-height:20px; color:#71717a; }
+.z-tr .z-rvt b{ font-size:16px; line-height:22px; font-weight:700; color:#fff; } .z-tr:has(.z-pic){ grid-template-columns:48px 1fr 120px; } .z-tr .z-pic{ width:120px; height:72px; border-radius:6px; }
+.z-tr.is-sel{ margin:0 -12px; padding:12px; border-radius:10px; background:color-mix(in srgb, var(--c) 14%, transparent); border-bottom-color:transparent; }
+.z-tr:hover b{ text-decoration:underline; text-underline-offset:3px; }

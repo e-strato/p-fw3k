@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_home.css" /><link rel="stylesheet" href="_week.css" />
+<style>
+/* v6 «Главный постер» — v3, но сверху полоса дней как календарь, под ней один широкий постер главного матча дня
+   (в эфире или ближайший: счёт или таймер крупно, кнопки) и рядом три постера поменьше. День и игра меняют набор. */
+.w6 { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+.w6 .w-head h1 { font-size: 38px; }
+.w6 .w-week { gap: 8px; }
+.w6 .w-d > div { height: 74px; padding: 10px 12px; }
+.w6 .w-d b { font-size: 24px; }
+
+.w6-main { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 16px; height: 530px; }
+/* Широкий постер — тот же постер, крупнее; всё содержимое внутри перестроено под ширину */
+.w-p--xl { width: auto; height: 100%; padding: 22px 26px 24px; border-radius: 18px; cursor: default; }
+.w-p--xl:hover { transform: none; box-shadow: 0 24px 50px -26px var(--c-black); }
+.w-p--xl .w-logos { inset: 0 0 auto; top: 92px; gap: 120px; }
+.w-p--xl .w-logos .h-lg:first-child { transform: rotate(-5deg); } .w-p--xl .w-logos .h-lg:last-child { transform: rotate(5deg); }
+.w-p--xl .w-score { top: 150px; padding: 10px 26px; border-radius: 14px; font-size: 76px; }
+.w-p--xl .w-lock { top: 140px; } .w-p--xl .w-lock span { font-size: 15px; }
+.w-p--xl span.w-tour { font-size: 14px; }
+.w-p--xl .w-st { padding: 6px 12px; font-size: 14px; }
+.w-p--xl h3 { font-size: 46px; }
+.w-p--xl .w-win { font-size: 19px; }
+.w-p--xl .w-p__meta { font-size: 14px; }
+.w-xl__timer { position: absolute; left: 50%; top: 140px; transform: translateX(-50%); display: grid; justify-items: center; gap: 4px; padding: 12px 26px; border-radius: 14px; background: color-mix(in srgb, var(--c-black) 72%, transparent); backdrop-filter: blur(6px); }
+.w-xl__timer b { font: 700 64px/1 var(--font-c); font-variant-numeric: tabular-nums; }
+.w-xl__timer small { color: color-mix(in srgb, var(--c-white) 70%, transparent); font-size: 13px; }
+.w-p--xl.has-timer .w-logos { gap: 330px; }
+.w-xl__acts { display: flex; gap: 8px; margin-top: 10px; }
+.w-xl__acts .h-btn { height: 44px; }
+.w-xl__acts .h-btn:not(.h-btn--main) { background: color-mix(in srgb, var(--c-black) 55%, transparent); }
+
+/* Три постера поменьше — горизонтальные: логотипы слева, текст справа */
+.w6-side { display: grid; grid-template-rows: repeat(3, minmax(0, 1fr)) auto; gap: 12px; min-height: 0; }
+.w-p--row { width: auto; height: auto; grid-template-columns: 120px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); align-content: stretch; gap: 0 14px; padding: 12px 14px; border-radius: 14px; }
+.w-p--row .w-logos { position: static; z-index: 0; grid-column: 1; grid-row: 1 / 3; align-self: center; inset: auto; }
+.w-p--row .w-logos .h-lg:first-child { transform: translateX(8px) rotate(-6deg); } .w-p--row .w-logos .h-lg:last-child { transform: translateX(-8px) rotate(6deg); }
+.w-p--row .w-p__top { grid-column: 2; grid-row: 1; gap: 6px; } .w-p--row span.w-tour { display: none; }
+.w-p--row .w-st { padding: 4px 8px; font-size: 11.5px; }
+.w-p--row .w-score { position: static; grid-column: 1; grid-row: 1 / 3; align-self: end; justify-self: center; transform: none; padding: 2px 10px; font-size: 20px; border-radius: 7px; }
+.w-p--row .w-lock { position: static; grid-column: 2; grid-row: 2; align-self: start; justify-self: start; margin-top: 6px; transform: none; width: auto; max-width: 100%; } .w-p--row .w-lock i { display: none; } .w-p--row .w-lock span { font-size: 11px; padding: 4px 8px; }
+.w-p--row .w-p__bot { grid-column: 2; grid-row: 2; gap: 3px; align-self: end; }
+.w-p--row h3 { font-size: 18px; } .w-p--row .w-win { font-size: 13px; }
+.w-p--row .w-p__meta { font-size: 11.5px; } .w-p--row .w-p__meta b { font-size: 10.5px; }
+.w-p--row .w-p__meta span:nth-child(3) { display: none; }
+.w-p--row.is-on { box-shadow: 0 0 0 2px var(--c-coin), 0 24px 50px -26px var(--c-black); }
+.w6-more { display: flex; gap: 8px; } .w6-more .h-btn { flex: 1; }
+</style></head>
+<body><main class="h-page">
+  <h1>v6 · Главный постер</h1>
+  <p>v3 с одним героем: сверху полоса 7 дней как календарь, под ней широкий постер главного матча дня — в эфире или ближайший, со счётом или живым таймером крупно и кнопками «Смотреть» / «Страница матча». Справа три постера поменьше: клик ставит матч героем. Смена дня или игры пересобирает набор: главный — матч в эфире, иначе ближайший.</p>
+  <p class="h-cap">Десктоп · 1440 × 900 — первый экран (рамка уменьшена под ширину окна)</p>
+  <div class="h-wrap"><div class="h-frame" id="f"></div></div>
+</main>
+<script src="_home.js"></script><script src="_week.js"></script>
+<script>
+const { ИГРЫ, ЭФИР, доСтарта, шапка } = H
+const { ДНИ, ДНИ_НЕД, ИГРЫ_ДНЯ, постер, главный } = W
+let день = 1, игры = new Set(), выбран = null
+
+// Порядок для правой колонки: в эфире → скоро → итоги → перенесённые и отменённые
+const вес = m => ЭФИР.includes(m.st) ? 0 : ['soon', 'delay'].includes(m.st) ? 1 : m.st === 'done' ? 2 : 3
+const героем = (m, d) => {
+  // Внутри героя — кнопки-ссылки, поэтому сам герой не ссылка, а блок (вложенные <a> браузер разрывает)
+  let html = постер(m, d, 'w-p--xl', 170).replace(/^<a /, '<div ').replace(/<\/a>$/, '</div>')
+  const эф = ЭФИР.includes(m.st), скоро = ['soon', 'delay'].includes(m.st) && !m.перенос
+  // Ближайший матч сегодня — живой таймер вместо счёта
+  if (скоро && d.today) html = html.replace('w-p--xl', 'w-p--xl has-timer').replace('<div class="w-p__bot">', `<div class="w-xl__timer"><b data-tick="${m.t}" data-mode="short">${доСтарта(m.t).short}</b><small>до начала</small></div><div class="w-p__bot">`)
+  const кнопки = эф ? '<a class="h-btn h-btn--main" href="#">Смотреть · Twitch RU</a><a class="h-btn" href="#">Страница матча</a>'
+    : скоро ? '<a class="h-btn h-btn--main" href="#">Напомнить</a><a class="h-btn" href="#">Собрать состав</a><a class="h-btn" href="#">Страница матча</a>'
+    : '<a class="h-btn" href="#">Страница матча</a>'
+  return html.replace(/(<p class="w-p__meta">[\s\S]*?<\/p>)(<\/div><\/div>)$/, `$1<div class="w-xl__acts">${кнопки}</div>$2`)
+}
+
+const f = document.getElementById('f')
+const рисовать = () => {
+  const d = ДНИ[день], c = ИГРЫ_ДНЯ(d)
+  const список = d.м.filter(m => !игры.size || игры.has(m.g))
+  const герой = список.find(m => m.id === выбран) || главный(список)
+  const ещё = список.filter(m => m !== герой).sort((a, b) => вес(a) - вес(b) || a.t - b.t)
+  f.innerHTML = `${шапка('Матчи')}<div class="h-body"><div class="w6">
+    <div class="w-head"><h1>Октябрь</h1><p>${d.today ? 'Сегодня, ' : ''}<b>${ДНИ_НЕД[день]}, ${d.n} октября</b> · ${d.k} матчей · главный — в эфире или ближайший</p>
+      <div class="w-games"><button type="button" data-g="all" aria-pressed="${!игры.size}">Все игры<small>${d.м.length}</small></button>
+        ${Object.keys(ИГРЫ).map(g => `<button type="button" data-g="${g}" style="--gc:var(--h-game-${g})" aria-pressed="${игры.has(g)}">${ИГРЫ[g]}<small>${c[g] || 0}</small></button>`).join('')}
+        <span class="w-cnt" title="Включено игр">${игры.size || 5}</span></div></div>
+    <div class="w-week">${ДНИ.map((x, i) => { const cg = ИГРЫ_ДНЯ(x)
+      return `<button class="w-d ${x.past ? 'is-past' : ''}" type="button" data-d="${i}" aria-pressed="${i === день}"><span>${x.today ? 'Сегодня' : x.past ? 'Вчера' : x.d}</span>
+        <div><p class="w-d__top"><b>${x.n}</b>${x.today ? '<em class="is-live"><i class="h-dot"></i>5 в эфире</em>' : ''}</p><small>${x.k} матчей<i>${Object.keys(cg).map(g => `<u style="--gc:var(--h-game-${g})"></u>`).join('')}</i></small></div></button>` }).join('')}
+      <div class="w-act"><a class="h-btn" href="#">★ Мои матчи · 4</a></div></div>
+    ${герой ? `<div class="w6-main">${героем(герой, d)}
+      <div class="w6-side">${ещё.slice(0, 3).map(m => постер(m, d, 'w-p--row', 64)).join('')}
+        ${ещё.length < 3 ? '<div></div>'.repeat(3 - ещё.length) : ''}
+        <div class="w6-more"><a class="h-btn" href="#">Все ${d.k} матчей дня</a>${ещё.length > 3 ? `<a class="h-btn" href="#">Ещё ${ещё.length - 3} главных</a>` : ''}</div></div></div>`
+      : '<div class="w-empty">В этот день матчей выбранных игр нет</div>'}
+  </div></div>`
+  H.тик()
+}
+f.addEventListener('click', e => {
+  const p = e.target.closest('.w-p--row'); if (p) { e.preventDefault(); выбран = p.dataset.id; рисовать(); return }
+  if (e.target.closest('a')) e.preventDefault()
+  const dd = e.target.closest('[data-d]'); if (dd) { день = +dd.dataset.d; выбран = null; рисовать(); return }
+  const g = e.target.closest('[data-g]'); if (g) { const k = g.dataset.g; if (k === 'all') игры.clear(); else игры.has(k) ? игры.delete(k) : игры.add(k); if (игры.size === 5) игры.clear(); выбран = null; рисовать() }
+})
+рисовать(); H.вписать()
+</script>
+</body></html>

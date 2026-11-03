@@ -1,0 +1,39 @@
+/* w-side — виджеты правой колонки для страницы матча (_wside.js, лаба w-side v2–v5). Вид — как в лабе v1 (_s.css). Токены — widget-tournament/_w.css. */
+.wsd{ font:13px/1.35 var(--w-font); color:var(--w-fg); background:var(--w-bg); border:1px solid var(--w-border); border-radius:var(--w-r); overflow:hidden; }
+.wsd .num{ font-variant-numeric:tabular-nums; }
+.wsd button{ font:inherit; color:inherit; cursor:pointer; }
+.wsd-hd{ display:flex; align-items:baseline; justify-content:space-between; gap:8px; padding:10px 12px 6px; }
+.wsd-hd b{ font-weight:600; font-size:14px; } .wsd-hd small{ color:var(--w-muted-fg); font-size:12px; }
+.wsd-ex{ color:#a78bfa; font-size:11px; }
+.wsd-lg{ width:18px; height:18px; object-fit:contain; flex:none; }
+
+/* турнир: две строки — место, команда, серии, карты */
+.wsd-tr{ display:grid; grid-template-columns:28px 18px 1fr auto auto; align-items:center; gap:8px; padding:6px 12px; }
+.wsd-tr:last-child{ padding-bottom:10px; } .wsd-tr .pl{ color:var(--w-muted-fg); } .wsd-tr .wl{ font-weight:600; } .wsd-tr .mp{ color:var(--w-muted-fg); width:44px; text-align:right; }
+
+/* прогноз: кто выиграет */
+.wsd-pr{ padding:4px 12px 12px; }
+.wsd-pr-t{ display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px; } .wsd-pr-t span{ display:flex; align-items:center; gap:6px; }
+.wsd-bar{ display:flex; height:6px; border-radius:3px; overflow:hidden; background:var(--w-muted); } .wsd-bar i{ background:var(--w-up); } .wsd-bar i + i{ background:var(--w-down); }
+.wsd-btn{ display:flex; gap:6px; margin-top:10px; } .wsd-btn button{ flex:1; height:32px; border:1px solid var(--w-border); border-radius:8px; background:none; }
+.wsd-btn button:hover{ background:var(--w-muted); } .wsd-btn button.on{ background:#1c1b26; border-color:#a78bfa; }
+.wsd-res{ margin-top:8px; font-size:12px; color:var(--w-muted-fg); }
+
+/* новости: 3 строки */
+.wsd-nw{ display:block; padding:8px 12px; color:inherit; text-decoration:none; } .wsd-nw + .wsd-nw{ border-top:1px solid var(--w-border); } .wsd-nw:last-child{ padding-bottom:12px; }
+.wsd-nw:hover{ background:#111114; } .wsd-nw small{ display:block; margin-top:2px; color:var(--w-muted-fg); font-size:12px; }
+
+/* MVP: тройка по итогу серии */
+.wsd-mv{ display:grid; grid-template-columns:32px 1fr auto; align-items:center; gap:10px; padding:6px 12px; } .wsd-mv:last-child{ padding-bottom:12px; }
+.wsd-mv img{ width:32px; height:32px; border-radius:6px; object-fit:cover; } .wsd-mv small{ display:block; color:var(--w-muted-fg); font-size:12px; }
+.wsd-kda{ font-weight:600; } .wsd-kda .k{ color:var(--w-up); } .wsd-kda .d{ color:var(--w-down); }
+.wsd-mv.top{ background:#1c1b26; }
+
+/* v4: одной карточкой — части через линию */
+.wsd-part + .wsd-part{ border-top:1px solid var(--w-border); }
+/* v5: вкладками */
+.wsd-tabs{ display:flex; gap:2px; padding:4px 6px 0; border-bottom:1px solid var(--w-border); }
+.wsd-tabs button{ position:relative; height:36px; padding:0 10px; border:0; background:none; color:var(--w-muted-fg); }
+.wsd-tabs button:hover, .wsd-tabs button.on{ color:var(--w-fg); }
+.wsd-tabs button.on::after{ content:''; position:absolute; left:10px; right:10px; bottom:-1px; height:2px; border-radius:2px; background:var(--w-fg); }
+.wsd-gap{ height:4px; }

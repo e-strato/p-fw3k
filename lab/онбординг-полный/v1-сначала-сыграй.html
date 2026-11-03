@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..900;1,400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" />
+<style>
+/* v1 · Сначала сыграй, потом сохрани (дирижёр 01.10, лаба «онбординг-полный»). Полноэкранная сцена, шаги — сцены, без модалки.
+   Механики из разбора (внутренняя документация/исследование-онбординги.md): команда меняет стартовый набор и свет сцены → сундук,
+   карты по одной + «Пропустить» + сетка → звезда-якорь твоей команды + «Собрать за меня» → прогноз на прошедшей карте, итог сразу
+   → вход в 1 клик ПОСЛЕ первой игры, ник с превью в таблице → коучмарки по одному у элемента → путь недели, отсчёт, фан-лига.
+   Плохое из разбора не берём: стена регистрации до игры, анкета, глоссарий, платное. Под сценой — раскадровка (?кадр=N). Данные условные. */
+@property --tc { syntax: '<color>'; inherits: true; initial-value: #8a5cf0; }
+body { background: var(--c-ui-bg); color: var(--c-text); font-family: var(--font); }
+.lab-wrap { max-width: 1440px; margin: 0 auto; padding: 24px; }
+.lab-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-size: var(--fs-app-sm); color: var(--c-caption); }
+.is-frame .lab-wrap { padding: 0; }
+.is-frame .lab-bar, .is-frame .sb { display: none; }
+.is-frame *, .is-frame *::before, .is-frame *::after { animation-duration: 0s !important; animation-delay: 0s !important; transition: none !important; }
+
+/* Сцена: тёмная студия, свет сверху и отражение на полу — цветом команды (--tc), фактура — шум */
+.st { --tc: var(--c-accent); position: relative; height: 820px; overflow: hidden; border-radius: 14px; isolation: isolate; transition: --tc .8s;
+  background:
+    radial-gradient(55% 60% at 50% -12%, color-mix(in srgb, var(--tc) 30%, transparent), transparent 72%),
+    radial-gradient(60% 26% at 50% 104%, color-mix(in srgb, var(--tc) 16%, transparent), transparent 75%),
+    linear-gradient(180deg, color-mix(in srgb, var(--c-ui-panel) 70%, var(--c-ui-bg)), var(--c-ui-bg) 78%); }
+.st::before { content: ''; position: absolute; inset: 0; z-index: -1; opacity: .07; mix-blend-mode: overlay; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.is-frame .st { border-radius: 0; }
+
+.st__top { position: absolute; inset: 0 0 auto; z-index: 5; display: flex; align-items: center; gap: 24px; padding: 18px 28px; }
+.st__brand { font-family: 'Archivo', var(--font); font-stretch: 112%; font-weight: 800; font-size: 17px; letter-spacing: -.01em; white-space: nowrap; }
+.st__prog { flex: 1; height: 3px; border-radius: 2px; background: color-mix(in srgb, var(--c-white) 8%, transparent); overflow: hidden; }
+.st__prog i { display: block; height: 100%; width: 0; background: var(--tc); border-radius: inherit; transition: width .5s ease; }
+.st__skip { border: 0; background: none; color: var(--c-caption); font: inherit; font-size: var(--fs-app-sm); cursor: pointer; }
+.st__skip:hover { color: var(--c-text); }
+.st[data-scene='tour'] .st__top, .st[data-scene='home'] .st__top { display: none; }
+.st[data-scene='final'] .st__skip { visibility: hidden; }
+
+.sc { position: absolute; inset: 0; padding: 84px 72px 40px; display: flex; flex-direction: column; }
+.sc[hidden] { display: none; }
+@media (prefers-reduced-motion: no-preference) { .sc { animation: sc-in .5s cubic-bezier(.2, .8, .2, 1); } }
+@keyframes sc-in { from { opacity: 0; translate: 0 18px; } }
+.h { margin: 0; font-family: 'Archivo', var(--font); font-stretch: 112%; font-weight: 800; font-size: 44px; line-height: 1.02; letter-spacing: -.025em; }
+.lead { margin: 12px 0 0; max-width: 620px; font-size: 17px; line-height: 1.5; color: var(--c-muted); }
+.lead b { color: var(--c-text); font-weight: 600; }
+.foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: auto; }
+.foot small, .cap { font-size: var(--fs-app-sm); color: var(--c-caption); }
+.btn--big { height: 56px; padding: 0 30px; font-size: 16px; }
+.btn:disabled { opacity: .35; pointer-events: none; }
+.chip { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px; border-radius: 999px; background: color-mix(in srgb, var(--c-white) 7%, transparent); font-size: var(--fs-app-sm); white-space: nowrap; }
+.chip b { font-weight: 600; }
+.chip--tc { background: color-mix(in srgb, var(--tc) 22%, transparent); }
+.link { border: 0; background: none; padding: 0; color: var(--c-muted); font: inherit; font-size: var(--fs-app-sm); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.link:hover { color: var(--c-text); }
+
+/* 1 · Хук: фраза + три живые карты веером */
+.sc--hook { display: grid; grid-template-columns: 1.05fr 1fr; align-items: center; gap: 40px; padding-top: 60px; }
+.sc--hook .h { font-size: 68px; line-height: .98; }
+.sc--hook .lead { font-size: 19px; max-width: 520px; }
+.hook__act { display: flex; align-items: center; gap: 22px; margin-top: 34px; }
+.hook__cap { margin-top: 18px; }
+.fan { position: relative; height: 520px; }
+.fan .player-card { position: absolute; left: 50%; top: 50%; --w: 230px; translate: -50% -50%; }
+.fan .player-card:nth-of-type(1) { rotate: -11deg; margin-left: -170px; margin-top: 26px; }
+.fan .player-card:nth-of-type(3) { rotate: 11deg; margin-left: 170px; margin-top: 26px; }
+.fan .player-card:nth-of-type(2) { --w: 260px; z-index: 2; }
+@media (prefers-reduced-motion: no-preference) {
+  .fan .player-card { animation: fan-in .8s cubic-bezier(.2, 1.1, .3, 1) backwards, float 6s ease-in-out infinite; }
+  .fan .player-card:nth-of-type(1) { animation-delay: .1s, 0s; } .fan .player-card:nth-of-type(2) { animation-delay: .25s, -2s; } .fan .player-card:nth-of-type(3) { animation-delay: .4s, -4s; }
+}
+@keyframes fan-in { from { opacity: 0; translate: -50% 10%; } }
+@keyframes float { 50% { margin-top: 10px; } }
+.fan .player-card:nth-of-type(2) { margin-top: 0; }
+.fan__floor { position: absolute; left: 10%; right: 10%; bottom: 12px; height: 60px; border-radius: 50%; background: radial-gradient(closest-side, color-mix(in srgb, var(--tc) 30%, transparent), transparent); filter: blur(6px); }
+
+/* 2 · Команда: популярные крупно, остальные рядом; выбор красит сцену */
+.teams { margin-top: 34px; display: grid; gap: 22px; }
+.teams__row { display: grid; gap: 14px; }
+.teams__row--top { grid-template-columns: repeat(4, 1fr); }
+.teams__row--rest { grid-template-columns: repeat(6, 1fr); }
+.teams__l { font-size: var(--fs-app-sm); color: var(--c-caption); margin-bottom: -10px; }
+.team { display: grid; justify-items: center; align-content: center; gap: 12px; padding: 22px 8px 18px; border: 0; border-radius: 16px;
+  background: color-mix(in srgb, var(--c-white) 4%, transparent); color: var(--c-muted); font: inherit; font-size: var(--fs-app-md); font-weight: 500; cursor: pointer;
+  box-shadow: inset 0 0 0 1px var(--c-ui-line); transition: background .2s, box-shadow .2s, translate .2s, color .2s; }
+.team:hover { background: color-mix(in srgb, var(--c-white) 8%, transparent); color: var(--c-text); translate: 0 -2px; }
+.team[aria-checked='true'] { color: var(--c-text); font-weight: 600; background: color-mix(in srgb, var(--tc) 16%, transparent); box-shadow: inset 0 0 0 2px var(--tc), 0 18px 50px -18px var(--tc); }
+.teams__row--top .team-logo--lg { width: 84px; height: 84px; }
+.teams__row--rest .team { padding: 16px 6px 14px; font-size: var(--fs-app-sm); }
+.teams__row--rest .team-logo--lg { width: 52px; height: 52px; }
+.team small { font-size: var(--fs-app-sm); color: var(--c-caption); font-weight: 400; }
+
+/* 3 · Сундук: живая 3D-сцена страницы «Сундук» (?embed) */
+.sc--chest { padding: 0; }
+.chest__frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.chest__info { position: absolute; left: 72px; top: 84px; z-index: 2; pointer-events: none; }
+.chest__info .chips { display: flex; gap: 8px; margin-top: 18px; }
+.chest__foot { position: absolute; left: 72px; right: 72px; bottom: 36px; z-index: 2; display: flex; align-items: center; justify-content: space-between; }
+
+/* 3б · Карты по одной: вспышка цветом редкости, «1 / 5», «Пропустить» */
+.sc--reveal { align-items: center; padding-top: 70px; }
+.rv { --rc: var(--c-muted); position: relative; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 48px; width: 100%; flex: 1; }
+.rv__glow { position: absolute; left: 50%; top: 50%; width: 760px; height: 760px; translate: -50% -50%; z-index: -1; border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--rc) 42%, transparent), color-mix(in srgb, var(--rc) 10%, transparent) 55%, transparent); transition: background .4s; }
+.rv__n { justify-self: end; text-align: right; }
+.rv__n b { display: block; font-family: 'Archivo', var(--font); font-stretch: 112%; font-weight: 800; font-size: 96px; line-height: 1; letter-spacing: -.04em; }
+.rv__n b span { color: var(--c-caption); font-size: .5em; }
+.rv__card { perspective: 1400px; }
+.rv__card .player-card { --w: 320px; }
+@media (prefers-reduced-motion: no-preference) { .rv__card.is-in .player-card { animation: flip-in .75s cubic-bezier(.2, 1.1, .3, 1); } }
+@keyframes flip-in { from { transform: rotateY(160deg) scale(.7); opacity: 0; } 60% { opacity: 1; } }
+.rv__about { display: grid; gap: 12px; justify-items: start; }
+.rv__about h3 { margin: 0; font-family: 'Archivo', var(--font); font-stretch: 112%; font-weight: 800; font-size: 40px; letter-spacing: -.02em; }
+.rv__about p { margin: 0; color: var(--c-muted); font-size: 16px; line-height: 1.5; max-width: 320px; }
+.rv__about .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.rv__rar { color: var(--rc); font-weight: 700; }
+.sc--reveal .foot { width: 100%; }
+
+/* 3в · Новые карты сеткой */
+.got { display: flex; justify-content: center; gap: 22px; margin-top: 40px; }
+.got figure { margin: 0; display: grid; justify-items: center; gap: 12px; }
+.got .player-card { --w: 196px; }
+@media (prefers-reduced-motion: no-preference) { .got figure { animation: deal .6s cubic-bezier(.2, 1.2, .4, 1) backwards; animation-delay: calc(var(--k) * 90ms); } }
+@keyframes deal { from { opacity: 0; translate: 0 40px; rotate: -6deg; } }
+.got figcaption { font-size: var(--fs-app-sm); color: var(--c-caption); text-align: center; }
+.got figcaption b { color: var(--c-text); font-weight: 600; }
+
+/* 4 · Пятёрка: якорь стоит, остальное — одной кнопкой */
+.five { display: flex; justify-content: center; align-items: flex-start; gap: 22px; margin-top: 30px; }
+.slot { display: grid; justify-items: center; gap: 12px; width: 178px; translate: 0 calc(var(--d) * 16px); }
+.slot__place { position: relative; width: 100%; aspect-ratio: 170 / 234; border-radius: 14px; container-type: inline-size;
+  display: grid; place-items: center; color: var(--c-caption); font-size: 30px; font-weight: 300;
+  background: color-mix(in srgb, var(--c-white) 3%, transparent); box-shadow: inset 0 0 0 1px var(--c-ui-line); }
+.slot__place::after { content: ''; position: absolute; left: 6%; right: 6%; bottom: -26px; height: 22px; border-radius: 50%; opacity: 0; transition: opacity .4s;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--tc) 40%, transparent), transparent); }
+.slot__place.is-on::after { opacity: 1; }
+.slot__place .player-card { position: absolute; inset: 0; --w: 100cqw; }
+@media (prefers-reduced-motion: no-preference) { .slot__place.is-fly .player-card { animation: fly .65s cubic-bezier(.2, 1.2, .4, 1) backwards; animation-delay: calc(var(--k) * 110ms); } }
+@keyframes fly { from { opacity: 0; translate: 0 80px; rotate: -10deg; scale: .8; } }
+.slot__pos { font-size: var(--fs-app-sm); color: var(--c-caption); text-align: center; }
+.slot__pos b { display: block; color: var(--c-text); font-weight: 600; font-size: var(--fs-app-md); }
+.slot .chip { height: 24px; font-size: var(--fs-app-xs); }
+
+/* 5 · Прогноз на прошедшей карте и повтор */
+.pred { display: grid; grid-template-columns: 1fr 280px; gap: 56px; align-items: center; margin-top: 22px; }
+.pred .player-card { --w: 280px; }
+.match { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; padding: 18px 24px; border-radius: 16px; background: color-mix(in srgb, var(--c-white) 5%, transparent); box-shadow: inset 0 0 0 1px var(--c-ui-line); }
+.match > div { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 17px; }
+.match > div:last-child { justify-content: flex-end; }
+.match__mid { display: grid !important; justify-items: center; gap: 2px !important; font-weight: 400 !important; }
+.match__mid b { font-family: 'Archivo', var(--font); font-stretch: 112%; font-size: 28px; font-weight: 800; }
+.match__mid small { font-size: var(--fs-app-sm); color: var(--c-caption); }
+.q { margin: 20px 0 14px; font-size: 26px; line-height: 1.3; font-weight: 600; letter-spacing: -.01em; }
+.q small { display: block; margin-top: 6px; font-size: var(--fs-app-md); font-weight: 400; color: var(--c-caption); }
+.ml { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ml .btn { height: 68px; font-size: 18px; border-radius: 16px; }
+.ml .btn em { font-style: normal; font-size: var(--fs-app-sm); color: var(--c-caption); font-weight: 500; }
+.pred.is-replay .ml { display: none; }
+.replay { display: none; }
+.pred.is-replay .replay { display: grid; gap: 16px; }
+.rp__meter { position: relative; height: 54px; border-radius: 14px; background: color-mix(in srgb, var(--c-white) 5%, transparent); overflow: hidden; box-shadow: inset 0 0 0 1px var(--c-ui-line); }
+.rp__fill { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(90deg, color-mix(in srgb, var(--tc) 25%, transparent), color-mix(in srgb, var(--tc) 60%, transparent)); }
+.rp__line { position: absolute; top: 0; bottom: 0; left: calc(8.5 / 15 * 100%); width: 2px; background: var(--c-text); }
+.rp__line span { position: absolute; left: 8px; top: 6px; font-size: var(--fs-app-xs); color: var(--c-text); white-space: nowrap; }
+.rp__pts { position: absolute; right: 16px; top: 50%; translate: 0 -50%; font-family: 'Archivo', var(--font); font-stretch: 112%; font-weight: 800; font-size: 26px; }
+.rp__time { display: flex; align-items: center; gap: 12px; font-size: var(--fs-app-sm); color: var(--c-caption); font-variant-numeric: tabular-nums; }
+.rp__bar { flex: 1; height: 4px; border-radius: 2px; background: color-mix(in srgb, var(--c-white) 8%, transparent); overflow: hidden; }
+.rp__bar i { display: block; height: 100%; width: 0; background: var(--c-text); }
+.rp__feed { display: grid; gap: 6px; min-height: 128px; align-content: start; margin: 0; padding: 0; list-style: none; }
+.rp__feed li { display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; padding: 9px 14px; border-radius: 10px; background: color-mix(in srgb, var(--c-white) 4%, transparent); font-size: var(--fs-app-md); }
+@media (prefers-reduced-motion: no-preference) { .rp__feed li { animation: sc-in .35s ease; } }
+.rp__feed time { color: var(--c-caption); font-variant-numeric: tabular-nums; }
+.rp__feed em { font-style: normal; font-weight: 700; color: var(--c-stat-high); }
+.verdict { display: none; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px; border-radius: 14px; background: color-mix(in srgb, var(--c-stat-high) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-stat-high) 45%, transparent); }
+.verdict.is-miss { background: color-mix(in srgb, var(--c-white) 6%, transparent); box-shadow: inset 0 0 0 1px var(--c-ui-line); }
+.pred.is-done .verdict { display: flex; }
+.verdict b { font-size: 18px; }
+.verdict p { margin: 2px 0 0; font-size: var(--fs-app-sm); color: var(--c-muted); }
+.verdict strong { font-family: 'Archivo', var(--font); font-stretch: 112%; font-weight: 800; font-size: 34px; color: var(--c-coin); white-space: nowrap; }
+
+/* 6 · Сохранить: 1 клик, ник с превью строки таблицы */
+.save { display: grid; grid-template-columns: 1fr 460px; gap: 64px; align-items: center; margin-top: 26px; flex: 1; }
+.keep { position: relative; height: 300px; }
+.keep .player-card { position: absolute; top: 20px; --w: 150px; }
+.keep__sum { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.keep__sum .chip { height: 38px; padding: 0 16px; font-size: var(--fs-app-md); }
+.keep__sum .chip b { color: var(--c-coin); }
+.panel { padding: 26px; border-radius: 18px; background: color-mix(in srgb, var(--c-ui-panel) 88%, transparent); box-shadow: inset 0 0 0 1px var(--c-ui-line), 0 40px 80px -30px var(--c-black); backdrop-filter: blur(10px); }
+.field { display: grid; gap: 8px; }
+.field label { font-size: var(--fs-app-sm); color: var(--c-caption); }
+.field input { height: 48px; padding: 0 16px; border: 0; border-radius: 12px; background: var(--c-ui-item); color: var(--c-text); font: inherit; font-size: 17px; font-weight: 600; box-shadow: inset 0 0 0 1px var(--c-ui-line); }
+.field input:focus { outline: none; box-shadow: inset 0 0 0 2px var(--c-accent); }
+.lb { display: grid; gap: 4px; margin: 14px 0 22px; }
+.lb div { display: grid; grid-template-columns: 64px 32px 1fr auto; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 10px; font-size: var(--fs-app-md); color: var(--c-caption); font-variant-numeric: tabular-nums; }
+.lb div.is-me { background: color-mix(in srgb, var(--tc) 18%, var(--c-ui-item)); color: var(--c-text); font-weight: 600; }
+.lb .avatar { width: 28px; height: 28px; font-size: var(--fs-app-xs); }
+.auth { display: grid; gap: 10px; }
+.auth .btn { height: 52px; width: 100%; font-size: 15px; }
+.auth__row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.auth__mail { text-align: center; margin-top: 4px; }
+.panel .cap { display: block; margin-top: 14px; text-align: center; }
+
+/* 7 · Главная продукта + коучмарки по одному */
+.sc--tour { padding: 0; }
+.home { position: absolute; inset: 0; padding: 0 28px; background: var(--c-ui-bg); overflow: hidden; }
+.hm-top { display: flex; align-items: center; gap: 16px; height: 60px; }
+.hm-brand { font-weight: 700; font-size: 18px; }
+.hm-coins { display: flex; align-items: center; gap: 10px; margin-left: auto; padding: 4px 4px 4px 12px; border-radius: 999px; font-size: var(--fs-app-sm); color: var(--c-caption); }
+.hm-coins b { color: var(--c-coin); font-size: 16px; font-variant-numeric: tabular-nums; }
+.hm-me { display: flex; align-items: center; gap: 8px; font-size: var(--fs-app-sm); font-weight: 600; }
+.hm-tabs { display: flex; gap: 4px; padding-bottom: 12px; border-bottom: 1px solid var(--c-ui-line); }
+.hm-tabs span { padding: 6px 12px; border-radius: 999px; font-size: var(--fs-app-sm); color: var(--c-caption); }
+.hm-tabs span.is-on { background: var(--c-ui-item); color: var(--c-text); font-weight: 600; }
+.hm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
+.w { padding: 16px 18px; border-radius: 12px; background: var(--c-ui-panel); }
+.w h4 { margin: 0 0 10px; font-size: var(--fs-app-md); font-weight: 600; }
+.w p { margin: 0; font-size: var(--fs-app-sm); color: var(--c-caption); line-height: 1.45; }
+.w--match { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr auto; align-items: center; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-accent) 55%, transparent); }
+.w--match .t { display: flex; align-items: center; gap: 12px; margin: 6px 0; font-size: 24px; font-weight: 700; letter-spacing: -.01em; }
+.w--match .t .team-logo { width: 34px; height: 34px; }
+.live { color: var(--c-live); font-weight: 600; }
+.w-big { font-size: 28px; font-weight: 700; }
+.w-big small { font-size: var(--fs-app-sm); font-weight: 400; color: var(--c-caption); }
+.w-bar { height: 6px; margin: 10px 0; border-radius: 3px; background: var(--c-ui-item); overflow: hidden; }
+.w-bar i { display: block; height: 100%; background: var(--c-accent); }
+.w-five { display: flex; gap: 10px; margin: 4px 0 10px; }
+.w-five span { display: grid; justify-items: center; gap: 4px; font-size: var(--fs-app-xs); color: var(--c-caption); }
+.w-five .avatar { width: 44px; height: 44px; }
+.w--wide { grid-column: span 2; }
+.w-lb div { display: grid; grid-template-columns: 56px 1fr auto; padding: 6px 8px; border-radius: 8px; font-size: var(--fs-app-sm); color: var(--c-caption); font-variant-numeric: tabular-nums; }
+.w-lb div.is-me { background: var(--c-ui-item); color: var(--c-text); font-weight: 600; }
+.spot { position: absolute; z-index: 6; border-radius: 14px; pointer-events: none; box-shadow: 0 0 0 2px color-mix(in srgb, var(--c-white) 70%, transparent), 0 0 0 3000px color-mix(in srgb, var(--c-black) 66%, transparent);
+  transition: left .45s cubic-bezier(.3, .9, .3, 1), top .45s cubic-bezier(.3, .9, .3, 1), width .45s cubic-bezier(.3, .9, .3, 1), height .45s cubic-bezier(.3, .9, .3, 1); }
+.coach { position: absolute; z-index: 7; width: 340px; padding: 18px 20px 16px; border-radius: 16px; background: var(--c-text); color: var(--c-card-dark-text); box-shadow: 0 30px 60px -20px var(--c-black);
+  transition: left .45s cubic-bezier(.3, .9, .3, 1), top .45s cubic-bezier(.3, .9, .3, 1); }
+.coach b { display: block; font-size: 17px; margin-bottom: 4px; }
+.coach p { margin: 0; font-size: var(--fs-app-md); line-height: 1.45; }
+.coach__row { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+.coach__row small { font-size: var(--fs-app-sm); opacity: .6; }
+.coach__row .link { color: var(--c-card-dark-text); opacity: .7; margin-left: auto; }
+.coach .btn { height: 36px; padding: 0 18px; }
+.st:not([data-scene='tour']) .spot, .st:not([data-scene='tour']) .coach { display: none; }
+.st.is-home .spot, .st.is-home .coach { display: none; }
+
+/* 8 · Финал: путь недели, отсчёт, монеты, фан-лига */
+.fin { display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 16px; margin-top: 30px; }
+.fin > div { display: flex; flex-direction: column; padding: 22px; border-radius: 18px; background: color-mix(in srgb, var(--c-white) 5%, transparent); box-shadow: inset 0 0 0 1px var(--c-ui-line); }
+.fin h4 { margin: 0 0 4px; font-size: 18px; }
+.fin .cap { margin-bottom: 18px; }
+.path { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.path li { position: relative; display: grid; grid-template-columns: 34px 1fr auto; align-items: center; gap: 14px; padding: 10px 0; }
+.path li + li::before { content: ''; position: absolute; left: 16px; top: -12px; height: 24px; width: 2px; background: var(--c-ui-line); }
+.path i { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--c-ui-item); font-style: normal; font-weight: 700; font-size: var(--fs-app-sm); }
+.path li.is-now i { background: var(--tc); color: var(--c-card-dark-text); }
+.path span { font-size: var(--fs-app-md); }
+.path span small { display: block; color: var(--c-caption); font-size: var(--fs-app-sm); }
+.path em { font-style: normal; font-size: var(--fs-app-sm); font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--c-ui-item); white-space: nowrap; }
+.path em.is-coin { color: var(--c-coin); }
+.cd { display: flex; align-items: center; justify-content: center; gap: 18px; margin: 6px 0 8px; }
+.cd .team-logo--lg { width: 60px; height: 60px; }
+.cd__t { font-family: 'Archivo', var(--font); font-stretch: 100%; font-weight: 800; font-size: 54px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; text-align: center; }
+.fin .btn { margin-top: auto; width: 100%; height: 48px; }
+.fan-l { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.fan-l .team-logo--lg { width: 64px; height: 64px; }
+.fan-l b { display: block; font-size: 17px; }
+.fin-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: auto; padding-top: 22px; }
+.coin-up { display: flex; align-items: baseline; gap: 14px; }
+.coin-up b { font-family: 'Archivo', var(--font); font-stretch: 112%; font-weight: 800; font-size: 40px; color: var(--c-coin); font-variant-numeric: tabular-nums; }
+.coin-up span { font-size: var(--fs-app-md); color: var(--c-muted); }
+
+/* Тост */
+.toast { position: absolute; left: 50%; bottom: 28px; z-index: 9; translate: -50% 20px; opacity: 0; padding: 12px 18px; border-radius: 12px; background: var(--c-text); color: var(--c-card-dark-text); font-size: var(--fs-app-md); font-weight: 500; transition: opacity .3s, translate .3s; pointer-events: none; }
+.toast.is-on { opacity: 1; translate: -50% 0; }
+
+/* Раскадровка */
+.sb { padding: 36px 0 60px; }
+.sb h3 { margin: 0 0 16px; font-size: var(--fs-app-lg); }
+.sb__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 16px; }
+.sb__f { margin: 0; }
+.sb__f span { position: relative; display: block; aspect-ratio: 1440 / 820; overflow: hidden; border-radius: 10px; box-shadow: inset 0 0 0 1px var(--c-ui-line); }
+.sb__f iframe { position: absolute; left: 0; top: 0; width: 1440px; height: 820px; border: 0; transform-origin: 0 0; pointer-events: none; }
+.sb__f figcaption { margin-top: 10px; font-size: var(--fs-app-sm); line-height: 1.45; color: var(--c-muted); }
+.sb__f figcaption b { display: block; color: var(--c-text); font-weight: 600; font-size: var(--fs-app-md); margin-bottom: 2px; }
+</style></head>
+<body>
+<div class="lab-wrap">
+  <div class="lab-bar"><span>v1 · Сначала сыграй, потом сохрани — пройди сам, раскадровка ниже</span><button class="btn btn--quiet btn--sm" type="button" data-restart>Пройти заново</button></div>
+
+  <div class="st" data-st data-scene="hook">
+    <div class="st__top"><b class="st__brand">Fantasy · Dota 2</b><div class="st__prog"><i data-prog></i></div><button class="st__skip" type="button" data-skip>Пропустить</button></div>
+
+    <!-- 1 · Хук -->
+    <section class="sc sc--hook" data-sc="hook">
+      <div>
+        <h1 class="h">Собери пятёрку про-игроков и угадай, как они сыграют</h1>
+        <p class="lead">Карты настоящих игроков Доты. Прогнозы на живые матчи — <b>за игровые монеты</b>, без денег.</p>
+        <div class="hook__act"><button class="btn btn--big" type="button" data-go="team">Начать — бесплатно</button><button class="link" type="button" data-login>Уже играю — войти</button></div>
+        <p class="cap hook__cap">Первая игра — за минуту. Регистрация потом, когда будет что сохранить.</p>
+      </div>
+      <div class="fan" data-fan><i class="fan__floor"></i></div>
+    </section>
+
+    <!-- 2 · Команда -->
+    <section class="sc" data-sc="team" hidden>
+      <h2 class="h">За кого болеешь?</h2>
+      <p class="lead">Игрок этой команды будет в твоём стартовом сундуке. <b>Поменять можно в профиле.</b></p>
+      <div class="teams" role="radiogroup" aria-label="Любимая команда" data-teams></div>
+      <div class="foot"><button class="link" type="button" data-noteam>Ни за кого — дальше без команды</button><button class="btn btn--big" type="button" data-go="chest" data-team-next disabled>Дальше</button></div>
+    </section>
+
+    <!-- 3 · Сундук -->
+    <section class="sc sc--chest" data-sc="chest" hidden>
+      <iframe class="chest__frame" data-chest title="Стартовый сундук"></iframe>
+      <div class="chest__info">
+        <h2 class="h">Твой стартовый сундук</h2>
+        <p class="lead">Нажми на сундук. Внутри 5 карт — по одной на каждую позицию.</p>
+        <div class="chips"><span class="chip"><b>5 карт</b></span><span class="chip">Гарантия: <b>Holo и выше</b></span><span class="chip chip--tc" data-chest-team>Игрок твоей команды</span></div>
+      </div>
+      <div class="chest__foot"><small class="cap">Шансы: Legend 1% · Prism 7% · Holo 22%</small><button class="btn btn--quiet" type="button" data-go="reveal">Без анимации — к картам</button></div>
+    </section>
+
+    <!-- 3б · Карты по одной -->
+    <section class="sc sc--reveal" data-sc="reveal" hidden>
+      <div class="rv" data-rv>
+        <i class="rv__glow"></i>
+        <div class="rv__n"><b data-rv-n>1<span> / 5</span></b><span class="cap">новая карта</span></div>
+        <div class="rv__card" data-rv-card></div>
+        <div class="rv__about" data-rv-about></div>
+      </div>
+      <div class="foot"><button class="btn btn--quiet" type="button" data-go="grid">Пропустить — показать все</button><button class="btn btn--big" type="button" data-rv-next>Следующая</button></div>
+    </section>
+
+    <!-- 3в · Новые карты -->
+    <section class="sc" data-sc="grid" hidden>
+      <h2 class="h">Новые карты в коллекции</h2>
+      <p class="lead">Сила — это рамка, редкость — блеск. <b>Чем реже карта, тем больше очков</b> она приносит за ту же игру.</p>
+      <div class="got" data-got></div>
+      <div class="foot"><small>Карты не продаются за деньги — только сундуки за монеты и награды</small><button class="btn btn--big" type="button" data-go="five">Собрать пятёрку</button></div>
+    </section>
+
+    <!-- 4 · Пятёрка -->
+    <section class="sc" data-sc="five" hidden>
+      <h2 class="h">Твоя пятёрка на сегодня</h2>
+      <p class="lead" data-five-lead>Игрок твоей команды уже в составе. Остальных поставим сами — по позициям, <b>из тех, кто играет сегодня</b>.</p>
+      <div class="five" data-five></div>
+      <div class="foot"><small>Состав можно менять до начала каждого матча</small><button class="btn btn--big" type="button" data-auto>Собрать за меня</button></div>
+    </section>
+
+    <!-- 5 · Прогноз на прошедшей карте -->
+    <section class="sc" data-sc="pred" hidden>
+      <h2 class="h">Разминка: прогноз на сыгранную карту</h2>
+      <p class="lead">Карта уже прошла — <b>результат увидишь через 10 секунд</b>, ждать матч не нужно.</p>
+      <div class="pred" data-pred>
+        <div>
+          <div class="match">
+            <div><i class="team-logo team-logo--lg t-ts is-logo">TS</i>Team Spirit</div>
+            <div class="match__mid"><b data-score>? : ?</b><small>Карта 2 · сыграна вчера</small></div>
+            <div>Tundra Esports<i class="team-logo team-logo--lg t-tun is-logo">TUN</i></div>
+          </div>
+          <p class="q">Pure наберёт больше 8.5 очков за карту?<small>В среднем за 10 карт — 9.1 очка</small></p>
+          <div class="ml" data-ml>
+            <button class="btn btn--quiet" type="button" data-pick="over">▲ Больше <em>62% игроков</em></button>
+            <button class="btn btn--quiet" type="button" data-pick="under">▼ Меньше <em>38%</em></button>
+          </div>
+          <div class="replay">
+            <div class="rp__meter"><i class="rp__fill" data-rp-fill></i><i class="rp__line"><span>линия 8.5</span></i><b class="rp__pts" data-rp-pts>0.0</b></div>
+            <div class="rp__time"><span data-rp-t>0:00</span><span class="rp__bar"><i data-rp-bar></i></span><span>38:12</span></div>
+            <ul class="rp__feed" data-rp-feed></ul>
+            <div class="verdict" data-verdict></div>
+          </div>
+        </div>
+        <div data-pred-card></div>
+      </div>
+      <div class="foot"><small data-pred-cap>Разминка бесплатна и ни на что не влияет</small><button class="btn btn--big" type="button" data-go="save" data-pred-next disabled>Сохранить результат</button></div>
+    </section>
+
+    <!-- 6 · Сохранить -->
+    <section class="sc" data-sc="save" hidden>
+      <h2 class="h">Сохрани 5 карт и 38 очков</h2>
+      <p class="lead">Один клик — и прогресс твой. <b>Без пароля и анкеты.</b></p>
+      <div class="save">
+        <div>
+          <div class="keep" data-keep></div>
+          <div class="keep__sum" data-keep-sum></div>
+        </div>
+        <div class="panel">
+          <div class="field"><label for="nick">Ник в таблице лидеров</label><input id="nick" maxlength="16" autocomplete="off" data-nick /></div>
+          <div class="lb" data-lb></div>
+          <div class="auth">
+            <button class="btn" type="button" data-auth="Steam">Войти через Steam</button>
+            <div class="auth__row"><button class="btn btn--quiet" type="button" data-auth="Google">Google</button><button class="btn btn--quiet" type="button" data-auth="Telegram">Telegram</button></div>
+            <button class="link auth__mail" type="button" data-auth="почту">или по почте — пришлём ссылку для входа</button>
+          </div>
+          <small class="cap">Монеты не покупаются и не выводятся</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · Главная + подсказки -->
+    <section class="sc sc--tour" data-sc="tour" hidden>
+      <div class="home" data-home>
+        <div class="hm-top">
+          <span class="hm-brand">Fantasy · Dota 2</span>
+          <span class="btn-row"><button class="btn btn--quiet btn--xs" type="button" aria-pressed="true">Dota</button><button class="btn btn--quiet btn--xs" type="button">LoL</button></span>
+          <span class="hm-coins" data-c="coins">Монеты <b data-coins>1 030</b><button class="btn btn--quiet btn--sm" type="button">Забрать +50</button></span>
+          <span class="hm-me"><i class="avatar" data-me-av></i><span data-me-nick></span></span>
+        </div>
+        <nav class="hm-tabs"><span class="is-on">Главная</span><span>Мои матчи</span><span>Сундуки</span><span>Коллекция</span><span>Квесты</span><span>Лидеры</span><span>История</span></nav>
+        <div class="hm-grid">
+          <div class="w w--match" data-c="match">
+            <div>
+              <p>Следующий матч · EPL World Series · Bo3</p>
+              <div class="t"><i class="team-logo t-yg is-logo">YG</i>Yangon Galacticos — Xipto Esports<i class="team-logo t-xip">XIP</i></div>
+              <p><span class="live">Карта 3 · live · 1 : 1</span> · izdu из твоей пятёрки в этом матче</p>
+            </div>
+            <div class="btn-row"><button class="btn" type="button">Собрать состав</button><button class="btn btn--quiet" type="button">Сделать прогноз</button></div>
+          </div>
+          <div class="w" data-c="five"><h4>Твоя пятёрка</h4><div class="w-five" data-w-five></div><p>Сегодня играют 2 из 5 · вчера — 38 очков</p></div>
+          <div class="w" data-c="quests"><h4>Квесты дня</h4><div class="w-big">0/6 <small>прогнозов</small></div><div class="w-bar"><i style="width: 0"></i></div><p>3 прогноза → +30 монет · 6 → ещё +30</p></div>
+          <div class="w" data-c="acc"><h4>Сундук точности</h4><div class="w-big">1/15 <small>верных</small></div><div class="w-bar"><i style="width: 7%"></i></div><p>Бесплатный сундук за верные прогнозы, раз в неделю</p></div>
+          <div class="w w--wide"><h4>Команда недели</h4><p>Лучшие очки за карту на этой неделе: керри — Yatoro (TS) · 24.5. Карты из неё дают +5% к очкам.</p></div>
+          <div class="w" data-c="lb"><h4>Лидеры</h4><div class="w-lb" data-w-lb></div></div>
+        </div>
+      </div>
+      <i class="spot" data-spot></i>
+      <div class="coach" data-coach role="dialog" aria-live="polite">
+        <b data-coach-t></b><p data-coach-p></p>
+        <div class="coach__row"><button class="btn" type="button" data-coach-ok>Ясно</button><small data-coach-n></small><button class="link" type="button" data-coach-skip>Без подсказок</button></div>
+      </div>
+    </section>
+
+    <!-- 8 · Финал -->
+    <section class="sc" data-sc="final" hidden>
+      <h2 class="h" data-fin-h>Ты в игре</h2>
+      <p class="lead">Вот что дальше. <b>Всё бесплатно.</b></p>
+      <div class="fin">
+        <div>
+          <h4>Первая неделя</h4><small class="cap">3 шага — и сезон пойдёт в полную силу</small>
+          <ol class="path">
+            <li class="is-now"><i>1</i><span>Живой прогноз<small>на ближайшую карту</small></span><em class="is-coin">+50 монет</em></li>
+            <li><i>2</i><span>3 прогноза за неделю<small>любые матчи</small></span><em>Сундук Holo</em></li>
+            <li><i>3</i><span>Пятёрка набрала 100 очков<small>вчера было 38</small></span><em>Карта Prism</em></li>
+          </ol>
+        </div>
+        <div>
+          <h4>Ближайший матч</h4><small class="cap">Yangon Galacticos — Xipto Esports · карта 3</small>
+          <div class="cd"><i class="team-logo team-logo--lg t-yg is-logo">YG</i><span class="cd__t" data-cd>14:32</span><i class="team-logo team-logo--lg t-xip">XIP</i></div>
+          <p class="cap" style="text-align: center; margin: 0 0 18px;">до начала · в матче твой izdu</p>
+          <button class="btn" type="button" data-go="home">Сделать живой прогноз</button>
+        </div>
+        <div>
+          <h4>Фан-лига</h4><small class="cap">Таблица только своих — болельщиков твоей команды</small>
+          <div class="fan-l" data-fan-l></div>
+          <button class="btn btn--quiet" type="button" data-join aria-pressed="false">Вступить</button>
+        </div>
+      </div>
+      <div class="fin-bar">
+        <div class="coin-up"><b data-coin-up>1 030</b><span>монет · +50 за первый вход, дальше +50 каждый день</span></div>
+        <button class="btn btn--big" type="button" data-go="home">На главную</button>
+      </div>
+    </section>
+
+    <div class="toast" data-toast></div>
+  </div>
+
+  <section class="sb">
+    <h3>Раскадровка</h3>
+    <div class="sb__grid" data-sb></div>
+  </section>
+</div>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)]
+  const st = $('[data-st]'), КАДР = +new URLSearchParams(location.search).get('кадр') || 0
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches || !!КАДР
+  if (КАДР) document.documentElement.classList.add('is-frame')
+
+  // ——— Данные (условные) ———
+  const КОМАНДЫ = [['ts', 'TS', 'Team Spirit', 1], ['tun', 'TUN', 'Tundra Esports', 1], ['pv', 'PV', 'PARIVISION', 1], ['bb', 'BB', 'BetBoom Team', 1],
+    ['gg', 'GG', 'Gaimin Gladiators'], ['flc', 'FLC', 'Team Falcons'], ['tl', 'TL', 'Team Liquid'], ['aur', 'AUR', 'Aurora'], ['yg', 'YG', 'Yangon Galacticos'], ['xip', 'XIP', 'Xipto Esports']]
+  const БОЛЕЛЬЩИКОВ = { ts: '48 210', tun: '21 940', pv: '17 305', bb: '29 870', gg: '12 480', flc: '15 620', tl: '19 330', aur: '9 870', yg: '3 140', xip: '2 615' }
+  const ИГРОКИ = {
+    pure: { ник: 'Pure', фото: 'pure', ovr: 93, tier: 'elite', r: 'prism', тег: 'TUN', к: 'tun', флаг: 'ru', pos: 1, герои: ['terrorblade', 'morphling', 'faceless_void'] },
+    izdu: { ник: 'izdu', фото: '', ovr: 52, tier: 'bronze', r: 'base', тег: 'XIP', к: 'xip', флаг: 'ru', pos: 2, герои: ['mars', 'lycan', 'hoodwink'] },
+    takizawa: { ник: 'takizawa', фото: '', ovr: 70, tier: 'silver', r: 'base', тег: 'VPP', к: '', флаг: 'ru', pos: 3, герои: ['lycan', 'beastmaster', 'mars'] },
+    '9class': { ник: '9Class', фото: '9class', ovr: 95, tier: 'elite', r: 'legend', тег: 'PV', к: 'pv', флаг: 'ru', pos: 4, герои: ['tusk', 'rubick', 'hoodwink'] },
+    yatoro: { ник: 'Yatoro', фото: 'yatoro', ovr: 88, tier: 'gold', r: 'holo', тег: 'TS', к: 'ts', флаг: 'ua', pos: 5, герои: ['faceless_void', 'terrorblade', 'morphling'] },
+  }
+  const ПОЗИЦИИ = ['Керри', 'Мид', 'Хардлейн', 'Роумер', 'Саппорт']
+  const RU = { base: 'Base', holo: 'Holo', prism: 'Prism', legend: 'Legend' }
+  const RC = { base: '--c-muted', holo: '--c-rarity-holo-4', prism: '--c-rarity-holo-5', legend: '--c-tier-gold' }
+  const ПАК = ['izdu', 'takizawa', 'yatoro', 'pure', '9class'] // раскрытие: от простых к Legend
+  const S = { team: null, rv: 0, pick: null, nick: '', coach: 0, coins: 1000 }
+
+  // Игрок твоей команды; у команды без карты в базе — силуэт на позицию 3 (данных нет, игрок условный)
+  const якорь = () => {
+    if (!S.team) return null
+    const id = Object.keys(ИГРОКИ).find((k) => ИГРОКИ[k].к === S.team[0])
+    if (id) return id
+    ИГРОКИ.fan = { ник: `Игрок ${S.team[1]}`, фото: '', ovr: 74, tier: 'silver', r: 'holo', тег: S.team[1], к: S.team[0], флаг: 'ru', pos: 3, герои: ['beastmaster', 'mars', 'lycan'] }
+    return 'fan'
+  }
+  const пак = () => { const a = якорь(); return a === 'fan' ? ПАК.map((id) => (id === 'takizawa' ? 'fan' : id)) : ПАК }
+  const пятёрка = () => [...пак()].sort((a, b) => ИГРОКИ[a].pos - ИГРОКИ[b].pos)
+
+  // Карта F — разметка компонента сайта (blocks/shared/card-f.html)
+  const картаF = (id) => { const p = ИГРОКИ[id]
+    const ph = p.фото ? `<img class="player-card__ph" src="/p-fw3k/site/img/players/${p.фото}.webp" alt="${p.ник}" />` : '<span class="player-card__ph player-card__ph--none"></span>'
+    const pop = p.фото ? `<img class="player-card__ph player-card__ph--pop" src="/p-fw3k/site/img/players/${p.фото}.webp" alt="" aria-hidden="true" />` : ''
+    return `<div data-tilt class="player-card player-card--f player-card--${p.tier} player-card--${p.r}"><div class="player-card__in"><div class="player-card__body"></div>
+      <div class="player-card__f-art"><i class="player-card__shine"></i><i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i><span class="player-card__big">${p.ovr}</span>${ph}</div>${pop}
+      <div class="player-card__f-info"><b class="player-card__rarity">${RU[p.r]}</b><div class="player-card__f-ic">${p.герои.map((h, i) => `<span${i === 2 ? ' class="player-card__hero--best"' : ''}><img src="/p-fw3k/site/img/heroes/${h}.webp" alt="" /></span>`).join('')}</div>
+      <div class="player-card__f-team"><i class="player-card__flag player-card__flag--${p.флаг}"></i><span>${p.тег} · <b>POS ${p.pos}</b></span></div></div>
+      <div class="player-card__f-strip"><b class="player-card__f-nick">${p.ник}</b><span class="player-card__ovr"><b>${p.ovr}</b><small>OVR</small></span></div><i class="player-card__glare"></i></div></div>` }
+  const аватар = (id, cls = '') => { const p = ИГРОКИ[id]; return p.фото ? `<i class="avatar ${cls}" style="--img: url(/p-fw3k/site/img/players/${p.фото}.webp)"></i>` : `<i class="avatar ${cls}">${p.ник[0]}</i>` }
+  const лого = (k, m, cls = 'team-logo--lg') => `<i class="team-logo ${cls} t-${k}${k === 'xip' ? '' : ' is-logo'}">${m}</i>`
+
+  // Наклон и блик карт — как app.js сайта [Карточка: наклон и блик]
+  const tilt = (root = st) => { if (calm) return
+    $$('.player-card[data-tilt]:not([data-t])', root).forEach((card) => { card.dataset.t = ''
+      card.addEventListener('pointermove', (e) => { const r = card.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height
+        card.style.setProperty('--mx', `${(x * 100).toFixed(1)}%`); card.style.setProperty('--my', `${(y * 100).toFixed(1)}%`)
+        card.style.setProperty('--dx', (x - .5).toFixed(3)); card.style.setProperty('--dy', (y - .5).toFixed(3)); card.classList.add('is-on') })
+      card.addEventListener('pointerleave', () => { card.classList.remove('is-on'); ['--mx', '--my', '--dx', '--dy'].forEach((v) => card.style.removeProperty(v)) }) }) }
+  const later = (fn, ms) => setTimeout(fn, calm ? 0 : ms)
+  const toast = (t) => { const el = $('[data-toast]'); el.textContent = t; el.classList.add('is-on'); clearTimeout(el._h); el._h = setTimeout(() => el.classList.remove('is-on'), 2600) }
+  const num = (n) => n.toLocaleString('ru-RU')
+
+  // ——— Сцены и прогресс ———
+  const ШАГ = { hook: 1, team: 2, chest: 3, reveal: 3, grid: 3, five: 4, pred: 5, save: 6, tour: 7, home: 7, final: 8 }
+  const go = (sc) => {
+    const view = sc === 'home' ? 'tour' : sc
+    st.dataset.scene = sc
+    st.classList.toggle('is-home', sc === 'home')
+    $$('[data-sc]', st).forEach((s) => { s.hidden = s.dataset.sc !== view })
+    $('[data-prog]').style.width = `${(ШАГ[sc] / 8) * 100}%`
+    if (sc === 'chest' && !$('[data-chest]').src) $('[data-chest]').src = '/p-fw3k/site/chest.html?form=chest&type=legend&embed'
+    if (sc === 'reveal') showCard(S.rv)
+    if (sc === 'grid') renderGrid()
+    if (sc === 'five') renderFive()
+    if (sc === 'save') renderSave()
+    if (sc === 'tour') { renderHome(); requestAnimationFrame(() => coach(S.coach)) }
+    if (sc === 'home') renderHome()
+    if (sc === 'final') renderFinal()
+    tilt()
+  }
+  st.addEventListener('click', (e) => { const b = e.target.closest('[data-go]'); if (b && !b.disabled) go(b.dataset.go) })
+  $('[data-skip]').addEventListener('click', () => { go('home'); toast('Стартовый сундук ждёт в «Сундуках»') })
+  $('[data-restart]').addEventListener('click', () => { location.href = location.pathname })
+  $('[data-login]').addEventListener('click', () => toast('Вход — Steam, Google или Telegram, тот же экран, что на шаге «Сохрани»'))
+
+  // 1 · Хук: три карты веером
+  $('[data-fan]').insertAdjacentHTML('beforeend', ['pure', '9class', 'yatoro'].map(картаF).join(''))
+
+  // 2 · Команда: популярные крупно, остальные рядом; выбор красит сцену
+  const кнопка = ([k, m, n]) => `<button class="team t-${k}" type="button" role="radio" aria-checked="false" data-team="${k}">${лого(k, m)}<span>${n}<small>${БОЛЕЛЬЩИКОВ[k] ? `<br>${БОЛЕЛЬЩИКОВ[k]} болельщиков` : ''}</small></span></button>`
+  $('[data-teams]').innerHTML = `<span class="teams__l">Популярные</span><div class="teams__row teams__row--top">${КОМАНДЫ.filter((t) => t[3]).map(кнопка).join('')}</div>
+    <span class="teams__l">Остальные</span><div class="teams__row teams__row--rest">${КОМАНДЫ.filter((t) => !t[3]).map(кнопка).join('')}</div>`
+  const pickTeam = (k) => {
+    S.team = КОМАНДЫ.find((t) => t[0] === k)
+    $$('.team', st).forEach((b) => b.setAttribute('aria-checked', String(b.dataset.team === k)))
+    st.style.setProperty('--tc', `var(--c-team-${k})`)
+    $('[data-team-next]').disabled = false
+    $('[data-chest-team]').innerHTML = `Игрок <b>${S.team[2]}</b>`
+    S.nick = `${S.team[2].split(' ').pop()}_фан`
+  }
+  $('[data-teams]').addEventListener('click', (e) => { const b = e.target.closest('.team'); if (b) pickTeam(b.dataset.team) })
+  $('[data-noteam]').addEventListener('click', () => { S.team = null; st.style.removeProperty('--tc'); $('[data-chest-team]').textContent = 'Игроки, у которых сегодня матч'; go('chest') })
+
+  // 3 · Сундук: сцена сообщает, что карты раскрыты → карты по одной
+  addEventListener('message', (e) => { if (e.data === 'chest-opened' && st.dataset.scene === 'chest') later(() => go('reveal'), 400) })
+
+  // 3б · Карты по одной
+  const showCard = (i) => {
+    const ids = пак(), id = ids[i], p = ИГРОКИ[id], моя = id === якорь()
+    S.rv = i
+    $('[data-rv]').style.setProperty('--rc', `var(${RC[p.r]})`)
+    $('[data-rv-n]').innerHTML = `${i + 1}<span> / ${ids.length}</span>`
+    const box = $('[data-rv-card]'); box.classList.remove('is-in'); box.innerHTML = картаF(id); void box.offsetWidth; box.classList.add('is-in')
+    $('[data-rv-about]').innerHTML = `<h3>${p.ник}</h3><div class="chips"><span class="chip"><span class="rv__rar">${RU[p.r]}</span></span><span class="chip">Позиция ${p.pos} · ${ПОЗИЦИИ[p.pos - 1]}</span>${моя ? '<span class="chip chip--tc"><b>Игрок твоей команды</b></span>' : ''}</div>
+      <p>${p.r === 'legend' ? 'Самая редкая карта сундука — 1% шанс. Очки за игру ×1.5.' : p.r === 'base' ? 'Обычная карта. Очки за игру — без бонуса.' : `Редкость ${RU[p.r]} даёт бонус к очкам за игру.`}</p>`
+    $('[data-rv-next]').textContent = i === ids.length - 1 ? 'Все карты' : 'Следующая'
+    tilt()
+  }
+  $('[data-rv-next]').addEventListener('click', () => { S.rv < пак().length - 1 ? showCard(S.rv + 1) : go('grid') })
+  $('[data-rv-card]').addEventListener('click', () => $('[data-rv-next]').click())
+
+  // 3в · Сетка новых карт
+  const renderGrid = () => { $('[data-got]').innerHTML = пак().map((id, k) => `<figure style="--k: ${k}">${картаF(id)}<figcaption><b>${ИГРОКИ[id].ник}</b> · ${RU[ИГРОКИ[id].r]}${id === якорь() ? ' · твоя команда' : ''}</figcaption></figure>`).join('') }
+
+  // 4 · Пятёрка: якорь на месте, остальные — «Собрать за меня»
+  let собрана = false
+  const renderFive = () => {
+    const a = якорь()
+    $('[data-five-lead]').innerHTML = a ? 'Игрок твоей команды уже в составе. Остальных поставим сами — по позициям, <b>из тех, кто играет сегодня</b>.' : 'Пять позиций, как в Доте. Поставим лучших из твоих карт — <b>тех, кто играет сегодня</b>.'
+    $('[data-five]').innerHTML = пятёрка().map((id, i) => `<div class="slot" style="--d: ${Math.abs(i - 2)}"><span class="slot__place${id === a || собрана ? ' is-on' : ''}" style="--k: ${i}">${id === a || собрана ? картаF(id) : '+'}</span>
+      <span class="slot__pos"><b>${i + 1} · ${ПОЗИЦИИ[i]}</b></span>${id === a ? '<span class="chip chip--tc">Твоя команда</span>' : ''}</div>`).join('')
+    $('[data-auto]').textContent = собрана ? 'Дальше — первый прогноз' : 'Собрать за меня'
+    tilt()
+  }
+  const auto = () => {
+    собрана = true
+    const a = якорь()
+    $$('.slot__place', st).forEach((pl, i) => { const id = пятёрка()[i]; if (id === a) return; pl.innerHTML = картаF(id); pl.classList.add('is-on', 'is-fly') })
+    $('[data-auto]').textContent = 'Дальше — первый прогноз'
+    tilt()
+  }
+  $('[data-auto]').addEventListener('click', () => (собрана ? go('pred') : auto()))
+
+  // 5 · Прогноз на прошедшей карте → повтор → итог сразу
+  $('[data-pred-card]').innerHTML = картаF('pure')
+  const СОБЫТИЯ = [[.09, '3:24', 'Первая кровь', 2.0], [.24, '9:10', '80 добиваний к 10-й минуте', 1.6], [.4, '15:02', 'Двойное убийство', 3.0], [.56, '21:30', 'Рошан вместе с командой', 1.2], [.74, '28:44', 'Тройное убийство', 2.4], [.92, '35:10', 'Победа на карте', 1.2]]
+  const ИТОГ = 11.4, ПЯТЁРКА_ОЧКИ = 38, ДЛИНА = 38 * 60 + 12
+  const replay = (pick) => {
+    S.pick = pick
+    $$('[data-ml] .btn').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.pick === pick)))
+    const pred = $('[data-pred]'); pred.classList.add('is-replay'); pred.classList.remove('is-done')
+    const feed = $('[data-rp-feed]'); feed.innerHTML = ''
+    let shown = 0
+    const draw = (k) => {
+      while (shown < СОБЫТИЯ.length && СОБЫТИЯ[shown][0] <= k) { const [, t, what, pts] = СОБЫТИЯ[shown++]; feed.insertAdjacentHTML('afterbegin', `<li><time>${t}</time><span>${what}</span><em>+${pts.toFixed(1)}</em></li>`) }
+      while (feed.children.length > 3) feed.lastElementChild.remove()
+      const pts = СОБЫТИЯ.slice(0, shown).reduce((s, e) => s + e[3], 0)
+      $('[data-rp-pts]').textContent = pts.toFixed(1)
+      $('[data-rp-fill]').style.width = `${Math.min(100, (pts / 15) * 100)}%`
+      $('[data-rp-bar]').style.width = `${k * 100}%`
+      const sec = Math.round(k * ДЛИНА); $('[data-rp-t]').textContent = `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`
+    }
+    const finish = () => {
+      draw(1)
+      $('[data-score]').textContent = '1 : 1'
+      const hit = pick === 'over'
+      if (hit) S.coins = 1030
+      const v = $('[data-verdict]'); v.classList.toggle('is-miss', !hit)
+      v.innerHTML = hit ? `<div><b>Прогноз зашёл: 11.4 больше 8.5</b><p>А вся твоя пятёрка набрала ${ПЯТЁРКА_ОЧКИ} очков за эту карту</p></div><strong>+30 монет</strong>`
+        : `<div><b>В этот раз мимо: Pure набрал 11.4</b><p>Это разминка — монеты не списались. Пятёрка набрала ${ПЯТЁРКА_ОЧКИ} очков</p></div><strong>${ПЯТЁРКА_ОЧКИ} очков</strong>`
+      pred.classList.add('is-done')
+      $('[data-pred-next]').disabled = false
+      $('[data-pred-cap]').textContent = 'Живые матчи — так же, только очки капают по ходу игры'
+    }
+    if (calm) return finish()
+    const t0 = performance.now(), DUR = 7000
+    const tick = (now) => { const k = Math.min(1, (now - t0) / DUR); draw(k); k < 1 ? requestAnimationFrame(tick) : finish() }
+    requestAnimationFrame(tick)
+  }
+  $('[data-ml]').addEventListener('click', (e) => { const b = e.target.closest('[data-pick]'); if (b && !S.pick) replay(b.dataset.pick) })
+
+  // 6 · Сохранить: карты веером, ник с живым превью строки таблицы
+  const lbRow = (place, av, nick, pts, me) => `<div class="${me ? 'is-me' : ''}"><span>${place}</span>${av}<span>${nick}</span><span>${pts}</span></div>`
+  const renderLb = () => {
+    const nick = S.nick || 'Твой ник'
+    $('[data-lb]').innerHTML = lbRow('1 283', '<i class="avatar">M</i>', 'Moonwalker', 39) + lbRow('1 284', `<i class="avatar">${nick[0]}</i>`, nick, ПЯТЁРКА_ОЧКИ, 1) + lbRow('1 285', '<i class="avatar">k</i>', 'kotik_mid', 37)
+  }
+  const renderSave = () => {
+    if (!S.nick) S.nick = 'Новичок_1284'
+    $('[data-keep]').innerHTML = пак().map((id, i) => картаF(id).replace('class="player-card', `style="left: ${i * 92}px; rotate: ${(i - 2) * 4}deg; top: ${Math.abs(i - 2) * 10 + 20}px; z-index: ${i}" class="player-card`)).join('')
+    $('[data-keep-sum]').innerHTML = `<span class="chip">5 карт · 1 Legend</span><span class="chip">${ПЯТЁРКА_ОЧКИ} очков пятёрки</span><span class="chip">Монеты <b>${num(S.coins)}</b></span>`
+    $('[data-nick]').value = S.nick
+    renderLb()
+  }
+  $('[data-nick]').addEventListener('input', (e) => { S.nick = e.target.value.trim(); renderLb() })
+  $('.auth', st).addEventListener('click', (e) => { const b = e.target.closest('[data-auth]'); if (!b) return
+    if (!S.nick) S.nick = 'Новичок_1284'
+    b.textContent = 'Сохраняем…'
+    later(() => { toast(`Сохранено. Привет, ${S.nick}!`); S.coach = 0; go('tour') }, 700) })
+
+  // 7 · Главная продукта + 5 подсказок по одной, у самого элемента
+  const renderHome = () => {
+    $('[data-me-nick]').textContent = S.nick || 'Новичок_1284'
+    $('[data-me-av]').textContent = (S.nick || 'Н')[0]
+    $('[data-coins]').textContent = num(S.coins)
+    $('[data-w-five]').innerHTML = пятёрка().map((id, i) => `<span>${аватар(id)}${i + 1} · ${ИГРОКИ[id].ник}</span>`).join('')
+    $('[data-w-lb]').innerHTML = `<div><span>1</span><span>Arteezy_fan</span><span>412</span></div><div><span>2</span><span>miposhka4ever</span><span>398</span></div><div class="is-me"><span>1 284</span><span>${S.nick || 'Новичок_1284'}</span><span>${ПЯТЁРКА_ОЧКИ}</span></div>`
+  }
+  const ПОДСКАЗКИ = [
+    ['match', 'Матч дня', 'Здесь живые матчи. Собери состав или сделай прогноз — до начала карты. Твой izdu играет прямо сейчас.'],
+    ['five', 'Твоя пятёрка', 'Очки капают, пока твои игроки на карте. На вчерашней карте она набрала бы 38.'],
+    ['quests', 'Квесты дня', '3 прогноза — +30 монет, 6 — ещё +30. Обновляются каждый день.'],
+    ['acc', 'Сундук точности', '15 верных прогнозов за неделю — бесплатный сундук. Разминка уже засчитана.'],
+    ['coins', 'Монеты', 'Каждый день +50. Не покупаются и не выводятся — только для игры: сундуки, бонусы, прогнозы.'],
+  ]
+  const coach = (i) => {
+    if (i >= ПОДСКАЗКИ.length) return go('final')
+    S.coach = i
+    const [key, t, p] = ПОДСКАЗКИ[i], el = $(`[data-c="${key}"]`, st)
+    const sr = st.getBoundingClientRect(), r = el.getBoundingClientRect(), pad = 8
+    const box = { x: r.left - sr.left - pad, y: r.top - sr.top - pad, w: r.width + pad * 2, h: r.height + pad * 2 }
+    Object.assign($('[data-spot]').style, { left: `${box.x}px`, top: `${box.y}px`, width: `${box.w}px`, height: `${box.h}px` })
+    $('[data-coach-t]').textContent = t; $('[data-coach-p]').textContent = p; $('[data-coach-n]').textContent = `${i + 1} из ${ПОДСКАЗКИ.length}`
+    const c = $('[data-coach]'), cw = 340, below = box.y + box.h + 16 + 170 < sr.height
+    c.style.left = `${Math.max(20, Math.min(sr.width - cw - 20, box.x + box.w / 2 - cw / 2))}px`
+    c.style.top = `${below ? box.y + box.h + 16 : box.y - 16 - c.offsetHeight}px`
+  }
+  $('[data-coach-ok]').addEventListener('click', () => coach(S.coach + 1))
+  $('[data-coach-skip]').addEventListener('click', () => go('final'))
+  addEventListener('resize', () => { if (st.dataset.scene === 'tour') coach(S.coach) })
+
+  // 8 · Финал
+  let cd = 14 * 60 + 32, cdT = 0
+  const renderFinal = () => {
+    $('[data-fin-h]').textContent = `Ты в игре, ${S.nick || 'Новичок_1284'}`
+    const t = S.team || ['all', 'F', 'Лига новичков']
+    $('[data-fan-l]').innerHTML = S.team ? `${лого(t[0], t[1])}<div><b>Фан-лига ${t[2]}</b><span class="cap">${БОЛЕЛЬЩИКОВ[t[0]]} болельщиков · ты будешь следующим</span></div>`
+      : '<i class="team-logo team-logo--lg">F</i><div><b>Лига новичков</b><span class="cap">Все, кто пришёл на этой неделе</span></div>'
+    const from = S.coins, to = S.coins + 50, el = $('[data-coin-up]')
+    if (calm) el.textContent = num(to)
+    else { const t0 = performance.now(); const up = (now) => { const k = Math.min(1, (now - t0) / 1200); el.textContent = num(Math.round(from + (to - from) * k)); if (k < 1) requestAnimationFrame(up) }; requestAnimationFrame(up) }
+    S.coins = to
+    clearInterval(cdT)
+    const draw = () => { $('[data-cd]').textContent = `${Math.floor(cd / 60)}:${String(cd % 60).padStart(2, '0')}` }
+    draw(); if (!calm) cdT = setInterval(() => { cd = Math.max(0, cd - 1); draw() }, 1000)
+  }
+  $('[data-join]').addEventListener('click', (e) => { const b = e.currentTarget, on = b.getAttribute('aria-pressed') !== 'true'
+    b.setAttribute('aria-pressed', String(on)); b.textContent = on ? 'Ты в лиге' : 'Вступить'; if (on) toast('Ты в фан-лиге — таблица своих на вкладке «Лидеры»') })
+
+  // ——— Кадры раскадровки: сразу нужное состояние ———
+  const КАДРЫ = [
+    ['Хук', 'Одна фраза о сути и живые карты. Кнопка «Начать — бесплатно», вход для старых — мелко. Регистрации нет: сначала игра.', () => go('hook')],
+    ['За кого болеешь', 'Популярные команды крупно, остальные рядом. Свет сцены становится цветом команды, её игрок попадёт в сундук.', () => { pickTeam('ts'); go('team') }],
+    ['Стартовый сундук', 'Живой 3D-сундук. Гарантия и «игрок твоей команды» видны до открытия, шансы — мелко.', () => { pickTeam('ts'); go('chest') }],
+    ['Карты по одной', '«3 / 5», вспышка цветом редкости, что даёт редкость — одной строкой. Карта твоей команды отмечена. «Пропустить» — всегда.', () => { pickTeam('ts'); S.rv = 2; go('reveal') }],
+    ['Новые карты', 'Итоговая сетка из 5 карт. Одна фраза про силу и редкость вместо глоссария.', () => { pickTeam('ts'); go('grid') }],
+    ['Пятёрка: якорь', 'Игрок твоей команды уже стоит на своей позиции. Пустые слоты подписаны ролями Доты.', () => { pickTeam('ts'); go('five') }],
+    ['Пятёрка собрана', '«Собрать за меня» — одна кнопка, карты прилетают по позициям. Ручная расстановка — позже, в «Составе».', () => { pickTeam('ts'); собрана = true; go('five') }],
+    ['Разминка: прогноз', 'Прогноз на карту, сыгранную вчера: «больше / меньше» по линии и доля голосов. Ждать матч не нужно.', () => { pickTeam('ts'); собрана = true; go('pred') }],
+    ['Повтор и итог', 'Повтор карты за 7 секунд: события, очки растут, линия 8.5. Итог сразу: +30 монет и 38 очков пятёрки.', () => { pickTeam('ts'); собрана = true; go('pred'); replay('over') }],
+    ['Сохрани прогресс', 'Регистрация — только когда есть что терять: 5 карт и 38 очков. Steam / Google / Telegram в 1 клик, ник сразу в строке таблицы.', () => { pickTeam('ts'); S.coins = 1030; go('save') }],
+    ['Главная: подсказка 1 из 5', 'Настоящая главная. Подсказки по одной у самого блока, «Ясно» и «Без подсказок».', () => { pickTeam('ts'); S.coins = 1030; S.coach = 0; go('tour') }],
+    ['Главная: подсказка 4 из 5', 'Сундук точности: разминка уже засчитана — 1 из 15. Дальше — квесты и монеты.', () => { pickTeam('ts'); S.coins = 1030; S.coach = 3; go('tour') }],
+    ['Ты в игре', 'Путь первой недели из 3 шагов с наградами, отсчёт до живого матча, фан-лига команды и +50 монет. Платного нет.', () => { pickTeam('ts'); S.coins = 1030; go('final') }],
+  ]
+  if (КАДР) {
+    КАДРЫ[Math.min(КАДР, КАДРЫ.length) - 1][2]()
+    if (st.dataset.scene === 'tour') document.fonts.ready.then(() => coach(S.coach))
+  } else {
+    go('hook')
+    const sb = $('[data-sb]')
+    sb.innerHTML = КАДРЫ.map(([t, note], i) => `<figure class="sb__f"><span><iframe loading="lazy" src="?кадр=${i + 1}" title="${t}" tabindex="-1"></iframe></span><figcaption><b>${i + 1}. ${t}</b>${note}</figcaption></figure>`).join('')
+    const fit = () => $$('.sb__f span', sb).forEach((sp) => { sp.firstElementChild.style.transform = `scale(${sp.clientWidth / 1440})` })
+    addEventListener('resize', fit); fit()
+  }
+})()
+</script>
+</body></html>

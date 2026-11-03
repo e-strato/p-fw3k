@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" />
+<style>
+.p-page { padding: 40px 32px 80px; }
+.p-page > h1 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.01em; }
+.p-page > p { max-width: 100ch; margin: 8px 0 0; color: var(--c-muted); font-size: 15px; line-height: 1.5; }
+.p-cap { margin: 28px 0 10px; font-size: 13px; font-weight: 600; color: var(--c-caption); }
+.p-tools { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.p-seg { display: flex; gap: 2px; padding: 3px; border-radius: 8px; background: var(--c-ui-chip); }
+.p-seg button { border: 0; padding: 7px 12px; border-radius: 6px; background: none; color: var(--c-ui-dim); font: 600 13.5px var(--font); cursor: pointer; }
+.p-seg button[aria-pressed='true'] { background: var(--c-ui-panel); color: var(--c-accent); }
+.p-wrap { width: 100%; }
+.p-desk { width: 1440px; border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px var(--c-ui-line), 0 30px 80px -30px var(--c-black); }
+.p-desk iframe { display: block; width: 1440px; height: 2400px; border: 0; }
+.p-board { display: flex; flex-wrap: wrap; gap: 36px 44px; align-items: flex-start; }
+.p-board figure { display: grid; gap: 12px; margin: 0; }
+.p-board figcaption { max-width: 392px; color: var(--c-caption); font-size: 13px; line-height: 1.45; } .p-board figcaption b { display: block; color: var(--c-text); font-size: 14px; }
+.p-phone { width: 390px; height: 844px; margin: 11px; overflow: hidden; border-radius: 42px; box-shadow: 0 0 0 10px color-mix(in srgb, var(--c-text) 8%, var(--c-ui-bg)), 0 0 0 11px var(--c-ui-line), 0 40px 90px -30px var(--c-black); }
+.p-phone iframe { display: block; width: 390px; height: 844px; border: 0; }
+</style></head>
+<body><main class="p-page">
+  <h1>v1 · Блоки под плитками</h1>
+  <p>Нынешняя страница матча сайта без изменений: шапка → 4 плитки → открытая плитка. Под ней вернулись блоки страницы 07.10 (v5 «Эфир сверху»), как были. В основной колонке: золото по минутам, таблицы команд, серия по картам, объекты карты, драфт, лучшие в матче. Справа: твои игроки, о матче, турнир, дальше у команд, другие матчи. До матча и после — свои блоки того же времени. На телефоне блоки идут после плитки.</p>
+  <div class="p-tools"><div class="p-seg" data-st><button type="button" data-v="pre">До матча</button><button type="button" data-v="live" aria-pressed="true">В эфире</button><button type="button" data-v="done">После</button></div>
+    <div class="p-seg" data-g><button type="button" data-v="dota" aria-pressed="true">Dota 2 · Spirit — Tundra</button><button type="button" data-v="cs">CS2 · G2 — FaZe</button></div></div>
+  <p class="p-cap">Десктоп · 1440 (уменьшено под ширину окна) — настоящая страница сайта, всё кликается</p>
+  <div class="p-wrap"><div class="p-desk"><iframe src="_page.html?game=dota&state=live" title="Десктоп"></iframe></div></div>
+  <p class="p-cap">Телефон · 390 — раскадровка, каждая рамка листается сама</p>
+  <div class="p-board">
+    <figure><figcaption><b>В эфире · первый экран</b>Эфир, сегмент, открыта «Статистика».</figcaption><div class="p-phone"><iframe src="_page.html?game=dota&state=live" title="Эфир"></iframe></div></figure>
+    <figure><figcaption><b>В эфире · ниже плитки</b>Вернувшиеся блоки: золото, таблицы команд, серия.</figcaption><div class="p-phone"><iframe src="_page.html?game=dota&state=live&scroll=1500" title="Эфир, блоки"></iframe></div></figure>
+    <figure><figcaption><b>До матча · ниже плитки</b>Блоки «до»: перед матчем, форма, прогноз счёта.</figcaption><div class="p-phone"><iframe src="_page.html?game=dota&state=pre&scroll=1300" title="До матча, блоки"></iframe></div></figure>
+    <figure><figcaption><b>После · ниже плитки</b>Блоки «после»: серия, лучшие, рейтинг, видео.</figcaption><div class="p-phone"><iframe src="_page.html?game=dota&state=done&scroll=1300" title="После, блоки"></iframe></div></figure>
+  </div>
+</main>
+<script>
+const desk = document.querySelector('.p-desk'), fr = desk.querySelector('iframe'), S = { state: 'live', game: 'dota' }
+const fit = () => { desk.style.zoom = Math.min(1, desk.parentElement.clientWidth / 1440) }
+fit(); addEventListener('resize', fit)
+const рост = () => { try { fr.style.height = fr.contentDocument.documentElement.scrollHeight + 'px' } catch (e) {} }
+addEventListener('message', e => { if (e.data && e.data.mb) { рост(); try { new ResizeObserver(рост).observe(fr.contentDocument.body) } catch (e) {} } })
+document.querySelectorAll('.p-tools .p-seg').forEach(seg => seg.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return
+  seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b))
+  S[seg.dataset.st !== undefined ? 'state' : 'game'] = b.dataset.v
+  fr.src = `_page.html?game=${S.game}&state=${S.state}`
+}))
+</script></body></html>

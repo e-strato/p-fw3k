@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..900;1,400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" />
+<style>
+/* Онбординг с нуля в стиле главной сайта (дирижёр 29.09): модалка поверх настоящей главной (iframe, размыта).
+   Шаги: 1 Любимая команда (логотипы) → 2 Стартовый сундук (3D со страницы «Сундук», ?embed) → 3 Пятёрка (карты F, автосборка)
+   → 4 Надень героя → 5 Первый прогноз «Больше / Меньше» (Матч дня, цвета команд) → 6 Ты в игре. Под экраном — раскадровка (?кадр=N).
+   Компоненты и токены — сайта: .card--ui, .btn, .btn--quiet, .team-logo (цвета и логотипы команд), .player-card--f. */
+body { background: var(--c-ui-bg); color: var(--c-text); font-family: var(--font); }
+.ob { position: relative; height: 820px; overflow: hidden; border-radius: 14px; isolation: isolate; }
+.ob__home { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; pointer-events: none; transition: filter .5s, scale .5s; }
+.ob:not(.is-done) .ob__home { filter: blur(8px) brightness(.45); scale: 1.02; }
+.ob__veil { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; transition: opacity .4s; }
+.ob.is-done .ob__veil { opacity: 0; pointer-events: none; }
+.ob__m { width: min(760px, 100%); max-height: 100%; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 30px 80px -20px var(--c-black), inset 0 0 0 1px var(--c-ui-line); }
+.ob__top { display: flex; align-items: center; gap: 16px; padding: 16px 20px; border-bottom: 1px solid var(--c-ui-line); }
+.ob__dots { display: flex; gap: 6px; flex: 1; }
+.ob__dots i { flex: 1; height: 4px; border-radius: 2px; background: var(--c-ui-item); transition: background .3s; }
+.ob__dots i.is-on { background: var(--c-accent); }
+.ob__n { font-size: var(--fs-app-sm); color: var(--c-caption); white-space: nowrap; }
+.ob__skip { border: 0; background: none; color: var(--c-caption); font: inherit; font-size: var(--fs-app-sm); cursor: pointer; }
+.ob__skip:hover { color: var(--c-text); }
+.ob__body { position: relative; flex: 1; min-height: 520px; }
+.ob__step { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 24px 28px 22px; animation: ob-in .35s ease; }
+.ob__step[hidden] { display: none; }
+@keyframes ob-in { from { opacity: 0; translate: 16px 0; } }
+.ob__step h2 { margin: 0 0 6px; font-size: var(--fs-app-xl); font-weight: 700; letter-spacing: -.02em; }
+.ob__step > p { margin: 0 0 18px; font-size: var(--fs-app-md); line-height: 1.5; color: var(--c-muted); }
+.ob__step > p b { color: var(--c-text); }
+.ob__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 16px; }
+.ob__foot small { font-size: var(--fs-app-sm); color: var(--c-caption); }
+.ob__foot .btn { min-width: 180px; }
+.ob__foot .btn:disabled { opacity: .35; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .ob__step { animation: none; } }
+
+/* 1 · Команда: логотипы на плитках, выбранная — кант и свечение цветом команды */
+.ob-teams { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.ob-team { display: grid; justify-items: center; gap: 10px; padding: 16px 6px 12px; border: 0; border-radius: 12px; background: var(--c-ui-item); color: var(--c-muted);
+  font: inherit; font-size: var(--fs-app-sm); cursor: pointer; transition: background .2s, box-shadow .2s, translate .2s; }
+.ob-team:hover { background: var(--c-ui-hover); color: var(--c-text); translate: 0 -2px; }
+.ob-team[aria-checked='true'] { color: var(--c-text); background: color-mix(in srgb, var(--tc) 14%, var(--c-ui-item)); box-shadow: inset 0 0 0 2px var(--tc), 0 10px 30px -10px var(--tc); }
+.ob-team .team-logo--lg { width: 56px; height: 56px; }
+
+/* 2 · Сундук: 3D-сцена страницы «Сундук» (?embed) */
+.ob-chest { position: relative; flex: 1; min-height: 300px; margin: -8px -28px 0; border-radius: 0; overflow: hidden;
+  background: radial-gradient(50% 60% at 50% 55%, color-mix(in srgb, var(--c-rarity-foil-1) 12%, transparent), transparent 70%); }
+.ob-chest iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.ob-guar { display: flex; flex-wrap: wrap; gap: 8px; }
+.ob-guar span { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: var(--c-ui-item); font-size: var(--fs-app-sm); }
+.ob-guar b { color: var(--c-rarity-holo-4); font-weight: 600; }
+
+/* 3 · Пятёрка: 5 слотов по позициям, автосборка раскладывает карты F */
+.ob-five { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.ob-slot { display: grid; justify-items: center; gap: 8px; }
+.ob-slot__place { position: relative; display: grid; place-items: center; width: 100%; aspect-ratio: 170 / 234; border-radius: 10px;
+  background: repeating-linear-gradient(135deg, transparent 0 6px, color-mix(in srgb, var(--c-white) 3%, transparent) 6px 12px), var(--c-ui-item);
+  box-shadow: inset 0 0 0 1px var(--c-ui-line); color: var(--c-caption); font-size: 26px; }
+.ob-slot__place { container-type: inline-size; }
+.ob-slot__place .player-card { position: absolute; inset: 0; --w: 100cqw; }
+.ob-slot small { font-size: var(--fs-app-xs); font-weight: 700; letter-spacing: .12em; color: var(--c-caption); }
+.ob-slot.is-cap small::after { content: ' · C'; color: var(--c-coin); }
+@media (prefers-reduced-motion: no-preference) { .ob-slot__place .player-card { animation: ob-deal .55s cubic-bezier(.2, 1.2, .4, 1) backwards; animation-delay: calc(var(--k) * 90ms); } }
+@keyframes ob-deal { from { opacity: 0; translate: 0 40px; rotate: -8deg; } }
+
+/* 4 · Герой: карта игрока и три героя с бонусом */
+.ob-hero { display: grid; grid-template-columns: 170px 1fr; gap: 24px; align-items: center; }
+.ob-hero .player-card { --w: 170px; }
+.ob-heroes { display: grid; gap: 8px; }
+.ob-h { display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: 14px; padding: 8px; border: 0; border-radius: 10px; background: var(--c-ui-item); color: var(--c-text); font: inherit; text-align: left; cursor: pointer; transition: background .2s, box-shadow .2s; }
+.ob-h:hover { background: var(--c-ui-hover); }
+.ob-h[aria-checked='true'] { background: color-mix(in srgb, var(--c-accent) 18%, var(--c-ui-item)); box-shadow: inset 0 0 0 1px var(--c-accent); }
+.ob-h img { width: 72px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 6px; }
+.ob-h b { display: block; font-size: var(--fs-app-md); }
+.ob-h small { font-size: var(--fs-app-sm); color: var(--c-caption); }
+.ob-h em { font-style: normal; font-weight: 700; font-size: var(--fs-app-lg); color: var(--c-stat-high); }
+
+/* 5 · Прогноз: матч дня цветами команд, «Больше / Меньше» */
+.ob-match { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; padding: 16px; border-radius: 12px; background: var(--c-ui-item); text-align: center; }
+.ob-match > div { display: grid; justify-items: center; gap: 8px; font-weight: 600; }
+.ob-match .team-logo--lg { width: 52px; height: 52px; }
+.ob-match__mid b { display: block; font-size: var(--fs-app-xl); color: var(--c-live); }
+.ob-match__mid small { font-size: var(--fs-app-sm); color: var(--c-live); }
+.ob-q { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 14px; margin: 14px 0 12px; }
+.ob-q .avatar { width: 48px; height: 48px; }
+.ob-q p { margin: 0; font-size: var(--fs-app-md); line-height: 1.45; }
+.ob-q p small { display: block; color: var(--c-caption); font-size: var(--fs-app-sm); }
+.ob-ml { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ob-ml .btn { height: 56px; justify-content: center; gap: 10px; font-size: var(--fs-app-md); border: 1px solid var(--c-ui-line); }
+.ob-ml .btn[aria-pressed='true'] { background: color-mix(in srgb, var(--c-accent) 22%, var(--c-ui-item)); color: var(--c-text); box-shadow: inset 0 0 0 1px var(--c-accent); }
+.ob-ml .btn em { font-style: normal; color: var(--c-caption); font-size: var(--fs-app-sm); }
+
+/* 6 · Готово */
+.ob-done { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.ob-done div { padding: 16px; border-radius: 12px; background: var(--c-ui-item); }
+.ob-done b { display: block; font-size: var(--fs-app-xl); font-weight: 700; }
+.ob-done small { font-size: var(--fs-app-sm); color: var(--c-caption); }
+.ob-done .is-coin b { color: var(--c-coin); }
+.ob-cards { display: flex; justify-content: center; gap: 12px; margin-bottom: 18px; }
+.ob-cards .player-card { --w: 120px; }
+
+/* Раскадровка */
+.sb { padding: 32px 0 60px; }
+.sb h3 { margin: 0 0 16px; font-size: var(--fs-app-lg); }
+.sb__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.sb__f { margin: 0; }
+.sb__f span { position: relative; display: block; aspect-ratio: 1440 / 820; overflow: hidden; border-radius: 10px; box-shadow: inset 0 0 0 1px var(--c-ui-line); }
+.sb__f iframe { position: absolute; left: 0; top: 0; width: 1440px; height: 820px; border: 0; transform-origin: 0 0; pointer-events: none; }
+.sb__f figcaption { margin-top: 8px; font-size: var(--fs-app-sm); color: var(--c-muted); }
+.is-frame .sb { display: none; }
+.lab-wrap { max-width: 1440px; margin: 0 auto; padding: 24px; }
+.is-frame .lab-wrap { padding: 0; }
+.is-frame .ob { border-radius: 0; }
+</style></head>
+<body>
+<div class="lab-wrap">
+  <div class="ob" data-ob>
+    <iframe class="ob__home" src="/p-fw3k/site/index.html" title="Главная сайта" tabindex="-1" aria-hidden="true"></iframe>
+    <div class="ob__veil">
+      <div class="card card--ui ob__m" role="dialog" aria-modal="true" aria-label="Первый вход">
+        <div class="ob__top"><div class="ob__dots" data-dots></div><span class="ob__n" data-n></span><button class="ob__skip" type="button" data-skip>Пропустить</button></div>
+        <div class="ob__body">
+
+          <section class="ob__step" data-step="1">
+            <h2>За кого болеешь?</h2>
+            <p>Выбери любимую команду — <b>её игрок будет в твоём первом сундуке</b>. Поменять можно в профиле.</p>
+            <div class="ob-teams" data-teams></div>
+            <div class="ob__foot"><small>Бесплатно · монеты не покупаются и не выводятся</small><button class="btn" type="button" data-next disabled>Дальше</button></div>
+          </section>
+
+          <section class="ob__step" data-step="2" hidden>
+            <h2>Твой стартовый сундук</h2>
+            <p>Нажми на сундук — внутри 3 карты игроков, у которых сегодня матч.</p>
+            <div class="ob-guar"><span>Гарантия: <b>Holo и выше</b></span><span data-guar-team>Игрок твоей команды</span></div>
+            <div class="ob-chest"><iframe data-chest title="Стартовый сундук" loading="lazy"></iframe></div>
+            <div class="ob__foot"><small data-chest-hint>Шансы: Legend 1% · Prism 7% · Holo 22%</small><button class="btn" type="button" data-next disabled>Забрать карты</button></div>
+          </section>
+
+          <section class="ob__step" data-step="3" hidden>
+            <h2>Собери пятёрку</h2>
+            <p>Пять позиций, как в Доте. Мы подобрали тех, кто <b>играет сегодня</b>, — нажми, и пятёрка соберётся сама.</p>
+            <div class="ob-five" data-five></div>
+            <div class="ob__foot"><button class="btn btn--quiet" type="button" data-auto>Собрать автоматически</button><button class="btn" type="button" data-next disabled>Дальше</button></div>
+          </section>
+
+          <section class="ob__step" data-step="4" hidden>
+            <h2>Надень героя</h2>
+            <p>Если игрок возьмёт этого героя в матче — <b>получишь бонус к очкам</b>. Редкий пик — бонус выше.</p>
+            <div class="ob-hero"><i data-hero-card></i><div class="ob-heroes" role="radiogroup" data-heroes></div></div>
+            <div class="ob__foot"><small>Героя можно поменять до начала матча</small><button class="btn" type="button" data-next disabled>Надеть</button></div>
+          </section>
+
+          <section class="ob__step" data-step="5" hidden>
+            <h2>Первый прогноз</h2>
+            <p>Матч дня уже идёт. Угадаешь — <b>+30 монет</b>.</p>
+            <div class="ob-match">
+              <div><i class="team-logo team-logo--lg t-ts is-logo" title="Team Spirit">TS</i>Team Spirit</div>
+              <div class="ob-match__mid"><b>1 : 0</b><small>Карта 2 · live</small></div>
+              <div><i class="team-logo team-logo--lg t-tun is-logo" title="Tundra Esports">TUN</i>Tundra Esports</div>
+            </div>
+            <div class="ob-q"><i class="avatar" style="--img: url(/p-fw3k/site/img/players/pure.webp)"></i><p>Pure наберёт больше <b>8.5 фэнтези-очков</b> за карту?<small>Средний за 10 карт — 9.1</small></p></div>
+            <div class="ob-ml" data-ml>
+              <button class="btn btn--quiet" type="button" aria-pressed="false">▲ Больше <em>62%</em></button>
+              <button class="btn btn--quiet" type="button" aria-pressed="false">▼ Меньше <em>38%</em></button>
+            </div>
+            <div class="ob__foot"><small>Голос без денег</small><button class="btn" type="button" data-next disabled>Принять прогноз</button></div>
+          </section>
+
+          <section class="ob__step" data-step="6" hidden>
+            <h2>Ты в игре</h2>
+            <p>Пятёрка собрана, прогноз принят. Очки начнут капать, как только твои игроки выйдут на карту.</p>
+            <div class="ob-cards" data-got></div>
+            <div class="ob-done">
+              <div><b>3</b><small>карты в коллекции</small></div>
+              <div><b>5 / 5</b><small>пятёрка на сегодня</small></div>
+              <div class="is-coin"><b>+50</b><small>монет за первый вход</small></div>
+            </div>
+            <div class="ob__foot"><small>Завтра — бесплатный сундук и 3 квеста</small><button class="btn" type="button" data-finish>На главную</button></div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="sb">
+    <h3>Раскадровка</h3>
+    <div class="sb__grid" data-sb></div>
+  </section>
+</div>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)]
+  const ob = $('[data-ob]'), КАДР = new URLSearchParams(location.search).get('кадр')
+  if (КАДР) document.body.classList.add('is-frame')
+
+  // Данные условные
+  const КОМАНДЫ = [['ts', 'TS', 'Team Spirit'], ['tun', 'TUN', 'Tundra Esports'], ['pv', 'PV', 'PARIVISION'], ['bb', 'BB', 'BetBoom Team'], ['gg', 'GG', 'Gaimin Gladiators'],
+    ['flc', 'FLC', 'Team Falcons'], ['tl', 'TL', 'Team Liquid'], ['aur', 'AUR', 'Aurora'], ['yg', 'YG', 'Yangon Galacticos'], ['xip', 'XIP', 'Xipto Esports']]
+  const ИГРОКИ = {
+    pure: { ник: 'Pure', фото: 'pure', ovr: 93, tier: 'elite', r: 'prism', тег: 'TUN', флаг: 'ru', pos: 1, герои: ['terrorblade', 'morphling', 'faceless_void'] },
+    izdu: { ник: 'izdu', фото: '', ovr: 52, tier: 'bronze', r: 'base', тег: 'XIP', флаг: 'ru', pos: 2, герои: ['mars', 'lycan', 'hoodwink'] },
+    takizawa: { ник: 'takizawa', фото: '', ovr: 70, tier: 'silver', r: 'base', тег: 'VPP', флаг: 'ru', pos: 3, герои: ['lycan', 'beastmaster', 'mars'] },
+    '9class': { ник: '9Class', фото: '9class', ovr: 95, tier: 'elite', r: 'legend', тег: 'PV', флаг: 'ru', pos: 4, герои: ['tusk', 'rubick', 'hoodwink'] },
+    yatoro: { ник: 'Yatoro', фото: 'yatoro', ovr: 88, tier: 'gold', r: 'holo', тег: 'TS', флаг: 'ua', pos: 5, герои: ['faceless_void', 'terrorblade', 'morphling'] },
+  }
+  const RU = { base: 'Base', holo: 'Holo', prism: 'Prism', legend: 'Legend' }
+  // Карта F — разметка компонента сайта (blocks/shared/card-f.html)
+  const картаF = (id, cls = '') => { const p = ИГРОКИ[id]
+    const ph = p.фото ? `<img class="player-card__ph" src="/p-fw3k/site/img/players/${p.фото}.webp" alt="${p.ник}" />` : '<span class="player-card__ph player-card__ph--none"></span>'
+    const pop = p.фото ? `<img class="player-card__ph player-card__ph--pop" src="/p-fw3k/site/img/players/${p.фото}.webp" alt="" aria-hidden="true" />` : ''
+    return `<div data-tilt class="player-card player-card--f player-card--${p.tier} player-card--${p.r} ${cls}"><div class="player-card__in"><div class="player-card__body"></div>
+      <div class="player-card__f-art"><i class="player-card__shine"></i><i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i><span class="player-card__big">${p.ovr}</span>${ph}</div>${pop}
+      <div class="player-card__f-info"><b class="player-card__rarity">${RU[p.r]}</b><div class="player-card__f-ic">${p.герои.map((h, i) => `<span${i === 2 ? ' class="player-card__hero--best"' : ''}><img src="/p-fw3k/site/img/heroes/${h}.webp" alt="" /></span>`).join('')}</div>
+      <div class="player-card__f-team"><i class="player-card__flag player-card__flag--${p.флаг}"></i><span>${p.тег} · <b>POS ${p.pos}</b></span></div></div>
+      <div class="player-card__f-strip"><b class="player-card__f-nick">${p.ник}</b><span class="player-card__ovr"><b>${p.ovr}</b><small>OVR</small></span></div><i class="player-card__glare"></i></div></div>` }
+
+  // Шаги и прогресс
+  const ШАГОВ = 6
+  let шаг = 1
+  $('[data-dots]').innerHTML = '<i></i>'.repeat(ШАГОВ)
+  const go = (n) => {
+    шаг = n
+    $$('[data-step]').forEach((s) => { s.hidden = +s.dataset.step !== n })
+    $$('[data-dots] i').forEach((d, i) => d.classList.toggle('is-on', i < n))
+    $('[data-n]').textContent = `${n} из ${ШАГОВ}`
+    if (n === 2 && !$('[data-chest]').src) $('[data-chest]').src = '/p-fw3k/site/chest.html?form=chest&type=legend&embed'
+  }
+  ob.addEventListener('click', (e) => { if (e.target.closest('[data-next]')) go(шаг + 1) })
+  $('[data-skip]').addEventListener('click', () => ob.classList.add('is-done'))
+  $('[data-finish]').addEventListener('click', () => ob.classList.add('is-done'))
+
+  // 1 · Команда
+  const teams = $('[data-teams]')
+  teams.innerHTML = КОМАНДЫ.map(([k, m, n]) => `<button class="ob-team t-${k}" type="button" role="radio" aria-checked="false" data-team="${n}"><i class="team-logo team-logo--lg t-${k}${k === 'xip' ? '' : ' is-logo'}">${m}</i>${n}</button>`).join('')
+  const pickTeam = (b) => { $$('.ob-team', teams).forEach((x) => x.setAttribute('aria-checked', String(x === b))); $('[data-step="1"] [data-next]').disabled = false
+    $('[data-guar-team]').textContent = `Игрок ${b.dataset.team}` }
+  teams.addEventListener('click', (e) => { const b = e.target.closest('.ob-team'); if (b) pickTeam(b) })
+
+  // 2 · Сундук: сцена сообщает, когда карты раскрыты
+  addEventListener('message', (e) => { if (e.data === 'chest-opened') { $('[data-step="2"] [data-next]').disabled = false; $('[data-chest-hint]').textContent = 'Карты в коллекции' } })
+
+  // 3 · Пятёрка
+  const ПЯТЁРКА = ['pure', 'izdu', 'takizawa', '9class', 'yatoro']
+  $('[data-five]').innerHTML = ПЯТЁРКА.map((id, i) => `<div class="ob-slot${id === '9class' ? ' is-cap' : ''}"><span class="ob-slot__place" style="--k: ${i}">+</span><small>POS ${i + 1}</small></div>`).join('')
+  const auto = () => { $$('.ob-slot__place').forEach((p, i) => { p.innerHTML = картаF(ПЯТЁРКА[i]) }); $('[data-auto]').disabled = true; $('[data-step="3"] [data-next]').disabled = false; tilt() }
+  $('[data-auto]').addEventListener('click', auto)
+
+  // 4 · Герой
+  $('[data-hero-card]').outerHTML = картаF('9class')
+  const ГЕРОИ = [['tusk', 'Tusk', '24 % карт · мета-пик', 5], ['rubick', 'Rubick', '19 % карт', 12], ['hoodwink', 'Hoodwink', '12 % карт · редкий пик', 25]]
+  $('[data-heroes]').innerHTML = ГЕРОИ.map(([id, n, d, b]) => `<button class="ob-h" type="button" role="radio" aria-checked="false"><img src="/p-fw3k/site/img/heroes/${id}.webp" alt="" /><span><b>${n}</b><small>${d}</small></span><em>+${b}%</em></button>`).join('')
+  $('[data-heroes]').addEventListener('click', (e) => { const b = e.target.closest('.ob-h'); if (!b) return
+    $$('.ob-h').forEach((x) => x.setAttribute('aria-checked', String(x === b))); $('[data-step="4"] [data-next]').disabled = false })
+
+  // 5 · Прогноз
+  $('[data-ml]').addEventListener('click', (e) => { const b = e.target.closest('.btn'); if (!b) return
+    $$('[data-ml] .btn').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); $('[data-step="5"] [data-next]').disabled = false })
+
+  // 6 · Готово: три карты из сундука
+  $('[data-got]').innerHTML = ['yatoro', '9class', 'pure'].map((id) => картаF(id)).join('')
+
+  // Наклон и блик карт — кодом сайта (app.js подключаем после отрисовки; повторно — только для новых карт)
+  function tilt() { $$('.player-card[data-tilt]:not([data-t-on])').forEach((c) => { c.dataset.tOn = ''; window.tilt?.(c) }) }
+  const s = document.createElement('script'); s.src = '/p-fw3k/site/app.js'; s.onload = () => $$('.player-card[data-tilt]').forEach((c) => { c.dataset.tOn = '' }); document.body.append(s)
+
+  // Кадр раскадровки: сразу нужный шаг с заполненным выбором
+  const n = +КАДР || 1
+  if (КАДР) {
+    if (n >= 2) pickTeam($('.ob-team.t-ts'))
+    if (n >= 4) auto()
+    if (n >= 5) $$('.ob-h')[2].click()
+    if (n >= 6) $$('[data-ml] .btn')[0].click()
+    if (n === 7) ob.classList.add('is-done')
+  }
+  go(Math.min(n, ШАГОВ))
+
+  // Раскадровка: 6 шагов + главная после онбординга
+  if (!КАДР) {
+    const ИМЕНА = ['1 · Любимая команда', '2 · Стартовый сундук (3D)', '3 · Пятёрка', '4 · Надень героя', '5 · Первый прогноз', '6 · Ты в игре', 'После — главная']
+    const sb = $('[data-sb]')
+    sb.innerHTML = ИМЕНА.map((t, i) => `<figure class="sb__f"><span><iframe loading="lazy" src="?кадр=${i + 1}" title="${t}" tabindex="-1"></iframe></span><figcaption>${t}</figcaption></figure>`).join('')
+    const fit = () => $$('.sb__f span', sb).forEach((sp) => { sp.firstElementChild.style.transform = `scale(${sp.clientWidth / 1440})` })
+    addEventListener('resize', fit); fit()
+  }
+})()
+</script>
+</body></html>

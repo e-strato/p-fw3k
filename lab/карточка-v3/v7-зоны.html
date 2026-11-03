@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_v3.css" />
+<style>
+/* v7 · Зоны — карта собрана из чётких областей (дирижёр 01.10: «надо подумать с областями»). Заход 2 (дирижёр 01.10: «идея интересная,
+   развивать»): у каждого блока своя зона, ничего не наезжает — фото, рейтинг, герои, имя, роль, статы, команда.
+   Команда — на всю нижнюю зону, без пилюли. Форма — один скос справа снизу. Заход 3 (01.10): шрифт Onest — обычной ширины (Sofia узкий, Tektur в v9 широкий);
+   герои строками и команда по центру — как в v9; перелив Prism — на всех зонах.
+   Сетка зон (em карты): поля .5, зазор .45; колонка справа 4.45 */
+.z7 { --f-disp: 'Onest'; --f-ui: 'Onest'; --zr: .6em; }
+/* Заход 4 (01.10): без внутренней тонкой линии контура и без чёрного поля у края — зоны почти у канта */
+.z7 .cut-frame .in { display: none; }
+.z7__face, .z7 .bk { font-family: 'Onest', sans-serif; }
+.z7__face { position: absolute; inset: 0; }
+.z7__plate { position: absolute; inset: 0; border-radius: var(--r); clip-path: var(--shape); background: var(--c-card-ink);
+  box-shadow: 0 1.4em 2.6em -1em color-mix(in srgb, var(--c-black) 85%, transparent); }
+.z7__zone { position: absolute; border-radius: var(--zr); overflow: hidden; background: color-mix(in srgb, var(--tier) 7%, var(--c-card-ink-2)); }
+
+/* 2 Фон: зона фото — тёмный цвет силы, логотип команды крупно за игроком */
+.z7__photo { left: .3em; top: .3em; width: 15.8em; height: 14.7em;
+  background:
+    radial-gradient(70% 55% at 50% 35%, color-mix(in srgb, var(--tier) 30%, transparent), transparent 75%),
+    linear-gradient(180deg, color-mix(in srgb, var(--tier-2) 85%, var(--c-card-ink)), color-mix(in srgb, var(--tier-2) 30%, var(--c-card-ink))); }
+.z7__logo { left: .4em; top: 1.2em; width: 14.6em; height: 12.5em; background: color-mix(in srgb, var(--tier) 22%, transparent); }
+.z7__grid { position: absolute; inset: 0;
+  background: linear-gradient(color-mix(in srgb, var(--tier) 12%, transparent) .05em, transparent .05em) 0 0 / 100% 1.6em,
+    linear-gradient(90deg, color-mix(in srgb, var(--tier) 12%, transparent) .05em, transparent .05em) 0 0 / 1.6em 100%;
+  -webkit-mask: linear-gradient(180deg, var(--c-black), transparent 80%); mask: linear-gradient(180deg, var(--c-black), transparent 80%); }
+
+/* 3 Рамка: контур формы цвета силы (общий, со скосом) */
+
+/* 4 Эффекты: блеск в зоне фото; с Prism — перелив по плиткам статов; у Legend — фольга на зоне рейтинга */
+.z7__tilesheen { position: absolute; inset: 0; mix-blend-mode: screen; opacity: .35;
+  background: linear-gradient(110deg, transparent 35%, var(--c-rarity-holo-4) 45%, var(--c-rarity-holo-1) 50%, var(--c-rarity-holo-2) 55%, transparent 65%);
+  background-size: 300% 100%; background-position: calc(100% - var(--mx, 0%) - var(--drift) * 2) 0; animation: drift 6s ease-in-out infinite alternate; }
+.z7__ovrfoil { position: absolute; inset: 0; mix-blend-mode: soft-light;
+  background: linear-gradient(118deg, transparent 25%, var(--c-white) 50%, transparent 75%); background-size: 300% 100%;
+  background-position: calc(100% - var(--drift) * 3) 0; animation: drift 3s ease-in-out infinite alternate; }
+
+/* 5 Фото: обрезано краем зоны — туловище короче, свечение за головой */
+.z7__halo { position: absolute; left: 7.9em; top: 4.9em; width: 12em; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--tier-hi) 60%, transparent), color-mix(in srgb, var(--tier) 22%, transparent) 55%, transparent); }
+.z7 .ph { left: -.2em; top: 1em; width: 15.6em; }
+
+/* 7 Раскладка — колонка справа: зона рейтинга (залита цветом силы) и зона героев; номер карты — чипом в углу фото */
+.z7__ovr { right: .3em; top: .3em; width: 5.15em; height: 4.3em; display: grid; place-content: center;
+  background: linear-gradient(160deg, var(--tier-hi), var(--tier) 60%); color: var(--c-card-dark-text); }
+.z7__ovr b { position: relative; font-size: 3.2em; font-weight: 900; line-height: 1; letter-spacing: -.02em; }
+.z7__heroes { right: .3em; top: 5.05em; width: 5.15em; height: 9.95em; display: grid; grid-template-rows: repeat(3, 1fr); padding: .3em .45em; }
+.z7__heroes div { position: relative; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: .45em; }
+.z7__heroes div + div { box-shadow: inset 0 .05em 0 color-mix(in srgb, var(--c-white) 8%, transparent); }
+.z7__heroes .hero-ic { width: 2em; aspect-ratio: 1; border-radius: .35em; }
+.z7__heroes span { display: grid; line-height: 1.15; }
+.z7__heroes b { font-size: .72em; font-weight: 800; }
+.z7__heroes small { font-size: .6em; font-weight: 600; color: var(--tier-hi); }
+.z7__serial { position: absolute; left: 1em; top: 1em; z-index: 7; display: grid; padding: .35em .6em; border-radius: .4em; line-height: 1.2;
+  background: color-mix(in srgb, var(--c-card-ink) 75%, transparent); }
+.z7__serial b { font-size: .78em; font-weight: 800; color: var(--tier-hi); }
+.z7__serial small { font-size: .55em; font-weight: 500; color: var(--c-muted); }
+
+/* 6 Игрок: зона имени — ник узким крупно, ниже флаг и настоящее имя */
+.z7__who { left: .3em; right: .3em; top: 15.45em; height: 3.85em; display: grid; place-content: center; text-align: center; }
+.z7__nick { font-weight: 800; font-size: 2.6em; line-height: .95; letter-spacing: -.01em; }
+.z7__name { display: flex; justify-content: center; align-items: center; gap: .5em; margin-top: .3em; font-size: .82em; font-weight: 500; color: var(--c-muted); }
+
+/* 8 Инфо: своя зона у роли (залита цветом силы), зона статов плитками 3×2, зона команды — логотип и название во всю зону */
+.z7__role { left: .3em; right: .3em; top: 19.75em; height: 2.1em; display: grid; place-content: center; font-size: 1em; font-weight: 800;
+  background: linear-gradient(90deg, var(--tier), var(--tier-hi) 50%, var(--tier)); color: var(--c-card-dark-text); }
+.z7__role span { font-size: 1.15em; }
+.z7__role b { font-weight: 900; }
+.z7__stats { left: .3em; right: .3em; top: 22.3em; height: 4em; display: grid; grid-template-columns: repeat(3, 1fr); gap: .3em; background: none; border-radius: 0; }
+.z7__stats span { display: flex; justify-content: space-between; align-items: center; padding: 0 .75em; border-radius: .45em;
+  background: color-mix(in srgb, var(--tier) 9%, var(--c-card-ink-2)); position: relative; overflow: hidden; }
+.z7__stats b { font-size: 1.5em; font-weight: 900; line-height: 1; }
+.z7__stats small { font-size: .58em; font-weight: 700; color: var(--c-muted); }
+.z7__foot { left: .3em; right: .3em; top: 26.75em; bottom: .3em; display: flex; justify-content: center; align-items: center; gap: .8em; padding-right: 1.4em;
+  clip-path: polygon(0 0, 100% 0, 100% 1.15em, calc(100% - 2.75em) 100%, 0 100%); border-radius: var(--zr) 0 0 var(--zr);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tier) 26%, var(--c-card-ink-2)), color-mix(in srgb, var(--tier) 8%, var(--c-card-ink-2)) 60%, color-mix(in srgb, var(--tier) 26%, var(--c-card-ink-2))); }
+.z7__foot .logo { width: 2.7em; height: 2.7em; }
+.z7__team { display: grid; line-height: 1.05; }
+.z7__team b { font-size: 1.5em; font-weight: 800; letter-spacing: -.01em; }
+.z7__team small { font-size: .58em; font-weight: 500; color: var(--c-muted); }
+
+/* 9 Оборот: те же зоны — шапка с рейтингом-бейджем, зона статов полосками, зона героев, зона формы, кнопка */
+.z7 .bk { box-shadow: none; padding: .3em .3em 1em; gap: .3em; background: var(--c-card-ink); }
+.z7 .bk > :not(.bk__mask):not(.bk__btn) { padding: .7em .8em; border-radius: var(--zr); background: color-mix(in srgb, var(--tier) 7%, var(--c-card-ink-2)); }
+.z7 .bk__top b { font-weight: 900; font-size: 1.8em; }
+.z7 .bk__top em { display: grid; place-content: center; margin: -.32em -.38em -.32em 0; width: 1.6em; height: 1.4em; border-radius: 0 .2em 0 .2em;
+  font-weight: 900; font-size: 2.6em; background: linear-gradient(160deg, var(--tier-hi), var(--tier) 60%); color: var(--c-card-dark-text); }
+.z7 .bk__stats b, .z7 .bk__heroes em { font-weight: 900; font-size: 1.2em; }
+.z7 .bk__lbl { padding: .5em .8em 0 !important; border-radius: var(--zr) var(--zr) 0 0 !important; margin-bottom: -.3em; }
+.z7 .bk__form { margin: 0; padding-top: .4em !important; border-radius: 0 0 var(--zr) var(--zr) !important; }
+.z7 .bk__btn { margin: auto 2.6em 0 .3em; border-radius: .45em; }
+</style></head>
+<body><section class="section v3">
+  <div class="sec-head">
+    <h2 class="sec-title">v7 · Зоны</h2>
+    <p class="sec-lead">Карта собрана из чётких областей, у каждого блока своя зона: фото, рейтинг, герои, имя, роль, статы, команда. Ничего не наезжает, каждую зону можно править отдельно.
+      Команда занимает всю нижнюю зону, без пилюли. Форма — один скос справа снизу. Шрифт один — Onest, обычной ширины. С Prism по всем зонам идёт перелив.</p>
+  </div>
+  <div id="v3"></div>
+</section>
+<script src="_v3.js"></script>
+<script>
+V3.страница({
+  класс: 'z7 kc-cut',
+  иерархия: [
+    'Скруглённый прямоугольник с одним скосом справа снизу. Внутри — зоны с ровным зазором.',
+    'Зона фото: тёмный цвет силы, логотип команды крупно за игроком. С Holo появляется техно-сетка.',
+    'Кант цвета силы по форме, со скосом, одной линией; зоны стоят почти у канта.',
+    'Блеск редкости в зоне фото. С Prism по всем зонам идёт перелив, у Legend зона рейтинга покрыта фольгой.',
+    'Игрок обрезан краем зоны — туловище короче, за головой свечение.',
+    'Зона имени: ник крупно, ниже флаг и настоящее имя.',
+    'Колонка справа: зона рейтинга, залитая цветом силы, под ней зона трёх героев строками (матчи и винрейт). Номер карты и сезон — чипом в углу фото.',
+    'Своя зона у позиции и роли, залитая цветом силы. Зона статов — плитки 3×2. Нижняя зона — команда: крупный логотип и название во всю зону.',
+    'Свой оборот из тех же зон: шапка с рейтингом-бейджем, статы полосками, герои, форма, кнопка «Страница игрока».',
+  ],
+  оборот: (п, r, h) => h.оборот(п, h.контур()),
+  лицо: (п, r, h) => `
+<div class="z7__face">
+  <div class="z7__plate" data-l="1"></div>
+  <div class="z7__zone z7__photo" data-l="2">
+    ${h.маска(п, 'z7__logo')}
+    <i class="z7__grid" data-deco="1"></i>
+    <i class="z7__halo" data-l="5"></i>
+    ${h.фото(п)}
+    ${h.блеск(r)}
+  </div>
+  ${h.контур()}
+  <div class="z7__serial" data-l="7"><b>${h.серия(п)}</b><small>${h.СЕЗОН}</small></div>
+  <div class="z7__zone z7__ovr" data-l="7"><i class="z7__ovrfoil" data-l="4" data-deco="3"></i><b>${п.рейтинг}</b></div>
+  <div class="z7__zone z7__heroes" data-l="7"><i class="z7__tilesheen" data-l="4" data-deco="2"></i>${п.герои.map((г) => `<div>${h.герой(г)}<span><b>${г[2]} М</b><small>${г[3]}%</small></span></div>`).join('')}</div>
+  <div class="z7__zone z7__who" data-l="6"><i class="z7__tilesheen" data-l="4" data-deco="2"></i><div class="z7__nick">${п.ник}</div>${п.имя ? `<div class="z7__name">${h.флаг(п)}${п.имя}</div>` : ''}</div>
+  <div class="z7__zone z7__role" data-l="8"><span><b>Pos ${п.pos}</b> · ${h.РОЛИ[п.pos]}</span></div>
+  <div class="z7__zone z7__stats" data-l="8">${h.статы(п).map((с) => `<span><small>${с.к}</small><b data-v="${с.ур}">${с.v}</b><i class="z7__tilesheen" data-l="4" data-deco="2"></i></span>`).join('')}</div>
+  <div class="z7__zone z7__foot" data-l="8"><i class="z7__tilesheen" data-l="4" data-deco="2"></i>${h.лого(п)}<span class="z7__team"><b>${h.команда(п)}</b><small>Команда</small></span></div>
+</div>`,
+})
+</script>
+</body></html>

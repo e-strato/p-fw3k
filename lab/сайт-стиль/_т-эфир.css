@@ -1,0 +1,43 @@
+/* Набор 6 · Эфир (Claude-B, 01.10) — графика киберспортивной трансляции: глубокий чёрный, плашки-титры, заливки цветом команд
+   со срезанными клиньями, сигнальный оранжевый акцент, красный live. Ники и цифры — Inter Tight (дирижёр 01.10: Barlow Condensed не понравился), текст — Inter */
+body.t-efir {
+  --s-page: #030304; --s-bg: #07070a; --s-panel: #101014; --s-panel-2: #1a1a20; --s-line: #ffffff17; --s-line-2: #ffffff0d;
+  --s-text: #f4f4f6; --s-muted: #9696a0; --s-accent: #ff6a2b; --s-accent-soft: #ff6a2b1f; --s-on-accent: #170600;
+  --s-live: #ff2e4d; --s-coin: #f2c94c; --s-win: #3ccf7e; --s-lose: #ff6b6b; --s-track: #23232a; --s-shadow: #000000;
+  --s-team-a: var(--c-team-ts); --s-team-b: var(--c-team-tun); --s-hd-bg: #050507; --s-hd-h: 56px;
+  --s-medal: linear-gradient(145deg, #ffd2b8, #ff6a2b 55%, #6b1d00); --s-medal-ink: #1d0700;
+  --s-gold: #f1c24c; --s-silver: #c9d2de; --s-bronze: #d08a55;
+  --s-font: 'Inter', system-ui, sans-serif; --s-font-h: 'Inter Tight', 'Inter', sans-serif; --s-font-num: 'Inter Tight', 'Inter', sans-serif; --s-fs: 14px;
+  --s-r: 4px; --s-r-s: 3px; --s-r-btn: 3px; --s-r-pill: 3px; --s-pad: 18px; --s-gap: 14px; --s-row-pad: 10px; --s-bar-h: 5px;
+  --s-h3: 21px; --s-h3-w: 600; --s-h1: 54px; --s-h1-w: 700; --s-track-h1: -.005em; --s-nick-w: 800; --s-num-w: 700; --s-score-w: 800; --s-team-w: 700;
+  --s-panel-edge: inset 0 0 0 1px #ffffff12;
+  --s-btn-glow: 0 10px 26px -12px #ff6a2b;
+  --s-cut: 14px; /* срез угла плашек — общий для набора */
+}
+.t-efir .ap { font-feature-settings: 'tnum' 1; }
+/* Шапка — тёмная линейка эфира; текущий раздел — заливкой, без подчёркиваний и полос */
+.t-efir .a-brand { font-size: 19px; }
+.t-efir .a-brand__mark { width: 32px; height: 32px; border-radius: 0; font-size: 18px; clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%); }
+.t-efir .a-nav a { font-size: 13.5px; border-radius: 0; }
+.t-efir .a-nav a[aria-current] { background: var(--s-text); color: var(--s-bg); clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%); padding-right: 18px; }
+.t-efir .a-coins { border-radius: 0; font-size: 15px; }
+/* Кнопки: плоские, со срезом угла; главная — сигнальный оранжевый */
+.t-efir .a-btn { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%); }
+.t-efir .a-btn--pri { font-weight: 700; }
+.t-efir .a-chips button[aria-pressed='true'] { background: var(--s-accent); color: var(--s-on-accent); }
+/* Заголовки панелей — узкий дисплейный шрифт */
+.t-efir .a-ph h3 { font-weight: 700; }
+.t-efir .a-panel { background: linear-gradient(180deg, #131318, #0e0e12); }
+.t-efir .a-lr--me { background: var(--s-accent-soft); }
+.t-efir .a-lr em, .t-efir .a-q em, .t-efir .a-gc__price, .t-efir .a-tbl__r em { font-size: 16px; }
+.t-efir .a-acc__seg i { border-radius: 0; transform: skewX(-14deg); }
+.t-efir .a-bar { border-radius: 0; }
+/* Онбординг: общие тела шагов — в плашках со срезом */
+.t-efir .a-opt, .t-efir .a-teamt, .t-efir .a-qq { border-radius: 0; clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--s-cut)), calc(100% - var(--s-cut)) 100%, 0 100%); }
+.t-efir .a-opt.is-on, .t-efir .a-teamt.is-on, .t-efir .a-qq__opts .is-on { background: var(--s-accent-soft); }
+.t-efir .a-qq__opts button { border-radius: 0; }
+.t-efir .a-tile b { font-size: 46px; }
+.t-efir .a-chest { background: radial-gradient(50% 70% at 50% 60%, #ff6a2b30, transparent 70%), linear-gradient(180deg, #131318, #0b0b0e); }
+.t-efir .a-modal { border-radius: 0; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%); }
+.t-efir .a-tag { border-radius: 0; }
+.t-efir .a-vid__img { border-radius: 0; }

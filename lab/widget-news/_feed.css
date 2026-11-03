@@ -1,0 +1,155 @@
+/* Виджет «Новости» — общая лента (v23+, _feed.js). Самостоятельный: не нужен _news.css (берём из него только каркас ниже). Вид значков — .nf--<look> */
+.nf{ width:340px; }
+.is-phone .nf{ width:100%; border-radius:0; border-left:0; border-right:0; }
+.nf .w-hd{ height:48px; }
+.nf .w-hd__t{ font:var(--t-title); }
+.nf .nw-all{ font:var(--t-sub); color:var(--w-muted-fg); text-decoration:none; white-space:nowrap; } .nf .nw-all:hover{ color:var(--w-fg); }
+.nf .nw-feed{ position:relative; height:340px; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:var(--w-ring) transparent;
+  -webkit-mask-image:linear-gradient(#000 calc(100% - 28px), transparent); mask-image:linear-gradient(#000 calc(100% - 28px), transparent); }
+.f-r{ display:flex; gap:12px; align-items:flex-start; padding:10px 16px; color:inherit; text-decoration:none; }
+.f-r + .f-r{ border-top:1px solid #ffffff08; }
+.f-r:hover{ background:var(--w-mid-bg); }
+.f-b{ min-width:0; flex:1; display:flex; flex-direction:column; gap:6px; }
+.f-t{ font:500 13px/18px var(--w-font); display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.f-im{ width:64px; height:64px; flex:none; border-radius:8px; object-fit:cover; background:var(--w-muted); }
+.f-m{ display:flex; align-items:center; gap:7px; min-width:0; font:var(--t-sub); color:var(--w-muted-fg); }
+.f-m time{ margin-left:auto; padding-left:4px; font:500 11px/1 var(--w-font); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.f-ic{ display:inline-flex; align-items:center; gap:2px; flex:none; cursor:help; font-style:normal; }
+.f-imp i{ width:3px; height:8px; border-radius:1px; background:currentColor; opacity:.25; } .f-imp svg{ margin-right:2px; }
+.f-imp.l1 i:nth-of-type(-n+1), .f-imp.l2 i:nth-of-type(-n+2), .f-imp.l3 i{ opacity:1; }
+.f-heat, .f-src{ font:500 11px/1 var(--w-font); font-variant-numeric:tabular-nums; }
+.f-lg{ width:14px; height:14px; object-fit:contain; }
+
+/* поповер «что значит» — как всплывашка графика (g2-pop) */
+.f-pop{ position:fixed; z-index:50; max-width:220px; padding:8px 10px; border-radius:10px; background:#18181b; border:1px solid var(--w-border); box-shadow:0 12px 32px #000a;
+  font:400 12px/16px var(--w-font); color:var(--w-muted-fg); pointer-events:none; opacity:0; transform:translateY(4px); transition:opacity .12s, transform .12s; }
+.f-pop.is-on{ opacity:1; transform:none; } .f-pop.is-down{ transform:translateY(-4px); } .f-pop.is-down.is-on{ transform:none; }
+.f-pop b{ display:block; margin-bottom:2px; font-weight:600; color:var(--w-fg); }
+.f-pop::after{ content:''; position:absolute; left:var(--ax); bottom:-5px; width:8px; height:8px; margin-left:-4px; background:#18181b; border:solid var(--w-border); border-width:0 1px 1px 0; transform:rotate(45deg); }
+.f-pop.is-down::after{ bottom:auto; top:-5px; border-width:1px 0 0 1px; }
+
+/* v23 — тихие с цветом: форма тегов турнира (t5-tier), цвет — тонкой подложкой; без влияния и лого */
+.nf--quiet2 .f-t{ font:500 14px/20px var(--w-font); }
+.nf--quiet2 .f-im{ width:56px; height:56px; border-radius:6px; }
+.nf--quiet2 .f-m{ gap:8px; }
+.nf--quiet2 .f-tier{ height:16px; padding:0 5px; border-radius:4px; background:var(--w-muted); font:700 10px/16px var(--w-font); }
+.nf--quiet2 .t-S{ background:#f59e0b26; color:#fbbf24; } .nf--quiet2 .t-A{ background:#a855f726; color:#d8b4fe; }
+.nf--quiet2 .t-B{ background:#3b82f626; color:#93c5fd; }
+.nf--quiet2 .f-au{ gap:3px; } .nf--quiet2 .f-au b{ font:500 11px/1 var(--w-font); font-variant-numeric:tabular-nums; color:var(--w-muted-fg); }
+.nf--quiet2 .f-au.is-ver{ color:var(--w-up); } .nf--quiet2 .f-au.is-off{ color:#60a5fa; }
+.nf--quiet2 .f-au.is-rum{ color:#fbbf24; font:700 11px/1 var(--w-font); }
+.nf--quiet2 .f-heat svg{ color:#fb923c; } .nf--quiet2 .f-heat.is-hot{ color:#fb923c; }
+.nf--quiet2 .f-g{ display:contents; }
+.nf--quiet2 .f-m time{ margin-left:auto; }
+
+/* v24–v26: цвет только у ранга; время — в группе значков, моно, мельче */
+.nf--top .f-g, .nf--box .f-g, .nf--cap .f-g{ display:flex; align-items:center; gap:8px; }
+:is(.nf--top, .nf--box, .nf--cap) .f-t{ font:500 14px/20px var(--w-font); }
+:is(.nf--top, .nf--box, .nf--cap) .f-im{ width:56px; height:56px; border-radius:6px; }
+:is(.nf--top, .nf--box, .nf--cap) .f-tier{ height:16px; padding:0 5px; border-radius:4px; background:var(--w-muted); color:var(--w-muted-fg); font:700 10px/16px var(--w-font); }
+:is(.nf--top, .nf--box, .nf--cap) .t-S{ background:#f59e0b2e; color:#fbbf24; }
+:is(.nf--top, .nf--box, .nf--cap) .t-A{ background:#a855f72a; color:#d8b4fe; }
+:is(.nf--top, .nf--box, .nf--cap) .t-B{ background:#3b82f62a; color:#93c5fd; }
+:is(.nf--top, .nf--box, .nf--cap) .f-au{ gap:3px; } :is(.nf--top, .nf--box, .nf--cap) .f-au b{ font-weight:500; }
+:is(.nf--top, .nf--box, .nf--cap) .f-au.is-rum{ font:700 11px/1 var(--w-font); }
+:is(.nf--top, .nf--box, .nf--cap) .f-m time, :is(.nf--top, .nf--box, .nf--cap) .f-heat, :is(.nf--top, .nf--box, .nf--cap) .f-au b{ font:500 10px/1 ui-monospace, "SF Mono", Menlo, monospace; letter-spacing:-.2px; }
+:is(.nf--top, .nf--box, .nf--cap) .f-m time{ margin-left:0; padding-left:0; }
+
+/* v24 — значки над заголовком, через точку */
+.nf--top .f-m{ order:-1; gap:8px; }
+.nf--top .f-g > * + *::before{ content:'·'; margin-right:8px; color:var(--w-ring); font-family:var(--w-font); }
+.nf--top .f-g{ gap:0; } .nf--top .f-g > *{ display:inline-flex; align-items:center; gap:3px; margin-right:8px; }
+
+/* v25 — значки в контейнере под заголовком */
+.nf--box .f-m{ align-self:flex-start; gap:8px; height:24px; padding:0 8px 0 4px; border-radius:6px; background:var(--w-mid-bg); box-shadow:inset 0 0 0 1px var(--w-border); }
+.nf--box .f-r:hover .f-m{ background:var(--w-muted); }
+
+/* v26 — ранг + капсула со значками сверху */
+.nf--cap .f-m{ order:-1; gap:6px; }
+.nf--cap .f-g{ height:18px; padding:0 8px; border-radius:999px; border:1px solid var(--w-border); gap:8px; }
+
+/* v27–v29: ранг ярко, в первой строке перед заголовком; низ — значки чуть крупнее, без контейнера, серые; время моно */
+:is(.nf--r1, .nf--r2, .nf--r3, .nf--r4, .nf--r5, .nf--r6, .nf--r7, .nf--r8, .nf--r9, .nf--r10) .f-t{ font:500 14px/20px var(--w-font); }
+:is(.nf--r1, .nf--r2, .nf--r3, .nf--r4, .nf--r5, .nf--r6, .nf--r7, .nf--r8, .nf--r9, .nf--r10) .f-im{ width:56px; height:56px; border-radius:6px; }
+:is(.nf--r1, .nf--r2, .nf--r3, .nf--r4, .nf--r5, .nf--r6, .nf--r7, .nf--r8, .nf--r9, .nf--r10) .f-t .f-tier{ display:inline-grid; place-items:center; vertical-align:1px; margin-right:6px; }
+:is(.nf--r1, .nf--r2, .nf--r3, .nf--r4, .nf--r5, .nf--r6, .nf--r7, .nf--r8, .nf--r9, .nf--r10) .f-g{ display:flex; align-items:center; gap:12px; }
+:is(.nf--r1, .nf--r2, .nf--r3, .nf--r4, .nf--r5, .nf--r6, .nf--r7, .nf--r8, .nf--r9, .nf--r10) .f-m{ font:500 12px/1 var(--w-font); }
+:is(.nf--r1, .nf--r2, .nf--r3, .nf--r4, .nf--r5, .nf--r6, .nf--r7, .nf--r8, .nf--r9, .nf--r10) .f-au{ gap:4px; } :is(.nf--r1, .nf--r2, .nf--r3, .nf--r4, .nf--r5, .nf--r6, .nf--r7, .nf--r8, .nf--r9, .nf--r10) .f-au svg{ width:13px; height:13px; }
+:is(.nf--r1, .nf--r2, .nf--r3, .nf--r4, .nf--r5, .nf--r6, .nf--r7, .nf--r8, .nf--r9, .nf--r10) .f-heat svg{ width:12px; height:12px; }
+:is(.nf--r1, .nf--r2, .nf--r3, .nf--r4, .nf--r5, .nf--r6, .nf--r7, .nf--r8, .nf--r9, .nf--r10) .f-au.is-rum{ font:700 12px/1 var(--w-font); }
+:is(.nf--r1, .nf--r2, .nf--r3, .nf--r4, .nf--r5, .nf--r6, .nf--r7, .nf--r8, .nf--r9, .nf--r10) .f-heat, :is(.nf--r1, .nf--r2, .nf--r3, .nf--r4, .nf--r5, .nf--r6, .nf--r7, .nf--r8, .nf--r9, .nf--r10) .f-au b, :is(.nf--r1, .nf--r2, .nf--r3, .nf--r4, .nf--r5, .nf--r6, .nf--r7, .nf--r8, .nf--r9, .nf--r10) .f-m time{ font:500 11px/1 ui-monospace, "SF Mono", Menlo, monospace; letter-spacing:-.2px; }
+:is(.nf--r1, .nf--r2, .nf--r3, .nf--r4, .nf--r5, .nf--r6, .nf--r7, .nf--r8, .nf--r9, .nf--r10) .f-m time{ margin-left:0; padding-left:0; }
+
+/* v27 — яркая плашка: заливка градиентом, тёмная буква */
+.nf--r1 .f-tier{ height:18px; min-width:18px; padding:0 5px; border-radius:5px; font:800 11px/18px var(--w-font); color:#111; }
+.nf--r1 .t-S{ background:linear-gradient(135deg, #fef08a, #f59e0b); box-shadow:0 0 10px #f59e0b80; }
+.nf--r1 .t-A{ background:linear-gradient(135deg, #f0abfc, #a855f7); color:#fff; box-shadow:0 0 8px #a855f760; }
+.nf--r1 .t-B{ background:linear-gradient(135deg, #7dd3fc, #3b82f6); color:#fff; }
+.nf--r1 .t-C{ background:#52525b; color:#e4e4e7; }
+
+/* v28 — свечение: крупная буква цветом, без подложки */
+.nf--r2 .f-tier{ font:900 15px/1 var(--w-font); margin-right:8px; }
+.nf--r2 .t-S{ color:#fbbf24; text-shadow:0 0 10px #f59e0bcc, 0 0 2px #fde68a; }
+.nf--r2 .t-A{ color:#e879f9; text-shadow:0 0 8px #a855f7aa; }
+.nf--r2 .t-B{ color:#60a5fa; text-shadow:0 0 6px #3b82f688; }
+.nf--r2 .t-C{ color:#71717a; }
+
+/* v29 — щит: значок-гексагон, как ранг в играх */
+.nf--r3 .f-tier{ width:20px; height:22px; clip-path:polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); font:900 11px/22px var(--w-font); color:#111; }
+.nf--r3 .t-S{ background:linear-gradient(160deg, #fff7c2, #fbbf24 45%, #d97706); }
+.nf--r3 .t-A{ background:linear-gradient(160deg, #f5d0fe, #c026d3); color:#fff; }
+.nf--r3 .t-B{ background:linear-gradient(160deg, #bfdbfe, #2563eb); color:#fff; }
+.nf--r3 .t-C{ background:linear-gradient(160deg, #a1a1aa, #52525b); color:#fafafa; }
+.nf--r3 .f-t .f-tier{ vertical-align:-5px; }
+
+/* v30–v32: ранг ровно в строку заголовка (строка 20px — значок прижат к её верху) */
+:is(.nf--r4, .nf--r5, .nf--r6) .f-t .f-tier{ vertical-align:top; }
+
+/* v30 — щит, как v29, но в высоту строки */
+.nf--r4 .f-tier{ width:16px; height:18px; margin-top:1px; clip-path:polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); font:900 10px/18px var(--w-font); color:#111; box-shadow:none; }
+.nf--r4 .t-S{ background:linear-gradient(160deg, #fff7c2, #fbbf24 45%, #d97706); }
+.nf--r4 .t-A{ background:linear-gradient(160deg, #f5d0fe, #c026d3); color:#fff; }
+.nf--r4 .t-B{ background:linear-gradient(160deg, #bfdbfe, #2563eb); color:#fff; }
+.nf--r4 .t-C{ background:linear-gradient(160deg, #a1a1aa, #52525b); color:#fafafa; }
+
+/* v31 — карточка-портрет: как мини-карта из колоды, яркая, со свечением и бликом */
+.nf--r5 .f-tier{ position:relative; overflow:hidden; width:15px; height:20px; border-radius:3px; font:900 10px/20px var(--w-font); color:#1a1000; box-shadow:inset 0 0 0 1px #ffffff80; }
+.nf--r5 .f-tier::after{ content:''; position:absolute; inset:0; background:linear-gradient(120deg, transparent 30%, #ffffff8c 45%, transparent 60%); transform:translateX(-120%); }
+.nf--r5 .t-S{ background:linear-gradient(160deg, #fffbe0, #fcd34d 40%, #f59e0b); box-shadow:inset 0 0 0 1px #fff8, 0 0 10px #fbbf24b3; }
+.nf--r5 .t-S::after{ animation:fshine 2.8s ease-in-out infinite; } @keyframes fshine{ 60%, 100%{ transform:translateX(120%); } }
+.nf--r5 .t-A{ background:linear-gradient(160deg, #fae8ff, #e879f9 40%, #a855f7); color:#2e0838; box-shadow:inset 0 0 0 1px #fff8, 0 0 8px #d946ef80; }
+.nf--r5 .t-B{ background:linear-gradient(160deg, #e0f2fe, #7dd3fc 40%, #3b82f6); color:#06203f; box-shadow:inset 0 0 0 1px #fff8; }
+.nf--r5 .t-C{ background:linear-gradient(160deg, #e4e4e7, #a1a1aa 50%, #71717a); color:#18181b; }
+
+/* v32 — светящаяся буква: без подложки, только цвет и свечение */
+.nf--r6 .f-tier{ background:none; box-shadow:none; padding:0; margin-right:7px; font:900 15px/20px var(--w-font); }
+.nf--r6 .t-S{ color:#fde047; text-shadow:0 0 6px #facc15, 0 0 14px #f59e0bcc; }
+.nf--r6 .t-A{ color:#f0abfc; text-shadow:0 0 6px #e879f9, 0 0 12px #a855f7aa; }
+.nf--r6 .t-B{ color:#93c5fd; text-shadow:0 0 6px #3b82f6cc; }
+.nf--r6 .t-C{ color:#a1a1aa; }
+
+/* v33–v35: светящаяся буква (как v32) — внизу, первой в общей строке значков, с разделителями */
+:is(.nf--r7, .nf--r8, .nf--r9, .nf--r10) .f-m{ gap:0; }
+:is(.nf--r7, .nf--r8, .nf--r9, .nf--r10) .f-g{ gap:0; }
+:is(.nf--r7, .nf--r8, .nf--r9, .nf--r10) .f-g > *{ display:inline-flex; align-items:center; }
+:is(.nf--r7, .nf--r8, .nf--r9, .nf--r10) .f-tier{ background:none; box-shadow:none; padding:0; font:900 14px/1 var(--w-font); }
+:is(.nf--r7, .nf--r8, .nf--r9, .nf--r10) .t-S{ color:#fde047; text-shadow:0 0 6px #facc15, 0 0 14px #f59e0bcc; }
+:is(.nf--r7, .nf--r8, .nf--r9, .nf--r10) .t-A{ color:#f0abfc; text-shadow:0 0 6px #e879f9, 0 0 12px #a855f7aa; }
+:is(.nf--r7, .nf--r8, .nf--r9, .nf--r10) .t-B{ color:#93c5fd; text-shadow:0 0 6px #3b82f6cc; }
+:is(.nf--r7, .nf--r8, .nf--r9, .nf--r10) .t-C{ color:#a1a1aa; }
+/* v33 — тонкая вертикальная черта */
+:is(.nf--r7, .nf--r9) .f-g > *::before{ content:''; width:1px; height:10px; margin:0 10px; background:#3f3f46; flex:none; }
+/* v34 — точка */
+.nf--r8 .f-g > *::before{ content:'·'; margin:0 8px; color:#52525b; font:700 13px/1 var(--w-font); }
+/* v35 — буква крупнее, время уходит вправо (без черты перед ним) */
+.nf--r9 .f-tier{ font-size:17px; }
+.nf--r9 .f-m{ min-height:20px; }
+.nf--r9 .f-g{ flex:1; } .nf--r9 .f-g > time{ margin-left:auto; } .nf--r9 .f-g > time::before{ display:none; }
+
+/* v36 — как v34, буква крупнее; между новостями — тонкая линия с отступами по краям */
+.nf--r10 .f-g > *::before{ content:'·'; margin:0 8px; color:#52525b; font:700 13px/1 var(--w-font); }
+.nf--r10 .f-tier{ font-size:17px; }
+.nf--r10 .f-m{ min-height:20px; }
+.nf--r10 .f-r{ position:relative; }
+.nf--r10 .f-r + .f-r{ border-top:0; }
+.nf--r10 .f-r + .f-r::before{ content:''; position:absolute; left:16px; right:16px; top:0; height:1px; background:var(--w-border); }

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_lineup.css" />
+<style>
+/* v3 · Карта и скамейка — поле-миникарта (квадрат, диагональ реки), 5 точек по ролям; справа сводка; снизу скамейка лентой */
+.v3-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; align-items: start; }
+.v3-field { position: relative; aspect-ratio: 16 / 10; border-radius: 16px; overflow: hidden;
+  background: radial-gradient(45% 60% at 0% 100%, color-mix(in srgb, var(--c-stat-high) 14%, transparent), transparent 70%), radial-gradient(45% 60% at 100% 0%, color-mix(in srgb, var(--c-live) 12%, transparent), transparent 70%),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--c-white) 3%, transparent) 0 1px, transparent 1px 40px), repeating-linear-gradient(90deg, color-mix(in srgb, var(--c-white) 3%, transparent) 0 1px, transparent 1px 40px), var(--c-ui-panel); }
+.v3-field::before { content: ''; position: absolute; left: -10%; right: -10%; top: 50%; height: 9%; translate: 0 -50%; rotate: -32deg; background: color-mix(in srgb, var(--c-accent) 14%, transparent); }
+.v3-lane { position: absolute; inset: 9% 6%; border: 1px solid color-mix(in srgb, var(--c-white) 8%, transparent); border-radius: 10px; }
+.v3-game { position: absolute; left: 16px; top: 14px; font-size: 12.5px; color: var(--c-caption); }
+.v3-spot { position: absolute; display: grid; justify-items: center; gap: 4px; translate: -50% -50%; }
+.v3-spot .kc { --w: 118px; cursor: pointer; }
+.v3-tag { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 6px; background: color-mix(in srgb, var(--c-ui-bg) 80%, transparent); font-size: 12px; white-space: nowrap; }
+.v3-tag b { font: 800 13px var(--font-c); }
+.v3-tag em { font-style: normal; color: var(--c-coin); font: 700 13px var(--font-c); }
+.v3-emp { display: grid; place-items: center; width: 92px; aspect-ratio: 4 / 5; border-radius: 8px; border: 1px dashed color-mix(in srgb, var(--c-white) 22%, transparent); background: color-mix(in srgb, var(--c-ui-bg) 55%, transparent); color: var(--c-caption); font-size: 26px; font-weight: 300; cursor: pointer; }
+.v3-side { display: grid; gap: 12px; }
+.v3-side .lu-sum { display: grid; grid-template-columns: 1fr 1fr; }
+.v3-side .lu-sum span:first-child { grid-column: 1 / -1; }
+.v3-panel { padding: 16px; border-radius: 12px; background: var(--c-ui-panel); }
+.v3-panel h3 { margin: 0 0 10px; font-size: 15px; }
+.v3-m { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; padding: 8px 0; border-bottom: 1px solid var(--c-ui-line); font-size: 13px; }
+.v3-m:last-child { border-bottom: 0; }
+.v3-m small { color: var(--c-caption); font-size: 11.5px; }
+.v3-m em { font-style: normal; font: 700 15px var(--font-c); color: var(--c-coin); grid-row: span 2; align-self: center; }
+.v3-side .btn { width: 100%; }
+.v3-bh { display: flex; align-items: center; gap: 12px; margin: 18px 0 12px; flex-wrap: wrap; }
+.v3-bh h3 { margin: 0; font-size: 17px; }
+.v3-bh .lu-search { margin-left: auto; width: 220px; }
+.v3-bench { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 12px; scrollbar-width: thin; }
+.v3-bc { flex: none; display: grid; justify-items: center; gap: 6px; font-size: 12px; color: var(--c-caption); }
+.v3-bc .kc { --w: 112px; cursor: pointer; }
+.v3-bc.is-out .kc { filter: grayscale(.8) brightness(.6); }
+.v3-bc b { color: var(--c-coin); font: 700 14px var(--font-c); }
+@container lu (max-width: 600px) {
+  .v3-grid { grid-template-columns: minmax(0, 1fr); }
+  .v3-field { aspect-ratio: 1; }
+  .v3-spot .kc { --w: 60px !important; }
+  .v3-emp { width: 56px; font-size: 20px; }
+  .v3-tag { font-size: 10.5px; padding: 2px 5px; }
+  .v3-tag span { display: none; }
+  .v3-bh .lu-search { width: 100%; margin: 0; }
+  .v3-bc .kc { --w: 92px !important; }
+}
+</style></head>
+<body><main class="lu-page">
+  <h1>v3 · Карта и скамейка</h1>
+  <p>Как в FIFA Ultimate Team, только поле — карта игры: игроки стоят на своих линиях (Dota — лес/линии по позициям, LoL — топ, лес, мид, бот; CS 2 — точки A, мид, B). Справа сводка: прогноз, дедлайн, кто когда играет. Снизу — скамейка лентой: кликни по карте или возьми её мышью — она приподнимается, наклоняется на ходу, точка своей роли на карте светится и притягивает, чужая — краснеет; с поля карту можно унести обратно на скамейку.</p>
+  <p class="lu-cap">Десктоп · 1440</p><div class="lu-frame lu-frame--desk" data-lu></div>
+  <p class="lu-cap">Телефон · 390</p><div class="lu-frame lu-frame--phone" data-lu></div>
+</main>
+<script src="_lineup.js"></script>
+<script>
+// Точки на поле по ролям, % от поля: Dota — пары на линиях и мид; LoL — топ, лес, мид, бот парой; CS 2 — A, мид, B
+// по горизонтали точки через 18% — карты не налезают друг на друга
+const ТОЧКИ = { dota: [[86, 72], [50, 48], [14, 26], [32, 28], [68, 76]], lol: [[14, 26], [32, 42], [50, 50], [86, 72], [68, 78]], cs: [[14, 30], [86, 28], [50, 50], [68, 74], [32, 72]] }
+const ПОЛЕ = { dota: 'Карта Доты · Radiant снизу', lol: 'Ущелье призывателей', cs: 'Карта · точки A и B' }
+LINEUP.page({
+  drag: true,
+  render: (S, h) => `${h.шапка()}<div class="lu-app hg">
+  <div class="lu-h"><div><h2>Состав</h2><p>Расставь пятёрку по карте — один состав для Dota 2, LoL и CS 2</p></div>${h.игры()}</div>
+  <div class="v3-grid">
+    <div class="v3-field" data-field><i class="v3-lane"></i><span class="v3-game">${ПОЛЕ[S.game]}</span>
+      ${h.РОЛИ().map(([код, имя], i) => { const id = S.slots[i], x = id && h.п(id), [l, t] = ТОЧКИ[S.game][i]
+        return `<div class="v3-spot" style="left: ${l}%; top: ${t}%" data-slot="${i}" data-drop="${i}">${id ? `<span data-out="${id}" title="Убрать">${h.карта(id, 118)}</span>` : '<span class="v3-emp">+</span>'}
+          <span class="v3-tag"><b>${код}</b><span>${имя}</span>${x ? `<em>${(x.очки * (id === S.cap ? 1.5 : 1)).toFixed(1)}</em><button class="lu-cap-b" type="button" aria-pressed="${id === S.cap}" data-cap="${id}" title="Капитан ×1.5">C</button>` : ''}</span></div>` }).join('')}
+    </div>
+    <aside class="v3-side">${h.итог()}${h.предупреждение()}
+      <section class="v3-panel"><h3>Кто сегодня играет</h3>${S.slots.filter(Boolean).map((id) => { const x = h.п(id); return `<div class="v3-m"><span><b>${x.ник}</b> <span class="lu-muted">· ${h.КОМАНДЫ[x.к]}</span></span><em>${x.очки.toFixed(1)}</em><small class="${x.матч ? '' : 'lu-out'}">${h.матч(x)}</small></div>` }).join('') || '<p class="lu-muted">Поставь игроков на карту</p>'}</section>
+      ${h.авто()}<button class="btn btn--quiet" type="button">Сохранить состав</button></aside>
+  </div>
+  <div class="v3-bh"><h3>Скамейка <span class="lu-muted">· ${h.скамейка().length}</span></h3>${h.позиции()}${h.поиск()}</div>
+  <div class="v3-bench" data-drop-bench>${h.скамейка().map((id) => { const x = h.п(id); return `<div class="v3-bc${x.матч ? '' : ' is-out'}" data-add="${id}" draggable="true">${h.карта(id, 112)}<span><b>${x.очки ? x.очки.toFixed(1) : '0'}</b> · ${x.матч ? x.матч[1] : '<span class="lu-out">не играет</span>'}</span></div>` }).join('')}</div>
+</div>${h.таббар()}`,
+})
+</script>
+</body></html>

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<title>v26 · Цвет выезжает</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="_t4.css" /><link rel="stylesheet" href="../widget-states/_s.css" /></head>
+<!-- Подача v13 (решение 26): на странице только виджет; «Экран» — под кадром лабы. Свитч «Со созвона» убран (дирижёр 21.10: «подсказки уберём пока что»), пункты созвона в S_CFG.hints оставлены — вернуть: data-hint="tags" data-switch="Со созвона" -->
+<body data-view="toolbar" data-hint="none"><div class="lab-board s-only"><div class="s-z2"><div><div id="w"></div></div></div></div>
+<script>window.S_CFG = { opt: { mark: 'bg', home: 'top', now: 'dock', hl: 'dim', bracket: 'path', air: true, dockMatch: true, dockStyle: 'match', allStyle: 'tabs', switch: 'vclock', fx: 'slide', fxv: 'tslide' },
+  o: { match: { match: { a: 'Power Rangers', b: 'Inner Circle x Insanity' } } },
+  // Пример для лабы: 21.10 одновременно идёт 1 матч — экран «Несколько LIVE» считает сегодняшние матчи EPL Masters III идущими
+  extra: [{ id: 'multi', name: 'Несколько LIVE (пример)', why: 'Пример: сегодняшние матчи EPL Masters III считаем идущими одновременно — снизу плашка с переключателем ‹ › по важности матчей', o: { init: { list: false, t: 0 } }, opt: { liveDemo: true } }], // на главной: в матче плашки нет
+  why: { home: 'Ничего не выбрано — сразу самый важный турнир; снизу плашка — идущий матч, нет идущих — ближайший', match: 'Открыт матч — виджет открыл его турнир, команды матча яркие, остальные приглушены; в плашке — этот матч: какие команды и что с ними будет', team: 'Открыта команда — сразу её идущий турнир; другие её турниры — по бургеру' },
+  hints: {
+    home: [['[data-list]', 'Т1.15', 'бургер остался — открывает список турниров; ‹ › нет'], ['.t4-tabs', 'Т1.16', 'группы — табами'], ['.t4-z--up', 'Т1.14', 'зоны выхода и вылета — фоном строки', 1], ['.t4-now', 'Т1.19', 'идущие матчи внизу — ведут на страницу матча'], ['', 'Т1.12', '«Идут сейчас / Предстоящие» и архив — в списке по бургеру']],
+    match: [['.t4-ctx', 'Т1.22', 'в матче подсвечены обе команды', 1], ['.t4-now', 'Т1.19', 'идущие матчи внизу, открытый первым и выделен'], ['.t4-z--up', 'Т1.14', 'зоны выхода и вылета — фоном строки', 1], ['', 'Т1.20', 'важность матча — в карточке: нажми на подсвеченную команду']],
+    team: [['[data-list]', 'Т1.21', 'в списке по бургеру — только турниры команды'], ['.t4-bm__r.t4-ctx', 'Т1.17', 'сетка без скролла — матч команды крупно'], ['.t4-bar__n', 'Т1.17', '‹ › — только её матчи, «Вся сетка» — отдалить']] } }</script>
+<script src="_data.js"></script><script src="_t4.js"></script><script src="../widget-states/_states.js"></script><script src="../widget-states/_shell.js"></script>
+</body></html>

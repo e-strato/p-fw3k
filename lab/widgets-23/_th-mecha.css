@@ -1,0 +1,178 @@
+/* Тема v13 · Меха-HUD — поверх v2 «Унифицировано». Всё под body.th-mecha
+   Как прицельный интерфейс кабины Armored Core VI / Titanfall: почти чёрное стекло, тонкие янтарные линии со свечением,
+   сетка и шкалы, индикаторы-сегменты, «скан» сверху вниз по наведению. Холодный белый текст, янтарь — только линии и активное. Шрифты, размеры и логика — как в v2. */
+
+/* ——— Токены ——— */
+body.th-mecha{
+  --w-page:#040506; --w-bg:#0a0c0e; --w-mid-bg:rgba(255,176,0,.045); --w-muted:#161a1e; --w-hover:#1f252a; --w-skel:#1f252a;
+  --w-border:rgba(255,176,0,.12); --w-ring:#4a4434;
+  --w-fg:#eef3f6; --w-muted-fg:#8d979f; --w-primary:#ffb000; --w-primary-fg:#0a0800;
+  --w-up:#3ce8b4; --w-up-bg:rgba(60,232,180,.10); --w-up-fg:#a6f5dc;
+  --w-down:#ff3d3d; --w-down-bg:rgba(255,61,61,.12); --w-down-fg:#ffa8a8;
+  --w-star:#ffb000; --w-a:#8fdcff; --w-b:#ffb000;
+  --mc-a:#ffb000; --mc-a-rgb:255,176,0; --mc-hi:#ffd27a;           /* янтарь линий и светлый янтарь текста */
+  --mc-line:rgba(255,176,0,.22); --mc-hair:rgba(255,176,0,.09);
+  --mc-glow:0 0 10px rgba(255,176,0,.35);
+  min-height:100vh;
+  background:
+    radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(0,0,0,.75)),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 3px),
+    linear-gradient(rgba(255,176,0,.04) 1px, transparent 1px) 0 0 / 40px 40px,
+    linear-gradient(90deg, rgba(255,176,0,.04) 1px, transparent 1px) 0 0 / 40px 40px,
+    radial-gradient(900px 420px at 50% 0%, rgba(255,176,0,.06), transparent 70%),
+    var(--w-page);
+}
+body.th-mecha .slot > b{ color:#6b6450; }
+
+/* ——— Панель: полупрозрачное стекло, тонкая янтарная рамка со свечением ——— */
+.th-mecha .w:not(.m6), .th-mecha .w.m6 .m6-main{ position:relative; border-color:transparent; border-radius:0;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,176,0,.018) 0 1px, transparent 1px 4px),
+    linear-gradient(180deg, rgba(255,176,0,.05), transparent 90px),
+    rgba(8,10,12,.86);
+  backdrop-filter:blur(6px);
+  box-shadow:inset 0 0 0 1px var(--mc-line), inset 0 0 32px rgba(255,176,0,.035), 0 0 28px -10px rgba(255,176,0,.28), 0 20px 40px -20px #000; }
+.th-mecha .w.m6{ background:none; }
+/* скан — мягкая полоса сверху вниз: один проход по наведению (fx-on, _fx.js); в заменах — нет */
+.th-mecha .w:not(.m6)::after, .th-mecha .w.m6 .m6-main::after{ content:''; position:absolute; left:0; right:0; top:0; height:56px; z-index:5; pointer-events:none;
+  background:linear-gradient(180deg, transparent, rgba(255,176,0,.06) 70%, rgba(255,200,90,.22) 98%, transparent);
+  transform:translateY(-60px); opacity:0; }
+.th-mecha .w.s3::after{ content:none; }
+.th-mecha .w.fx-on:not(.m6)::after, .th-mecha .w.m6.fx-on .m6-main::after{ animation:mc-scan 2s cubic-bezier(.45,0,.55,1) 1; }
+@keyframes mc-scan{ 0%{ transform:translateY(-60px); opacity:0; } 18%{ opacity:1; } 96%{ transform:translateY(440px); opacity:1; } 100%{ transform:translateY(440px); opacity:0; } }
+
+/* ——— Шапка: линия снизу ——— */
+.th-mecha .w .t5-hd, .th-mecha .w .s6-hd, .th-mecha .w .t2-hd, .th-mecha .w .m6-hd{
+  background:linear-gradient(90deg, var(--mc-line), rgba(255,176,0,.06)) 0 100% / 100% 1px no-repeat; }
+.th-mecha .w .s6-hd:has(+ .s6-steps){ background:none; }   /* в шагах замены линию даёт сама шкала шагов */
+.th-mecha .w .t5-arch, .th-mecha .w .s6-arch, .th-mecha .w .t2-top{ transition:color .15s, text-shadow .15s; }
+.th-mecha .w .t5-arch:hover, .th-mecha .w .s6-arch:hover, .th-mecha .w .t2-top:hover{ color:var(--mc-hi); text-shadow:var(--mc-glow); }
+.th-mecha .w .t5-ib, .th-mecha .w .s6-ib{ border-radius:0; transition:background .15s, color .15s, box-shadow .15s; }
+.th-mecha .w .t5-ib:hover, .th-mecha .w .s6-ib:hover{ background:rgba(255,176,0,.10); color:var(--mc-hi); box-shadow:inset 0 0 0 1px rgba(255,176,0,.5); }
+
+/* ——— Подписи разделов: шкала с метками до края ——— */
+.th-mecha .t5-lbl, .th-mecha .s3-team{ display:flex; align-items:center; gap:8px; }
+.th-mecha .t5-lbl::after, .th-mecha .s3-team::after{ content:''; flex:1; min-width:12px; height:6px;
+  background:
+    linear-gradient(90deg, rgba(255,176,0,.3), rgba(255,176,0,.08)) 0 100% / 100% 1px no-repeat,
+    repeating-linear-gradient(90deg, rgba(255,176,0,.35) 0 1px, transparent 1px 6px) 0 100% / 100% 3px no-repeat,
+    repeating-linear-gradient(90deg, rgba(255,176,0,.5) 0 1px, transparent 1px 30px) 0 100% / 100% 6px no-repeat; }
+.th-mecha .t5-lbl, .th-mecha .t2-th, .th-mecha .t5-tbl th{ color:#7f8890; }
+.th-mecha .w-scroll{ scrollbar-color:rgba(255,176,0,.25) transparent; scrollbar-width:thin; }
+
+/* ——— LIVE — красным со свечением; индикатор мигает только по наведению (fx-on), в заменах — статично ——— */
+.th-mecha .u-when > b.u-live, .th-mecha .w .u-live, .th-mecha .w .t5-live, .th-mecha .w .s9-live--text{ color:#ff4a4a; text-shadow:0 0 8px rgba(255,61,61,.7); }
+.th-mecha .u-when > b.u-live{ display:inline-flex; align-items:center; gap:4px; }
+.th-mecha .u-when > b.u-live::before{ content:''; flex:none; width:0; height:0; border-left:5px solid #ff4a4a; border-top:3px solid transparent; border-bottom:3px solid transparent;
+  filter:drop-shadow(0 0 3px rgba(255,61,61,.9)); }
+.th-mecha .w.fx-on:not(.s3) .u-when > b.u-live::before{ animation:mc-blink .7s steps(2, jump-none) 2; }
+@keyframes mc-blink{ 50%{ opacity:.2; } }
+
+/* ——— Числа: светлым янтарём ——— */
+.th-mecha .u-count{ color:var(--mc-hi); }
+.th-mecha .s3-r:hover .u-count{ text-shadow:var(--mc-glow); }
+.th-mecha .t5-tbl td:last-child, .th-mecha .t5-fm__s{ color:var(--w-fg); }
+.th-mecha .t5-bx span b, .th-mecha .t5-fc span b{ color:var(--mc-hi); }
+.th-mecha .t5-bx span.is-lose b{ color:inherit; }
+
+/* ——— Тиры: янтарь / лёд / латунь ——— */
+.th-mecha .t5-tier--1{ --tc:#ffb000; } .th-mecha .t5-tier--2{ --tc:#8fdcff; } .th-mecha .t5-tier--3{ --tc:#c9ab86; }
+.th-mecha.uni .w .t5-tr:has(.t5-tier--1){ --tc:#ffb000; } .th-mecha.uni .w .t5-tr:has(.t5-tier--2){ --tc:#8fdcff; } .th-mecha.uni .w .t5-tr:has(.t5-tier--3){ --tc:#c9ab86; }
+
+/* ——— Строки: наведение — как в v2 (цвет тира / команд) + тонкие линии захвата сверху и снизу ——— */
+.th-mecha .w .t5-tr, .th-mecha .w .s3-r, .th-mecha .w.t2--sk .t2-r, .th-mecha .w button.s8-r, .th-mecha .w .s6-qm{ border-radius:0; transition:background .15s, box-shadow .15s; }
+.th-mecha .w .s3-r + .s3-r, .th-mecha .w.t2-rows--tint .t2-r + .t2-r{ box-shadow:inset 0 1px 0 rgba(255,255,255,.035); }
+.th-mecha.uni .w .t5-tr:hover{ box-shadow:inset 0 1px 0 color-mix(in srgb, var(--tc, #fff) 45%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--tc, #fff) 45%, transparent); }
+.th-mecha .w .s3-r:hover, .th-mecha .w.t2-rows--tint .t2-r:hover, .th-mecha .w.s3 button.s8-r:hover{ box-shadow:inset 0 1px 0 rgba(255,176,0,.3), inset 0 -1px 0 rgba(255,176,0,.3); }
+.th-mecha .w .s3-r:not([style*='--ta']):hover{ background:rgba(255,176,0,.06); }
+
+/* ——— Сегменты: рамка-линия, активное — янтарная подсветка (фон и тени — «таблетка» копирует) ——— */
+.th-mecha.uni .t5-seg, .th-mecha.uni .m6-seg, .th-mecha .s6-seg{ border-radius:0; background:rgba(0,0,0,.35); box-shadow:inset 0 0 0 1px var(--mc-line); }
+.th-mecha.uni .w .t5-seg button, .th-mecha.uni .w .m6-seg button, .th-mecha .w .s6-seg button{ border-radius:0; transition:color .15s, background .15s, box-shadow .15s, text-shadow .15s; }
+.th-mecha.uni .w .t5-seg button:hover:not(.is-on), .th-mecha.uni .w .m6-seg button:hover:not(.is-on), .th-mecha .w .s6-seg button:hover:not(.is-on){ color:var(--w-fg); background:rgba(255,176,0,.05); }
+.th-mecha.uni .w .t5-seg button.is-on, .th-mecha.uni .w .m6-seg button.is-on, .th-mecha .w .s6-seg button.is-on{ color:var(--mc-hi); text-shadow:0 0 8px rgba(255,176,0,.6);
+  background:linear-gradient(180deg, rgba(255,176,0,.20), rgba(255,176,0,.08));
+  box-shadow:inset 0 0 0 1px rgba(255,176,0,.75), inset 0 0 12px rgba(255,176,0,.15), 0 0 12px -3px rgba(255,176,0,.6); }
+.th-mecha.uni .m6--depth .m6-seg.m6-up{ background:rgba(6,8,10,.7); backdrop-filter:blur(8px); box-shadow:inset 0 0 0 1px var(--mc-line), 0 10px 22px rgba(0,0,0,.6); }
+
+/* ——— Кнопки ——— */
+.th-mecha .w .s6-btn{ border-radius:0; border-color:var(--mc-line); transition:background .15s, border-color .15s, color .15s, box-shadow .15s; }
+.th-mecha .w .s6-btn:hover{ background:rgba(255,176,0,.06); border-color:rgba(255,176,0,.55); color:var(--mc-hi); }
+.th-mecha .w .s6-btn--pri{ border-color:transparent; color:#0a0800; background:var(--mc-a); box-shadow:0 0 16px -4px rgba(255,176,0,.75); }
+.th-mecha .w .s6-btn--pri:hover{ background:var(--mc-hi); color:#0a0800; box-shadow:0 0 20px -2px rgba(255,176,0,.8); }
+.th-mecha .w .s6-btn--pri:disabled{ background:rgba(255,176,0,.18); color:rgba(255,210,122,.55); box-shadow:none; opacity:1; }
+.th-mecha .w .s6-btn--ghost{ border-color:transparent; }
+.th-mecha .w .s6-btn--ghost:hover{ background:none; }
+/* низ трансферов и кнопка MVP — нижний блок панели */
+.th-mecha .w.t2--sk .t2-all{ background:rgba(255,176,0,.03); border-top-color:var(--mc-hair); }
+.th-mecha .w.t2--sk .t2-all:hover{ background:rgba(255,176,0,.08); color:var(--mc-hi); }
+.th-mecha .w a.m6-dock{ border:0; border-radius:0; background:rgba(8,10,12,.9);
+  box-shadow:inset 1px 0 0 var(--mc-line), inset -1px 0 0 var(--mc-line), inset 0 -1px 0 var(--mc-line), 0 0 24px -12px rgba(255,176,0,.35); transition:background .15s; }
+.th-mecha .w a.m6-dock:hover{ background:rgba(255,176,0,.07); }
+.th-mecha .w a.m6-dock:hover > svg:last-child{ color:var(--mc-a); }
+.th-mecha .m6-dock--split .m6-dock__c{ border-radius:0; background:rgba(255,176,0,.08); box-shadow:inset 0 0 0 1px rgba(255,176,0,.4); color:var(--mc-hi); }
+.th-mecha .w a.m6-dock.is-mine{ color:var(--w-up); text-shadow:0 0 10px rgba(60,232,180,.5); }
+
+/* ——— MVP: за игроком — прицельная сетка (кольца и перекрестие) ——— */
+.th-mecha .m6-card::before{ content:''; position:absolute; left:50%; top:46%; width:220px; height:220px; transform:translate(-50%, -50%); pointer-events:none;
+  background:
+    linear-gradient(rgba(255,176,0,.18), rgba(255,176,0,.18)) 50% 0 / 1px 26px no-repeat,
+    linear-gradient(rgba(255,176,0,.18), rgba(255,176,0,.18)) 50% 100% / 1px 26px no-repeat,
+    linear-gradient(rgba(255,176,0,.18), rgba(255,176,0,.18)) 0 50% / 26px 1px no-repeat,
+    linear-gradient(rgba(255,176,0,.18), rgba(255,176,0,.18)) 100% 50% / 26px 1px no-repeat,
+    radial-gradient(circle, transparent 69%, rgba(255,176,0,.16) 69.5% 70.2%, transparent 70.7%),
+    radial-gradient(circle, transparent 47%, rgba(255,176,0,.10) 47.5% 48%, transparent 48.5%); }
+.th-mecha .m6-bg{ opacity:.05; }
+.th-mecha .m6-fade{ background:linear-gradient(transparent, rgba(8,10,12,.85) 60%, rgba(8,10,12,.98)); }
+.th-mecha .m6-gl i{ animation:none; background:linear-gradient(90deg, transparent, rgba(255,176,0,.35) 25%, rgba(255,230,180,.2) 55%, transparent); }
+.th-mecha .m6-floor{ background:radial-gradient(rgba(255,176,0,.22), rgba(0,0,0,.5) 40%, transparent 70%); }
+.th-mecha .m6--depth .m6-c--br b{ text-shadow:0 0 14px rgba(255,176,0,.45), 0 6px 14px rgba(0,0,0,.9); }
+.th-mecha .m6-c--br span{ color:var(--mc-a); }
+
+/* ——— Турнир: таблица, сетка, финал ——— */
+.th-mecha .t5-tbl td{ border-top-color:rgba(255,255,255,.04); }
+.th-mecha .t5-tbl tr.t5-z--up td{ background:rgba(60,232,180,.07); }
+.th-mecha .t5-tbl tr.t5-z--mid td{ background:rgba(255,176,0,.08); }
+.th-mecha .t5-tbl tr.t5-z--down td{ background:rgba(255,61,61,.08); }
+.th-mecha .t5-tbl tr.t5-z--up td:first-child{ color:var(--w-up); } .th-mecha .t5-tbl tr.t5-z--mid td:first-child{ color:var(--w-b); } .th-mecha .t5-tbl tr.t5-z--down td:first-child{ color:var(--w-down); }
+.th-mecha .t5-form{ gap:2px; }
+.th-mecha .t5-form i{ width:4px; height:10px; border-radius:0; }
+.th-mecha .t5-form i.is-w{ box-shadow:0 0 4px rgba(60,232,180,.6); } .th-mecha .t5-form i.is-l{ box-shadow:0 0 4px rgba(255,61,61,.5); }
+.th-mecha .t5-sq{ border-radius:0; }
+.th-mecha .t5-bx, .th-mecha .t5-fc{ border-radius:0; background:rgba(255,176,0,.035); box-shadow:inset 0 0 0 1px rgba(255,176,0,.14); }
+.th-mecha .t5-bx.is-on{ background:rgba(255,176,0,.10); box-shadow:inset 0 0 0 1px var(--mc-a), 0 0 14px -3px rgba(255,176,0,.6); }
+.th-mecha .t5-ln path{ stroke:rgba(255,176,0,.4); }
+.th-mecha .t5-fm{ border-top-color:var(--mc-hair); }
+.th-mecha .t5-pop{ border-radius:0; background:rgba(10,12,14,.96); border-color:rgba(255,176,0,.45); box-shadow:0 0 16px -4px rgba(255,176,0,.4), 0 10px 30px rgba(0,0,0,.6); }
+.th-mecha .w .t5-inf{ border-radius:0; border-color:rgba(255,176,0,.55); color:var(--mc-hi); }
+
+/* ——— Замены: шаги — сегменты, карточки — панели в рамке ——— */
+.th-mecha .s6-steps i{ height:3px; border-radius:0; background:repeating-linear-gradient(90deg, rgba(255,255,255,.12) 0 6px, transparent 6px 8px); }
+.th-mecha .s6-steps .is-done i{ background:repeating-linear-gradient(90deg, rgba(255,176,0,.75) 0 6px, transparent 6px 8px); }
+.th-mecha .s6-steps .is-on i{ background:repeating-linear-gradient(90deg, var(--mc-hi) 0 6px, transparent 6px 8px); filter:drop-shadow(0 0 3px rgba(255,176,0,.8)); }
+.th-mecha .s6-who, .th-mecha .s6-card, .th-mecha .s6-note, .th-mecha .s6-drop{ border-radius:0; background:rgba(255,176,0,.035); box-shadow:inset 0 0 0 1px rgba(255,176,0,.14); }
+.th-mecha .s6-av, .th-mecha .s8-p--ring{ border-radius:0; }
+.th-mecha .w .s6-pl button, .th-mecha .w .s6-pp button, .th-mecha .w .s6-maps button, .th-mecha .w .s6-terms button{ border-radius:0; box-shadow:inset 0 0 0 1px rgba(255,176,0,.12); }
+.th-mecha .w .s6-pl button.is-on, .th-mecha .w .s6-pp button.is-on, .th-mecha .w .s6-maps button.is-on, .th-mecha .w .s6-terms button.is-on{ color:var(--mc-hi);
+  background:rgba(255,176,0,.14); box-shadow:inset 0 0 0 1px rgba(255,176,0,.75), 0 0 12px -3px rgba(255,176,0,.6); }
+.th-mecha .s6-in, .th-mecha .s6-date{ border-radius:0; border-color:rgba(255,176,0,.55); }
+.th-mecha .w .s6-lnk:hover{ color:var(--mc-hi); }
+.th-mecha .w .s8-id{ border-radius:0; }
+.th-mecha .s6-ft{ border-top-color:var(--mc-hair); }
+.th-mecha .s6-ft--warn, .th-mecha .s6-ft--ok{ border-radius:0; }
+.th-mecha .s6-ft--warn{ background:rgba(255,176,0,.10); box-shadow:inset 0 0 0 1px rgba(255,176,0,.3); }
+.th-mecha .s6-ft--ok{ background:var(--w-up-bg); box-shadow:inset 0 0 0 1px rgba(60,232,180,.3); }
+.th-mecha .s8-toast{ border-radius:0; background:rgba(10,12,14,.96); color:var(--mc-hi); box-shadow:inset 0 0 0 1px var(--mc-a), 0 0 18px -4px rgba(255,176,0,.6); }
+
+/* ——— Трансферы ——— */
+.th-mecha .t2--sk .t2-av{ border-radius:0; }
+.th-mecha .tr5-go{ color:var(--mc-a); text-shadow:0 0 6px rgba(255,176,0,.5); }
+
+/* глитч MVP — один проход по наведению (fx-on), а не по таймеру */
+.th-mecha .w.m6.fx-on .m6-gl i{ animation:th-glitch1 .5s steps(1) 1; }
+.th-mecha .w.m6.fx-on .m6-gl i:nth-child(2){ animation-delay:.08s; } .th-mecha .w.m6.fx-on .m6-gl i:nth-child(3){ animation-delay:.16s; }
+@keyframes th-glitch1{ 0%{ opacity:1; transform:translateX(-14px); } 25%{ opacity:.6; transform:translateX(18px); } 50%{ opacity:1; transform:translateX(-6px); } 75%, 100%{ opacity:0; transform:none; } }
+
+@media (prefers-reduced-motion: reduce){
+  .th-mecha .w::after, .th-mecha .w .m6-main::after, .th-mecha .w .u-when > b.u-live::before, .th-mecha .w .m6-gl i{ animation:none !important; }
+}

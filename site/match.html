@@ -1,0 +1,149 @@
+<!doctype html>
+<!--
+  FantasyWeb — каркас страницы.
+  ⚠️ *.html в корне website/ СГЕНЕРИРОВАНЫ: этот каркас + pages/<имя>.html + blocks/**/*.html → `node build.mjs`.
+  Правьте блоки, страницы и layout.html, не собранные файлы (гейт `node build.mjs --check` поймает ручную правку).
+  Витрина компонентов — ../storybook.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Team Spirit — Tundra · live — FantasyWeb</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..900;1,400..900&family=Archivo:ital,wdth,wght@0,62..125,700..900;1,62..125,700..900&family=Cinzel:wght@700;900&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..700&display=swap" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<main>
+<!-- Шапка продукта: бренд, игра (Dota / LoL — переключает турниры в списке матчей), монеты, разделы. Внизу на телефоне — таб-бар.
+     Разделы, которых ещё нет, — data-soon (плашка «скоро»). Текущий раздел (aria-current) ставит app.js по адресу страницы. -->
+<header class="ui-header">
+  <div class="ui-header__in">
+    <div class="ui-header__top">
+      <a class="ui-header__brand" href="index.html">Fantasy · Dota 2</a>
+      <div class="btn-row ui-header__game" role="group" aria-label="Игра">
+        <button class="btn btn--quiet btn--xs" type="button" aria-pressed="true" data-game-pick="dota">Dota</button>
+        <button class="btn btn--quiet btn--xs" type="button" aria-pressed="false" data-game-pick="lol">LoL</button>
+      </div>
+      <div class="ui-header__coins"><span>Монеты</span><b>1 000</b><button class="btn btn--quiet btn--sm" type="button" data-soon="Забрать +50">Забрать +50</button></div>
+    </div>
+    <nav class="ui-tabs ui-header__nav" aria-label="Разделы">
+      <a class="ui-tabs__a" href="index.html">Главная</a>
+      <a class="ui-tabs__a" href="schedule.html">Матчи</a>
+      <a class="ui-tabs__a" href="match-center.html">Match Center</a>
+      <a class="ui-tabs__a" href="lineup.html">Состав</a>
+      <a class="ui-tabs__a" href="#" data-soon="Бустеры">Бустеры</a>
+      <a class="ui-tabs__a" href="gallery.html">Коллекция</a>
+      <a class="ui-tabs__a" href="#" data-soon="Квесты">Квесты</a>
+      <a class="ui-tabs__a" href="#" data-soon="Лидеры">Лидеры</a>
+      <a class="ui-tabs__a" href="#" data-soon="История">История</a>
+      <a class="ui-tabs__a" href="onboarding.html">Как это работает</a>
+    </nav>
+  </div>
+  <nav class="ui-tabbar" aria-label="Разделы">
+    <a href="schedule.html"><i>▦</i>Матчи</a>
+    <a href="#" data-soon="Поиск"><i>⌕</i>Поиск</a>
+    <a href="lineup.html"><i>★</i>Состав</a>
+    <a href="#app-matches" data-list-go="fav"><i>☆</i>Избранное</a>
+    <a href="#" data-soon="Профиль"><i>◉</i>Профиль</a>
+  </nav>
+</header>
+<!-- Матч live: счёт серии и карты, трансляция, сравнение и нетворс, составы 5 на 5, мои игроки и их очки, прогноз на карту 3, события.
+     Перенос из лабы «Сайт в одном стиле», набор v25 «Финал» (дирижёр 05.10): разметка — экран лабы (раскладка набора 2), данные условные.
+     Стили — styles.css [=== Экраны финала ===] (классы a-*, m-* под .fin), телефон — там же, @media (max-width: 700px). -->
+<section class="section section--ui fin" id="fx-match">
+<div class="ap ap--match">
+<main class="a-page m-match">
+  <div class="a-crumbs"><a class="a-link" href="schedule.html">Матчи</a><i>/</i><a class="a-link">DreamLeague · Сезон 27</a><i>/</i><span>Team Spirit — Tundra</span></div>
+  <section class="a-panel a-feat m-hero">
+    <div class="a-feat__top"><span class="a-live"><i class="a-dot"></i>Live</span><span class="a-feat__league">DreamLeague · Сезон 27 · Плей-офф · Верхняя сетка · Bo3</span><span class="a-feat__clock">Карта 2 · 27:41</span></div>
+    <div class="a-feat__teams">
+      <div class="a-feat__team"><img class="a-logo" src="img/teams/ts.png" alt="" /><span><b>Team Spirit</b><small>2 твоих игрока · Yatoro, Collapse</small></span></div>
+      <div class="a-feat__score"><b>1</b><i>:</i><b>0</b><small>серия · до двух побед</small></div>
+      <div class="a-feat__team a-feat__team--r"><img class="a-logo" src="img/teams/tun.png" alt="" /><span><b>Tundra Esports</b><small>1 твой игрок · Pure</small></span></div>
+    </div>
+    <div class="m-maps "><div class="m-map m-map--ft"><small>Карта 1</small><b>TS победа</b><span>34 : 21 · 38:12</span></div><div class="m-map m-map--live"><small>Карта 2</small><b><i class="a-dot"></i>Идёт · 27:41</b><span>убийства 18 : 11</span></div><div class="m-map m-map--up"><small>Карта 3</small><b>—</b><span>если понадобится</span></div></div>
+  </section>
+  <div class="m-match__grid">
+    <div class="m-match__main">
+      <section class="a-panel"><div class="a-ph"><h3>Трансляция</h3><a class="a-link">Открыть на Twitch →</a></div><div class="m-tv "><img src="https://i.ytimg.com/vi/WEj83vr1Plo/hqdefault.jpg" alt="" loading="lazy" /><i class="a-vid__play"></i>
+    <span class="m-tv__live"><i class="a-dot"></i>Live · 41 тыс. зрителей</span><span class="m-tv__src">Twitch · RU · комментаторы Lex и Smile</span></div></section>
+      <section class="a-panel"><div class="a-ph"><h3>Карта 2 · 27:41</h3><span class="a-muted">Team Spirit впереди по башням и убийствам</span></div>
+        <div class="m-duo"><div class="a-cmp"><div class="a-cmp__row"><b>42.3k</b><span class="a-cmp__bar" style="--p: 50.4%"><i></i></span><small>Нетворс</small><span class="a-cmp__bar a-cmp__bar--b" style="--p: 49.6%"><i></i></span><b>41.7k</b></div><div class="a-cmp__row"><b>18</b><span class="a-cmp__bar" style="--p: 62%"><i></i></span><small>Убийства</small><span class="a-cmp__bar a-cmp__bar--b" style="--p: 38%"><i></i></span><b>11</b></div><div class="a-cmp__row"><b>5</b><span class="a-cmp__bar" style="--p: 71%"><i></i></span><small>Башни</small><span class="a-cmp__bar a-cmp__bar--b" style="--p: 29%"><i></i></span><b>2</b></div><div class="a-cmp__row"><b>1</b><span class="a-cmp__bar" style="--p: 100%"><i></i></span><small>Рошаны</small><span class="a-cmp__bar a-cmp__bar--b" style="--p: 0%"><i></i></span><b>0</b></div><div class="a-cmp__row"><b>48.9k</b><span class="a-cmp__bar" style="--p: 51.4%"><i></i></span><small>Опыт</small><span class="a-cmp__bar a-cmp__bar--b" style="--p: 48.6%"><i></i></span><b>46.2k</b></div></div><div class="m-graph" style="--h: 150px"><div class="m-graph__l"><span><img class="a-logo" src="img/teams/ts.png" alt="" />+4k</span><span><img class="a-logo" src="img/teams/tun.png" alt="" />+4k</span></div>
+      <svg viewBox="0 0 280 80" preserveAspectRatio="none" aria-label="Перевес по нетворсу"><path class="m-graph__a" d="M0,40 L0.0,40.0 L10.4,39.0 L20.7,38.0 L31.1,40.0 L41.5,40.0 L51.9,40.0 L62.2,40.0 L72.6,38.0 L83.0,31.0 L93.3,26.0 L103.7,29.0 L114.1,34.0 L124.4,40.0 L134.8,40.0 L145.2,40.0 L155.6,40.0 L165.9,40.0 L176.3,36.0 L186.7,24.0 L197.0,12.0 L207.4,6.0 L217.8,18.0 L228.1,29.0 L238.5,40.0 L248.9,40.0 L259.3,37.0 L269.6,30.0 L280.0,34.0 L280,40 Z" /><path class="m-graph__b" d="M0,40 L0.0,40.0 L10.4,40.0 L20.7,40.0 L31.1,43.0 L41.5,45.0 L51.9,48.0 L62.2,44.0 L72.6,40.0 L83.0,40.0 L93.3,40.0 L103.7,40.0 L114.1,40.0 L124.4,42.0 L134.8,53.0 L145.2,61.0 L155.6,58.0 L165.9,49.0 L176.3,40.0 L186.7,40.0 L197.0,40.0 L207.4,40.0 L217.8,40.0 L228.1,40.0 L238.5,44.0 L248.9,52.0 L259.3,40.0 L269.6,40.0 L280.0,40.0 L280,40 Z" /><line x1="0" y1="40" x2="280" y2="40" /><polyline points="0.0,40.0 10.4,39.0 20.7,38.0 31.1,43.0 41.5,45.0 51.9,48.0 62.2,44.0 72.6,38.0 83.0,31.0 93.3,26.0 103.7,29.0 114.1,34.0 124.4,42.0 134.8,53.0 145.2,61.0 155.6,58.0 165.9,49.0 176.3,36.0 186.7,24.0 197.0,12.0 207.4,6.0 217.8,18.0 228.1,29.0 238.5,44.0 248.9,52.0 259.3,37.0 269.6,30.0 280.0,34.0" /></svg>
+      <div class="m-graph__x"><i style="left: 0%">0:00</i><i style="left: 37.03703703703704%">10:00</i><i style="left: 74.07407407407408%">20:00</i><i style="left: 100%">27:00</i></div></div></div></section>
+      <section class="a-panel"><div class="a-ph"><h3>Составы</h3><span class="a-muted">карта 2 · очки Fantasy считаются по ходу</span></div>
+        <div class="m-teams"><div class="m-sb">
+      <div class="m-sb__r m-sb__r--h"><span><img class="a-logo" src="img/teams/ts.png" alt="" /><b>Team Spirit</b></span><span>K / D / A</span><span>Нетворс</span><span>Добив.</span><span>GPM</span><span>Очки</span></div>
+      <div class="m-sb__r is-mine"><span class="m-sb__who"><img class="a-hero" src="img/heroes/faceless_void.webp" alt="" /><span><b><i class="a-star"></i>Yatoro</b><small>Faceless Void · поз. 1</small></span></span><span class="a-kda">6 / 1 / 4</span><span>13.8k</span><span>212</span><span>702</span><em>21.4</em></div><div class="m-sb__r"><span class="m-sb__who"><img class="a-hero" src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/puck.png" alt="" /><span><b>Larl</b><small>Puck · поз. 2</small></span></span><span class="a-kda">5 / 2 / 7</span><span>11.2k</span><span>168</span><span>588</span><em>18.2</em></div><div class="m-sb__r is-mine"><span class="m-sb__who"><img class="a-hero" src="img/heroes/mars.webp" alt="" /><span><b><i class="a-star"></i>Collapse</b><small>Mars · поз. 3</small></span></span><span class="a-kda">3 / 4 / 11</span><span>8.1k</span><span>96</span><span>431</span><em>15.1</em></div><div class="m-sb__r"><span class="m-sb__who"><img class="a-hero" src="img/heroes/hoodwink.webp" alt="" /><span><b>Rue</b><small>Hoodwink · поз. 4</small></span></span><span class="a-kda">3 / 2 / 9</span><span>5k</span><span>41</span><span>312</span><em>12.6</em></div><div class="m-sb__r"><span class="m-sb__who"><img class="a-hero" src="img/heroes/tusk.webp" alt="" /><span><b>Miposhka</b><small>Tusk · поз. 5</small></span></span><span class="a-kda">1 / 2 / 12</span><span>4.2k</span><span>18</span><span>256</span><em>9.8</em></div>
+    </div><div class="m-sb">
+      <div class="m-sb__r m-sb__r--h"><span><img class="a-logo" src="img/teams/tun.png" alt="" /><b>Tundra Esports</b></span><span>K / D / A</span><span>Нетворс</span><span>Добив.</span><span>GPM</span><span>Очки</span></div>
+      <div class="m-sb__r is-mine"><span class="m-sb__who"><img class="a-hero" src="img/heroes/terrorblade.webp" alt="" /><span><b><i class="a-star"></i>Pure</b><small>Terrorblade · поз. 1</small></span></span><span class="a-kda">5 / 2 / 3</span><span>14.6k</span><span>248</span><span>741</span><em>24.0</em></div><div class="m-sb__r"><span class="m-sb__who"><img class="a-hero" src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/storm_spirit.png" alt="" /><span><b>bzm</b><small>Storm Spirit · поз. 2</small></span></span><span class="a-kda">3 / 4 / 4</span><span>11.9k</span><span>175</span><span>603</span><em>14.3</em></div><div class="m-sb__r"><span class="m-sb__who"><img class="a-hero" src="img/heroes/beastmaster.webp" alt="" /><span><b>33</b><small>Beastmaster · поз. 3</small></span></span><span class="a-kda">1 / 4 / 6</span><span>7.6k</span><span>88</span><span>402</span><em>9.1</em></div><div class="m-sb__r"><span class="m-sb__who"><img class="a-hero" src="img/heroes/rubick.webp" alt="" /><span><b>Saksa</b><small>Rubick · поз. 4</small></span></span><span class="a-kda">1 / 4 / 7</span><span>4.1k</span><span>30</span><span>281</span><em>8.4</em></div><div class="m-sb__r"><span class="m-sb__who"><img class="a-hero" src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/shadow_shaman.png" alt="" /><span><b>Whitemon</b><small>Shadow Shaman · поз. 5</small></span></span><span class="a-kda">1 / 4 / 8</span><span>3.5k</span><span>14</span><span>238</span><em>7.7</em></div>
+    </div></div></section>
+    </div>
+    <aside class="m-match__side">
+      <section class="a-panel m-myp"><div class="a-ph"><h3>Твои игроки в матче</h3><span class="m-sum"><b>+60.5</b> очков</span></div>
+    <div class="m-my">
+      <span class="m-my__ph"><img src="img/players/yatoro.webp" alt="" /><img class="m-my__hero" src="img/heroes/faceless_void.webp" alt="" /></span>
+      <span class="m-my__who"><b>Yatoro</b><small>TS · Faceless Void · 6 / 1 / 4</small></span>
+      <span class="m-my__p"><b>21.4</b><small>очков</small></span>
+      <div class="m-my__br"><span><small>Убийства 6</small><em class="">+12.0</em></span><span><small>Смерти 1</small><em class="is-down">−1.0</em></span><span><small>Помощь 4</small><em class="">+4.0</em></span><span><small>Добивания 212</small><em class="">+4.2</em></span><span><small>Рошан 1</small><em class="">+2.2</em></span></div>
+    </div>
+    <div class="m-my">
+      <span class="m-my__ph"><img src="img/players/pure.webp" alt="" /><img class="m-my__hero" src="img/heroes/terrorblade.webp" alt="" /></span>
+      <span class="m-my__who"><b>Pure</b><small>TUN · Terrorblade · 5 / 2 / 3</small></span>
+      <span class="m-my__p"><b>24.0</b><small>очков</small></span>
+      <div class="m-my__br"><span><small>Убийства 5</small><em class="">+10.0</em></span><span><small>Смерти 2</small><em class="is-down">−2.0</em></span><span><small>Помощь 3</small><em class="">+3.0</em></span><span><small>Добивания 248</small><em class="">+5.0</em></span><span><small>Башни 2</small><em class="">+8.0</em></span></div>
+    </div>
+    <div class="m-my">
+      <span class="m-my__ph"><img src="img/players/_silhouette.png" alt="" /><img class="m-my__hero" src="img/heroes/mars.webp" alt="" /></span>
+      <span class="m-my__who"><b>Collapse</b><small>TS · Mars · 3 / 4 / 11</small></span>
+      <span class="m-my__p"><b>15.1</b><small>очков</small></span>
+      <div class="m-my__br"><span><small>Убийства 3</small><em class="">+6.0</em></span><span><small>Смерти 4</small><em class="is-down">−4.0</em></span><span><small>Помощь 11</small><em class="">+11.0</em></span><span><small>Добивания 96</small><em class="">+1.9</em></span><span><small>Станы 48 с</small><em class="">+0.2</em></span></div>
+    </div></section>
+      <section class="a-panel"><div class="a-ph"><h3>Прогноз на карту 3</h3><span class="a-muted">до начала карты</span></div><div class="a-qs">
+    <div class="a-qq"><span class="a-qq__n">1</span><b>Кто возьмёт карту 3?</b><div class="a-qq__opts"><button type="button" class="js-pick is-on" aria-pressed="true"><span>Team Spirit</span><em>58%</em></button><button type="button" class="js-pick" aria-pressed="false"><span>Tundra</span><em>42%</em></button></div><em class="a-qq__r">+50</em></div>
+    <div class="a-qq"><span class="a-qq__n">2</span><b>Первая кровь на карте 3</b><div class="a-qq__opts"><button type="button" class="js-pick" aria-pressed="false"><span>Spirit</span><em>51%</em></button><button type="button" class="js-pick is-on" aria-pressed="true"><span>Tundra</span><em>49%</em></button></div><em class="a-qq__r">+30</em></div>
+    <div class="a-qq"><span class="a-qq__n">3</span><b>У Yatoro больше 8 убийств?</b><div class="a-qq__opts"><button type="button" class="js-pick" aria-pressed="false"><span>Да</span><em>44%</em></button><button type="button" class="js-pick" aria-pressed="false"><span>Нет</span><em>56%</em></button></div><em class="a-qq__r">+40</em></div></div>
+        <button type="button" class="a-btn a-btn--pri m-wide">Отправить прогноз</button></section>
+      <section class="a-panel"><div class="a-ph"><h3>События карты 2</h3></div><ol class="m-ev"><li class="m-ev__i m-ev__i--a"><time>27:02</time><i class="m-ev__ic m-ev__ic--kill"></i><span><b>Yatoro — тройное убийство</b><small>Faceless Void ловит троих в Chronosphere у Рошана</small></span><em>+6.0</em></li><li class="m-ev__i m-ev__i--a"><time>25:40</time><i class="m-ev__ic m-ev__ic--tower"></i><span><b>Team Spirit ломают T2 в центре</b><small>Перевес по башням 5 : 2</small></span></li><li class="m-ev__i m-ev__i--a"><time>24:31</time><i class="m-ev__ic m-ev__ic--rosh"></i><span><b>Team Spirit берут Рошана</b><small>Аегис у Yatoro</small></span><em>+2.2</em></li><li class="m-ev__i m-ev__i--b"><time>21:15</time><i class="m-ev__ic m-ev__ic--tower"></i><span><b>Pure ломает T1 на нижней линии</b><small>Terrorblade сносит башню за 20 секунд</small></span><em>+4.0</em></li><li class="m-ev__i m-ev__i--a"><time>18:48</time><i class="m-ev__ic m-ev__ic--kill"></i><span><b>Collapse — Reverse Polarity на четверых</b><small>Драка 4 : 1 в пользу Team Spirit</small></span><em>+4.0</em></li><li class="m-ev__i m-ev__i--b"><time>14:20</time><i class="m-ev__ic m-ev__ic--kill"></i><span><b>Pure — двойное убийство</b><small>Terrorblade на нижней линии</small></span><em>+4.0</em></li></ol></section>
+    </aside>
+  </div>
+</main></div>
+</section>
+<!-- Футер продукта (правка начальника 30.09: «не хватает футера»; дирижёр 05.10: из лабы «Футер» берём v2 «По мотивам Esports World Cup»).
+     Постер: ссылки тремя колонками, огромный знак Fantasy / Dota 2 на диагональной фактуре, «Честная игра» тремя значками, внизу полоса —
+     копирайт, приложения, соцсети, язык. Иконки — свои SVG. Разделов, которых нет, — data-soon (плашка «скоро»). Телефон — container query «ft»
+     на обёртке .site-ft. Стили — styles.css [=== Футер ===]. -->
+<div class="site-ft">
+<footer class="ft f2">
+  <div class="f2__main">
+    <div class="f2__links">
+      <div><h4>Играть</h4><ul><li><a href="onboarding.html">Как это работает</a></li><li><a href="#" data-soon="Как считаются очки">Как считаются очки</a></li><li><a href="chest.html?form=booster">Бустеры</a></li><li><a href="gallery.html">Маркет карт</a></li><li><a href="#" data-soon="Лидеры">Лидеры</a></li></ul></div>
+      <div><h4>Помощь</h4><ul><li><a href="#" data-soon="Вопросы и ответы">Вопросы и ответы</a></li><li><a href="#" data-soon="Поддержка">Поддержка</a></li><li><a href="#" data-soon="Статус сервиса">Статус сервиса</a></li><li><a href="#" data-soon="Партнёрам и командам">Партнёрам и командам</a></li><li><a href="#" data-soon="Пресса">Пресса</a></li></ul></div>
+      <div><h4>Правила</h4><ul><li><a href="#" data-soon="Соглашение">Соглашение</a></li><li><a href="#" data-soon="Бустеры и шансы">Бустеры и шансы</a></li><li><a href="#" data-soon="Честная игра">Честная игра</a></li><li><a href="#" data-soon="Конфиденциальность">Конфиденциальность</a></li><li><a href="#" data-soon="Cookies">Cookies</a></li></ul></div>
+    </div>
+    <div class="f2__mark"><b>Fantasy</b><b>Dota 2</b><p>Сезон 1 · DreamLeague, BLAST, The International</p></div>
+  </div>
+  <div class="f2__fair" aria-label="Честная игра">
+    <span><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 3.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11Zm-1 2v7h2v-7h-2Z" /></svg>Монеты не покупаются и не выводятся</span>
+    <span><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 4a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Zm9 9a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7ZM18.3 4.3l1.4 1.4L5.7 19.7l-1.4-1.4L18.3 4.3Z" /></svg>Шансы каждого бустера открыты</span>
+    <span><span class="ft-age">18+</span>Fantasy — не ставки, играй в удовольствие</span>
+  </div>
+  <div class="f2__band">
+    <div><small>Fantasy · Dota 2</small><p class="ft-fine">© 2026 Fantasy · Dota 2. Не связан с Valve и Riot Games. Данные матчей — Liquipedia и OpenDota.</p></div>
+    <div><small>Играй с телефона</small><div class="f2__apps"><a class="f2__app" href="#" data-soon="Приложение"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.5 2-3.6a4.3 4.3 0 0 0-3.4-1.8c-1.4-.1-2.8.9-3.5.9s-1.8-.9-3-.8a4.5 4.5 0 0 0-3.8 2.3c-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7 2-1.2 2.8-2.3c.9-1.3 1.3-2.6 1.3-2.6s-2.5-1-2.5-3.7ZM14.1 5.6A4 4 0 0 0 15 2.7a4.1 4.1 0 0 0-2.7 1.4 3.8 3.8 0 0 0-1 2.8 3.4 3.4 0 0 0 2.8-1.3Z" /></svg><span><i>Скачать в</i>App Store</span></a><a class="f2__app" href="#" data-soon="Приложение"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 2.9v18.2c0 .6.6.9 1.1.6L20 13.1c.5-.3.5-1.1 0-1.4L5.6 2.3c-.5-.3-1.1 0-1.1.6Z" /></svg><span><i>Доступно в</i>Google Play</span></a></div></div>
+    <div><small>Мы в соцсетях</small><div class="f2__soc"><a href="#" aria-label="Telegram" data-soon="Telegram"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 3.6 2.9 10.8c-1.3.5-1.3 1.2-.2 1.6l4.8 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.3-2.2 4.8 3.5c.9.5 1.5.2 1.7-.8l3.1-14.7c.3-1.3-.5-1.9-1.5-1.4Zm-3.4 4-8.6 7.8-.3 3.5-1.6-5 10.1-6.4c.5-.3.9 0 .4.1Z" /></svg></a><a href="#" aria-label="Twitch" data-soon="Twitch"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3 3 6v13h4v2h2.5l2-2H15l5-5V3H4Zm14 10-3 3h-3.5l-2 2v-2H6V5h12v8Zm-3-6h-2v5h2V7Zm-5 0H8v5h2V7Z" /></svg></a><a href="#" aria-label="YouTube" data-soon="YouTube"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12c0 1.6.1 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.3-1.6.4-3.2.4-4.8s-.1-3.2-.4-4.8ZM10 15V9l5.2 3-5.2 3Z" /></svg></a><a href="#" aria-label="Discord" data-soon="Discord"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.3 5.3A16 16 0 0 0 15.4 4l-.5 1a14 14 0 0 0-5.8 0L8.6 4a16 16 0 0 0-3.9 1.3C2.2 9 1.6 12.7 1.9 16.3a16 16 0 0 0 4.8 2.5l1-1.6c-.6-.2-1.1-.5-1.6-.8l.4-.3a11 11 0 0 0 11 0l.4.3c-.5.3-1 .6-1.6.8l1 1.6a16 16 0 0 0 4.8-2.5c.4-4.2-.7-7.8-2.8-11ZM8.8 14.2c-1 0-1.7-.9-1.7-2s.8-2 1.7-2 1.8.9 1.7 2c0 1.1-.8 2-1.7 2Zm6.4 0c-1 0-1.7-.9-1.7-2s.8-2 1.7-2 1.8.9 1.7 2c0 1.1-.7 2-1.7 2Z" /></svg></a><a href="#" aria-label="X" data-soon="X"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.8 3h3.1l-6.8 7.8L22 21h-6.2l-4.9-6.4L5.3 21H2.2l7.3-8.3L2 3h6.4l4.4 5.8L17.8 3Zm-1.1 16.2h1.7L7.4 4.7H5.6l11.1 14.5Z" /></svg></a></div></div>
+    <div><small>Язык</small><span class="ft-lang"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm6.9 6h-3a15 15 0 0 0-1.3-3.9A8 8 0 0 1 18.9 8ZM12 4c.8 1.1 1.5 2.5 1.9 4h-3.8c.4-1.5 1.1-2.9 1.9-4ZM4.3 14a8 8 0 0 1 0-4h3.4a16 16 0 0 0 0 4H4.3Zm.8 2h3c.3 1.4.7 2.7 1.3 3.9A8 8 0 0 1 5.1 16Zm3-8h-3a8 8 0 0 1 4.3-3.9C8.8 5.3 8.4 6.6 8.1 8ZM12 20c-.8-1.1-1.5-2.5-1.9-4h3.8c-.4 1.5-1.1 2.9-1.9 4Zm2.3-6H9.7a14 14 0 0 1 0-4h4.6a14 14 0 0 1 0 4Zm.3 5.9c.6-1.2 1-2.5 1.3-3.9h3a8 8 0 0 1-4.3 3.9Zm1.7-5.9a16 16 0 0 0 0-4h3.4a8 8 0 0 1 0 4h-3.4Z" /></svg>Русский<svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5H7Z" /></svg></span></div>
+  </div>
+</footer>
+</div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

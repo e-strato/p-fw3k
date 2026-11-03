@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<base href="../widget-tournament-4/" />
+<title>v6 · Липкий виджет</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="_t4.css" /><link rel="stylesheet" href="../widget-states/_s.css" /></head>
+<body><div class="lab-board">
+  <h1>Состояния виджета · v6 · Липкий виджет</h1>
+  <p class="lab-board__lead">Виджет закреплён справа, слева три экрана — крутишь, виджет переключается. Подсказка — строка «Попробуй» под виджетом.</p>
+  <div class="s-scr" id="scr"><div class="s-scr__steps" id="steps"></div><div class="s-scr__pin"><div class="s-z2" style="zoom:1.5"><div><div id="w"></div></div></div></div></div>
+</div>
+<script src="_data.js"></script><script src="_t4.js"></script><script src="../widget-states/_states.js"></script>
+<script>
+  const steps = document.getElementById('steps'), w = document.getElementById('w')
+  steps.innerHTML = S.key.map((k, i) => `<div class="s-scr__st" data-k="${k.id}"><b><span class="s-n">${i + 1}</span>${k.name}</b>${k.why}</div>`).join('')
+  let cur = null
+  const show = id => { if (id === cur) return; cur = id
+    steps.querySelectorAll('[data-k]').forEach(x => x.classList.toggle('is-on', x.dataset.k === id)); S.mount(w, S.by(id), { hint: 'footer' }) }
+  // Активный шаг — тот, что пересекает линию на 1/5 высоты области прокрутки
+  const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && show(e.target.dataset.k)), { root: document.getElementById('scr'), rootMargin: '-20% 0px -79% 0px' })
+  steps.querySelectorAll('[data-k]').forEach(x => io.observe(x))
+  show(S.key[0].id)
+</script>
+</body></html>

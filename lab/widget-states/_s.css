@@ -1,0 +1,127 @@
+/* Лаба «Как показывать состояния виджета»: подачи «3 экрана + точка» одного виджета (турнир v2). Токены — ../widget-tournament/_w.css. */
+/* Подсказки — свой вид в каждой версии (S.mount hint). Общий цвет подсказок — фиолетовый */
+.s-h{ position:absolute; z-index:4; pointer-events:none; }
+.s-num{ display:grid; place-items:center; width:18px; height:18px; border-radius:50%; background:#a78bfa; color:#0b0b0d; font-size:11px; font-weight:700; box-shadow:0 0 0 2px var(--w-page); }
+.s-h.s-leg, .s-h.s-foot{ position:static; margin-top:10px; font-size:12px; line-height:18px; color:var(--w-muted-fg); pointer-events:auto; }
+.s-leg div{ display:flex; gap:8px; } .s-leg b{ display:inline-grid; place-items:center; width:16px; height:16px; margin-top:1px; border-radius:50%; background:#a78bfa; color:#0b0b0d; font-size:10px; }
+.s-foot b{ color:var(--w-fg); font-weight:600; }
+.s-foot button{ height:24px; padding:0 10px; border:0; border-radius:6px; background:var(--w-muted); font:500 12px var(--w-font); color:var(--w-fg); cursor:pointer; }
+.w .s-glow, .w tr.s-glow td{ animation:s-glow 1.8s ease-in-out infinite; }
+@keyframes s-glow{ 50%{ box-shadow:0 0 0 1px var(--g, #a78bfa), 0 0 12px var(--g, rgba(167,139,250,.55)); } }
+.w .s-glowc{ outline:1px solid var(--g); outline-offset:1px; border-radius:6px; }
+.s-spot{ border-radius:8px; box-shadow:0 0 0 2px #a78bfa, 0 0 0 9999px rgba(0,0,0,.6); }
+.s-spot span{ position:absolute; top:calc(100% + 8px); left:0; padding:4px 8px; border-radius:6px; background:#a78bfa; color:#0b0b0d; font-size:12px; font-weight:600; white-space:nowrap; }
+.s-hw:has(> .s-spot){ overflow:hidden; border-radius:var(--w-r); }
+.s-tipf{ padding:4px 8px; border-radius:6px; background:#18181b; box-shadow:0 0 0 1px #a78bfa; font-size:12px; color:var(--w-fg); white-space:nowrap; }
+.s-hand{ left:0; top:0; width:0; height:0; }
+.s-hand svg{ position:absolute; animation:s-hand 2.6s ease-in-out infinite; filter:drop-shadow(0 2px 4px rgba(0,0,0,.6)); }
+.s-hand span{ position:absolute; left:var(--x); top:var(--y); width:24px; height:24px; margin:-12px 0 0 -12px; border-radius:50%; border:2px solid #a78bfa; opacity:0; animation:s-tap 2.6s ease-out infinite; }
+@keyframes s-hand{ 0%{ transform:translate(calc(var(--x) + 80px), calc(var(--y) + 70px)); opacity:0; } 20%{ opacity:1; } 50%,60%{ transform:translate(calc(var(--x) - 6px), calc(var(--y) - 2px)); } 55%{ transform:translate(calc(var(--x) - 6px), calc(var(--y) - 2px)) scale(.88); } 100%{ transform:translate(calc(var(--x) + 80px), calc(var(--y) + 70px)); opacity:0; } }
+@keyframes s-tap{ 0%,52%{ opacity:0; transform:scale(.4); } 56%{ opacity:1; } 80%,100%{ opacity:0; transform:scale(1.6); } }
+.s-coach-ring{ border-radius:8px; box-shadow:0 0 0 2px #a78bfa; }
+.s-h.s-coach{ width:240px; padding:10px 12px; border-radius:10px; background:#f4f4f5; color:#0b0b0d; box-shadow:0 8px 24px rgba(0,0,0,.5); pointer-events:auto; }
+.s-coach b{ display:block; font-size:13px; } .s-coach > span{ display:block; margin-top:2px; font-size:12px; color:#52525b; }
+.s-coach div{ display:flex; align-items:center; justify-content:space-between; margin-top:8px; } .s-coach small{ font-size:11px; color:#71717a; }
+.s-coach button{ height:24px; padding:0 10px; border:0; border-radius:6px; background:#0b0b0d; color:#fff; font:500 12px var(--w-font); cursor:pointer; }
+.s-chips{ display:flex; flex-direction:column; gap:6px; }
+.s-chips button{ display:flex; flex-direction:column; align-items:flex-start; gap:2px; padding:8px 10px; border:0; border-radius:8px; background:var(--w-muted); font:500 13px var(--w-font); color:var(--w-fg); text-align:left; cursor:pointer; }
+.s-chips button span{ font-size:12px; font-weight:400; color:var(--w-muted-fg); }
+.s-chips button:hover{ box-shadow:0 0 0 1px #a78bfa; }
+/* Пометки: тонкая рамка плавно «дышит» (дирижёр 21.10: мигание, но очень плавное и небольшое) + метка с номером пункта */
+.w .s-ann{ outline:1px solid var(--g); outline-offset:1px; border-radius:6px; animation:s-breathe 2.4s ease-in-out infinite; }
+@keyframes s-breathe{ 0%,100%{ outline-color:color-mix(in srgb, var(--g) 15%, transparent); } 50%{ outline-color:var(--g); } }
+.s-ann-tag{ transform:translate(-100%, -60%); padding:0 4px; border-radius:4px; background:var(--g); color:#0b0b0d; font-size:10px; line-height:14px; font-weight:700; white-space:nowrap; }
+/* Точка: пульс, с подписью или без */
+.s-hw{ position:relative; }
+.s-hot{ display:flex; align-items:center; gap:8px; transform:translateY(-50%); pointer-events:none; }
+.s-hot i{ position:relative; width:12px; height:12px; flex:none; border-radius:50%; background:#a78bfa; box-shadow:0 0 0 3px rgba(167,139,250,.35); }
+.s-hot i::after{ content:''; position:absolute; inset:-6px; border-radius:50%; border:2px solid #a78bfa; animation:s-pulse 1.6s ease-out infinite; }
+@keyframes s-pulse{ from{ transform:scale(.6); opacity:1; } to{ transform:scale(1.6); opacity:0; } }
+.s-hot span{ padding:4px 8px; border-radius:6px; background:#a78bfa; color:#0b0b0d; font-size:12px; line-height:16px; font-weight:600; white-space:nowrap; }
+.s-why{ max-width:320px; font-size:13px; line-height:18px; color:var(--w-muted-fg); }
+.s-tabs{ display:flex; gap:4px; margin-top:12px; }
+.s-tabs button{ height:32px; padding:0 14px; border:0; border-radius:999px; background:none; font:500 13px var(--w-font); color:var(--w-muted-fg); cursor:pointer; }
+.s-tabs button.is-on{ background:var(--w-muted); color:var(--w-fg); }
+.s-cap{ font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+.s-tag{ display:inline-flex; align-items:center; height:20px; padding:0 8px; border-radius:999px; background:var(--w-muted); font-size:12px; font-weight:500; color:var(--w-muted-fg); white-space:nowrap; }
+.s-n{ display:inline-grid; place-items:center; width:20px; height:20px; flex:none; border-radius:50%; background:var(--w-fg); color:var(--w-page); font-size:12px; font-weight:600; }
+
+/* v1 Раскадровка: три экрана в ряд */
+.s-strip{ display:flex; gap:24px; flex-wrap:wrap; }
+.s-fr{ display:flex; flex-direction:column; gap:8px; width:320px; }
+.s-fr__h{ display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; }
+
+/* v2 В странице: каркас 2 колонки, три экрана вкладками сверху */
+.s-page{ display:grid; grid-template-columns:1fr 320px; gap:24px; max-width:1100px; margin-top:16px; padding:24px; border-radius:16px; background:#0c0c0e; box-shadow:0 0 0 1px var(--w-border); }
+.s-ctr{ display:flex; flex-direction:column; gap:12px; }
+.s-ctr__h{ font-size:20px; line-height:28px; font-weight:600; }
+.s-sk{ border-radius:12px; background:var(--w-mid-bg); }
+.s-what{ display:flex; align-items:center; gap:8px; margin-top:12px; font-size:13px; color:var(--w-muted-fg); }
+
+/* v3 Сценарий по шагам */
+.s-sc{ display:grid; grid-template-columns:280px auto; gap:32px; margin-top:24px; align-items:start; }
+.s-steps{ display:flex; flex-direction:column; gap:4px; }
+.w .s-st, .s-st{ display:flex; gap:12px; padding:8px 12px; border:0; border-radius:10px; background:none; font:inherit; color:var(--w-muted-fg); text-align:left; cursor:pointer; }
+.s-st:hover{ background:var(--w-mid-bg); }
+.s-st.is-on{ background:var(--w-muted); color:var(--w-fg); }
+.s-st .s-n{ background:var(--w-muted); color:var(--w-muted-fg); }
+.s-st.is-on .s-n{ background:var(--w-fg); color:var(--w-page); }
+.s-st__t{ display:flex; flex-direction:column; gap:2px; }
+.s-st__t b{ font-size:13px; font-weight:600; }
+.s-nav{ display:flex; align-items:center; gap:12px; margin-top:16px; }
+.s-nav button{ height:32px; padding:0 12px; border:0; border-radius:8px; background:var(--w-muted); font:500 13px var(--w-font); color:var(--w-fg); cursor:pointer; }
+.s-nav button:disabled{ opacity:.3; cursor:default; }
+.s-z2{ zoom:1.5; }
+
+
+/* v5 Карта переходов: кадры-узлы и стрелки с подписью действия */
+.s-map{ position:relative; margin-top:24px; }
+.s-map svg{ position:absolute; inset:0; overflow:visible; pointer-events:none; }
+.s-map__path{ fill:none; stroke:var(--w-ring); stroke-width:1.5; }
+.s-map__lbl{ fill:var(--w-muted-fg); font:500 12px var(--w-font); paint-order:stroke; stroke:var(--w-page); stroke-width:4px; }
+.s-node{ position:absolute; display:flex; flex-direction:column; gap:6px; }
+.s-node .s-fr__h{ font-size:12px; }
+.s-start{ position:absolute; display:grid; place-items:center; width:120px; height:56px; border-radius:999px; background:var(--w-muted); font-size:13px; font-weight:600; text-align:center; }
+
+/* v6 Липкий виджет: шаги прокруткой слева, виджет закреплён справа.
+   Своя область прокрутки фиксированной высоты: песочница подгоняет рамку под содержимое, vh внутри растут без конца. */
+.s-scr{ display:grid; grid-template-columns:minmax(260px, 420px) auto; gap:48px; height:560px; margin-top:24px; overflow-y:auto; }
+.s-scr__steps{ padding-bottom:320px; }
+.s-scr__st{ min-height:280px; padding-top:24px; color:var(--w-muted-fg); transition:color .2s; }
+.s-scr__st b{ display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:18px; line-height:24px; font-weight:600; }
+.s-scr__st.is-on{ color:var(--w-fg); }
+.s-scr__st .s-n{ background:var(--w-muted); color:var(--w-muted-fg); }
+.s-scr__st.is-on .s-n{ background:var(--w-fg); color:var(--w-page); }
+.s-scr__pin{ position:sticky; top:0; align-self:start; }
+
+/* v7 Панель переключателей */
+.s-pl{ display:grid; grid-template-columns:auto 300px; gap:48px; margin-top:24px; align-items:start; }
+.s-ctl{ display:flex; flex-direction:column; gap:16px; padding:16px; border-radius:12px; background:var(--w-mid-bg); }
+.s-ctl__f{ display:flex; flex-direction:column; gap:6px; }
+.s-ctl__f > b{ font-size:12px; font-weight:500; color:var(--w-muted-fg); }
+.s-ctl .w-seg{ margin:0; flex-wrap:wrap; }
+.s-ctl .w-seg button{ flex:none; padding:0 10px; }
+.s-ctl .w-seg button:disabled{ opacity:.3; cursor:default; }
+.s-ctl__res{ padding-top:12px; border-top:1px solid var(--w-border); font-size:12px; line-height:18px; color:var(--w-muted-fg); }
+
+/* v8 До и после клика по точке */
+.s-ba{ display:grid; grid-template-columns:240px auto; gap:32px; margin-top:24px; align-items:start; }
+.s-ba__pair{ display:flex; gap:40px; align-items:start; }
+.s-ba__c{ display:flex; flex-direction:column; gap:8px; }
+.s-ba__h{ font-size:13px; font-weight:600; color:var(--w-muted-fg); }
+.s-z125{ zoom:1.25; }
+
+/* v9 Ось «где пользователь» */
+.s-ax{ margin-top:32px; }
+.s-ax__h{ display:flex; align-items:baseline; gap:12px; margin:0 0 4px; font-size:16px; font-weight:600; }
+.s-ax__h .s-cap{ font-weight:400; }
+.s-ax__vals{ display:flex; gap:6px; margin:8px 0 12px; }
+
+/* v10–v12: на странице только виджет, управление — в оболочке лабы */
+.s-only{ padding:32px 48px; }
+.s-only .s-z2{ zoom:2; }
+
+/* v4 Таблица: экран · зачем · главное действие · виджет */
+.s-tbl4{ display:grid; grid-template-columns:120px 220px 200px 320px; gap:24px 32px; margin-top:24px; align-items:start; }
+.s-tbl4 > .h{ font-size:12px; font-weight:500; color:var(--w-muted-fg); }
+.s-tbl4 > .r{ font-size:14px; font-weight:600; }

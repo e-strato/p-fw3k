@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_v3.css" />
+<style>
+/* v14 · Радар · две колонки — вариант идеи v13 (дирижёр 01.10: «идея прикольная, предложи ещё парочку на неё»): фото сверху,
+   снизу панель в две колонки — слева позиция, ник и имя, справа диаграмма статов; команда строкой во всю ширину внизу. Шрифт — IBM Plex Sans */
+.d14 { --r: .9em; --shape: inset(0 round .9em); --f-disp: 'IBM Plex Sans'; --f-ui: 'IBM Plex Sans'; }
+.d14__face, .d14 .bk { font-family: 'IBM Plex Sans', sans-serif; }
+.d14__face { position: absolute; inset: 0; }
+.d14__plate { position: absolute; inset: 0; border-radius: var(--r); overflow: hidden; background: var(--c-card-ink);
+  box-shadow: 0 1.4em 2.6em -1em color-mix(in srgb, var(--c-black) 85%, transparent); }
+
+/* 2 Фон: сверху тёмный цвет силы и логотип команды за игроком, ниже — тёмное поле под диаграмму */
+.d14__bg { position: absolute; inset: 0;
+  background:
+    radial-gradient(60% 30% at 50% 18%, color-mix(in srgb, var(--tier) 30%, transparent), transparent 75%),
+    radial-gradient(50% 25% at 50% 75%, color-mix(in srgb, var(--tier) 10%, transparent), transparent 75%),
+    linear-gradient(180deg, color-mix(in srgb, var(--tier-2) 85%, var(--c-card-ink)), var(--c-card-ink) 50%); }
+.d14__logo { left: 3em; top: 1.6em; width: 16em; height: 12em; background: color-mix(in srgb, var(--tier) 20%, transparent); }
+
+/* 3 Рамка: кант поверх всего — язычок команды его не рвёт */
+.d14__edge { position: absolute; inset: 0; z-index: 12; border-radius: var(--r); pointer-events: none; box-shadow: inset 0 0 0 .15em var(--tier); }
+
+/* 5 Фото: сверху по центру, уходит в тёмное поле, свечение за головой */
+.d14__halo { position: absolute; left: 11em; top: 4.8em; width: 12em; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--tier-hi) 55%, transparent), color-mix(in srgb, var(--tier) 22%, transparent) 55%, transparent); }
+.d14 .ph { left: 2.5em; top: .9em; width: 17em;
+  -webkit-mask: linear-gradient(180deg, var(--c-black) 62%, transparent 76%); mask: linear-gradient(180deg, var(--c-black) 62%, transparent 76%); }
+
+/* 7 Раскладка: рейтинг справа сверху, герои в воздухе под ним, номер карты — чипом слева сверху */
+.d14__ovr { position: absolute; right: 1.2em; top: .8em; z-index: 7; }
+.d14__ovr b { font-size: 3.1em; font-weight: 700; line-height: 1; letter-spacing: -.04em; color: var(--c-white);
+  text-shadow: 0 .05em .4em color-mix(in srgb, var(--c-black) 45%, transparent); }
+.d14__heroes { position: absolute; right: 1.3em; top: 4.9em; z-index: 7; display: grid; gap: .45em; justify-items: center; }
+.d14__heroes div { display: grid; justify-items: center; gap: .2em; }
+.d14__heroes .hero-ic { width: 2.3em; aspect-ratio: 1; border-radius: 50%; box-shadow: 0 0 0 .1em color-mix(in srgb, var(--tier) 70%, transparent), 0 .3em .8em color-mix(in srgb, var(--c-black) 50%, transparent); }
+.d14__heroes small { font-size: .54em; font-weight: 500; white-space: nowrap; color: var(--c-muted); }
+.d14__heroes small b { font-weight: 700; color: var(--c-white); }
+.d14__serial { position: absolute; left: 1em; top: 1em; z-index: 7; display: grid; padding: .35em .65em; border-radius: .45em; line-height: 1.2;
+  background: color-mix(in srgb, var(--c-card-ink) 75%, transparent); }
+.d14__serial b { font-size: .82em; font-weight: 700; color: var(--tier-hi); }
+.d14__serial small { font-size: .56em; font-weight: 500; color: var(--c-muted); }
+
+/* 8 Позиция — пилюлей по центру над ником */
+.d14__role { position: absolute; left: 50%; top: 13.1em; translate: -50% 0; z-index: 7; padding: .38em 1.05em; border-radius: 2em; white-space: nowrap;
+  font-size: .92em; font-weight: 600; background: var(--c-card-ink); box-shadow: inset 0 0 0 .1em var(--tier); }
+.d14__role b { font-weight: 700; color: var(--tier-hi); }
+
+/* 6 Игрок */
+.d14__who { position: absolute; left: 1.2em; right: 1.2em; top: 14.9em; z-index: 6; text-align: center; }
+.d14__nick { font-weight: 700; line-height: 1; letter-spacing: -.02em; }
+.d14__name { display: flex; justify-content: center; align-items: center; gap: .5em; margin-top: .35em; font-size: .78em; font-weight: 500; color: var(--c-muted); }
+
+/* 8 Статы — диаграмма: сетка из трёх шестиугольников, фигура игрока цветом силы, у вершин — подпись и значение */
+.d14__radar { left: 10.6em; top: 18.2em; width: 10.8em; height: 8.7em; z-index: 6; }
+
+/* 4 Эффекты: блеск по фото; с Holo — сетка диаграммы светится; с Prism — фигура переливается; у Legend — по диаграмме ходит луч радара */
+.d14__sweep { position: absolute; left: 16em; top: 22.55em; width: 6.2em; aspect-ratio: 1; translate: -50% -50%; z-index: 6; border-radius: 50%; pointer-events: none;
+  background: conic-gradient(from var(--spin), color-mix(in srgb, var(--tier-hi) 45%, transparent), transparent 18%);
+  -webkit-mask: radial-gradient(closest-side, var(--c-black) 98%, transparent); mask: radial-gradient(closest-side, var(--c-black) 98%, transparent);
+  animation: spin 4s linear infinite; mix-blend-mode: screen; }
+
+/* 8 Команда — язычком у нижнего края, как в v1, со скруглёнными верхними углами */
+.d14__team { position: absolute; left: 50%; bottom: 0; translate: -50% 0; z-index: 9; display: flex; align-items: center; gap: .5em; white-space: nowrap;
+  padding: .45em 1.4em .55em; border-radius: .8em .8em 0 0; font-size: .82em; font-weight: 700;
+  background: linear-gradient(0deg, color-mix(in srgb, var(--tier) 30%, var(--c-card-ink)), color-mix(in srgb, var(--tier) 10%, var(--c-card-ink))); }
+.d14__team .logo { width: 1.9em; height: 1.9em; }
+
+/* 9 Оборот: та же диаграмма крупнее нет — оборот подробный: статы полосками с полными названиями, герои, форма, кнопка */
+.d14 .bk { box-shadow: inset 0 0 0 .15em var(--tier); padding: 1.3em; gap: .7em; }
+.d14 .bk__top b, .d14 .bk__top em { font-weight: 700; }
+.d14 .bk__top em { color: var(--c-white); }
+.d14 .bk__stats { grid-template-columns: 1fr; gap: .35em; }
+.d14 .bk__stats li { grid-template-columns: 6.5em 1fr 2em; align-items: center; gap: .6em; font-size: .72em; }
+.d14 .bk__stats b { order: 3; text-align: right; font-size: 1.1em; }
+.d14 .bk__stats i { grid-column: auto; height: .45em; }
+.d14 .bk__heroes { grid-template-columns: repeat(3, 1fr); }
+.d14 .bk__heroes li { grid-template-columns: 1fr; justify-items: center; text-align: center; gap: .2em; }
+.d14 .bk__heroes .hero-ic { width: 2.2em; aspect-ratio: 1; border-radius: 50%; }
+.d14 .bk__btn { border-radius: .6em; }
+
+/* Панель снизу: две колонки — текст слева, диаграмма справа; команда строкой внизу */
+.d14__panel { position: absolute; left: 0; right: 0; top: 16.4em; bottom: 0; z-index: 4; background: var(--c-card-ink); box-shadow: 0 -.06em 0 color-mix(in srgb, var(--tier) 45%, transparent); }
+.d14__left { position: absolute; left: 1.3em; width: 9.6em; top: 18.2em; height: 8.6em; z-index: 6; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: .5em; }
+.d14__role { position: static; translate: none; }
+.d14__who { position: static; text-align: left; }
+.d14__name { justify-content: flex-start; }
+.d14__team { left: 0; right: 0; translate: none; justify-content: center; height: 2.7em; padding: 0; border-radius: 0;
+  border-top: .06em solid color-mix(in srgb, var(--c-white) 10%, transparent); font-size: .9em;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tier) 20%, var(--c-card-ink)), color-mix(in srgb, var(--tier) 6%, var(--c-card-ink)) 50%, color-mix(in srgb, var(--tier) 20%, var(--c-card-ink))); }
+.d14__team .logo { width: 1.7em; height: 1.7em; }
+
+/* Заход 2 (01.10: «технологичнее, не такой простой»): цифры — IBM Plex Mono (та же семья); развёртка по фото; светящаяся линия на стыке
+   фото и панели; сетка точек в панели; разделитель колонок с делениями; у паука — деления шкалы и пунктирные оси */
+.d14__ovr b, .d14__serial b, .d14__heroes small, .d14__radar .v, .d14__radar .k, .d14__radar .tick { font-family: 'IBM Plex Mono', monospace; }
+.d14__scan { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0 .3em, color-mix(in srgb, var(--c-black) 22%, transparent) .3em .36em); }
+.d14__panel { background:
+    radial-gradient(circle, color-mix(in srgb, var(--tier) 16%, transparent) .05em, transparent .07em) 0 0 / .8em .8em,
+    var(--c-card-ink); }
+.d14__line { position: absolute; left: 0; right: 0; top: 16.35em; height: .1em; z-index: 5; background: linear-gradient(90deg, transparent, var(--tier-hi) 30%, var(--tier-hi) 70%, transparent);
+  box-shadow: 0 0 .8em .1em color-mix(in srgb, var(--tier) 60%, transparent); }
+.d14__div { position: absolute; left: 10.5em; top: 17.6em; height: 9.6em; width: .5em; z-index: 5;
+  background: linear-gradient(color-mix(in srgb, var(--tier) 40%, transparent) 0 0) 0 0 / .06em 100% no-repeat,
+    repeating-linear-gradient(180deg, color-mix(in srgb, var(--tier) 55%, transparent) 0 .06em, transparent .06em .8em) 0 0 / .3em 100% no-repeat; }
+.d14__radar .grid { stroke: color-mix(in srgb, var(--tier) 30%, transparent); }
+.d14__radar .axis { stroke: color-mix(in srgb, var(--tier) 35%, transparent); stroke-dasharray: 1.2 1.6; }
+.d14__radar .tick { font-size: 4.2px; fill: color-mix(in srgb, var(--tier) 70%, transparent); }
+.d14__radar .v { font-size: 10px; }
+.d14__ovr small { display: block; margin-top: .1em; text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: .5em; font-weight: 600; color: var(--tier-hi); }
+</style></head>
+<body><section class="section v3">
+  <div class="sec-head">
+    <h2 class="sec-title">v14 · Радар · две колонки</h2>
+    <p class="sec-lead">Та же идея, другой баланс, технологичнее: фото с развёрткой, светящаяся линия на стыке, панель с сеткой точек в две колонки через разделитель с делениями. Слева позиция, ник и имя, справа диаграмма статов. Команда — строкой во всю ширину внизу. Шрифты — IBM Plex Sans и Plex Mono для цифр.</p>
+  </div>
+  <div id="v3"></div>
+</section>
+<script src="_v3.js"></script>
+<script>
+V3.страница({
+  класс: 'd14',
+  иерархия: [
+    'Скруглённый прямоугольник, только скругления.',
+    'Сверху тёмный цвет силы и логотип команды крупно за игроком.',
+    'Кант цвета силы поверх всего.',
+    'Развёртка по фото. Блеск редкости. С Holo светится сетка диаграммы, с Prism фигура переливается радугой, у Legend по диаграмме ходит луч радара.',
+    'Игрок сверху по центру, уходит в тёмную панель, за головой свечение.',
+    'Левая колонка панели: ник, ниже флаг и настоящее имя.',
+    'Рейтинг в правом верхнем углу крупно, без обводок. Под ним три героя в воздухе: матчи и винрейт. Номер карты и сезон — чипом слева сверху.',
+    'Панель с сеткой точек и светящейся линией на стыке с фото. Две колонки через разделитель с делениями: слева позиция над ником, справа паук навыков со шкалой и пунктирными осями. Цифры — IBM Plex Mono. Команда — строкой во всю ширину внизу.',
+    'Свой оборот — подробный: статы полосками с полными названиями, герои, форма, кнопка «Страница игрока».',
+  ],
+  оборот: (п, r, h) => h.оборот(п),
+  лицо: (п, r, h) => `
+<div class="d14__face">
+  <div class="d14__plate" data-l="1">
+    <div class="d14__bg" data-l="2">${h.маска(п, 'd14__logo')}</div>
+    <i class="d14__halo" data-l="5"></i>
+    ${h.фото(п)}
+    <i class="d14__scan"></i>
+    ${h.блеск(r)}
+  </div>
+  <i class="d14__edge" data-l="3"></i>
+  <div class="d14__serial" data-l="7"><b>${h.серия(п)}</b><small>${h.СЕЗОН}</small></div>
+  <div class="d14__ovr" data-l="7"><b>${п.рейтинг}</b><small>/ 100</small></div>
+  <div class="d14__heroes" data-l="7">${п.герои.map((г) => `<div>${h.герой(г)}<small><b>${г[2]} М</b> · ${г[3]}%</small></div>`).join('')}</div>
+  <div class="d14__panel" data-l="8"></div>
+  <i class="d14__line" data-l="8"></i>
+  <i class="d14__div" data-l="8"></i>
+  <div class="d14__left"><span class="d14__role" data-l="8"><b>Pos ${п.pos}</b> · ${h.РОЛИ[п.pos]}</span>
+  <div class="d14__who" data-l="6"><div class="d14__nick" style="font-size: ${Math.min(2.1, 9.4 / (п.ник.length * .6)).toFixed(2)}em">${п.ник}</div>${п.имя ? `<div class="d14__name">${h.флаг(п)}${п.имя}</div>` : ''}</div></div>
+  ${h.радар(п, 'd14__radar').replace('<polygon class="shape"', '<text class="tick" x="2" y="-11">33</text><text class="tick" x="2" y="-23">66</text><polygon class="shape"')}
+  <i class="d14__sweep" data-l="4" data-deco="3"></i>
+  <div class="d14__team" data-l="8">${h.лого(п)}${h.команда(п)}</div>
+</div>`,
+})
+</script>
+</body></html>

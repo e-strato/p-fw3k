@@ -1,0 +1,37 @@
+/* «Статистика к матчу» на странице матча (w-preview v21 → _wstat.js). Токены — widget-tournament/_w.css. Узко (< 600) — одно досье и переключалка. */
+.ws{ container-type:inline-size; background:var(--w-bg); color:var(--w-fg); border:1px solid var(--w-border); border-radius:var(--w-r); font:12px/16px var(--w-font); overflow:hidden; }
+.ws-lg{ width:14px; height:14px; object-fit:contain; flex:none; }
+.ws-hd{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; padding:10px 16px; border-bottom:1px solid var(--w-border); }
+.ws-hd b{ font-size:14px; font-weight:600; } .ws-hd small, .ws-h small{ font-size:11px; color:var(--w-muted-fg); }
+.ws-sw{ display:none; grid-template-columns:1fr 1fr; gap:2px; padding:8px 12px 0; }
+.ws-sw button{ display:flex; align-items:center; justify-content:center; gap:6px; height:32px; border:0; border-radius:8px; background:transparent; color:var(--w-muted-fg); font:500 13px var(--w-font); cursor:pointer; }
+.ws-sw button.is-on{ background:var(--w-muted); color:var(--w-fg); } .ws-sw .ws-lg{ width:16px; height:16px; }
+.ws-w{ display:grid; grid-template-columns:1fr 240px 1fr; }
+.ws-ds{ padding:10px 16px; min-width:0; font-variant-numeric:tabular-nums; }
+.ws-t{ display:flex; align-items:center; gap:6px; margin-bottom:6px; } .ws-t b{ font-weight:600; }
+.ws-k{ display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:8px; }
+.ws-k span{ display:flex; flex-direction:column; padding:6px 8px; border-radius:6px; background:#111113; font-size:14px; font-weight:600; } .ws-k small{ font-size:10px; font-weight:400; color:var(--w-muted-fg); }
+.ws-i{ display:flex; gap:8px; align-items:flex-start; padding:3px 0; } .ws-i span{ color:#d4d4d8; }
+.ws-i i{ flex:none; width:14px; height:14px; margin-top:1px; border-radius:50%; display:grid; place-items:center; font-size:9px; font-style:normal; }
+.ws-i.ok i{ background:#14532d; color:#86efac; } .ws-i.no i{ background:#3f1d1d; color:#fca5a5; }
+.ws-h{ margin:8px 0 4px; font-size:11px; color:var(--w-muted-fg); }
+.ws-f{ display:flex; align-items:center; gap:8px; height:22px; border-top:1px solid #18181b; white-space:nowrap; overflow:hidden; }
+.ws-f i{ flex:none; width:16px; height:16px; border-radius:4px; display:grid; place-items:center; font:600 9px var(--w-font); font-style:normal; }
+.ws-f i.W{ background:#14532d; color:#86efac; } .ws-f i.L{ background:#3f1d1d; color:#fca5a5; }
+.ws-f span{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; } .ws-f b{ font-weight:600; } .ws-f small{ width:44px; text-align:right; font-size:11px; color:var(--w-muted-fg); }
+/* новости — таймлайн по центру */
+.ws-n{ padding:10px 14px; min-width:0; border-left:1px solid var(--w-border); border-right:1px solid var(--w-border); } .ws-n .ws-h{ margin-top:0; }
+.ws-tl{ position:relative; padding-left:12px; } .ws-tl::before{ content:''; position:absolute; left:3px; top:6px; bottom:6px; width:1px; background:var(--w-border); }
+.ws-tr{ position:relative; display:flex; flex-direction:column; gap:1px; padding:5px 0; color:inherit; text-decoration:none; }
+.ws-tr i{ position:absolute; left:-12px; top:9px; width:7px; height:7px; border-radius:50%; background:#a1a1aa; }
+.ws-tr small{ font-size:11px; color:var(--w-muted-fg); } .ws-tr span{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; } .ws-tr:hover span{ text-decoration:underline; }
+/* узко: одно досье выбранной команды, новости под ним */
+@container (max-width: 600px){
+  .ws-hd small{ display:none; } .ws-sw{ display:grid; }
+  .ws-w{ grid-template-columns:1fr; } .ws-ds{ padding:10px 12px; }
+  .ws-w[data-cur="a"] .ws-ds:last-child, .ws-w[data-cur="b"] .ws-ds:first-child{ display:none; }
+  .ws-n{ order:2; border:0; border-top:1px solid var(--w-border); padding:10px 12px; }
+  .ws-k span{ font-size:13px; padding:5px 6px; }
+}
+/* обёртка на странице матча: карточка .cd без своих полей — рамка у самого виджета */
+.ws-cd{ padding:0 !important; background:none !important; border:0 !important; }

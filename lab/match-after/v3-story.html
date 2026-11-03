@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../match-page/_page.css" /><link rel="stylesheet" href="_after.css" />
+<style>
+/* История серии: Dota пост-матч (Обзор / Таблица / Графики, нетворс с иконками событий) + Flapscore (одна шапка, вкладки) */
+.v3-top { position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 24px; padding: 24px 28px; border-radius: 16px;
+  background: radial-gradient(40% 120% at 0% 50%, color-mix(in srgb, var(--ta) 22%, transparent), transparent 70%), radial-gradient(40% 120% at 100% 50%, color-mix(in srgb, var(--tb) 14%, transparent), transparent 70%), var(--c-ui-panel); }
+.v3-team { display: flex; align-items: center; gap: 16px; } .v3-team:last-child { flex-direction: row-reverse; text-align: right; }
+.v3-team .r-lg { width: 64px; height: 64px; } .v3-team > span { display: grid; justify-items: start; gap: 6px; } .v3-team:last-child > span { justify-items: end; } .v3-team b { font-size: 22px; } .v3-team small { color: var(--c-caption); font-size: 13px; }
+.v3-team.is-l b { color: var(--c-muted); } .v3-team.is-l .r-lg { opacity: .7; }
+.v3-c { display: grid; justify-items: center; gap: 6px; text-align: center; }
+.v3-c b { font: 700 72px/1 var(--font-c); } .v3-c b span.l { color: var(--c-ui-dim); } .v3-c b i { margin: 0 10px; color: var(--c-ui-dim); font-style: normal; font-size: 46px; }
+.v3-c p { color: var(--c-muted); font-size: 13.5px; } .v3-c .v3-res { padding: 4px 12px; border-radius: 14px; background: color-mix(in srgb, var(--tw) 18%, var(--c-ui-item)); color: var(--c-text); font-size: 13px; font-weight: 600; }
+.v3-bar { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.v3-bar .a-tabs { background: var(--c-ui-panel); }
+.v3-bar .a-tabs button { padding: 10px 18px; font-size: 14px; }
+.v3-bar small { color: var(--c-caption); font-size: 13px; }
+
+/* Глава = карта */
+.v3-story { display: grid; gap: 0; }
+.v3-ch { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 22px; padding: 22px; border-radius: 16px; background: var(--c-ui-panel);
+  background-image: radial-gradient(60% 80% at 0% 0%, color-mix(in srgb, var(--tc) 13%, transparent), transparent 60%); }
+.v3-ch__l { display: grid; align-content: start; gap: 14px; }
+.v3-ch__n { display: flex; align-items: baseline; gap: 10px; } .v3-ch__n b { font-size: 20px; } .v3-ch__n small { color: var(--c-caption); font-size: 13px; }
+.v3-ch__s { display: flex; align-items: center; gap: 12px; font: 700 52px/1 var(--font-c); } .v3-ch__s .l { color: var(--c-ui-dim); } .v3-ch__s i { color: var(--c-ui-dim); font-style: normal; font-size: 34px; }
+.v3-ch__w { display: flex; align-items: center; gap: 8px; color: var(--c-muted); font-size: 13.5px; } .v3-ch__w b { color: var(--c-text); }
+.v3-mvp { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; background: color-mix(in srgb, var(--tc) 12%, var(--c-ui-item)); }
+.v3-mvp .a-ava { width: 52px; height: 52px; box-shadow: 0 0 0 2px var(--tc); } .v3-mvp span { display: grid; gap: 1px; } .v3-mvp small { color: var(--c-caption); font-size: 12px; } .v3-mvp b { font-size: 16px; } .v3-mvp em { color: var(--c-muted); font-size: 12.5px; font-style: normal; }
+.v3-ch__r { display: grid; gap: 14px; min-width: 0; }
+.v3-ch .a-evl li { padding: 6px 0; font-size: 13px; }
+.v3-ch__more { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; }
+.v3-link { position: relative; display: flex; align-items: center; gap: 12px; height: 54px; margin-left: 172px; padding-left: 26px; color: var(--c-caption); font-size: 13px; }
+.v3-link::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: linear-gradient(var(--c-ui-hover), var(--c-ui-hover)); }
+.v3-link b { color: var(--c-text); font: 700 16px var(--font-c); }
+.v3-skip { display: flex; align-items: center; gap: 12px; padding: 16px 22px; border-radius: 14px; box-shadow: inset 0 0 0 1px var(--c-ui-line); color: var(--c-caption); font-size: 14px; } .v3-skip b { color: var(--c-muted); }
+.v3-gr { display: grid; gap: 16px; } .v3-gr .a-maps { margin-bottom: 4px; }
+@container row (max-width: 700px) {
+  .v3-top { grid-template-columns: 1fr auto 1fr; gap: 6px; padding: 16px 10px; } .v3-team { flex-direction: column !important; gap: 6px; text-align: center !important; }
+  .v3-team .r-lg { width: 40px; height: 40px; } .v3-team b { font-size: 13.5px; } .v3-team small { display: none; } .v3-team > span, .v3-team:last-child > span { justify-items: center; }
+  .v3-c b { font-size: 44px; } .v3-c b i { margin: 0 4px; font-size: 28px; } .v3-c p { font-size: 11.5px; } .v3-c .v3-res { font-size: 11.5px; }
+  .v3-bar { flex-direction: column; align-items: stretch; } .v3-bar .a-tabs { width: 100%; } .v3-bar .a-tabs button { flex: 1; padding: 9px 6px; font-size: 13px; } .v3-bar small { display: none; }
+  .v3-ch { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 14px; } .v3-ch__s { font-size: 40px; } .v3-ch__more { grid-template-columns: minmax(0, 1fr); }
+  .v3-link { margin-left: 24px; }
+}
+</style></head>
+<body><main class="p-page">
+  <h1>v3 · История серии</h1>
+  <p>Как пост-матч Dota 2 (вкладки Обзор / Таблица / Графики, нетворс по минутам с иконками событий) и страница матча Flapscore (одна шапка, ниже вкладки). Обзор рассказывает серию по главам: каждая карта — счёт, победитель, игрок карты и график со значками ключевых моментов (⚔ драка, ◆ Рошан, ▲ башня; в CS — ● пистолетка, ◎ клатч, ✦ эйс), между главами — как менялся счёт серии. «Таблица» — игроки за серию, «Графики» — любая карта крупно, карта выбирается плиткой.</p>
+  <div class="p-tools"><div class="p-seg"><button type="button" data-g="dota">Dota 2 · Spirit — Tundra 2 : 1</button><button type="button" data-g="cs">CS2 · G2 — FaZe 2 : 0</button></div></div>
+  <p class="p-cap">Десктоп · 1440 (рамка уменьшена под ширину окна)</p><div class="p-wrap"><div class="p-frame p-frame--desk" data-ma></div></div>
+  <p class="p-cap">Телефон · 390 — листается внутри рамки</p><div class="p-frame p-frame--phone" data-ma></div>
+</main>
+<script>
+window.MA = {}
+MA.вариант = (m, x) => {
+  const w = x.поб(m), cs = m.g === 'cs'
+  let сa = 0, сb = 0
+  const главы = m.карты.map((к, i) => {
+    if (!к.сч) return `<div class="v3-link"><span>Серия закончилась ${сa} : ${сb}</span></div><div class="v3-skip"><b>${к.n}</b><span>${к.под} — не понадобилась</span></div>`
+    к.поб === 'a' ? сa++ : сb++
+    const [n, k, строка] = к.mvp, l = к.поб === 'a' ? 'b' : 'a'
+    const связка = i ? `<div class="v3-link"><span>Счёт серии</span><b>${сa - (к.поб === 'a')} : ${сb - (к.поб === 'b')} → ${сa} : ${сb}</b></div>` : ''
+    return `${связка}<article class="v3-ch" style="--tc:${x.цвет(m, к.поб)}">
+      <div class="v3-ch__l">
+        <p class="v3-ch__n"><b>${к.n}</b><small>${к.под}</small></p>
+        <p class="v3-ch__s"><span class="${к.поб === 'a' ? '' : 'l'}">${к.сч[0]}</span><i>:</i><span class="${к.поб === 'b' ? '' : 'l'}">${к.сч[1]}</span></p>
+        <p class="v3-ch__w">${x.лого(m[к.поб], 'sm')}<b>${x.имя(m[к.поб])}</b> взяли карту · ${к.длит}</p>
+        <div class="v3-mvp">${x.ава(n)}<span><small>Игрок карты</small><b>${n}</b><em>${строка}</em></span></div>
+        ${x.состав_карты(m, i)}
+      </div>
+      <div class="v3-ch__r">${x.график(m, i, { h: 200, id: 'o' })}${x.события(m, i)}</div>
+    </article>`
+  }).join('')
+  const кн = m.карты.filter((к) => к.сч)
+  return `
+  <header class="v3-top" style="--ta:${x.цвет(m, 'a')};--tb:${x.цвет(m, 'b')}">
+    <div class="v3-team ${w === 'a' ? '' : 'is-l'}">${x.лого(m.a)}<span><b>${x.имя(m.a)}</b><small>${w === 'a' ? 'победа' : 'поражение'} · ${x.пипы(m.серия[0])}</small></span></div>
+    <div class="v3-c"><p>${m.тур} · ${m.стадия}</p><b><span class="${w === 'a' ? '' : 'l'}">${m.серия[0]}</span><i>:</i><span class="${w === 'b' ? '' : 'l'}">${m.серия[1]}</span></b><span class="v3-res">Завершён · ${m.дата} · ${m.длит}</span></div>
+    <div class="v3-team ${w === 'b' ? '' : 'is-l'}">${x.лого(m.b)}<span><b>${x.имя(m.b)}</b><small>${w === 'b' ? 'победа' : 'поражение'} · ${x.пипы(m.серия[1])}</small></span></div>
+  </header>
+  <div data-tabs style="display:grid;gap:18px">
+    <div class="v3-bar">${x.вкладки([['o', 'Обзор'], ['t', 'Таблица'], ['g', 'Графики']])}<small>${cs ? '● пистолетка · ◎ клатч · ✦ эйс' : '⚔ драка · ◆ Рошан · ▲ башня · ★ конец'}</small></div>
+    ${x.панели([
+      ['o', `<div class="v3-story">${главы}</div>`],
+      ['t', `<div style="display:grid;gap:18px">${x.сек('', x.таблица(m, w))}${x.сек('', x.таблица(m, w === 'a' ? 'b' : 'a'))}</div>`],
+      ['g', `<div data-tabs class="v3-gr">${x.карты(m, { кнопки: true })}${x.панели(кн.map((к, i) => ['map' + i, x.сек(к.n + ' · ' + к.сч[0] + ' : ' + к.сч[1], `<div style="display:grid;gap:16px">${x.график(m, i, { h: 300, id: 'g' })}${x.события(m, i)}</div>`)]))}</div>`],
+    ])}
+  </div>
+  <div class="a-g2">${x.сек('Что дальше', x.дальше(m, 0))}${x.сек('Твой матч', x.мои(m))}</div>`
+}
+</script>
+<script src="_after.js"></script>
+</body></html>

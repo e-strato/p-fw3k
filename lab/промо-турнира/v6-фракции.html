@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_промо.css" />
+<style>
+/* v6 · Фракции болельщиков. Откуда: LoL Pick'Em «Factions» (Worlds 2025) — фанаты встают за сторону, очки всех складываются,
+   победившая фракция получает награду каждому участнику. У нас фракция = команда TI, очки = очки фэнтези её болельщиков.
+   Место — колонка главной (1 из 2 центральных). Виджет красится цветом твоей команды. */
+.w-fac { --tc: var(--c-accent); overflow: hidden; transition: --tc .5s;
+  background: radial-gradient(90% 50% at 50% 0%, color-mix(in srgb, var(--tc) 18%, transparent), transparent 70%), var(--c-ui-panel); }
+.w-fac .card__b { display: grid; gap: 16px; }
+.towers { display: grid; grid-template-columns: repeat(6, 1fr); align-items: end; gap: 8px; height: 230px; padding-top: 22px; }
+.tw { position: relative; display: grid; grid-template-rows: 1fr auto; justify-items: center; gap: 8px; height: 100%; border: 0; padding: 0; background: none; color: var(--c-text); font: inherit; cursor: pointer; }
+.tw__bar { position: relative; align-self: end; width: 100%; height: var(--h); min-height: 24px; border-radius: 10px 10px 4px 4px; transition: height .8s cubic-bezier(.2, .8, .2, 1);
+  background: linear-gradient(180deg, var(--tc), color-mix(in srgb, var(--tc) 30%, var(--c-ui-bg))); opacity: .55; }
+.tw:hover .tw__bar { opacity: .8; }
+.tw.is-mine .tw__bar { opacity: 1; box-shadow: 0 0 26px color-mix(in srgb, var(--tc) 50%, transparent); }
+.tw__n { position: absolute; top: -20px; left: 0; right: 0; font-size: var(--fs-app-xs); color: var(--c-caption); text-align: center; font-variant-numeric: tabular-nums; }
+.tw.is-mine .tw__n { color: var(--c-text); font-weight: 600; }
+.tw .team-logo { width: 34px; height: 34px; border-radius: 10px; }
+.tw.is-lead .tw__bar::after { content: '1'; position: absolute; top: 8px; left: 50%; translate: -50% 0; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--c-coin); color: var(--c-card-dark-text); font-size: 11px; font-weight: 700; }
+
+.me { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 14px; border-radius: 12px; background: color-mix(in srgb, var(--tc) 14%, var(--c-ui-item)); }
+.me b { display: block; font-size: var(--fs-app-md); }
+.me small { font-size: var(--fs-app-sm); color: var(--c-caption); }
+.me .disp { font-size: 26px; text-align: right; }
+.me .disp small { display: block; font: 400 var(--fs-app-xs)/1.3 var(--font); }
+.prize { display: flex; align-items: center; gap: 12px; font-size: var(--fs-app-sm); color: var(--c-caption); }
+.prize i { flex: none; width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: var(--c-ui-bg); color: var(--c-coin); }
+.prize b { color: var(--c-text); font-weight: 600; }
+.feed { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; font-size: var(--fs-app-xs); color: var(--c-caption); }
+.feed li { display: flex; gap: 6px; }
+.feed b { color: var(--c-text); font-weight: 500; }
+@media (prefers-reduced-motion: no-preference) { .feed li:first-child { animation: in .4s ease; } }
+@keyframes in { from { opacity: 0; translate: 0 -6px; } }
+</style></head>
+<body>
+<div class="lab-wrap">
+  <div class="lab-bar">
+    <div class="lab-bar__t"><b>v6 · Фракции болельщиков</b><small>LoL Pick'Em Factions · одна из центральных колонок</small></div>
+    <div class="lab-st"><button data-go="до">Выбери сторону</button><button data-go="в">Я во фракции</button></div>
+  </div>
+  <p class="home-cap">Настоящая главная: фракции — на месте «Бустера точности», сразу под витриной; остальное приглушено</p>
+  <div class="home" data-slot="into:.app-home__accuracy">
+    <div class="ghost ghost--tall"></div>
+    <section class="card card--ui w-fac" id="w" aria-label="Фракции TI">
+      <div class="card__h"><h2>Фракции TI</h2><small>Чьи болельщики наберут больше?</small></div>
+      <div class="card__b">
+        <div class="towers" id="tw"></div>
+        <div class="me" data-st="до"><span><b>Встань за команду</b><small>Твои очки фэнтези пойдут в её копилку. Сменить можно до старта.</small></span></div>
+        <div class="me" data-st="в"><span><b id="mn">Ты за Team Spirit</b><small id="mp">12-й по вкладу во фракции из 9 412</small></span><span class="disp num" id="mv">+412<small>твои очки</small></span></div>
+        <div class="prize"><i><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.3 8 11 4.6-1.7 8-6 8-11V5l-8-3Zm0 4.2 4 1.5V11c0 2.9-1.6 5.6-4 7-2.4-1.4-4-4.1-4-7V7.7l4-1.5Z"/></svg></i><span>Победившей фракции — <b>карта TI в цвете команды</b> каждому болельщику. Второму месту — сундук.</span></div>
+        <ul class="feed" id="feed"><li><b>Аня_SPB</b> за Tundra: +64 за Pure на Faceless Void</li><li><b>dota_dad</b> за PARIVISION: +41 за 9Class</li></ul>
+      </div>
+    </section>
+    <div class="ghost ghost--tall"></div>
+    <div class="ghost span-2"></div>
+  </div>
+</div>
+<script src="_промо.js"></script>
+<script>
+const F = [['ts', 'Team Spirit', 1840200], ['pv', 'PARIVISION', 1712400], ['tun', 'Tundra', 1390800], ['bb', 'BetBoom', 1205600], ['flc', 'Falcons', 990300], ['gg', 'Gaimin Gladiators', 760100]]
+let mine = null
+const box = document.getElementById('tw'), w = document.getElementById('w')
+box.innerHTML = F.map(([k, n]) => `<button class="tw t-${k}" data-k="${k}" title="${n}"><i class="tw__bar"><span class="tw__n"></span></i><i class="team-logo t-${k} is-logo"></i></button>`).join('')
+const short = (v) => (v / 1e6).toFixed(2).replace('.', ',') + ' млн'
+const draw = () => {
+  const max = Math.max(...F.map((f) => f[2]))
+  F.forEach(([k, , v]) => {
+    const b = box.querySelector(`[data-k=${k}]`)
+    b.style.setProperty('--h', (v / max * 100) + '%')
+    b.querySelector('.tw__n').textContent = short(v)
+    b.classList.toggle('is-lead', v === max)
+    b.classList.toggle('is-mine', k === mine)
+  })
+}
+const join = (k) => {
+  mine = k; const f = F.find((x) => x[0] === k)
+  w.style.setProperty('--tc', getComputedStyle(box.querySelector(`[data-k=${k}]`)).getPropertyValue('--tc'))
+  document.getElementById('mn').textContent = 'Ты за ' + f[1]
+  if (document.documentElement.dataset.state !== 'в') ПРОМО.set('в')
+  draw()
+}
+box.addEventListener('click', (e) => { const b = e.target.closest('.tw'); if (b) join(b.dataset.k) })
+document.addEventListener('промо:состояние', (e) => { if (e.detail === 'в' && !mine) join('ts'); if (e.detail === 'до') { mine = null; w.style.removeProperty('--tc'); draw() } })
+// Очки капают живьём: случайной фракции +20…90, строка в ленту
+const NICK = ['rinat_mid', 'Аня_SPB', 'dota_dad', 'kirill5', 'ms.carry', 'pos5forever', 'Тимур']
+const PL = { ts: 'Yatoro', pv: '9Class', tun: 'Pure', bb: 'Kiyotaka', flc: 'skiter', gg: 'Quinn' }
+setInterval(() => {
+  const f = F[Math.floor(Math.random() ** 1.6 * F.length)], add = 20 + Math.floor(Math.random() * 70)
+  f[2] += add * 40
+  const feed = document.getElementById('feed')
+  feed.insertAdjacentHTML('afterbegin', `<li><b>${NICK[Math.floor(Math.random() * NICK.length)]}</b> за ${f[1]}: +${add} за ${PL[f[0]]}</li>`)
+  while (feed.children.length > 2) feed.lastElementChild.remove()
+  draw()
+}, 2200)
+draw()
+</script>
+</body></html>

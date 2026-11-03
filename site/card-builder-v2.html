@@ -1,0 +1,161 @@
+<!doctype html>
+<!--
+  FantasyWeb — каркас страницы.
+  ⚠️ *.html в корне website/ СГЕНЕРИРОВАНЫ: этот каркас + pages/<имя>.html + blocks/**/*.html → `node build.mjs`.
+  Правьте блоки, страницы и layout.html, не собранные файлы (гейт `node build.mjs --check` поймает ручную правку).
+  Витрина компонентов — ../storybook.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Генератор карточки v2 — FantasyWeb</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..900;1,400..900&family=Archivo:ital,wdth,wght@0,62..125,700..900;1,62..125,700..900&family=Cinzel:wght@700;900&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..700&display=swap" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<main>
+<!-- Генератор карточки v2 — с нуля, по этапам: 1 Форма (большой формат 440×616, 5:7) → 2 Фон (узор из линий, цвет — сила) → 3 Рамка → 4 Эффекты (редкость: блеск, искры, сияние — под фото) → 5 Фото → 6 Раскладка (рейтинг, позиция, ник) → 7 Инфо (герои, статы). Дальше — инфо (герои, статы).
+     Карта — .cb2-card › кольца одной формы .cb2-ring (рамка) › .cb2-face (фон) › .cb2-art (фото), плюс .cb2-pop и .cb2-glare; строит app.js.
+     Слева — выбор формы и её настройка, справа — заготовка карты. Поведение — app.js [Генератор карточки v2], стили — styles.css [=== Генератор карточки v2 ===]. -->
+<!-- Шрифтовые пары карты (этап 6) — грузим только здесь, не в общем каркасе -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700..900&family=Onest:wght@500..800&family=Oswald:wght@600..700&family=Rubik:wght@500..800&display=swap" />
+<section class="section" id="card-builder-v2">
+  <aside class="cb2-side">
+    <div class="cb2-head">
+      <b>Генератор карточки v2</b>
+      <button class="cb2-reftoggle" type="button" data-cb2-ref aria-pressed="true">Референс Arcane</button>
+    </div>
+    <nav class="cb2-steps" aria-label="Этапы">
+      <button type="button" data-cb2-step="1" aria-pressed="true"><b>1</b>Форма</button>
+      <button type="button" data-cb2-step="2" aria-pressed="false"><b>2</b>Фон</button>
+      <button type="button" data-cb2-step="3" aria-pressed="false"><b>3</b>Рамка</button>
+      <button type="button" data-cb2-step="4" aria-pressed="false"><b>4</b>Эффекты</button>
+      <button type="button" data-cb2-step="5" aria-pressed="false"><b>5</b>Фото</button>
+      <button type="button" data-cb2-step="6" aria-pressed="false"><b>6</b>Игрок</button>
+      <button type="button" data-cb2-step="7" aria-pressed="false"><b>7</b>Раскладка</button>
+      <button type="button" data-cb2-step="8" aria-pressed="false"><b>8</b>Инфо</button>
+      <button type="button" data-cb2-step="9" aria-pressed="false"><b>9</b>Оборот</button>
+    </nav>
+    <div class="cb2-body" data-cb2-panel="1">
+      <h2 class="cb2-title">Форма карты</h2>
+      <div class="cb2-shapes" data-cb2-shapes></div>
+    </div>
+    <div class="cb2-body" data-cb2-panel="2" hidden>
+      <h2 class="cb2-title">Фон карты</h2>
+      <div class="cb2-shapes" data-cb2-bgs></div>
+      <div class="cb2-param">
+        <div class="cb2-row cb2-row--seg"><span>Сила — цвет</span><div class="cb2-seg" data-cb2-tiers></div></div>
+        <div class="cb2-row cb2-row--seg"><span>Команда</span><div class="cb2-teams" data-cb2-teams></div></div>
+      </div>
+    </div>
+    <div class="cb2-body" data-cb2-panel="3" hidden>
+      <h2 class="cb2-title">Рамка</h2>
+      <div class="cb2-shapes" data-cb2-frames></div>
+    </div>
+    <div class="cb2-body" data-cb2-panel="6" hidden>
+      <h2 class="cb2-title">Игрок</h2>
+      <div class="cb2-shapes" data-cb2-players></div>
+      <p class="cb2-note">Undefined — базовый игрок без фото (частый случай): вместо фото 3D-силуэт с глитчем, идея из Figma (Sorare).</p>
+    </div>
+    <div class="cb2-body" data-cb2-panel="5" hidden>
+      <h2 class="cb2-title">Фото игрока</h2>
+      <div class="cb2-shapes" data-cb2-arts></div>
+      <div class="cb2-param">
+        <div class="cb2-row cb2-row--seg"><span>Свечение за головой</span><div class="cb2-seg" data-cb2-halos></div></div>
+      </div>
+    </div>
+    <div class="cb2-body" data-cb2-panel="7" hidden>
+      <h2 class="cb2-title">Раскладка: рейтинг, позиция, ник</h2>
+      <div class="cb2-shapes" data-cb2-layouts></div>
+      <h2 class="cb2-title cb2-title--next">Шрифты: ник и рейтинг + остальной текст</h2>
+      <div class="cb2-fonts" data-cb2-fonts></div>
+      <div class="cb2-param">
+        <div class="cb2-row cb2-row--seg"><span>Наклон шрифта</span><div class="cb2-seg" data-cb2-slants></div></div>
+      </div>
+    </div>
+    <div class="cb2-body" data-cb2-panel="4" hidden>
+      <h2 class="cb2-title">Эффекты: редкость</h2>
+      <div class="cb2-shapes" data-cb2-fxs></div>
+      <p class="cb2-note">Наведи курсор на карту и поводи — блеск идёт за наклоном.</p>
+    </div>
+    <div class="cb2-body" data-cb2-panel="8" hidden>
+      <h2 class="cb2-title">Позиция, роль и команда</h2>
+      <div class="cb2-shapes" data-cb2-roles></div>
+      <h2 class="cb2-title cb2-title--next">Номер карты <small>у «Полос: рейтинг…»</small></h2>
+      <div class="cb2-shapes" data-cb2-serials></div>
+      <h2 class="cb2-title cb2-title--next">Герои</h2>
+      <div class="cb2-shapes" data-cb2-heroes></div>
+      <h2 class="cb2-title cb2-title--next">Статы</h2>
+      <div class="cb2-shapes" data-cb2-stats></div>
+    </div>
+    <div class="cb2-body" data-cb2-panel="9" hidden>
+      <h2 class="cb2-title">Оборот карты</h2>
+      <div class="cb2-shapes" data-cb2-backs></div>
+      <p class="cb2-note">Макеты: содержание оборота продумаем отдельно. Клик по карте — перевернуть.</p>
+    </div>
+    <div class="cb2-actions">
+      <button class="cb2-act cb2-act--main" type="button" data-cb2-random>🎲 Случайная карта</button>
+      <button class="cb2-act" type="button" data-cb2-reset>Сбросить всё</button>
+    </div>
+  </aside>
+  <div class="cb2-canvas">
+    <div class="cb2-stage">
+      <div class="cb2-outline"><i class="cb2-card"></i></div>
+      <!-- Референс: карточка Arcane (blocks/shared/card-full.html) — рядом со сборкой, чтобы собирать по ней -->
+      <figure class="cb2-ref">
+<!-- Карточка игрока, полная (решение 5: Arcane / STAN). Стили — styles.css [=== Карточка ===], наклон — app.js [Карточка].
+     Другой игрок / вид: меняй данные и модификаторы силы (--bronze/silver/gold/elite) и редкости (--base/holo/prism/legend).
+     Размер — style="--w: 312px" (по умолчанию 440px). -->
+<div class="player-card player-card--elite player-card--legend" data-tilt>
+  <div class="player-card__in">
+    <div class="player-card__body"></div>
+    <div class="player-card__art">
+      <i class="player-card__shine"></i>
+      <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+      <span class="player-card__big">95</span>
+      <img class="player-card__ph" src="img/players/9class.webp" alt="9Class" />
+    </div>
+    <img class="player-card__ph player-card__ph--pop" src="img/players/9class.webp" alt="" aria-hidden="true" />
+    <i class="player-card__corner"></i><i class="player-card__corner"></i>
+    <div class="player-card__strip">
+      <small>#012 / 400</small>
+      <b class="player-card__nick">9Class</b>
+      <span class="player-card__ovr"><b>95</b><small>OVR</small></span>
+    </div>
+    <div class="player-card__info">
+      <div class="player-card__tags"><b class="player-card__rarity">Legend</b><span class="player-card__pips"><i></i><i></i><i></i><i></i></span><small class="player-card__src">from 42 pro matches</small></div>
+      <div class="player-card__team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>Team Vision · <b>POS 4</b> · Support</span></div>
+      <div class="player-card__heroes">
+        <div class="player-card__hero"><img src="img/heroes/tusk.webp" alt="Tusk" /><span><b>Tusk</b><small>24 % карт · мета-пик</small></span><em>+5%</em></div>
+        <div class="player-card__hero"><img src="img/heroes/rubick.webp" alt="Rubick" /><span><b>Rubick</b><small>19 % карт</small></span><em>+12%</em></div>
+        <div class="player-card__hero player-card__hero--best"><img src="img/heroes/hoodwink.webp" alt="Hoodwink" /><span><b>Hoodwink</b><small>12 % карт · редкий пик</small></span><em>+25%</em></div>
+      </div>
+      <div class="player-card__stats">
+        <span><b data-l="hi">82</b><small>FRM</small></span>
+        <span><b data-l="mid">60</b><small>FGT</small></span>
+        <span><b data-l="lo">47</b><small>POOL</small></span>
+        <span><b data-l="hi">91</b><small>SUR</small></span>
+        <span><b data-l="lo">36</b><small>VIS</small></span>
+        <span><b data-l="mid">67</b><small>FORM</small></span>
+      </div>
+    </div>
+    <i class="player-card__glare"></i>
+  </div>
+</div>
+        <figcaption>Референс · Arcane</figcaption>
+      </figure>
+    </div>
+    <p class="cb2-caption" data-cb2-caption></p>
+    <p class="cb2-snack" role="status" data-cb2-snack hidden></p>
+  </div>
+</section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

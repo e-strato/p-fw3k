@@ -1,0 +1,63 @@
+/* Лаба «card-mini» — страница варианта и общее для мини-форм Хайперглитча. Поверх ../карточка-v3/_v3.css (карта .kc: наклон, ступени силы,
+   слои редкости). Цвета — токены сайта (--c-*) и переменные карты (--tier, --tier-2, --tier-hi, --c-glitch-a/b из _v3.css).
+   Мини-карта крупнее в em, чем полная: 1em = ширина / 16 (у полной — / 22), чтобы ник и рейтинг читались и на 110 px. */
+
+/* ── Страница варианта ── */
+.mn-h { margin: 88px 0 28px; text-align: center; font-size: 20px; font-weight: 600; }
+.mn-size { display: grid; grid-template-columns: 70px 1fr; align-items: center; gap: 20px; max-width: 1080px; margin: 0 auto 40px; }
+.mn-size__w { color: var(--c-caption); font-size: 13px; font-weight: 600; text-align: right; }
+.mn-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 28px; }
+.mn-row figure { margin: 0; display: grid; gap: 12px; justify-items: center; }
+.mn-row figcaption { font-size: 12.5px; color: var(--c-caption); }
+.mn-ctx { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; max-width: 1180px; margin: 0 auto 96px; align-items: start; }
+.mn-panel { padding: 20px; border-radius: 14px; background: var(--c-surface); box-shadow: inset 0 0 0 1px var(--c-line); }
+.mn-ph { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; }
+.mn-ph b { font-size: 16px; font-weight: 600; } .mn-ph small { color: var(--c-caption); font-size: 12.5px; }
+.mn-mine { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.mn-mine__it { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 10px; background: var(--c-ui-item, var(--c-bg)); }
+.mn-mine__it > span { display: grid; gap: 3px; min-width: 0; }
+.mn-mine__it .kc { flex: none; } /* иначе флекс ужимает карту, а её em считаются от --w */
+/* Подписи — только у текста рядом с картой (> span), не внутри карты */
+.mn-mine__it > span b { font-size: 15px; font-weight: 700; } .mn-mine__it > span small { color: var(--c-caption); font-size: 11.5px; }
+.mn-mine__it > span em { font-style: normal; font-size: 12px; font-weight: 600; } .mn-mine__it > span em.is-live { color: var(--c-live); }
+.mn-mine__it > span strong { color: var(--c-text); }
+.mn-market { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; justify-items: center; }
+.mn-gc { display: grid; gap: 10px; justify-items: center; }
+.mn-gc__buy { display: flex; align-items: center; gap: 10px; }
+.mn-price { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; }
+.mn-price i { width: 12px; height: 12px; border-radius: 50%; background: var(--c-coin); }
+.mn-btn { padding: 5px 12px; border-radius: 8px; font-size: 12.5px; font-weight: 600; box-shadow: inset 0 0 0 1px var(--c-line); }
+
+/* ── Мини-карта: общее ── */
+.kc.mk { font-size: calc(var(--w) / 16); }
+.mk .kc__face { overflow: visible; }
+/* Пластина: форма варианта (--shape), тёмный цвет силы и пиксельные полосы — как фон полной карты */
+.mk-plate { position: absolute; inset: 0; clip-path: var(--shape); overflow: hidden;
+  background:
+    radial-gradient(70% 40% at 50% 26%, color-mix(in srgb, var(--tier) 24%, transparent), transparent 75%),
+    repeating-linear-gradient(0deg, transparent 0 .4em, color-mix(in srgb, var(--tier) 7%, transparent) .4em .45em),
+    linear-gradient(180deg, color-mix(in srgb, var(--tier-2) 75%, var(--c-card-ink)), var(--c-card-ink) 85%); }
+/* Кант цвета силы по контуру со скосами: svg, обводка не масштабируется */
+.mk-frame { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 12; fill: none; }
+.mk-frame polygon { stroke: var(--tier); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+/* Глитч растёт с редкостью: пиксельные блоки — с Holo, сдвиг каналов логотипа — с Prism, скан-луч — у Legend */
+.mk-logo { position: absolute; background: color-mix(in srgb, var(--tier) 28%, transparent); }
+.mk-logo--a, .mk-logo--b { mix-blend-mode: screen; opacity: .45; animation: mk-jit 3.6s steps(1) infinite; }
+.mk-logo--a { background: var(--c-glitch-a); translate: -.3em 0; }
+.mk-logo--b { background: var(--c-glitch-b); translate: .3em 0; animation-delay: -1.8s; }
+.mk-pix { position: absolute; inset: 0; opacity: .55; mix-blend-mode: screen; animation: mk-pix 2.4s steps(1) infinite;
+  background:
+    linear-gradient(color-mix(in srgb, var(--tier) 45%, transparent) 0 0) 8% 16% / 3em .45em no-repeat,
+    linear-gradient(color-mix(in srgb, var(--tier-hi) 32%, transparent) 0 0) 92% 30% / 4em .3em no-repeat,
+    linear-gradient(color-mix(in srgb, var(--c-glitch-a) 30%, transparent) 0 0) 12% 44% / 1.8em .7em no-repeat,
+    linear-gradient(color-mix(in srgb, var(--c-glitch-b) 26%, transparent) 0 0) 86% 52% / 5em .25em no-repeat; }
+.mk-scan { position: absolute; left: 0; right: 0; height: 2.4em; top: var(--scan); z-index: 3; mix-blend-mode: screen;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--tier-hi) 35%, transparent) 48%, var(--tier-hi) 50%, transparent 52%);
+  animation: scan 4.5s linear infinite; }
+.mk-halo { position: absolute; z-index: 1; border-radius: 50%; filter: blur(.35em);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--tier-hi) 55%, transparent), color-mix(in srgb, var(--tier) 22%, transparent) 55%, transparent); }
+.mk .ph { z-index: 2; }
+.mk .fx-shine, .mk .fx-spark { z-index: 5; }
+@keyframes mk-pix { 0% { translate: 0 0; } 30% { translate: 1em 0; } 55% { translate: -.5em .3em; } 80% { translate: .3em -.25em; } }
+@keyframes mk-jit { 0%, 86%, 100% { translate: -.3em 0; } 88% { translate: -.8em .15em; } 92% { translate: .25em 0; } }
+@media (prefers-reduced-motion: reduce) { .mk-pix, .mk-logo--a, .mk-logo--b, .mk-scan { animation: none; } }

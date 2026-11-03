@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<base href="../widget-tournament-4/" />
+<title>v1 · Раскадровка</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="_t4.css" /><link rel="stylesheet" href="../widget-states/_s.css" /></head>
+<body><div class="lab-board">
+  <h1>Состояния виджета · v1 · Раскадровка</h1>
+  <p class="lab-board__lead">3 главных экрана рядом: на главной, в матче, у команды. Под каждым — зачем он. Подсказка — номера на всём, что можно нажать, и расшифровка под виджетом.</p>
+  <div class="s-strip" style="margin-top:32px" id="row"></div>
+</div>
+<script src="_data.js"></script><script src="_t4.js"></script><script src="../widget-states/_states.js"></script>
+<script>
+  document.getElementById('row').innerHTML = S.key.map(k => `<div class="s-fr"><div class="s-fr__h">${k.name}</div><div class="s-why">${k.why}</div><div><div data-k="${k.id}"></div></div></div>`).join('')
+  document.querySelectorAll('[data-k]').forEach(el => S.mount(el, S.by(el.dataset.k), { hint: 'numbers' }))
+</script>
+</body></html>

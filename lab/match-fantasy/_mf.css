@@ -1,0 +1,135 @@
+/* Лаба «Матч + фэнтези до начала» — страница лабы (переключалки, рамки 1440 и 390) и общие кусочки.
+   Токены — «Финал» (/p-fw3k/site/styles.css), мини-карта «Жетон» — стили сайта под обёрткой .hg. Без капса, без боковых полос, без кикеров.
+   Рамки — container query «mf»: всё, что ниже @container mf (max-width: 700px), — раскладка телефона. */
+body { margin: 0; background: var(--c-ui-bg); color: var(--c-text); font-family: var(--font); }
+.mf-page { padding: 40px 32px 80px; }
+.mf-page > h1 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.01em; }
+.mf-page > p { max-width: 104ch; margin: 8px 0 0; color: var(--c-muted); font-size: 15px; line-height: 1.5; }
+.mf-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 20px 0 4px; }
+.mf-tools > span { color: var(--c-caption); font-size: 13px; }
+.mf-seg { display: flex; flex-wrap: wrap; gap: 2px; padding: 3px; border-radius: 8px; background: var(--c-ui-chip); }
+.mf-seg button { border: 0; padding: 7px 12px; border-radius: 6px; background: none; color: var(--c-ui-dim); font: 600 13.5px var(--font); cursor: pointer; }
+.mf-seg button[aria-pressed='true'] { background: var(--c-ui-panel); color: var(--c-accent); }
+.mf-cap { margin: 26px 0 10px; font-size: 13px; font-weight: 600; color: var(--c-caption); }
+.mf-wrap { width: 100%; }
+.mf-frame { container: mf / inline-size; position: relative; overflow: hidden; border-radius: 14px; background: var(--c-ui-bg); box-shadow: 0 0 0 1px var(--c-ui-line), 0 30px 80px -30px var(--c-black); }
+.mf-frame--desk { width: 1440px; }
+.mf-frame--phone { width: 390px; height: 844px; border-radius: 40px; margin-left: 11px; box-shadow: 0 0 0 10px color-mix(in srgb, var(--c-text) 8%, var(--c-ui-bg)), 0 0 0 11px var(--c-ui-line); }
+.mf-frame--phone .mf-scroll { height: 100%; overflow-y: auto; scrollbar-width: none; padding-bottom: 76px; box-sizing: border-box; }
+.mf-frame * { box-sizing: border-box; }
+:where(.mf-frame) button { font: inherit; color: inherit; cursor: pointer; }
+:where(.mf-frame) :is(h1, h2, h3, h4, p, ol, ul) { margin: 0; }
+:where(.mf-frame) :is(ol, ul) { padding: 0; list-style: none; }
+:where(.mf-frame) a { color: inherit; text-decoration: none; }
+.mf-frame button:focus:not(:focus-visible) { outline: none; }
+.mf-frame [hidden] { display: none !important; }
+.mf-frame { --gutter: 48px; --ta: var(--c-team-ts); --tb: var(--c-team-tun); }
+.mf-frame .ui-header__in { padding-top: 20px; }
+.mf-crumbs { max-width: 1480px; margin: 0 auto; padding: 0 var(--gutter) 14px; color: var(--c-caption); font-size: 13px; }
+.mf-crumbs a { color: var(--c-muted); }
+.mf-body { display: grid; gap: 20px; max-width: 1480px; margin: 0 auto; padding: 0 var(--gutter) 48px; }
+.mf-tabbar { display: none; }
+
+/* Общие кусочки */
+.mf-lg { width: 24px; height: 24px; object-fit: contain; flex: none; }
+.mf-lg.sm { width: 18px; height: 18px; } .mf-lg.lg { width: 44px; height: 44px; } .mf-lg.xl { width: 88px; height: 88px; }
+.mf-lg--mono { display: inline-grid; place-content: center; width: auto; min-width: 24px; padding: 0 3px; border-radius: 5px; background: var(--c-ui-item); color: var(--c-caption); font: 700 8.5px var(--font); }
+.mf-lg--mono.sm { min-width: 18px; font-size: 7px; } .mf-lg--mono.lg { min-width: 44px; font-size: 12px; border-radius: 9px; } .mf-lg--mono.xl { min-width: 88px; font-size: 20px; border-radius: 18px; }
+.mf-gt { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 5px; background: var(--c-ui-item); color: var(--c-muted); font-size: 12px; font-weight: 600; }
+.mf-dot { display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: var(--c-live); vertical-align: 1px; }
+.mf-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 18px; border: 0; border-radius: 7px; background: var(--c-ui-hover); color: var(--c-text); font: 600 14px var(--font); white-space: nowrap; }
+.mf-btn--main { background: var(--c-accent); color: var(--c-on-accent); box-shadow: 0 8px 28px -10px color-mix(in srgb, var(--c-accent) 80%, transparent); }
+.mf-btn--main:hover { background: color-mix(in srgb, var(--c-accent) 85%, var(--c-white)); }
+.mf-btn:disabled { background: var(--c-ui-item); color: var(--c-ui-dim); box-shadow: none; cursor: default; }
+.mf-btn--lg { height: 48px; padding: 0 24px; font-size: 15px; }
+.mf-btn--sm { height: 32px; padding: 0 12px; font-size: 13px; }
+.mf-panel { min-width: 0; padding: 20px; border-radius: 12px; background: var(--c-ui-panel); }
+.mf-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px !important; font-size: 16px; font-weight: 700; }
+.mf-h small { color: var(--c-caption); font-size: 13px; font-weight: 500; }
+.mf-mut { color: var(--c-caption); font-size: 13px; line-height: 1.45; }
+.mf-num { font-family: var(--font-c); font-variant-numeric: tabular-nums; }
+.mf-coin { color: var(--c-coin); font-weight: 700; }
+.mf-up { color: var(--c-stat-high); } .mf-dn { color: var(--c-live); }
+
+/* Таймер: часы крупно узким шрифтом, подпись сверху */
+.mf-clock { display: grid; gap: 2px; }
+.mf-clock small { color: var(--c-caption); font-size: 12.5px; }
+.mf-clock b { font: 700 28px/1 var(--font-c); font-variant-numeric: tabular-nums; letter-spacing: .01em; }
+.mf-clock.is-warn b { color: var(--c-stat-mid); }
+.mf-clock.is-off b { color: var(--c-ui-dim); }
+
+/* Сцена матча: свет цветом команд, логотипы крупно, время по центру — как герой-блок клиента */
+.mf-stage { position: relative; isolation: isolate; overflow: hidden; padding: 22px 28px 24px; border-radius: 14px;
+  background: radial-gradient(48% 120% at 12% 50%, color-mix(in srgb, var(--ta) 16%, transparent), transparent 70%),
+    radial-gradient(48% 120% at 88% 50%, color-mix(in srgb, var(--tb) 16%, transparent), transparent 70%),
+    linear-gradient(180deg, var(--c-ui-panel), color-mix(in srgb, var(--c-ui-panel) 60%, var(--c-ui-bg))); }
+.mf-stage__t { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 13px; }
+.mf-stage__t span:not(.mf-gt) { color: var(--c-caption); }
+.mf-stage__m { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 24px; margin-top: 14px; }
+.mf-team { display: flex; align-items: center; gap: 18px; min-width: 0; }
+.mf-team--b { flex-direction: row-reverse; text-align: right; }
+.mf-team b { display: block; font-size: 26px; font-weight: 800; letter-spacing: -.01em; }
+.mf-team small { color: var(--c-caption); font-size: 13px; }
+.mf-team .mf-lg.xl { filter: drop-shadow(0 10px 30px color-mix(in srgb, var(--tc) 45%, transparent)); }
+.mf-mid { display: grid; justify-items: center; gap: 6px; text-align: center; }
+.mf-mid > b { font: 700 64px/1 var(--font-c); letter-spacing: -.01em; }
+.mf-mid small { color: var(--c-caption); font-size: 13px; }
+.mf-mid .mf-pill { margin-top: 2px; }
+.mf-pill { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; border-radius: 14px; background: var(--c-ui-item); color: var(--c-muted); font-size: 13px; font-weight: 600; white-space: nowrap; }
+.mf-pill--warn { background: color-mix(in srgb, var(--c-stat-mid) 14%, var(--c-ui-item)); color: var(--c-stat-mid); }
+.mf-pill--ok { background: color-mix(in srgb, var(--c-stat-high) 14%, var(--c-ui-item)); color: var(--c-stat-high); }
+.mf-pill--bad { background: color-mix(in srgb, var(--c-live) 14%, var(--c-ui-item)); color: var(--c-live); }
+.mf-pill--acc { background: color-mix(in srgb, var(--c-accent) 18%, var(--c-ui-item)); color: var(--c-text); }
+
+/* Мини-карта «Жетон» в лабе: обёртка .hg (стили сайта), размер — --w */
+.mf-card { position: relative; display: inline-grid; justify-items: center; gap: 6px; border: 0; padding: 0; background: none; text-align: center; }
+.mf-card .hg { display: block; }
+.mf-card .hg .kc { width: var(--w, 120px); }
+.mf-card.is-dim { opacity: .38; }
+.mf-card__pts { font: 700 14px var(--font-c); color: var(--c-muted); }
+.mf-card__pts b { color: var(--c-text); }
+.mf-cap-mark { position: absolute; top: -8px; left: -8px; z-index: 9; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--c-coin); color: var(--c-card-dark-text); font: 800 12px var(--font-c); box-shadow: 0 6px 16px -4px var(--c-black); }
+.mf-mine { position: absolute; top: -8px; left: -8px; z-index: 9; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--c-accent); color: var(--c-on-accent); font-size: 13px; font-weight: 800; box-shadow: 0 6px 16px -4px var(--c-black); }
+
+/* Аватар игрока кружком */
+.mf-ava { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; object-position: top; background: var(--c-ui-item); flex: none; }
+.mf-ava--sil { filter: brightness(.7) saturate(.3); }
+
+/* Друзья: таблица очков */
+.mf-board { display: grid; gap: 2px; }
+.mf-board p { display: grid; grid-template-columns: 22px 28px minmax(0, 1fr) auto auto; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 8px; font-size: 13.5px; }
+.mf-board p:nth-child(odd) { background: color-mix(in srgb, var(--c-ui-item) 50%, transparent); }
+.mf-board p.is-me { background: color-mix(in srgb, var(--c-accent) 16%, var(--c-ui-item)); }
+.mf-board i { color: var(--c-caption); font: 600 12px var(--font-c); font-style: normal; text-align: right; }
+.mf-board .mf-ava { width: 28px; height: 28px; }
+.mf-board b { font: 700 15px var(--font-c); }
+.mf-board em { min-width: 64px; color: var(--c-caption); font-size: 12px; font-style: normal; text-align: right; }
+
+/* Тост */
+.mf-toast { position: absolute; left: 50%; bottom: 24px; z-index: 30; translate: -50% 12px; padding: 10px 16px; border-radius: 10px; background: var(--c-ui-hover); box-shadow: 0 12px 40px -10px var(--c-black); font-size: 14px; font-weight: 600; opacity: 0; pointer-events: none; transition: .25s; }
+.mf-toast.is-on { translate: -50% 0; opacity: 1; }
+
+/* Телефон */
+@container mf (max-width: 700px) {
+  .mf-frame, .mf-scroll { --gutter: 14px; }
+  .mf-body { gap: 12px; padding-bottom: 24px; }
+  .mf-crumbs { display: none; }
+  .mf-tabbar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 20; display: grid; grid-template-columns: repeat(5, 1fr); padding: 8px 6px 22px; background: color-mix(in srgb, var(--c-ui-panel) 94%, transparent); backdrop-filter: blur(10px); box-shadow: 0 -1px 0 var(--c-ui-line); }
+  .mf-tabbar a { display: grid; justify-items: center; gap: 2px; color: var(--c-ui-dim); font-size: 10.5px; font-weight: 600; }
+  .mf-tabbar a i { font-size: 18px; font-style: normal; line-height: 1.2; }
+  .mf-tabbar a[aria-current] { color: var(--c-accent); }
+  .mf-panel { padding: 14px; }
+  .mf-stage { padding: 14px 14px 16px; border-radius: 12px; }
+  .mf-stage__t { font-size: 12px; }
+  .mf-stage__m { gap: 8px; margin-top: 12px; }
+  .mf-team, .mf-team--b { flex-direction: column; gap: 6px; text-align: center; }
+  .mf-team b { font-size: 15px; } .mf-team small { font-size: 11.5px; }
+  .mf-team .mf-lg.xl { width: 52px; height: 52px; }
+  .mf-mid > b { font-size: 38px; } .mf-mid small { font-size: 11.5px; }
+  .mf-clock b { font-size: 22px; }
+  .mf-h { font-size: 15px; }
+}
+.mf-ini { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--c-ui-hover); color: var(--c-muted); font-size: 12px; font-weight: 700; }
+.is-me .mf-ini { background: var(--c-accent); color: var(--c-on-accent); }
+/* Разметка «Жетона» в лабе — на span (карты стоят внутри кнопок): структурные узлы — блоками */
+.mf-frame .hg, .mf-frame .hg .kc, .mf-frame .hg .kc__in { display: block; }

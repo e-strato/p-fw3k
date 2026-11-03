@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_бустер.css" />
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+</head>
+<body>
+<!-- v2 · Капсула: открути крышку. Низ — стекло, сквозь него видно три карты рубашкой и свет внутри; верх — металл в цвете редкости.
+     Тянешь мышью влево-вправо — крышка крутится по резьбе и поднимается, шов светится, из щели сочится пар. Полтора оборота —
+     крышку выбивает вверх, из стакана бьёт столб света, карты поднимаются. «Открыть» — крутит сама. -->
+<div class="bs"></div>
+<script type="module">
+import { start, THREE, packFace, foil, RAR } from './_бустер.js'
+const R = 0.62, HB = 1.0, HT = 0.95, TURNS = 1.5
+const lathe = (pts, mat) => new THREE.Mesh(new THREE.LatheGeometry(pts.map(([x, y]) => new THREE.Vector2(x, y)), 72), mat)
+// Профили: стакан с круглым дном и купол крышки
+const cup = [[0, -HB], ...Array.from({ length: 10 }, (_, i) => { const a = (i + 1) / 10 * Math.PI / 2; return [Math.sin(a) * R, -HB + R - Math.cos(a) * R] }), [R, -0.02], [R * 0.96, 0]]
+const dome = [[R * 1.02, 0], [R * 1.02, HT - R * 0.9], ...Array.from({ length: 12 }, (_, i) => { const a = (i + 1) / 12 * Math.PI / 2; return [Math.cos(a) * R * 1.02, HT - R * 0.9 + Math.sin(a) * R * 0.9] })]
+start({
+  name: 'Капсула: открути',
+  note: 'Стеклянный стакан, внутри — три карты и свет; крышка в цвете редкости. Тяни влево-вправо — крышка крутится по резьбе, полтора оборота — выбивает вверх.',
+  hint: 'Тяни вбок — откручивай крышку',
+  build(K) {
+    const g = new THREE.Group(), cap = new THREE.Group(), cupG = new THREE.Group(); g.add(cupG, cap)
+    const col = K.glow()
+    const glass = new THREE.MeshPhysicalMaterial({ color: col.clone().lerp(new THREE.Color(1, 1, 1), 0.7), metalness: 0, roughness: 0.06, transmission: 0.92, thickness: 0.4, ior: 1.4, clearcoat: 1, transparent: true, opacity: 0.95, side: THREE.DoubleSide })
+    cupG.add(lathe(cup, glass))
+    // Карты внутри стакана — рубашкой, светятся краем
+    const backTex = (() => { const c = document.createElement('canvas'); c.width = 170; c.height = 234; const x = c.getContext('2d'); x.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--c-ui-panel'); x.fillRect(0, 0, 170, 234); x.strokeStyle = '#' + col.getHexString(); x.lineWidth = 6; x.strokeRect(3, 3, 164, 228); x.fillStyle = '#' + col.getHexString(); x.font = '900 80px Inter, sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('F', 85, 120); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t })()
+    const inner = new THREE.Group(); cupG.add(inner)
+    ;[-1, 0, 1].forEach((i) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.69), new THREE.MeshBasicMaterial({ map: backTex, side: THREE.DoubleSide })); m.position.set(i * 0.16, -0.42 + Math.abs(i) * -0.04, i * -0.05); m.rotation.z = -i * 0.18; inner.add(m) })
+    const innerLight = new THREE.PointLight(col, 4, 2.5); innerLight.position.set(0, -0.5, 0); cupG.add(innerLight)
+    // Крышка: металл-фольга с рисунком редкости + рифлёное кольцо снизу
+    const metal = foil(K.rar, packFace(K.rar, { name: RAR[K.rar].ru, sub: 'Капсула · 3 карты' }))
+    metal.metalness = 0.85; metal.bumpScale = 0.6
+    cap.add(lathe(dome, metal))
+    const ribs = new THREE.Mesh(new THREE.CylinderGeometry(R * 1.05, R * 1.05, 0.14, 72, 1, true), new THREE.MeshStandardMaterial({ color: K.rar === 'legend' ? K.col('--c-tier-gold') : K.col('--c-tier-silver'), metalness: 1, roughness: 0.3, side: THREE.DoubleSide }))
+    ribs.position.y = 0.07; cap.add(ribs)
+    // Шов: светящееся кольцо между крышкой и стаканом
+    const seam = new THREE.Mesh(new THREE.TorusGeometry(R * 0.99, 0.018, 8, 96), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0, blending: THREE.AdditiveBlending })); seam.rotation.x = Math.PI / 2; g.add(seam)
+    g.position.y = 0.1
+
+    let ang = 0, dragging = false, lastX = 0, done = false, puff = 0
+    const need = TURNS * Math.PI * 2
+    const go = async () => {
+      done = true; K.hint('')
+      const mouth = new THREE.Vector3(0, 0.15, 0.2)
+      K.flash(0.6)
+      K.tween(1200, (k) => { cap.position.set(k * 1.4, 0.1 + k * 3.4 - k * k * 0.8, k * 0.8); cap.rotation.set(k * 1.2, ang + k * 9, -k * 1.6) })
+      K.shock(mouth, 7); K.sparks(mouth, 0.9, 3.4); K.confetti(mouth, 0.9, 3.6)
+      await K.tween(500, (k) => { K.lightAt(mouth, 0.4 + k * 0.6, 1.1); K.rays(mouth, k); inner.position.y = k * 0.9; inner.scale.setScalar(1 - k * 0.6) })
+      inner.visible = false
+      K.reveal(47)
+      K.tween(900, (k) => { cupG.position.y = -k * 3.6; seam.material.opacity = 1 - k }, (k) => k * k)
+      await K.tween(1600, (k) => { K.lightAt(mouth, 1 - k * 0.7, 1.1); K.rays(mouth, 1 - k * 0.6) })
+    }
+    const twistTo = (a) => {
+      ang = THREE.MathUtils.clamp(a, 0, need)
+      const p = ang / need
+      cap.rotation.y = ang; cap.position.y = p * 0.12
+      seam.position.y = cap.position.y * 0.5
+      seam.material.opacity = p
+      innerLight.intensity = 4 + p * 14
+      K.lightAt(new THREE.Vector3(0, 0.1, 0), p * 0.35, 1)
+      K.hint(p > 0 && p < 1 ? `Ещё ${Math.ceil((1 - p) * TURNS * 4) / 4} оборота` : '')
+      if (p >= 1) K.open()
+    }
+    return {
+      g, open: go,
+      down(e) { if (!done) { dragging = true; lastX = e.clientX } },
+      move(e) { if (dragging && !done) { twistTo(ang + Math.abs(e.clientX - lastX) * 0.012); lastX = e.clientX } },
+      up() { dragging = false },
+      auto() { const a0 = ang; K.tween(1500, (k) => twistTo(a0 + (need - a0) * k), (k) => k * k * (3 - 2 * k)) },
+      tick(dt, t) {
+        if (done) return
+        g.position.y = 0.1 + Math.sin(t * 1.5) * 0.05
+        // Пар из шва, пока крутишь
+        if (ang > 0 && (puff -= dt) < 0) { puff = 0.35; K.sparks(new THREE.Vector3(0, 0.1 + cap.position.y, 0), 0.25, 0.6) }
+      },
+    }
+  },
+})
+</script>
+</body></html>

@@ -1,0 +1,57 @@
+/* Лаба w-actions — трансляция и активность (код — _act.js). Вид наших виджетов: карточка 12, --t-title / --t-sub, отступы кратны 4 */
+.ac{ display:flex; flex-direction:column; padding:12px; border:1px solid var(--w-border); border-radius:var(--w-r, 12px); background:var(--w-card, var(--w-page)); color:var(--w-fg); font:400 13px/18px var(--w-font); }
+.ac button{ font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer; }
+.ac-min, .ac-full{ display:flex; flex-direction:column; gap:8px; }
+.wx.is-c .ac-full, .wx:not(.is-c) .ac-min{ display:none; }
+.ac-lg{ width:12px; height:12px; object-fit:contain; }
+
+/* трансляция-заглушка */
+.ac-tv{ position:relative; aspect-ratio:16 / 9; border-radius:var(--w-r-sm, 8px); overflow:hidden; background:linear-gradient(to top, rgba(0,0,0,.6), transparent 50%), var(--art) center / cover #000; }
+.ac-live{ position:absolute; left:8px; top:8px; padding:1px 6px; border-radius:4px; background:#dc2626; color:#fff; font:700 10px/14px var(--w-font); letter-spacing:.04em; }
+.ac-src{ position:absolute; left:52px; top:8px; display:inline-flex; align-items:center; gap:4px; padding:1px 6px; border-radius:4px; background:rgba(0,0,0,.55); color:#fff; font:500 10px/14px var(--w-font); }
+.ac-src svg{ color:#a970ff; }
+.ac-view{ position:absolute; right:8px; top:8px; display:inline-flex; align-items:center; gap:4px; padding:1px 6px; border-radius:4px; background:rgba(0,0,0,.55); color:#fff; font:500 11px/14px var(--w-font); }
+.ac-play{ position:absolute !important; left:50%; top:50%; transform:translate(-50%, -50%); display:grid !important; place-items:center; width:44px; height:44px; border-radius:50% !important; background:rgba(0,0,0,.55) !important; color:#fff !important; backdrop-filter:blur(4px); }
+
+/* строка оценки */
+.ac-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.ac-rt{ display:inline-flex; align-items:center; gap:2px; padding:2px; border-radius:8px; background:var(--w-mid-bg, var(--w-muted)); }
+.ac-pm{ display:grid !important; place-items:center; width:32px; height:28px; border-radius:6px; color:var(--w-muted-fg) !important; } .ac-pm:hover{ background:var(--w-muted) !important; color:var(--w-fg) !important; }
+.ac-pm.on.up{ background:color-mix(in srgb, var(--w-up) 20%, transparent) !important; color:var(--w-up) !important; } .ac-pm.on.dn{ background:color-mix(in srgb, var(--w-down) 20%, transparent) !important; color:var(--w-down) !important; }
+.ac-rt > b{ min-width:48px; text-align:center; font:700 14px/18px var(--w-font); font-variant-numeric:tabular-nums; } .ac-rt > b.pos{ color:var(--w-up); } .ac-rt > b.neg{ color:var(--w-down); }
+.ac-meta{ display:inline-flex; gap:4px; } .ac-meta button{ display:inline-flex !important; align-items:center; gap:4px; height:28px; padding:0 8px !important; border-radius:6px; color:var(--w-muted-fg) !important; font:500 12px/16px var(--w-font) !important; } .ac-meta button:hover{ background:var(--w-muted) !important; color:var(--w-fg) !important; }
+.ac-hint{ margin:0; font:var(--t-sub); color:var(--w-muted-fg); }
+
+/* v1 — распределение и по картам */
+.ac-split{ height:6px; border-radius:3px; background:var(--w-down); overflow:hidden; } .ac-split i{ display:block; height:100%; background:var(--w-up); transition:width .4s; }
+.ac-splt{ display:flex; justify-content:space-between; font:var(--t-sub); color:var(--w-muted-fg); }
+.ac-maps{ display:flex; flex-direction:column; gap:4px; padding-top:8px; border-top:1px solid var(--w-border); } .ac-maps small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.ac-mp{ display:grid; grid-template-columns:56px 1fr 36px; align-items:center; gap:8px; font:400 12px/16px var(--w-font); } .ac-mp i{ height:4px; border-radius:2px; background:var(--w-muted); overflow:hidden; } .ac-mp u{ display:block; height:100%; background:var(--w-up); }
+.ac-mp b{ font:600 12px/16px var(--w-font); text-align:right; font-variant-numeric:tabular-nums; }
+
+/* v2 — реакции поверх эфира */
+.ac-tv--ov.is-big{ aspect-ratio:4 / 3; }
+.ac-ovr{ position:absolute; left:8px; top:30px; padding:1px 6px; border-radius:4px; background:rgba(0,0,0,.55); color:#fff; font:600 11px/14px var(--w-font); } .ac-ovr.pos{ color:#86efac; } .ac-ovr.neg{ color:#fca5a5; }
+.ac-fly{ position:absolute; inset:0 0 44px 55%; pointer-events:none; overflow:hidden; }
+.ac-fly i{ position:absolute; bottom:0; font-style:normal; font-size:20px; animation:acFly 1.6s ease-out forwards; } @keyframes acFly{ 0%{ transform:translateY(0) scale(.6); opacity:0; } 15%{ opacity:1; } 100%{ transform:translateY(-140px) scale(1.1); opacity:0; } }
+.ac-ovb{ position:absolute; left:8px; right:8px; bottom:8px; display:flex; gap:6px; }
+.ac-ob{ display:grid !important; place-items:center; width:32px; height:32px; border-radius:50% !important; background:rgba(0,0,0,.5) !important; color:#fff !important; backdrop-filter:blur(6px); } .ac-ob.on{ background:#fff !important; color:#000 !important; }
+.ac-ob--f{ color:#fb923c !important; } .ac-ob:active{ transform:scale(.9); } .ac-ovb .ac-ob:nth-child(4){ margin-left:auto; }
+.ac-rf small{ font:var(--t-sub); color:var(--w-muted-fg); } .ac-rfr{ display:flex; justify-content:space-between; margin-top:4px; font:400 12px/16px var(--w-font); } .ac-rfr b{ font-weight:600; font-variant-numeric:tabular-nums; }
+
+/* v3 — оценка игроков */
+.ac-plh{ display:flex; justify-content:space-between; padding-top:8px; border-top:1px solid var(--w-border); } .ac-plh small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.ac-pls{ display:grid; grid-template-columns:repeat(5, 1fr); gap:4px; }
+.ac-p{ position:relative; display:flex !important; flex-direction:column; align-items:center; gap:2px; padding:6px 0 !important; border-radius:8px; } .ac-p:hover, .ac-p.on{ background:var(--w-mid-bg, var(--w-muted)) !important; }
+.ac-p img:first-child{ width:32px; height:32px; border-radius:50%; object-fit:cover; } .ac-p .ac-lg{ position:absolute; top:6px; right:calc(50% - 20px); width:12px; height:12px; }
+.ac-p b{ padding:0 5px; border-radius:4px; background:var(--w-muted); font:700 11px/16px var(--w-font); font-variant-numeric:tabular-nums; } .ac-p b.hi{ background:color-mix(in srgb, var(--w-up) 25%, transparent); color:var(--w-up); } .ac-p b.lo{ background:color-mix(in srgb, var(--w-down) 22%, transparent); color:var(--w-down); }
+.ac-p small{ max-width:100%; font:400 10px/12px var(--w-font); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ac-pk{ display:flex; flex-direction:column; gap:6px; padding:8px; border-radius:8px; background:var(--w-mid-bg, var(--w-muted)); } .ac-pk span{ font:var(--t-sub); color:var(--w-muted-fg); }
+.ac-pk div{ display:grid; grid-template-columns:repeat(7, 1fr); gap:4px; } .ac-pk button{ height:28px; border-radius:6px; background:var(--w-muted) !important; font:600 12px/16px var(--w-font) !important; } .ac-pk button:hover, .ac-pk button.on{ background:var(--w-fg) !important; color:var(--w-primary-fg) !important; }
+
+/* телефон: свёрнутый — полоса над нижним баром (миниатюра эфира + главное), раскрытый — шторка снизу */
+body:not(.is-desk) .wx.ac-host{ position:fixed; left:8px; right:8px; bottom:76px; z-index:40; box-shadow:0 8px 24px rgba(0,0,0,.5); border-radius:var(--w-r, 12px); }
+body:not(.is-desk) .wx.ac-host.is-c .ac-min{ display:grid; grid-template-columns:96px 1fr; grid-template-rows:auto auto; align-items:center; column-gap:10px; row-gap:2px; }
+body:not(.is-desk) .wx.ac-host.is-c .ac-min > .ac-tv{ grid-row:1 / span 2; } body:not(.is-desk) .wx.ac-host.is-c .ac-min .ac-src, body:not(.is-desk) .wx.ac-host.is-c .ac-min .ac-play{ display:none; }
+body:not(.is-desk) .wx.ac-host.is-c .ac-min .ac-pls, body:not(.is-desk) .wx.ac-host.is-c .ac-min .ac-ovb .ac-ob:nth-child(n+4){ display:none; }
+body:not(.is-desk) .wx.ac-host:not(.is-c) .wx-p{ max-height:78vh; overflow:auto; }

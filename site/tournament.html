@@ -1,0 +1,93 @@
+<!doctype html>
+<!--
+  FantasyWeb — каркас страницы.
+  ⚠️ *.html в корне website/ СГЕНЕРИРОВАНЫ: этот каркас + pages/<имя>.html + blocks/**/*.html → `node build.mjs`.
+  Правьте блоки, страницы и layout.html, не собранные файлы (гейт `node build.mjs --check` поймает ручную правку).
+  Витрина компонентов — ../storybook.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>BLAST Slam VIII — турнир — FantasyWeb</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..900;1,400..900&family=Archivo:ital,wdth,wght@0,62..125,700..900;1,62..125,700..900&family=Cinzel:wght@700;900&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..700&display=swap" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<main>
+<!-- Шапка продукта: бренд, игра (Dota / LoL — переключает турниры в списке матчей), монеты, разделы. Внизу на телефоне — таб-бар.
+     Разделы, которых ещё нет, — data-soon (плашка «скоро»). Текущий раздел (aria-current) ставит app.js по адресу страницы. -->
+<header class="ui-header">
+  <div class="ui-header__in">
+    <div class="ui-header__top">
+      <a class="ui-header__brand" href="index.html">Fantasy · Dota 2</a>
+      <div class="btn-row ui-header__game" role="group" aria-label="Игра">
+        <button class="btn btn--quiet btn--xs" type="button" aria-pressed="true" data-game-pick="dota">Dota</button>
+        <button class="btn btn--quiet btn--xs" type="button" aria-pressed="false" data-game-pick="lol">LoL</button>
+      </div>
+      <div class="ui-header__coins"><span>Монеты</span><b>1 000</b><button class="btn btn--quiet btn--sm" type="button" data-soon="Забрать +50">Забрать +50</button></div>
+    </div>
+    <nav class="ui-tabs ui-header__nav" aria-label="Разделы">
+      <a class="ui-tabs__a" href="index.html">Главная</a>
+      <a class="ui-tabs__a" href="schedule.html">Матчи</a>
+      <a class="ui-tabs__a" href="match-center.html">Match Center</a>
+      <a class="ui-tabs__a" href="lineup.html">Состав</a>
+      <a class="ui-tabs__a" href="#" data-soon="Бустеры">Бустеры</a>
+      <a class="ui-tabs__a" href="gallery.html">Коллекция</a>
+      <a class="ui-tabs__a" href="#" data-soon="Квесты">Квесты</a>
+      <a class="ui-tabs__a" href="#" data-soon="Лидеры">Лидеры</a>
+      <a class="ui-tabs__a" href="#" data-soon="История">История</a>
+      <a class="ui-tabs__a" href="onboarding.html">Как это работает</a>
+    </nav>
+  </div>
+  <nav class="ui-tabbar" aria-label="Разделы">
+    <a href="schedule.html"><i>▦</i>Матчи</a>
+    <a href="#" data-soon="Поиск"><i>⌕</i>Поиск</a>
+    <a href="lineup.html"><i>★</i>Состав</a>
+    <a href="#app-matches" data-list-go="fav"><i>☆</i>Избранное</a>
+    <a href="#" data-soon="Профиль"><i>◉</i>Профиль</a>
+  </nav>
+</header>
+<!-- Страница турнира (дирижёр 08.10: перенос лабы «Страница турнира» v2 «Как страница матча»; вход — «›» у турнира BLAST в Match Center).
+     Каркас страницы матча: шапка турнира → 4 плитки (Матчи · Сетка · Группы · Команды) → открытая плитка → блоки в две колонки
+     (лучшие в турнире, новости, видео; справа — о турнире, букмекеры, фэнтези, другие турниры). Строки матча — как в Match Center.
+     Разметку строит tournament.js (данные — week-data.js), раскрытие строк — app.js [Match Center]. Стили — styles.css [=== Турнир ===]. -->
+<div class="mc" id="tournament" data-trn></div>
+<script src="week-data.js"></script>
+<script src="tournament.js"></script>
+<!-- Футер продукта (правка начальника 30.09: «не хватает футера»; дирижёр 05.10: из лабы «Футер» берём v2 «По мотивам Esports World Cup»).
+     Постер: ссылки тремя колонками, огромный знак Fantasy / Dota 2 на диагональной фактуре, «Честная игра» тремя значками, внизу полоса —
+     копирайт, приложения, соцсети, язык. Иконки — свои SVG. Разделов, которых нет, — data-soon (плашка «скоро»). Телефон — container query «ft»
+     на обёртке .site-ft. Стили — styles.css [=== Футер ===]. -->
+<div class="site-ft">
+<footer class="ft f2">
+  <div class="f2__main">
+    <div class="f2__links">
+      <div><h4>Играть</h4><ul><li><a href="onboarding.html">Как это работает</a></li><li><a href="#" data-soon="Как считаются очки">Как считаются очки</a></li><li><a href="chest.html?form=booster">Бустеры</a></li><li><a href="gallery.html">Маркет карт</a></li><li><a href="#" data-soon="Лидеры">Лидеры</a></li></ul></div>
+      <div><h4>Помощь</h4><ul><li><a href="#" data-soon="Вопросы и ответы">Вопросы и ответы</a></li><li><a href="#" data-soon="Поддержка">Поддержка</a></li><li><a href="#" data-soon="Статус сервиса">Статус сервиса</a></li><li><a href="#" data-soon="Партнёрам и командам">Партнёрам и командам</a></li><li><a href="#" data-soon="Пресса">Пресса</a></li></ul></div>
+      <div><h4>Правила</h4><ul><li><a href="#" data-soon="Соглашение">Соглашение</a></li><li><a href="#" data-soon="Бустеры и шансы">Бустеры и шансы</a></li><li><a href="#" data-soon="Честная игра">Честная игра</a></li><li><a href="#" data-soon="Конфиденциальность">Конфиденциальность</a></li><li><a href="#" data-soon="Cookies">Cookies</a></li></ul></div>
+    </div>
+    <div class="f2__mark"><b>Fantasy</b><b>Dota 2</b><p>Сезон 1 · DreamLeague, BLAST, The International</p></div>
+  </div>
+  <div class="f2__fair" aria-label="Честная игра">
+    <span><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 3.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11Zm-1 2v7h2v-7h-2Z" /></svg>Монеты не покупаются и не выводятся</span>
+    <span><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 4a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Zm9 9a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7ZM18.3 4.3l1.4 1.4L5.7 19.7l-1.4-1.4L18.3 4.3Z" /></svg>Шансы каждого бустера открыты</span>
+    <span><span class="ft-age">18+</span>Fantasy — не ставки, играй в удовольствие</span>
+  </div>
+  <div class="f2__band">
+    <div><small>Fantasy · Dota 2</small><p class="ft-fine">© 2026 Fantasy · Dota 2. Не связан с Valve и Riot Games. Данные матчей — Liquipedia и OpenDota.</p></div>
+    <div><small>Играй с телефона</small><div class="f2__apps"><a class="f2__app" href="#" data-soon="Приложение"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.5 2-3.6a4.3 4.3 0 0 0-3.4-1.8c-1.4-.1-2.8.9-3.5.9s-1.8-.9-3-.8a4.5 4.5 0 0 0-3.8 2.3c-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7 2-1.2 2.8-2.3c.9-1.3 1.3-2.6 1.3-2.6s-2.5-1-2.5-3.7ZM14.1 5.6A4 4 0 0 0 15 2.7a4.1 4.1 0 0 0-2.7 1.4 3.8 3.8 0 0 0-1 2.8 3.4 3.4 0 0 0 2.8-1.3Z" /></svg><span><i>Скачать в</i>App Store</span></a><a class="f2__app" href="#" data-soon="Приложение"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 2.9v18.2c0 .6.6.9 1.1.6L20 13.1c.5-.3.5-1.1 0-1.4L5.6 2.3c-.5-.3-1.1 0-1.1.6Z" /></svg><span><i>Доступно в</i>Google Play</span></a></div></div>
+    <div><small>Мы в соцсетях</small><div class="f2__soc"><a href="#" aria-label="Telegram" data-soon="Telegram"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 3.6 2.9 10.8c-1.3.5-1.3 1.2-.2 1.6l4.8 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.3-2.2 4.8 3.5c.9.5 1.5.2 1.7-.8l3.1-14.7c.3-1.3-.5-1.9-1.5-1.4Zm-3.4 4-8.6 7.8-.3 3.5-1.6-5 10.1-6.4c.5-.3.9 0 .4.1Z" /></svg></a><a href="#" aria-label="Twitch" data-soon="Twitch"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3 3 6v13h4v2h2.5l2-2H15l5-5V3H4Zm14 10-3 3h-3.5l-2 2v-2H6V5h12v8Zm-3-6h-2v5h2V7Zm-5 0H8v5h2V7Z" /></svg></a><a href="#" aria-label="YouTube" data-soon="YouTube"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12c0 1.6.1 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.3-1.6.4-3.2.4-4.8s-.1-3.2-.4-4.8ZM10 15V9l5.2 3-5.2 3Z" /></svg></a><a href="#" aria-label="Discord" data-soon="Discord"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.3 5.3A16 16 0 0 0 15.4 4l-.5 1a14 14 0 0 0-5.8 0L8.6 4a16 16 0 0 0-3.9 1.3C2.2 9 1.6 12.7 1.9 16.3a16 16 0 0 0 4.8 2.5l1-1.6c-.6-.2-1.1-.5-1.6-.8l.4-.3a11 11 0 0 0 11 0l.4.3c-.5.3-1 .6-1.6.8l1 1.6a16 16 0 0 0 4.8-2.5c.4-4.2-.7-7.8-2.8-11ZM8.8 14.2c-1 0-1.7-.9-1.7-2s.8-2 1.7-2 1.8.9 1.7 2c0 1.1-.8 2-1.7 2Zm6.4 0c-1 0-1.7-.9-1.7-2s.8-2 1.7-2 1.8.9 1.7 2c0 1.1-.7 2-1.7 2Z" /></svg></a><a href="#" aria-label="X" data-soon="X"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.8 3h3.1l-6.8 7.8L22 21h-6.2l-4.9-6.4L5.3 21H2.2l7.3-8.3L2 3h6.4l4.4 5.8L17.8 3Zm-1.1 16.2h1.7L7.4 4.7H5.6l11.1 14.5Z" /></svg></a></div></div>
+    <div><small>Язык</small><span class="ft-lang"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm6.9 6h-3a15 15 0 0 0-1.3-3.9A8 8 0 0 1 18.9 8ZM12 4c.8 1.1 1.5 2.5 1.9 4h-3.8c.4-1.5 1.1-2.9 1.9-4ZM4.3 14a8 8 0 0 1 0-4h3.4a16 16 0 0 0 0 4H4.3Zm.8 2h3c.3 1.4.7 2.7 1.3 3.9A8 8 0 0 1 5.1 16Zm3-8h-3a8 8 0 0 1 4.3-3.9C8.8 5.3 8.4 6.6 8.1 8ZM12 20c-.8-1.1-1.5-2.5-1.9-4h3.8c-.4 1.5-1.1 2.9-1.9 4Zm2.3-6H9.7a14 14 0 0 1 0-4h4.6a14 14 0 0 1 0 4Zm.3 5.9c.6-1.2 1-2.5 1.3-3.9h3a8 8 0 0 1-4.3 3.9Zm1.7-5.9a16 16 0 0 0 0-4h3.4a8 8 0 0 1 0 4h-3.4Z" /></svg>Русский<svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5H7Z" /></svg></span></div>
+  </div>
+</footer>
+</div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

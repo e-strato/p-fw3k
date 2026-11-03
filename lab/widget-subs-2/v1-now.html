@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<base href="../widget-tournament-4/" />
+<title>v1 · Сейчас (v17)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="../widget-subs/_subs.css" />
+<style>.lab-board{ padding:32px 48px; } .z2{ zoom:2; }</style></head>
+<!-- Точка отсчёта: v17 «Ровно» из widget-subs (решение 28) как есть, теми же файлами. Подача v13 (решение 26): на странице только виджет, «Экран» — под кадром лабы (window.LAB) -->
+<body><div class="lab-board"><div class="z2"><div id="w"></div></div></div>
+<script src="_data.js"></script><script src="../widget-subs/_data.js"></script><script src="../widget-subs/_subs.js"></script>
+<script>
+  // Экраны: на главной — лента по матчам дня; в матче — первый сегодняшний матч, где есть замены
+  const m = S5.today().find(x => S5.subsOf(x).length)
+  const K = [{ id: 'home', name: 'На главной', why: 'Замены по матчам: матч крупно, под ним его замены; тег — надёжность источника; нажми — новость и решение', o: {} },
+    { id: 'match', name: 'В матче', why: 'Только замены открытого матча', o: m ? { match: { a: m.a, b: m.b, when: m.when } } : {} }]
+  const w = document.getElementById('w'); let cur = 0
+  const go = (f, i) => { cur = i; S5.render(w, { ...K[i].o, look: 'mix', v14: true, v15: true, v16: true, v17: true }) }
+  window.LAB = { view: 'toolbar', flows: () => [{ name: 'Экраны', steps: K.map(k => ({ name: k.name, what: k.why })) }], go, cur: () => ({ f: 0, i: cur }),
+    axes: () => [{ key: 'screen', name: 'Экран', value: K[cur].id, options: K.map(k => ({ v: k.id, label: k.name })) }],
+    set: (k, v) => go(0, K.findIndex(x => x.id === v)), caption: () => K[cur].why }
+  go(0, 0)
+</script>
+</body></html>

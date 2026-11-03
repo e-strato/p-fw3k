@@ -1,0 +1,150 @@
+/* Лаба widget-vote: голосование как опрос HotelAI «В20» (код — _vote.js) */
+.vt{ display:flex; flex-direction:column; gap:12px; padding:14px; border:1px solid var(--w-border); border-radius:22px; background:var(--w-card, var(--w-page)); color:var(--w-fg); font:400 14px/19px var(--w-font); }
+.vt button{ font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer; text-align:left; }
+.vt-hd{ display:flex; align-items:center; gap:12px; }
+.vt-ic{ display:grid; place-items:center; width:40px; height:40px; flex:none; border-radius:50%; background:var(--w-fg); color:var(--w-primary-fg); }
+.vt-tt{ min-width:0; flex:1; } .vt-tt b{ display:block; font:400 18px/24px var(--w-font); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.vt-tt small{ display:block; font:400 13px/16px var(--w-font); color:color-mix(in srgb, var(--w-fg) 45%, transparent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.vt-pg{ height:2px; margin:0 -14px -12px; } .vt-pg i{ display:block; height:100%; background:var(--w-fg); transition:width .3s; }
+.vt-rows{ margin:0 -14px -14px; overflow:hidden; border:1px solid var(--w-border); border-radius:18px; background:var(--w-bg, #09090b); }
+.vt-r{ position:relative; display:flex !important; align-items:center; gap:8px; width:100%; min-height:44px; padding:0 12px 0 16px !important; }
+.vt-r + .vt-r::before{ content:''; position:absolute; left:16px; right:0; top:0; height:1px; background:var(--w-border); }
+.vt-r span{ position:relative; flex:1; min-width:0; } .vt-r i{ position:relative; display:grid; color:var(--w-muted-fg); font-style:normal; }
+button.vt-r:hover{ background:var(--w-muted) !important; } .vt-r.is-sel{ background:var(--w-muted) !important; } .vt-r.is-sel i{ color:var(--w-fg); }
+.vt-bar{ position:absolute; inset:0 auto 0 0; background:var(--w-muted); transition:width .5s ease-out; } .vt-r.is-me .vt-bar{ background:color-mix(in srgb, var(--w-fg) 16%, transparent); }
+.vt-r em{ position:relative; font-style:normal; font:600 13px/16px var(--w-font); font-variant-numeric:tabular-nums; } .vt-ok{ color:var(--w-up) !important; }
+
+/* v2 — наша стилистика: как виджеты турнира / замен (карточка 12, шапка 36, --t-title / --t-sub, строки с наведением --w-mid-bg) */
+.vt.vt--ours{ gap:0; padding:0; border-radius:var(--w-r, 12px); font:var(--t-title); }
+.vo-hd{ display:flex; align-items:center; justify-content:space-between; height:36px; padding:0 12px; } .vo-hd b{ font:var(--t-title); } .vo-hd small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.vo-q{ padding:0 12px 8px; } .vo-q b{ display:block; font:var(--t-title); } .vo-q small{ display:block; font:var(--t-sub); color:var(--w-muted-fg); }
+.vo-rows{ display:flex; flex-direction:column; gap:2px; padding:0 4px 4px; }
+.vo-r{ position:relative; display:flex !important; align-items:center; gap:10px; min-height:40px; padding:0 8px !important; border-radius:var(--w-r-sm, 8px); overflow:hidden; }
+button.vo-r:hover, .vo-r.is-sel{ background:var(--w-mid-bg, var(--w-muted)) !important; }
+.vo-r span{ position:relative; flex:1; min-width:0; font:var(--t-title); }
+.vo-dot{ position:relative; width:16px; height:16px; flex:none; border-radius:50%; box-shadow:inset 0 0 0 1.5px var(--w-ring); } .vo-r.is-sel .vo-dot{ box-shadow:inset 0 0 0 5px var(--w-fg); }
+.vo-r.is-res .vo-dot{ box-shadow:inset 0 0 0 1.5px var(--w-border); }
+.vo-ok{ position:relative; display:grid; width:16px; height:16px; flex:none; color:var(--w-up); font-style:normal; } .vo-ok svg{ width:16px; height:16px; }
+.vo-bar{ position:absolute; inset:0 auto 0 0; background:var(--w-mid-bg, var(--w-muted)); transition:width .5s ease-out; } .vo-r.is-me .vo-bar{ background:color-mix(in srgb, var(--w-up) 18%, transparent); }
+.vo-r em{ position:relative; font-style:normal; font:var(--t-num-s, 600 12px/16px var(--w-font)); font-variant-numeric:tabular-nums; color:var(--w-muted-fg); } .vo-r.is-me em{ color:var(--w-fg); }
+.vo-ft{ margin:0; padding:4px 12px 10px; font:var(--t-sub); color:var(--w-muted-fg); }
+
+/* v3–v4 — таймер, трибуны, два вопроса */
+.vo-tm{ display:inline-flex; align-items:center; gap:4px; font:600 12px/16px var(--w-font); font-variant-numeric:tabular-nums; } .vo-tm svg{ width:13px; height:13px; }
+.vo-pg{ height:2px; margin:0 12px 8px; border-radius:1px; background:var(--w-muted); overflow:hidden; } .vo-pg i{ display:block; height:100%; background:var(--w-fg); transition:width 1s linear; }
+.vo-r--t{ min-height:48px; align-items:center; } .vo-tx{ display:flex; flex-direction:column; gap:3px; }
+.vo-tr{ display:flex; align-items:center; gap:4px; } .vo-lg{ width:12px; height:12px; object-fit:contain; vertical-align:-2px; margin-right:2px; }
+.vo-trb{ position:relative; width:64px; height:4px; border-radius:2px; background:var(--w-down); overflow:hidden; } .vo-trb u{ position:absolute; inset:0 auto 0 0; background:var(--w-up); }
+.vo-tr small{ font:400 10px/12px var(--w-font); color:var(--w-muted-fg); font-variant-numeric:tabular-nums; }
+.vo-st{ display:flex; align-items:center; gap:4px; margin-bottom:4px; } .vo-st i{ width:16px; height:3px; border-radius:2px; background:var(--w-muted); } .vo-st i.on, .vo-st i.done{ background:var(--w-fg); } .vo-st small{ margin-left:4px; font:var(--t-sub); color:var(--w-muted-fg); }
+.vo-ft .vo-lg{ margin:0 2px 0 0; }
+.vo-next{ display:block !important; width:calc(100% - 24px); margin:0 12px 12px; height:32px; border-radius:var(--w-r-sm, 8px); background:var(--w-muted) !important; font:500 12px/16px var(--w-font) !important; text-align:center !important; } .vo-next:hover{ background:var(--w-mid-bg) !important; }
+
+/* v5 — шаг «за кого болеешь», итог по трём трибунам */
+.vo-flg{ position:relative; width:18px; height:18px; flex:none; object-fit:contain; } .vo-nt{ position:relative; display:grid; width:18px; height:18px; flex:none; color:var(--w-muted-fg); font-style:normal; } .vo-nt svg{ width:18px; height:18px; }
+.vo-tr3{ display:flex; width:96px; height:4px; border-radius:2px; overflow:hidden; gap:1px; } .vo-tr3 i{ display:block; height:100%; }
+.vo-tr3 .a, .vo-leg .a{ background:var(--w-up); } .vo-tr3 .b, .vo-leg .b{ background:var(--w-down); } .vo-tr3 .n, .vo-leg .n{ background:var(--w-ring); }
+.vo-leg{ display:flex; gap:12px; } .vo-leg span{ display:inline-flex; align-items:center; gap:4px; } .vo-leg i{ width:8px; height:4px; border-radius:2px; }
+
+/* v6 — трибуны цифрами под каждым ответом; полоска видна (не тянется flex:1) */
+.vo-r .vo-tx{ padding:6px 0; } .vo-r .vo-tx > span{ flex:none; }
+.vo-tn{ display:flex; gap:10px; font:400 11px/14px var(--w-font); color:var(--w-muted-fg); } .vo-tn span{ display:inline-flex; align-items:center; gap:3px; font:inherit; flex:none; }
+.vo-tn .vo-flg, .vo-tn .vo-nt, .vo-tn .vo-nt svg{ width:12px; height:12px; } .vo-tn .is-my{ color:var(--w-fg); font-weight:600; }
+.vo-r .vo-tr3{ width:100%; max-width:160px; height:4px; flex:none; }
+.vo-r--t:has(.vo-tn){ min-height:64px; }
+
+/* v7–v9 — без полосы хода и «голос учтён»; итог и таймер по-разному */
+.vo-hd .vr-ring, .vo-hd .vr-pill, .vo-hd .vr-mono{ margin-left:auto; }
+/* таймер: кольцо */
+.vr-ring{ display:inline-flex; align-items:center; gap:6px; font:600 12px/16px var(--w-font); font-variant-numeric:tabular-nums; }
+.vr-ring svg{ transform:rotate(-90deg); } .vr-ring circle{ fill:none; stroke-width:2.5; } .vr-ring .bg{ stroke:var(--w-muted); } .vr-ring .fg{ stroke:var(--w-fg); stroke-linecap:round; transition:stroke-dashoffset 1s linear; }
+/* таймер: пилюля, тает изнутри */
+.vr-pill{ position:relative; display:inline-grid; place-items:center; min-width:52px; height:22px; padding:0 8px; border-radius:999px; background:var(--w-muted); overflow:hidden; }
+.vr-pill i{ position:absolute; inset:0 auto 0 0; background:color-mix(in srgb, var(--w-fg) 22%, transparent); transition:width 1s linear; } .vr-pill b{ position:relative; font:600 12px/16px var(--w-font); font-variant-numeric:tabular-nums; }
+/* таймер: моноширинные цифры */
+.vr-mono{ font:600 14px/18px 'JetBrains Mono', ui-monospace, monospace; letter-spacing:.02em; } .vr-mono i{ font-style:normal; animation:vrBlink 1s steps(1) infinite; } @keyframes vrBlink{ 50%{ opacity:.25; } }
+/* итог: num — процент крупно слева */
+.vr-num{ display:flex; flex-direction:column; padding:0 12px 10px; }
+.vr-nr{ display:flex; align-items:center; gap:12px; padding:8px 0; } .vr-nr + .vr-nr{ border-top:1px solid var(--w-border); }
+.vr-nr > b{ width:52px; flex:none; font:700 22px/26px var(--w-font); font-variant-numeric:tabular-nums; color:var(--w-muted-fg); } .vr-nr > b small{ font-size:13px; font-weight:600; margin-left:1px; } .vr-nr.is-me > b{ color:var(--w-fg); }
+.vr-nt{ flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; } .vr-nt > span:first-child{ font:var(--t-title); display:flex; align-items:center; gap:4px; } .vr-nt .vo-ok{ display:inline-grid; width:14px; height:14px; } .vr-nt .vo-ok svg{ width:14px; height:14px; }
+.vr-tn{ display:flex; gap:10px; font:400 11px/14px var(--w-font); color:var(--w-muted-fg); } .vr-tn span{ display:inline-flex; align-items:center; gap:3px; } .vr-tn .is-my{ color:var(--w-fg); font-weight:600; }
+.vr-tn .vo-flg, .vr-tn .vo-nt, .vr-tn .vo-nt svg{ width:12px; height:12px; }
+/* итог: stack — строка заливается на %, заливка поделена на трибуны */
+.vr-sr{ position:relative; display:flex; align-items:center; gap:8px; min-height:40px; padding:0 8px; border-radius:var(--w-r-sm, 8px); background:var(--w-muted); overflow:hidden; } .vr-sr + .vr-sr{ margin-top:4px; }
+.vr-fill{ position:absolute; inset:0 auto 0 0; display:flex; opacity:.35; transition:width .5s ease-out; } .vr-fill i{ display:block; height:100%; } .vr-fill .a{ background:var(--w-up); } .vr-fill .n{ background:var(--w-ring); } .vr-fill .b{ background:var(--w-down); }
+.vr-sr.is-me .vr-fill{ opacity:.55; }
+.vr-st{ position:relative; flex:1; min-width:0; font:var(--t-title); display:flex; align-items:center; gap:4px; } .vr-st .vo-ok{ display:inline-grid; } .vr-st .vo-ok svg{ width:14px; height:14px; }
+.vr-sr em{ position:relative; font-style:normal; font:600 13px/16px var(--w-font); font-variant-numeric:tabular-nums; }
+/* итог: cols — три столбика */
+.vr-cols{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; padding:4px 12px 8px; }
+.vr-c{ display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center; } .vr-c > b{ font:700 16px/20px var(--w-font); font-variant-numeric:tabular-nums; color:var(--w-muted-fg); } .vr-c.is-me > b{ color:var(--w-fg); }
+.vr-cb{ position:relative; display:flex; align-items:flex-end; width:100%; height:96px; border-radius:8px; background:var(--w-muted); overflow:hidden; }
+.vr-cf{ display:flex; flex-direction:column; width:100%; transition:height .5s ease-out; } .vr-cf i{ display:block; width:100%; } .vr-cf .a{ background:var(--w-up); } .vr-cf .n{ background:var(--w-ring); } .vr-cf .b{ background:var(--w-down); }
+.vr-c:not(.is-me) .vr-cf{ opacity:.6; } .vr-c.is-me .vr-cb{ box-shadow:inset 0 0 0 1.5px var(--w-fg); }
+.vr-c small{ font:var(--t-sub); color:var(--w-muted-fg); line-height:14px; } .vr-c.is-me small{ color:var(--w-fg); }
+
+/* v10 — итог двумя колонками по трибунам; таймер — три сегмента */
+.vr-segs{ display:inline-flex; align-items:center; gap:3px; margin-left:auto; } .vr-segs i{ width:14px; height:4px; border-radius:2px; background:var(--w-muted); overflow:hidden; } .vr-segs u{ display:block; height:100%; background:var(--w-fg); transition:width 1s linear; }
+.vr-segs b{ margin-left:6px; font:600 12px/16px var(--w-font); font-variant-numeric:tabular-nums; }
+.vr-sides{ display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:0 8px 10px; }
+.vr-sd{ display:flex; flex-direction:column; gap:2px; padding:8px; border-radius:var(--w-r-sm, 8px); background:var(--w-mid-bg, var(--w-muted)); } .vr-sd.is-my{ box-shadow:inset 0 0 0 1px var(--w-ring); }
+.vr-sdh{ display:flex; align-items:center; gap:6px; margin-bottom:4px; } .vr-sdh b{ font:600 12px/16px var(--w-font); } .vr-sdh .vo-flg, .vr-sdh .vo-nt{ width:14px; height:14px; }
+.vr-sdr{ display:flex; align-items:baseline; gap:6px; font:400 11px/15px var(--w-font); color:var(--w-muted-fg); } .vr-sdr span{ flex:1; min-width:0; } .vr-sdr b{ font:600 12px/15px var(--w-font); font-variant-numeric:tabular-nums; }
+.vr-sdr.is-top{ color:var(--w-fg); } .vr-sd:first-child .vr-sdr.is-top b{ color:var(--w-up); } .vr-sd:last-child .vr-sdr.is-top b{ color:var(--w-down); }
+/* v11 — аватарки проголосовавших, трибуны точками; тихий таймер */
+.vr-quiet{ margin-left:auto; font:var(--t-sub); color:var(--w-muted-fg); }
+.vr-ch{ display:flex; flex-direction:column; gap:6px; padding:8px; border-radius:var(--w-r-sm, 8px); } .vr-ch + .vr-ch{ border-top:1px solid var(--w-border); border-radius:0; } .vr-ch.is-me{ background:var(--w-mid-bg, var(--w-muted)); border-radius:var(--w-r-sm, 8px); }
+.vr-cht{ display:flex; align-items:center; gap:8px; } .vr-cht span{ flex:1; font:var(--t-title); display:flex; align-items:center; gap:4px; } .vr-cht .vo-ok{ display:inline-grid; } .vr-cht .vo-ok svg{ width:14px; height:14px; }
+.vr-cht b{ font:700 15px/18px var(--w-font); font-variant-numeric:tabular-nums; }
+.vr-chb{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.vr-avs{ display:inline-flex; align-items:center; } .vr-avs img{ width:18px; height:18px; border-radius:50%; object-fit:cover; box-shadow:0 0 0 2px var(--w-card, var(--w-page)); } .vr-avs img + img{ margin-left:-6px; }
+.vr-avs small{ margin-left:6px; font:var(--t-sub); color:var(--w-muted-fg); }
+.vr-dots{ display:inline-flex; gap:8px; font:400 11px/14px var(--w-font); color:var(--w-muted-fg); } .vr-dots span{ display:inline-flex; align-items:center; gap:3px; } .vr-dots i{ width:6px; height:6px; border-radius:50%; }
+.vr-dots .a{ background:var(--w-up); } .vr-dots .n{ background:var(--w-ring); } .vr-dots .b{ background:var(--w-down); }
+
+/* v12 — v7 + v8: заливка трибунами и цифры трибун под ответом; таймер красным, как LIVE */
+.vr-sr--mix{ min-height:52px; align-items:center; } .vr-mt{ position:relative; flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; padding:6px 0; } .vr-mt .vr-st{ flex:none; }
+.vr-sr--mix .vr-tn{ position:relative; } .vr-sr--mix .vr-tn span{ color:color-mix(in srgb, var(--w-fg) 70%, transparent); } .vr-sr--mix .vr-tn .is-my{ color:var(--w-fg); }
+.vr-sr--mix .vr-fill{ opacity:.28; } .vr-sr--mix.is-me .vr-fill{ opacity:.45; } .vr-sr--mix em{ font:700 15px/18px var(--w-font); }
+.vr-leg2{ display:flex; flex-wrap:wrap; gap:10px; } .vr-leg2 span{ display:inline-flex; align-items:center; gap:4px; } .vr-leg2 .vo-flg, .vr-leg2 .vo-nt, .vr-leg2 .vo-nt svg{ width:12px; height:12px; }
+.vr-leg2 i:not(.vo-nt){ width:8px; height:4px; border-radius:2px; } .vr-leg2 .a{ background:var(--w-up); } .vr-leg2 .n{ background:var(--w-ring); } .vr-leg2 .b{ background:var(--w-down); }
+.vr-live{ display:inline-flex; align-items:center; gap:6px; margin-left:auto; color:#ef4444; }
+.vr-live > i{ width:7px; height:7px; border-radius:50%; background:#dc2626; box-shadow:0 0 0 0 rgba(220,38,38,.6); animation:vrPulse 1.4s infinite; } @keyframes vrPulse{ 70%{ box-shadow:0 0 0 6px rgba(220,38,38,0); } 100%{ box-shadow:0 0 0 0 rgba(220,38,38,0); } }
+.vr-live .vr-ring{ margin-left:0; color:#ef4444; } .vr-live .vr-ring .fg{ stroke:#dc2626; } .vr-live .vr-ring .bg{ stroke:rgba(220,38,38,.2); }
+
+/* v13–v15 — таймер: точка + моно; цветные значки ответов; три реализации итога трибун */
+.vr-live--mono b{ font:600 13px/16px 'JetBrains Mono', ui-monospace, monospace; letter-spacing:.02em; color:#ef4444; }
+.vr-live--mono > i{ animation:vrBlinkDot 1s steps(1) infinite; box-shadow:none; } @keyframes vrBlinkDot{ 50%{ opacity:.2; } }
+.vo-oi{ position:relative; width:20px; height:20px; flex:none; object-fit:contain; } .vo-oi--t{ display:grid; place-items:center; border-radius:6px; background:rgba(245,158,11,.18); color:#f59e0b; font-style:normal; } .vo-oi--t svg{ width:14px; height:14px; }
+.vr-l3{ display:flex; flex-direction:column; padding:0 12px 10px; }
+.vr-r3{ display:flex; flex-direction:column; gap:6px; padding:8px 0; } .vr-r3 + .vr-r3{ border-top:1px solid var(--w-border); }
+.vr-h3{ display:flex; align-items:center; gap:8px; } .vr-h3 .vr-st{ flex:1; } .vr-h3 em{ font-style:normal; font:700 15px/18px var(--w-font); font-variant-numeric:tabular-nums; color:var(--w-muted-fg); } .vr-r3.is-me .vr-h3 em{ color:var(--w-fg); }
+.vr-r3 .vr-tn{ padding-left:28px; }
+/* bar — тонкая сегментная полоса */
+.vr-b3{ display:block; height:6px; margin-left:28px; border-radius:3px; background:var(--w-muted); overflow:hidden; }
+.vr-sg{ display:flex; gap:2px; height:100%; transition:width .5s ease-out; } .vr-sg i{ display:block; height:100%; border-radius:2px; } .vr-sg .a{ background:var(--w-up); } .vr-sg .n{ background:var(--w-ring); } .vr-sg .b{ background:var(--w-down); }
+/* pills — три пилюли трибун */
+.vr-pl3{ display:flex; gap:6px; padding-left:28px; }
+.vr-p3{ display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px 0 6px; border-radius:999px; font:600 11px/14px var(--w-font); }
+.vr-p3 .vo-flg, .vr-p3 .vo-nt, .vr-p3 .vo-nt svg{ width:12px; height:12px; } .vr-p3 b{ font:inherit; font-variant-numeric:tabular-nums; }
+.vr-p3.a{ background:color-mix(in srgb, var(--w-up) 16%, transparent); color:var(--w-up); } .vr-p3.n{ background:var(--w-muted); color:var(--w-muted-fg); } .vr-p3.b{ background:color-mix(in srgb, var(--w-down) 16%, transparent); color:var(--w-down); }
+.vr-p3.is-my{ box-shadow:inset 0 0 0 1px currentColor; }
+/* waffle — квадратики */
+.vr-wf{ display:grid; grid-template-columns:repeat(20, 1fr); gap:2px; margin-left:28px; } .vr-wf i{ aspect-ratio:1; border-radius:2px; }
+.vr-wf .a{ background:var(--w-up); } .vr-wf .n{ background:var(--w-ring); } .vr-wf .b{ background:var(--w-down); } .vr-wf .e{ background:var(--w-muted); }
+.vr-l3 > .vo-ft{ padding:6px 0 0 28px; }
+
+/* v16–v19 — вопрос в шапке, мелкий таймер, залитые значки Material, дуэль трибун */
+.vt--ours:has(.vo-q--hd) .vo-q--hd{ padding:12px 12px 8px; }
+.vo-qh{ display:flex; align-items:baseline; gap:8px; } .vo-qh > b{ flex:1; min-width:0; }
+.vr-live--sm{ gap:4px; margin-left:auto; flex:none; } .vr-live--sm > i{ width:5px; height:5px; animation:vrBlinkDot 1s steps(1) infinite; box-shadow:none; }
+.vr-live--sm b{ font:500 11px/14px 'JetBrains Mono', ui-monospace, monospace; color:#ef4444; }
+.vo-mi{ position:relative; display:grid; place-items:center; width:22px; height:22px; flex:none; border-radius:6px; font-style:normal; }
+.vo-mi--0{ background:rgba(245,158,11,.16); color:#f59e0b; } .vo-mi--1{ background:rgba(56,189,248,.16); color:#38bdf8; } .vo-mi--2{ background:rgba(167,139,250,.16); color:#a78bfa; }
+.vr-du{ display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-left:30px; }
+.vr-dl, .vr-dr{ display:flex; align-items:center; gap:4px; } .vr-dl i, .vr-dr i{ position:relative; flex:1; height:6px; border-radius:3px; background:var(--w-muted); overflow:hidden; }
+.vr-dl u{ position:absolute; inset:0 0 0 auto; background:var(--w-up); } .vr-dr u{ position:absolute; inset:0 auto 0 0; background:var(--w-down); }
+.vr-du b{ font:600 11px/14px var(--w-font); font-variant-numeric:tabular-nums; color:var(--w-muted-fg); min-width:18px; } .vr-dl b{ text-align:right; }
+.vr-du .vo-flg{ width:12px; height:12px; }
+.vr-pre{ margin-left:auto; flex:none; font:500 11px/14px 'JetBrains Mono', ui-monospace, monospace; color:var(--w-muted-fg); } /* v20: до матча — серое «до старта» */

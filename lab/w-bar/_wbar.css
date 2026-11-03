@@ -1,0 +1,77 @@
+/* w-bar — виджет «Остров» (_wbar.js, лаба w-bar v11): пилюля в центре бара + карточка события «вопрос крупно». Один CSS для лабы и страницы матча. Токены — widget-tournament/_w.css. */
+.wb-isl, .wb-card, .wb-side{ --gold:#eab308; --up:#22c55e; --dn:#ef4444; font-family:var(--w-font); }
+.wb-isl .num, .wb-card .num{ font-variant-numeric:tabular-nums; }
+.wb-isl, .wb-card button{ font:inherit; color:inherit; border:0; background:none; cursor:pointer; padding:0; }
+/* пилюля одной ширины: внутри меняется только текст, бар не двигается */
+.wb-isl{ display:flex; align-items:center; justify-content:center; gap:6px; width:156px; height:40px; margin:0 auto; padding:0 12px; border-radius:20px; background:#18181b; border:1px solid var(--w-border);
+  font-size:12px; color:var(--w-fg); white-space:nowrap; overflow:hidden; transition:background .3s, border-color .3s; align-self:center; }
+.wb-isl > *{ flex:none; } .wb-isl b, .wb-isl span:not(.wb-dot){ min-width:0; overflow:hidden; text-overflow:ellipsis; flex:0 1 auto; } .wb-isl b{ font-weight:600; }
+.wb-isl.is-ev{ background:#1c1708; border-color:var(--gold); animation:wb-glow 1.2s infinite; } .wb-isl.is-ev .num{ color:var(--gold); }
+.wb-isl .ok{ color:var(--up); font-weight:700; }
+.wb-dot{ width:7px; height:7px; border-radius:50%; background:var(--dn); animation:wb-glow 1.4s infinite; } .wb-dot.is-ev{ background:var(--gold); } .wb-dot.is-off{ background:#52525b; animation:none; }
+.anim-pop{ animation:wb-pop .45s ease, wb-glow 1.2s .45s infinite; }
+@keyframes wb-pop{ 0%{ transform:scale(.6); } 60%{ transform:scale(1.12); } 100%{ transform:scale(1); } }
+@keyframes wb-glow{ 0%,100%{ box-shadow:0 0 0 0 rgba(234,179,8,.6); } 50%{ box-shadow:0 0 0 8px rgba(234,179,8,0); } }
+@keyframes wb-up{ from{ transform:translateY(40px) scale(.96); opacity:0; } }
+@keyframes wb-fade{ from{ opacity:0; } }
+
+/* слой карточки: страница — на весь экран, лаба — в рамке телефона */
+.wb-layer{ position:fixed; inset:0; z-index:20; pointer-events:none; } .wb-layer > *{ pointer-events:auto; }
+.wb-layer.is-abs{ position:absolute; }
+.wb-dim{ position:absolute; inset:0; background:#000a; animation:wb-fade .2s ease; }
+.wb-card{ position:absolute; left:12px; right:12px; bottom:var(--wb-bottom, 86px); max-width:420px; margin:0 auto; overflow:hidden; border-radius:24px; color:var(--w-fg);
+  background:linear-gradient(180deg,#2a2208 0%,#111113 46%); border:1px solid #3f3a1f; box-shadow:0 24px 56px #000d; transform-origin:50% 100%; }
+.wb-card.anim-up{ animation:wb-up .35s cubic-bezier(.2,.9,.3,1.2); }
+.wb-card.is-desk{ position:relative; left:auto; right:auto; bottom:auto; box-shadow:none; }
+.wb-from{ display:flex; align-items:center; gap:8px; padding:12px 14px 0; font-size:12px; color:var(--w-muted-fg); } .wb-lnk{ margin-left:auto; color:#a78bfa; font-size:13px; }
+.wb-top{ display:flex; flex-direction:column; align-items:center; padding:16px 16px 8px; text-align:center; }
+.wb-ic svg{ width:40px; height:40px; } .wb-ev{ margin-top:6px; font-size:12px; color:var(--w-muted-fg); } .wb-ev b{ color:var(--w-fg); }
+.wb-q{ margin:8px 0 4px; font-size:20px; line-height:1.25; font-weight:600; }
+.wb-big{ font-size:28px; font-weight:700; letter-spacing:.5px; color:var(--gold); }
+.wb-rows{ display:flex; flex-direction:column; gap:6px; padding:8px 12px 0; }
+.wb-row{ position:relative; overflow:hidden; display:flex; align-items:center; gap:10px; height:52px; padding:0 14px; border-radius:14px; background:#1c1c20; font-weight:600; font-size:15px; }
+.wb-row i{ position:absolute; left:0; top:0; bottom:0; background:#2c2c32; transition:width .5s ease; } .wb-row > *:not(i){ position:relative; } .wb-row span{ flex:1; text-align:left; }
+.wb-row img{ width:28px; height:28px; object-fit:contain; flex:none; } .wb-row em{ font-style:normal; color:var(--w-muted-fg); }
+.wb-row.pick{ outline:1px solid var(--gold); } .wb-row.pick i{ background:#3b3214; }
+.wb-ft{ display:flex; justify-content:center; padding:10px 12px 12px; font-size:12px; color:var(--w-muted-fg); }
+.wb-re{ display:flex; gap:2px; } .wb-re button{ display:inline-flex; align-items:center; gap:4px; height:26px; padding:0 7px; border-radius:13px; font-size:13px; }
+.wb-re button span{ font-size:12px; color:var(--w-muted-fg); } .wb-re button:hover{ background:var(--w-muted); } .wb-re button.on{ background:#4c3d7a; } .wb-re button.on span{ color:var(--w-fg); }
+/* компьютер: правая колонка */
+.wb-side .wb-isl{ width:100%; height:44px; }
+
+/* страница матча: в баре 5 мест — остров посередине */
+.tabbar.wb-on{ grid-template-columns:1fr 1fr auto 1fr 1fr; align-items:center; }
+
+/* лаба w-island (27.10): вид текста в острове — window.WB_LOOK */
+.wb-lg{ width:18px; height:18px; object-fit:contain; flex:none; }
+/* big — крупнее и ровнее: шире, 13 px, значение — полужирным, подпись — приглушённо */
+.wb-isl--big{ width:176px; height:44px; gap:8px; font-size:13px; letter-spacing:.1px; }
+.wb-isl--big span:not(.wb-dot):not(.ok){ color:var(--w-muted-fg); } .wb-isl--big b, .wb-isl--big .num{ color:var(--w-fg); font-weight:600; }
+/* two — две строки: что (11 px, приглушённо) и значение (14 px, полужирным) */
+.wb-isl--two{ width:168px; height:44px; gap:8px; justify-content:flex-start; padding:0 14px; }
+.wb-2{ display:flex; flex-direction:column; align-items:flex-start; min-width:0; line-height:1.15; text-align:left; }
+.wb-2 small{ font-size:11px; color:var(--w-muted-fg); } .wb-2 b{ font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:124px; }
+/* logos — логотипы команд вместо названий: счёт / время крупно между ними */
+.wb-isl--logos{ width:156px; height:44px; gap:8px; font-size:14px; } .wb-isl--logos b{ font-weight:700; } .wb-isl--logos .wb-sc{ font-size:16px; letter-spacing:.5px; }
+.wb-isl--logos .wb-lg{ width:22px; height:22px; }
+
+/* лаба w-barst v3–v5 (27.10): значки в острове — WB_LOOK ic / ring / chip. Шире (176), текст не режется: событие — одно слово, подробности — по нажатию */
+.wb-isl--ic, .wb-isl--ring, .wb-isl--chip{ width:176px; height:44px; gap:7px; font-size:13px; padding:0 12px; }
+.wb-isl--ic .wb-lg, .wb-isl--ring .wb-lg, .wb-isl--chip .wb-lg{ width:20px; height:20px; }
+.wb-isl--ic b, .wb-isl--ring b, .wb-isl--chip b{ font-weight:700; } .wb-isl .wb-sc{ font-size:15px; letter-spacing:.5px; }
+.wb-isl .wb-i{ width:18px; height:18px; flex:none; display:block; }
+.wb-isl .wb-mut{ color:var(--w-muted-fg); display:flex; align-items:center; } .wb-isl small.wb-mut{ font-size:11px; }
+.wb-isl .wb-mut .wb-i{ width:16px; height:16px; }
+.wb-ld{ display:flex; align-items:center; }
+.t-dn{ color:var(--dn); } .t-gold{ color:var(--gold); } .t-amber{ color:#f59e0b; } .t-up{ color:var(--up); } .t-mute{ color:var(--w-muted-fg); }
+.wb-isl.is-hot{ border-color:var(--dn); background:#1f0d0d; } .wb-isl.is-hot .num{ color:var(--dn); }
+/* chip — кружок 26 px с цветным фоном */
+.wb-chip{ display:grid; place-items:center; width:26px; height:26px; margin-left:-6px; border-radius:50%; background:color-mix(in srgb, currentColor 18%, transparent); }
+.wb-chip .wb-i{ width:15px; height:15px; } .wb-isl--chip{ justify-content:flex-start; }
+.wb-live{ width:8px; height:8px; border-radius:50%; background:currentColor; animation:wb-glow 1.4s infinite; }
+/* ring — таймер вопроса кольцом вокруг значка */
+.wb-ring{ position:relative; display:grid; place-items:center; width:28px; height:28px; margin-left:-6px; }
+.wb-ring > svg:first-child{ position:absolute; inset:0; width:28px; height:28px; transform:rotate(-90deg); }
+.wb-ring > svg:first-child circle{ fill:none; stroke:currentColor; stroke-width:2.5; opacity:.25; } .wb-ring .wb-rg{ opacity:1; stroke-linecap:round; transition:stroke-dashoffset 1s linear; }
+.wb-ring .wb-i{ width:15px; height:15px; }
+.wb-isl--ring.is-ev{ justify-content:flex-start; }

@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_mf.css" />
+<style>
+.pk { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 20px; align-items: start; }
+.pk-main { display: grid; gap: 20px; min-width: 0; } .pk-side { display: grid; gap: 20px; min-width: 0; }
+/* Шапка прогноза: статус и сколько осталось на выбор */
+.pk-st { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.pk-st h2 { font-size: 22px; font-weight: 800; letter-spacing: -.01em; }
+.pk-st .mf-clock { justify-items: end; text-align: right; }
+/* Выбор победителя: две большие панели цветом команды */
+.pk-pick { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: stretch; gap: 14px; }
+.pk-team { position: relative; isolation: isolate; overflow: hidden; display: grid; justify-items: center; gap: 10px; padding: 26px 16px 20px; border: 0; border-radius: 14px; background: var(--c-ui-item); text-align: center; transition: background .25s, box-shadow .25s, transform .25s; }
+.pk-team::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(70% 80% at 50% 0%, color-mix(in srgb, var(--tc) 30%, transparent), transparent 70%); opacity: 0; transition: opacity .3s; }
+.pk-team:hover::before { opacity: .5; }
+.pk-team .mf-lg.xl { width: 96px; height: 96px; transition: transform .3s; }
+.pk-team b { font-size: 20px; font-weight: 800; }
+.pk-team small { color: var(--c-caption); font-size: 13px; }
+.pk-team .pk-votes { display: grid; gap: 6px; width: 100%; max-width: 240px; }
+.pk-votes i { display: block; height: 6px; border-radius: 3px; background: var(--c-ui-hover); }
+.pk-votes i::after { content: ''; display: block; width: var(--p); height: 100%; border-radius: inherit; background: var(--tc); }
+.pk-team.is-on { background: color-mix(in srgb, var(--tc) 12%, var(--c-ui-item)); box-shadow: inset 0 0 0 2px var(--tc), 0 18px 50px -24px var(--tc); }
+.pk-team.is-on::before { opacity: 1; }
+.pk-team.is-on .mf-lg.xl { transform: scale(1.06); }
+.pk-team.is-off { opacity: .55; }
+.pk-team.is-win { background: color-mix(in srgb, var(--c-stat-high) 14%, var(--c-ui-item)); box-shadow: inset 0 0 0 2px var(--c-stat-high); }
+.pk-team.is-lose { background: color-mix(in srgb, var(--c-live) 12%, var(--c-ui-item)); box-shadow: inset 0 0 0 2px var(--c-live); }
+.pk-team:disabled { cursor: default; }
+.pk-mark { position: absolute; top: 12px; right: 12px; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--tc); color: var(--c-card-dark-text); font-size: 15px; font-weight: 900; }
+.pk-team.is-win .pk-mark { background: var(--c-stat-high); } .pk-team.is-lose .pk-mark { background: var(--c-live); color: var(--c-white); }
+.pk-vs { display: grid; place-items: center; color: var(--c-ui-dim); font: 700 22px var(--font-c); }
+/* Счёт серии */
+.pk-score { display: grid; gap: 10px; margin-top: 18px; }
+.pk-score > p { display: flex; justify-content: space-between; color: var(--c-muted); font-size: 14px; }
+.pk-chips { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.pk-chip { display: grid; gap: 2px; padding: 12px 10px; border: 0; border-radius: 10px; background: var(--c-ui-item); text-align: center; transition: .2s; }
+.pk-chip b { font: 700 26px/1 var(--font-c); } .pk-chip small { color: var(--c-caption); font-size: 12px; }
+.pk-chip.is-on { background: color-mix(in srgb, var(--c-accent) 22%, var(--c-ui-item)); box-shadow: inset 0 0 0 2px var(--c-accent); }
+.pk-chip.is-real { box-shadow: inset 0 0 0 2px var(--c-stat-high); }
+.pk-chip.is-miss { box-shadow: inset 0 0 0 2px var(--c-live); }
+.pk-chip:disabled { cursor: default; } .pk-chip.is-x { opacity: .35; }
+/* Награды за прогноз и кнопка */
+.pk-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--c-ui-line); }
+.pk-pts { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13.5px; color: var(--c-muted); }
+.pk-pts b { color: var(--c-text); font-family: var(--font-c); font-size: 16px; }
+.pk-res { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 16px; margin-top: 18px; padding: 16px 18px; border-radius: 12px; }
+.pk-res.is-win { background: color-mix(in srgb, var(--c-stat-high) 12%, var(--c-ui-item)); } .pk-res.is-lose { background: color-mix(in srgb, var(--c-live) 10%, var(--c-ui-item)); }
+.pk-res > i { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; font-size: 22px; font-style: normal; font-weight: 900; }
+.pk-res.is-win > i { background: var(--c-stat-high); color: var(--c-card-dark-text); } .pk-res.is-lose > i { background: var(--c-live); color: var(--c-white); }
+.pk-res b { display: block; font-size: 17px; } .pk-res span { color: var(--c-muted); font-size: 13.5px; }
+.pk-res em { font: 700 34px var(--font-c); font-style: normal; } .pk-res.is-win em { color: var(--c-stat-high); } .pk-res.is-lose em { color: var(--c-ui-dim); }
+/* Сетка турнира с прогнозами, как Pick'Em: даты над парами, кружок выбора у каждой команды */
+.pk-br { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+.pk-col > h4 { margin-bottom: 4px !important; font-size: 14px; font-weight: 700; } .pk-col > small { display: block; margin-bottom: 12px; color: var(--c-caption); font-size: 12px; }
+.pk-col { display: grid; align-content: space-around; gap: 22px; }
+.pk-m { display: grid; gap: 2px; } .pk-m > small { color: var(--c-caption); font-size: 12px; margin-bottom: 4px; }
+.pk-m.is-this { padding: 8px; margin: -8px; border-radius: 12px; background: color-mix(in srgb, var(--c-accent) 12%, transparent); }
+.pk-r { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; align-items: center; gap: 10px; height: 40px; padding: 0 10px; border: 0; border-radius: 8px; background: var(--c-ui-item); font-size: 14px; font-weight: 600; text-align: left; }
+.pk-r:hover:not(:disabled) { background: var(--c-ui-hover); }
+.pk-r > i { width: 20px; height: 20px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--c-ui-dim); }
+.pk-r.is-on > i { background: var(--c-accent); box-shadow: inset 0 0 0 4px var(--c-accent), inset 0 0 0 7px var(--c-ui-item); }
+.pk-r.is-tbd { color: var(--c-ui-dim); font-weight: 500; }
+.pk-r.is-win { background: color-mix(in srgb, var(--c-stat-high) 16%, var(--c-ui-item)); } .pk-r.is-win > i { background: var(--c-stat-high); box-shadow: none; }
+.pk-r.is-lose { background: color-mix(in srgb, var(--c-live) 14%, var(--c-ui-item)); } .pk-r.is-lose > i { background: var(--c-live); box-shadow: none; }
+.pk-r:disabled { cursor: default; }
+.pk-prog { display: grid; gap: 8px; }
+.pk-prog p { display: flex; align-items: center; gap: 10px; font-size: 13.5px; }
+.pk-prog p i { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--c-ui-item); color: var(--c-ui-dim); font-size: 12px; font-style: normal; font-weight: 800; flex: none; }
+.pk-prog p.is-done i { background: var(--c-stat-high); color: var(--c-card-dark-text); }
+.pk-prog p span { flex: 1; } .pk-prog p small { color: var(--c-coin); font-weight: 700; }
+.pk-me { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+.pk-me p { display: grid; gap: 2px; padding: 12px; border-radius: 10px; background: var(--c-ui-item); }
+.pk-me b { font: 700 26px/1 var(--font-c); } .pk-me small { color: var(--c-caption); font-size: 12px; }
+@container mf (max-width: 700px) {
+  .pk { grid-template-columns: minmax(0, 1fr); gap: 12px; } .pk-main, .pk-side { gap: 12px; }
+  .pk-st h2 { font-size: 18px; } .pk-st { margin-bottom: 12px; }
+  .pk-pick { gap: 8px; } .pk-team { padding: 16px 8px 14px; gap: 6px; } .pk-team .mf-lg.xl { width: 56px; height: 56px; } .pk-team b { font-size: 15px; }
+  .pk-vs { font-size: 14px; } .pk-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); } .pk-chip b { font-size: 22px; }
+  .pk-br { grid-template-columns: minmax(0, 1fr); gap: 18px; } .pk-col { gap: 12px; }
+  .pk-res { grid-template-columns: auto minmax(0, 1fr); } .pk-res em { grid-column: 1 / -1; font-size: 26px; }
+  .pk-foot .mf-btn { width: 100%; } .pk-score > p { flex-direction: column; gap: 2px; } .pk-st .mf-clock { justify-items: start; text-align: left; }
+}
+</style></head>
+<body><main class="mf-page">
+  <h1>v1 · Прогноз как Pick'Em</h1>
+  <p>Как Pick'Em мейджора в CS2 и прогнозы TI в Dota 2: на странице будущего матча — крупный выбор победителя цветом команды и точный счёт серии, сколько осталось на выбор, справа очки друзей. Ниже — сетка турнира, где этот матч подсвечен, а у соседних пар тоже можно поставить кружок. Состояния сверху: открыт → выбор сохранён → прогнозы закрыты (матч идёт) → итог, угадал или мимо — строки становятся зелёными или красными. Всё кликается, таймер тикает.</p>
+  <div class="mf-tools" data-tools></div>
+  <p class="mf-cap">Десктоп · 1440 (рамка уменьшена под ширину окна)</p><div class="mf-wrap"><div class="mf-frame mf-frame--desk" data-mf></div></div>
+  <p class="mf-cap">Телефон · 390 — листается внутри рамки</p><div class="mf-frame mf-frame--phone" data-mf></div>
+</main>
+<script>
+window.MF = {
+  нач: { st: 'open', win: null, sc: null, br: { b2: 'flc', f: null, gf: null } },
+  инструменты: [['st', 'Состояние', [['open', '2 ч на выбор'], ['saved', 'Выбор сохранён'], ['locked', 'Прогнозы закрыты'], ['win', 'Итог · угадал'], ['lose', 'Итог · мимо']]]],
+  // Переключалка состояния: для «сохранён» и итогов — готовый выбор
+  сброс: (S) => {
+    if (S.st === 'open') { S.win = null; S.sc = null }
+    if (S.st === 'saved' || S.st === 'locked') { S.win = S.win || 'ts'; S.sc = S.sc || '2:1' }
+    if (S.st === 'win') { S.win = 'ts'; S.sc = '2:1'; S.br.f = 'ts' }
+    if (S.st === 'lose') { S.win = 'tun'; S.sc = '2:0'; S.br.f = 'tun' }
+  },
+  действия: {
+    win: (S, el) => { if (S.st !== 'open') return false; S.win = el.dataset.v; S.sc = null; if (S.br.f && S.br.f !== S.win) S.br.f = null },
+    sc: (S, el) => { if (S.st !== 'open') return false; S.sc = el.dataset.v },
+    save: (S, el, x) => { S.st = 'saved'; setTimeout(() => x.тост('Прогноз сохранён — изменить можно до 16:50'), 30) },
+    edit: (S) => { S.st = 'open' },
+    br: (S, el) => { if (S.st === 'win' || S.st === 'lose') return false; S.br[el.dataset.m] = el.dataset.v },
+  },
+}
+MF.вариант = (S, x) => {
+  const { МАТЧ: m, имя, кор, лого, ЦВЕТ, часы } = x
+  const итог = S.st === 'win' || S.st === 'lose', закрыт = S.st === 'locked' || итог, можно = S.st === 'open'
+  const ГОЛОСА = { ts: 58, tun: 42 }
+  // Статус прогноза: что можно сделать и сколько времени
+  const статус = {
+    open: [`<span class="mf-pill mf-pill--warn">Открыт</span>`, `<div class="mf-clock is-warn"><small>Прогнозы закроются через</small>${часы('lock')}</div>`],
+    saved: [`<span class="mf-pill mf-pill--ok">✓ Выбор сохранён</span>`, `<div class="mf-clock"><small>Изменить можно ещё</small>${часы('lock')}</div>`],
+    locked: [`<span class="mf-pill mf-pill--bad">Прогнозы закрыты</span>`, `<div class="mf-clock is-off"><small>Матч идёт · итог после карты 3</small><b>— : —</b></div>`],
+    win: [`<span class="mf-pill mf-pill--ok">Итог · Spirit 2 : 1</span>`, `<div class="mf-clock"><small>Очки за прогноз</small><b class="mf-up">+300</b></div>`],
+    lose: [`<span class="mf-pill mf-pill--bad">Итог · Spirit 2 : 1</span>`, `<div class="mf-clock is-off"><small>Очки за прогноз</small><b>0</b></div>`],
+  }[S.st]
+  const команда = (k) => {
+    const on = S.win === k, cls = итог ? (on ? (k === 'ts' ? 'is-win' : 'is-lose') : 'is-off') : on ? 'is-on' : S.win ? 'is-off' : ''
+    const знак = on ? `<span class="pk-mark">${итог ? (k === 'ts' ? '✓' : '✕') : '✓'}</span>` : ''
+    return `<button type="button" class="pk-team ${cls}" style="--tc:${ЦВЕТ[k]}" data-act="win" data-v="${k}" ${можно ? '' : 'disabled'}>${знак}${лого(k, 'xl')}<b>${имя(k)}</b>
+      <span class="pk-votes"><small>${ГОЛОСА[k]}% зрителей за них</small><i style="--p:${ГОЛОСА[k]}%"></i></span></button>`
+  }
+  const сч = [['ts', '2:0'], ['ts', '2:1'], ['tun', '2:1'], ['tun', '2:0']]
+  const счёт = `<div class="pk-score"><p><span>Точный счёт серии</span><span>${S.win ? '' : 'сначала выберите победителя'}</span></p><div class="pk-chips">${сч.map(([k, s]) => {
+    const [a, b] = s.split(':'), подпись = k === 'ts' ? `${a} : ${b}` : `${b} : ${a}`, свой = S.win === k && S.sc === s
+    const cls = итог ? (k === 'ts' && s === '2:1' ? 'is-real' : свой ? 'is-miss' : 'is-x') : свой ? 'is-on' : S.win && S.win !== k ? 'is-x' : ''
+    return `<button type="button" class="pk-chip ${cls}" data-act="sc" data-v="${s}" ${можно && S.win === k ? '' : 'disabled'}><b>${подпись}</b><small>${кор(k)}${итог && k === 'ts' && s === '2:1' ? ' · так и вышло' : ''}</small></button>`
+  }).join('')}</div></div>`
+  const низ = итог
+    ? `<div class="pk-res ${S.st === 'win' ? 'is-win' : 'is-lose'}"><i>${S.st === 'win' ? '✓' : '✕'}</i><div><b>${S.st === 'win' ? 'Угадали победителя и точный счёт' : 'Мимо: вы ставили Tundra 2 : 0'}</b><span>${S.st === 'win' ? '+100 за победителя · +200 за счёт · серия прогнозов: 3 подряд' : 'Серия прогнозов прервалась · следующий матч дня — Falcons — Liquid в 20:00'}</span></div><em>${S.st === 'win' ? '+300' : '0'}</em></div>`
+    : `<div class="pk-foot"><p class="pk-pts"><span>Победитель <b>+100</b></span><span>Точный счёт <b>+200</b></span><span>Против большинства <b>×1.5</b></span></p>${
+      S.st === 'open' ? `<button class="mf-btn mf-btn--main mf-btn--lg" type="button" data-act="save" ${S.win && S.sc ? '' : 'disabled'}>${S.win && S.sc ? 'Сохранить прогноз' : S.win ? 'Выберите счёт' : 'Выберите победителя'}</button>`
+      : S.st === 'saved' ? `<button class="mf-btn mf-btn--lg" type="button" data-act="edit">Изменить</button>` : `<button class="mf-btn mf-btn--lg" type="button" disabled>Ждём итог</button>`}</div>`
+
+  // Сетка: полуфиналы верхней сетки → финал → гранд-финал; у каждой пары — кружок выбора
+  const пара = (id, a, b, дата, это) => {
+    const выбор = id === 's1' ? S.win : S.br[id]
+    const ряд = (k) => {
+      if (!k) return `<button class="pk-r is-tbd" type="button" disabled><i></i><span>Победитель пары выше</span><small></small></button>`
+      const on = выбор === k, факт = итог && id === 's1' ? (k === 'ts') : итог && id === 'b2' ? k === 'flc' : null
+      const cls = итог && on && факт !== null ? (факт ? 'is-win' : 'is-lose') : on ? 'is-on' : ''
+      return `<button class="pk-r ${cls}" type="button" ${id === 's1' ? `data-act="win" data-v="${k}"` : `data-act="br" data-m="${id}" data-v="${k}"`} ${(id === 's1' ? можно : !итог) ? '' : 'disabled'}><i></i><span style="display:flex;align-items:center;gap:8px">${лого(k, 'sm')}${кор(k)}</span><small class="mf-mut">${это && итог ? (k === 'ts' ? '2' : '1') : ''}</small></button>`
+    }
+    return `<div class="pk-m ${это ? 'is-this' : ''}"><small>${дата}${это ? ' · этот матч' : ''}</small>${ряд(a)}${ряд(b)}</div>`
+  }
+  const f1 = S.win || null, f2 = S.br.b2 || null
+  const сетка = `<section class="mf-panel"><h3 class="mf-h">Сетка с прогнозами<small>${закрыт ? 'полуфиналы закрыты' : 'кружок — ваш выбор · можно на всю сетку сразу'}</small></h3><div class="pk-br">
+    <div class="pk-col"><div><h4>Полуфиналы верхней сетки</h4><small>6 октября</small></div>${пара('s1', 'ts', 'tun', '17:00', 1)}${пара('b2', 'flc', 'tl', '20:00', 0)}</div>
+    <div class="pk-col"><div><h4>Финал верхней сетки</h4><small>8 октября</small></div>${пара('f', f1, f2, '17:00', 0)}</div>
+    <div class="pk-col"><div><h4>Гранд-финал</h4><small>12 октября · LAN</small></div>${пара('gf', S.br.f || null, null, '18:00', 0)}</div></div></section>`
+
+  const плюс = S.st === 'win' ? 300 : 0
+  const сбоку = `<section class="mf-panel"><h3 class="mf-h">Прогнозы турнира<small>BLAST Slam VIII</small></h3>
+      <div class="pk-me"><p><b class="mf-num">${(1490 + плюс).toLocaleString('ru-RU')}</b><small>ваши очки</small></p><p><b class="mf-num">${S.st === 'win' ? '12' : '19'}%</b><small>лучше вас</small></p></div>
+      <div class="pk-prog"><p class="is-done"><i>✓</i><span>Прогноз на 5 матчей группы</span><small>+50</small></p><p class="${S.win && S.sc ? 'is-done' : ''}"><i>${S.win && S.sc ? '✓' : '2'}</i><span>Прогноз на оба полуфинала</span><small>+50</small></p><p><i>3</i><span>Вся сетка до гранд-финала</span><small>Бустер</small></p></div></section>
+    <section class="mf-panel"><h3 class="mf-h">Друзья<small>очки за турнир</small></h3>${x.друзья(плюс)}</section>`
+
+  return `${x.сцена(S)}<div class="pk"><div class="pk-main"><section class="mf-panel"><div class="pk-st"><div><p class="mf-mut" style="margin-bottom:6px">${статус[0]}</p><h2>Кто выиграет серию?</h2></div>${статус[1]}</div>
+    <div class="pk-pick">${команда('ts')}<span class="pk-vs">vs</span>${команда('tun')}</div>${счёт}${низ}</section>${сетка}</div><aside class="pk-side">${сбоку}</aside></div>`
+}
+</script>
+<script src="_mf.js"></script>
+</body></html>

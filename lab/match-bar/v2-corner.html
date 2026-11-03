@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>v2 · Без переключателя, лого турнира в углу</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700;800;900&display=swap" />
+<link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="../widgets-unified/_type.css" /><link rel="stylesheet" href="../gs-tournament/_ours.css" /><link rel="stylesheet" href="_mb.css" />
+<!-- Матч-бар v2 — как v1, но без переключателя турниров: лого турнира маленьким в правом верхнем углу каждой плитки; дата короче — «19:00», «31.10 16:00», «30.10» (дирижёр 03.11).
+     v1 — в стиле CBS Sports (дирижёр 03.11: «cbssports.com — сделай версию в этом стиле»; разбор — Figma стр. 12, 351:368):
+     под шапкой сайта подложка с плитками; слева турнир ▾ (выбор турнира) и «Все матчи», дальше матчи: статус сверху, две строки «лого · команда · счёт», проигравший серым.
+     Порядок: идут → скоро → завершены. Прокрутка вбок, на телефоне — пальцем. Под строкой — заглушка страницы. ‼️ Матчи UNIVERSE, счёт и время — пример. -->
+</head>
+<body>
+<div class="app">
+  <header class="portal"><a class="pt-brand" href="#"><span class="pt-logo">◆</span>GoatScout</a>
+    <nav class="pt-nav"><a href="#">Матчи</a><a href="#">Турниры</a><a href="#">Фэнтези</a><a href="#" class="is-on">Новости</a></nav>
+    <a class="pt-in" href="#">Войти</a></header>
+  <div id="mb"></div>
+  <div class="mb-ph"><i></i><i></i><i></i></div>
+</div>
+<script src="../widget-tournament-4/_data.js"></script><script src="_mb.js"></script>
+<script>
+  const P = new URLSearchParams(location.search), FIT = P.has('fit'), fv = () => (innerWidth < 800 ? 'phone' : 'desk')
+  let view = FIT ? fv() : 'desk'; const ap = () => document.body.classList.toggle('is-desk', view === 'desk'); ap()
+  MB.mount(document.getElementById('mb'), { v2: true })
+  window.LAB = { view: 'toolbar', flows: () => [], go() {}, cur: () => ({ f: 0, i: 0 }),
+    axes: () => [{ key: 'view', name: 'Вид', value: view, options: [{ v: 'desk', label: 'Компьютер 1440' }, { v: 'phone', label: 'Телефон 390' }] }],
+    set(k, x) { if (k === 'view') { view = x; ap() } }, toggles: () => [], toggle() {}, caption: () => '‼️ Матчи UNIVERSE, счёт и время — пример' }
+  if (FIT) addEventListener('resize', () => { if (fv() !== view) { view = fv(); ap() } })
+</script>
+</body></html>

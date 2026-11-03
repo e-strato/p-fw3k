@@ -1,0 +1,21 @@
+/* w-gold-2 — кнопки зума и курсор ведения пальцем (_z.js) поверх виджета w-gold (_wgold.css). */
+.gz{ display:flex; gap:2px; } .gz:empty{ display:none; }
+.gw--top .gw-rail .gz-b{ width:auto; padding:0 8px; font:500 12px var(--w-font); color:var(--w-muted-fg); white-space:nowrap; }
+.gw--top .gw-rail .gz-b.on{ color:var(--w-fg); background:var(--w-muted); }
+.gz-sep{ width:1px; margin:5px 2px; background:var(--w-border); }
+.gz-live::before{ content:'●'; margin-right:4px; color:var(--dn); }
+/* кнопки зума в группе — подпись «Золото · карта» уходит строкой ниже */
+.gw--top.gz-on .cap{ top:38px; right:8px; }
+.gw-plot{ user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; }
+
+/* scrub: линия под пальцем, точка на линии, карточка минуты */
+.gz-cur{ position:absolute; width:0; border-left:1px dashed #a1a1aa; pointer-events:none; }
+.gz-dot{ position:absolute; width:10px; height:10px; border-radius:50%; background:#fff; box-shadow:0 0 0 3px #0009; transform:translate(-50%,-50%); pointer-events:none; }
+.gz-card{ position:absolute; z-index:4; padding:8px 0 6px; border-radius:10px; background:#18181bf2; border:1px solid var(--w-border); box-shadow:0 12px 32px #000a; pointer-events:none; font-size:12px; }
+.gz-h{ display:flex; align-items:baseline; gap:8px; padding:0 10px 4px; }
+.gz-h span{ font-weight:600; } .gz-h .up{ color:var(--up); } .gz-h .dn{ color:var(--dn); } .gz-h small{ margin-left:auto; color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.gz-r{ display:flex; align-items:center; gap:8px; padding:2px 10px; border-left:3px solid transparent; white-space:nowrap; overflow:hidden; }
+.gz-r.a{ border-color:var(--up); } .gz-r.b{ border-color:var(--dn); }
+.gz-r small{ width:34px; flex:none; color:var(--w-muted-fg); } .gz-r img{ width:20px; height:20px; border-radius:4px; }
+.gz-ic{ width:12px; height:12px; flex:none; border-radius:2px; background:#a1a1aa; } .gz-rosh{ border-radius:50%; background:#eab308; }
+.gz-more{ padding:2px 10px 0 55px; color:var(--w-muted-fg); }

@@ -1,0 +1,26 @@
+/* Общее для 4 виджетов по созвону 23.10 (решение 34): колонка даты слева, тег команды, тихие счётчики, значок игры 16 */
+.u-when{ flex:none; width:44px; display:flex; flex-direction:column; gap:0; font-variant-numeric:tabular-nums; }
+.u-when b{ font:var(--t-num-s, 600 12px/16px var(--w-font)); color:var(--w-fg); }
+.u-when span{ font:var(--t-sub, 400 11px/16px var(--w-font)); color:var(--w-muted-fg); white-space:nowrap; }
+.u-when .u-live{ font:var(--t-live, 700 11px/16px var(--w-font)); color:var(--w-down); }
+.u-tag{ white-space:nowrap; }
+.u-game{ flex:none; width:16px; height:16px; border-radius:4px; object-fit:contain; }
+.u-count{ font:var(--t-num-s, 600 12px/16px var(--w-font)); color:var(--w-muted-fg); font-variant-numeric:tabular-nums; } /* число без подложки (0.4) */
+.u-nm{ display:inline-block; min-width:0; max-width:100%; overflow:hidden; white-space:nowrap; vertical-align:bottom; } /* имя команды по месту (U.fit) */
+.u-fit{ min-width:0; overflow:hidden; }
+/* Верх колонки даты (LIVE, время, дата) — Inter, цифры одной ширины, 11/16·600 (дирижёр 23.10; было тремя копиями в турнире, заменах и трансферах) */
+.u-when > b{ font:600 11px/16px Inter, system-ui, sans-serif; font-feature-settings:'tnum' 1; font-variant-numeric:tabular-nums; }
+.u-when > b.u-live{ font:600 11px/16px Inter, system-ui, sans-serif; } /* LIVE — тем же шрифтом, что время (дирижёр 23.10) */
+/* Сегмент: «таблетка» переезжает к новой кнопке (_cons.js), пока едет — у самой кнопки подложки нет */
+.t5-seg, .m6-seg{ position:relative; } .t5-seg > button, .m6-seg > button{ position:relative; z-index:1; }
+.u-seg-pill{ position:absolute; z-index:0; pointer-events:none; }
+.u-seg-hold{ background:none !important; background-image:none !important; box-shadow:none !important; }
+/* Сегмент во всех вариантах и темах (дирижёр 23.10): у невыбранных кнопок на наведении и нажатии меняется только цвет текста —
+   никаких подложек, теней и сдвигов; выбранную подложку привозит «таблетка», сама кнопка под мышью и при нажатии не меняется */
+.t5-seg > button:not(.is-on), .m6-seg > button:not(.is-on){ background:none !important; box-shadow:none !important; transform:none !important; filter:none !important; }
+.t5-seg > button.is-on:hover, .t5-seg > button.is-on:active, .m6-seg > button.is-on:hover, .m6-seg > button.is-on:active{ transform:none !important; }
+.t5-seg > button, .m6-seg > button{ transition:color .25s ease !important; }
+/* Пустое состояние (дирижёр 23.10) — турнир и MVP; у замен и трансферов свои, такого же вида */
+.u-empty{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:40px 12px; text-align:center; }
+.u-empty b{ font-size:13px; font-weight:600; color:var(--w-fg); }
+.u-empty span{ font-size:12px; line-height:16px; color:var(--w-muted-fg); }

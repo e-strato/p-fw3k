@@ -1,0 +1,111 @@
+/* Лаба «Страница турнира» v2: внутри — стили сайта (styles.css), здесь только то, чего на сайте нет: шапка турнира поверх .mp-top,
+   сетка плей-офф, таблицы групп, призовые, команды. Цвета — токены сайта; выделение — фоном и рамкой целиком. */
+
+/* Без правой колонки (v2) — вся ширина под страницу */
+.trn-app--one .mx-main { grid-column: 1 / -1; }
+.trn-mp { max-width: none; margin: 0; padding: 0; }
+.trn-mp .mp-crumbs { margin-bottom: 12px; }
+
+/* Шапка турнира — .mp-top страницы матча; в центре вместо счёта — что в эфире */
+.trn-top { background: radial-gradient(40% 120% at 0% 50%, color-mix(in srgb, var(--ta) 26%, transparent), transparent 70%), radial-gradient(40% 120% at 100% 50%, color-mix(in srgb, var(--tb) 16%, transparent), transparent 70%),
+  linear-gradient(90deg, var(--c-ui-panel) 35%, color-mix(in srgb, var(--c-ui-panel) 70%, transparent)), url(/p-fw3k/site/img/heroes/terrorblade.webp) right 30% center / 46% auto no-repeat, var(--c-ui-panel); }
+.trn-emb { display: inline-grid; place-content: center; width: 64px; height: 64px; border-radius: 16px; text-align: center;
+  background: linear-gradient(150deg, color-mix(in srgb, var(--c-game-dota) 70%, var(--c-ui-item)), var(--c-ui-item)); color: var(--c-white); font: 700 28px/1 var(--font-c); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-white) 14%, transparent); }
+.trn-emb small { display: block; font-size: 10px; opacity: .8; }
+.trn-emb--gold { background: linear-gradient(150deg, color-mix(in srgb, var(--c-coin) 60%, var(--c-ui-item)), var(--c-ui-item)); }
+.mp-c > b.trn-live { display: inline-flex; align-items: center; gap: 4px; font-size: 44px; color: var(--c-live); }
+.mp-c > b.trn-live .mx-dot { width: 12px; height: 12px; }
+
+/* Полоса дней турнира — .mx-days Match Center; 11 дней */
+.trn-days button { min-width: 64px; }
+
+/* Сетка плей-офф */
+.trn-pan-wide h3 { display: flex; align-items: baseline; gap: 10px; } .trn-pan-wide h3 small { color: var(--c-caption); font-size: 12.5px; font-weight: 400; }
+.trn-br { display: grid; grid-template-columns: minmax(0, 1fr) 220px; grid-template-areas: "up gf" "low gf"; gap: 18px 24px; }
+.trn-br__part--верх { grid-area: up; } .trn-br__part--низ { grid-area: low; } .trn-br__part--финал { grid-area: gf; align-self: center; }
+.trn-br--mini { display: block; }
+.trn-br__h { margin-bottom: 8px; color: var(--c-muted); font-size: 13px; font-weight: 600; }
+.trn-br__cols { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 12px; }
+.trn-br__col { display: grid; grid-template-rows: auto 1fr; gap: 8px; min-width: 0; }
+.trn-br__col h4 { margin: 0; color: var(--c-ui-dim); font-size: 12px; font-weight: 600; }
+.trn-br__col > div { display: grid; align-content: space-around; gap: 10px; }
+.trn-bm { display: grid; gap: 4px; width: 100%; padding: 8px 10px; border: 0; border-radius: 8px; background: var(--c-ui-item); color: var(--c-text); font: inherit; text-align: left; cursor: pointer; transition: background .15s, box-shadow .15s; }
+.trn-bm:hover { background: var(--c-ui-hover); }
+.trn-bm.is-sel { box-shadow: inset 0 0 0 2px var(--c-accent); }
+.trn-bm.is-air { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-live) 70%, transparent); } .trn-bm.is-air.is-sel { box-shadow: inset 0 0 0 2px var(--c-live); }
+.trn-bm__h { overflow: hidden; color: var(--c-caption); font-size: 11.5px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.trn-bm.is-air .trn-bm__h { color: var(--c-live); }
+.trn-bm__t { display: grid; grid-template-columns: 20px minmax(0, 1fr) 14px; align-items: center; gap: 8px; }
+.trn-bm__t .mx-lg { width: 20px; height: 20px; }
+.trn-bm__t em { overflow: hidden; font-size: 13px; font-style: normal; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.trn-bm__t b { font: 700 14px var(--font-c); text-align: right; }
+.trn-bm__t.is-lose { opacity: .45; }
+.trn-bm.is-if .trn-bm__t { opacity: .7; }
+.trn-bm__if { color: var(--c-ui-dim); font-size: 11px; }
+.trn-br__part--финал .trn-bm { padding: 12px 14px; background: color-mix(in srgb, var(--c-coin) 10%, var(--c-ui-item)); }
+.trn-br__part--финал h4 { color: var(--c-coin); }
+.trn-br--mini .trn-br__cols { gap: 6px; } .trn-br--mini .trn-bm { padding: 6px 7px; } .trn-br--mini .trn-bm__h, .trn-br--mini .trn-bm__if { display: none; }
+.trn-br--mini .trn-bm__t { grid-template-columns: 16px minmax(0, 1fr) 12px; gap: 5px; } .trn-br--mini .trn-bm__t .mx-lg { width: 16px; height: 16px; } .trn-br--mini .trn-bm__t em { font-size: 11.5px; }
+.trn-br--mini .trn-br__h { display: none; }
+
+/* Группы */
+.trn-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.trn-groups .trn-tbl { padding: 14px 16px; border-radius: 8px; background: var(--c-ui-panel); }
+.trn-tbl + .trn-tbl { margin-top: 14px; } .trn-groups .trn-tbl + .trn-tbl { margin-top: 0; }
+.trn-tbl__h { margin: 0 0 4px; font-size: 13px; font-weight: 600; }
+.trn-tbl table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+.trn-tbl th { padding: 4px 6px; color: var(--c-ui-dim); font-size: 11.5px; font-weight: 600; text-align: right; } .trn-tbl th:nth-child(2) { text-align: left; }
+.trn-tbl td { padding: 6px; border-top: 1px solid var(--c-ui-line); text-align: right; }
+.trn-tbl td:first-child { width: 18px; color: var(--c-ui-dim); text-align: left; }
+.trn-tbl td:nth-child(2) { text-align: left; } .trn-tbl td:nth-child(2) span { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.trn-tbl td .mx-lg { width: 20px; height: 20px; }
+.trn-tbl tr.is-up td:first-child { color: var(--c-accent); font-weight: 700; }
+
+/* Турнир, призовые, команды */
+.trn-fmt { margin: 0; color: var(--c-caption); font-size: 12.5px; line-height: 1.45; }
+.trn-prize { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.trn-prize li { display: flex; justify-content: space-between; gap: 10px; padding: 6px 0; border-top: 1px solid var(--c-ui-line); font-size: 13px; }
+.trn-prize li:first-child { border-top: 0; } .trn-prize span { color: var(--c-muted); } .trn-prize li:first-child b { color: var(--c-coin); }
+.trn-teams { display: grid; gap: 6px; }
+.trn-teams p { display: flex; align-items: center; gap: 10px; margin: 0; } .trn-teams .mx-lg { width: 24px; height: 24px; }
+.trn-teams span { display: grid; min-width: 0; } .trn-teams b { font-size: 13.5px; } .trn-teams small { overflow: hidden; color: var(--c-caption); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.trn-teams .is-out { opacity: .5; }
+.trn-cols2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; } .trn-cols2 .mx-pan + .mx-pan { margin-top: 0; }
+.trn-pane { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.trn-pane[hidden] { display: none; }
+
+/* v2: блоки под открытой плиткой — как на странице матча (решение 20): .mpo .mp5-grid, секции .mp-sec; здесь — только свои блоки */
+.trn-other { display: grid; gap: 2px; }
+.trn-other a { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 2px 10px; padding: 8px 0; border-top: 1px solid var(--c-ui-line); }
+.trn-other a:first-child { border-top: 0; } .trn-other b { font-size: 13.5px; } .trn-other small { grid-column: 2; color: var(--c-caption); font-size: 12px; }
+.trn-bk__r { display: grid; grid-template-columns: 22px minmax(0, 1fr) 54px 34px auto; align-items: center; gap: 10px; padding: 6px 0; border-top: 1px solid var(--c-ui-line); }
+.trn-bk__r:first-of-type { border-top: 0; }
+.trn-bk__r .mx-lg { width: 22px; height: 22px; }
+.trn-bk__r span { display: grid; min-width: 0; } .trn-bk__r b { overflow: hidden; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; } .trn-bk__r small { color: var(--c-caption); font-size: 11.5px; }
+.trn-bk__r .mx-bar i { background: var(--c-accent); }
+.trn-bk__r em { color: var(--c-muted); font: 600 12.5px var(--font-c); font-style: normal; text-align: right; }
+.trn-odd { min-width: 52px; height: 30px; padding: 0 8px; border: 0; border-radius: 6px; background: var(--c-ui-item); color: var(--c-text); font: 700 14px var(--font-c); cursor: pointer; }
+.trn-odd:hover { background: var(--c-ui-hover); }
+.trn-bk__ft { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 10px 0 0; } .trn-bk__ft small { color: var(--c-ui-dim); font-size: 11.5px; }
+.trn-fan { display: grid; align-content: start; gap: 12px; background: radial-gradient(90% 80% at 100% 0%, color-mix(in srgb, var(--c-accent) 22%, transparent), transparent 70%), var(--c-ui-panel); }
+.trn-fan h3 { margin-bottom: 0; }
+.trn-fan__t { margin: 0; font: 700 18px/1.25 var(--font-c); }
+.trn-fan__mine { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; background: var(--c-ui-item); }
+.trn-fan__mine span { display: grid; } .trn-fan__mine b { font-size: 13.5px; color: var(--c-coin); } .trn-fan__mine small { color: var(--c-caption); font-size: 12px; }
+.trn-fan__lock { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; } .trn-fan__lock small { color: var(--c-caption); font-size: 12.5px; }
+.trn-fan__lock b { font: 700 20px var(--font-c); font-variant-numeric: tabular-nums; }
+.trn-fan__ft { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+
+/* Телефон — правило виджетов (решение 19): одна колонка, ленты вбок — только внутри виджета */
+@media (max-width: 860px) {
+  .trn-top { background: radial-gradient(60% 120% at 0% 0%, color-mix(in srgb, var(--ta) 30%, transparent), transparent 70%), var(--c-ui-panel); }
+  .trn-emb { width: 40px; height: 40px; border-radius: 10px; font-size: 18px; } .trn-emb small { font-size: 8px; }
+  .mp-c > b.trn-live { font-size: 22px; } .mp-c > b.trn-live .mx-dot { width: 8px; height: 8px; }
+  .trn-top .mp-res { display: none; }
+  .trn-br { display: block; }
+  .trn-br__part + .trn-br__part { margin-top: 16px; }
+  .trn-br__cols { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .trn-br__col { flex: 0 0 158px; scroll-snap-align: start; }
+  .trn-br--mini .trn-br__col { flex: 0 0 120px; }
+  .trn-groups, .trn-cols2 { grid-template-columns: minmax(0, 1fr); }
+}

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../бустеры/_бустер.css" />
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<style>
+/* Замедление — только виньетка по краям (без CSS-фильтра на холсте: он тормозит) */
+.bs::after { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(75% 70% at 50% 45%, transparent 45%, color-mix(in srgb, var(--c-black) 75%, transparent)); }
+.bs.is-slow::after { opacity: 1; }
+</style>
+</head>
+<body>
+<!-- v7 · Тихая пасть с замедлением (дирижёр 05.10: «пасть, только не так явно, и замедление; разрез один; главное — чтоб не лагало»).
+     Пак — голографическая фольга. Один разрез под любым углом → время почти встаёт: половины едва приоткрываются к тебе
+     на петлях вдоль разреза (на ~10°), в узкой щели — свет, искры висят. Время срывается — свет бьёт из щели веером вдоль
+     линии разреза, карты вылетают из неё, створки мягко смыкаются, пак уходит вниз.
+     Против лагов: шейдер с отсечением собран заранее (Cutter.prewarm), все светящиеся детали в сцене с самого начала,
+     след курсора без shadowBlur, чёткость 1,25. -->
+<div class="bs"></div>
+<script type="module">
+import { start } from '../бустеры/_бустер.js'
+import { THREE, RAR, makePack, Trail, Cutter } from './_пак.js'
+const W = 1.6, H = 2.45
+start({
+  name: 'Тихая пасть с замедлением',
+  note: 'Один разрез под любым углом — время почти встаёт, половины едва приоткрываются, в щели свет. Потом время срывается — свет из щели, карты вылетают из неё.',
+  hint: 'Проведи через пак — один разрез',
+  build(K) {
+    K.renderer.setPixelRatio(Math.min(devicePixelRatio, 1.25))
+    const g = new THREE.Group(), P = makePack(K, { W, H, finish: 'foil', irid: 1, name: 'Голо · ' + RAR[K.rar].ru, D: 0.12 }); g.add(P.g)
+    Cutter.prewarm(P.g)
+    const trail = new Trail(K, { life: 320, width: 11 }), cutter = new Cutter(g, P.g, W, H)
+    // Свет щели: вытянутое пятно вдоль разреза — в сцене с начала (opacity 0), чтобы не собирать шейдер в момент разреза
+    const slitMat = new THREE.MeshBasicMaterial({ color: K.glow(), map: K.softTex, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })
+    const slit = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), slitMat); slit.scale.set(W * 1.5, 0.05, 1); g.add(slit)
+    const lineMat = new THREE.MeshBasicMaterial({ color: K.glow(), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })
+    const line = new THREE.Mesh(new THREE.PlaneGeometry(1, 0.012), lineMat); line.scale.x = Math.hypot(W, H); g.add(line)
+    let a = null, drawing = false, done = false
+
+    const cut = async (p1, p2) => {
+      done = true; K.hint('')
+      const [[A, B]] = cutter.cut(p1, p2)
+      const ang = Math.atan2(A.dir.y, A.dir.x)
+      ;[slit, line].forEach((m) => { m.position.copy(A.mid).setZ(0.02); m.rotation.z = ang })
+      line.position.z = P.D + 0.01
+      // Створки: петля вдоль разреза у дальнего края каждой половины; свободный край (у разреза) идёт к зрителю
+      const hinge = (pc) => {
+        const pv = new THREE.Group(), at = A.mid.clone().addScaledVector(pc.n, 1.3)
+        pv.position.copy(at); g.add(pv); pc.h.position.sub(at); pv.add(pc.h)
+        const sgn = Math.sign(new THREE.Vector3().crossVectors(A.dir, pc.n).z) || 1
+        return (t) => pv.quaternion.setFromAxisAngle(A.dir, -sgn * t)
+      }
+      const ha = hinge(A), hb = hinge(B)
+      const c = g.localToWorld(A.mid.clone()).setZ(0.4)
+      // 1. Замедление: время ×0,07, створки на 10°, щель светится узко
+      K.host.classList.add('is-slow'); K.timeScale = 0.07
+      K.sparks(c, 0.7, 0.3)
+      await K.tween(1250, (k) => { const e = Math.sin(k * Math.PI / 2); ha(e * 0.17); hb(e * 0.17); lineMat.opacity = e; slitMat.opacity = e * 0.6; slit.scale.y = 0.05 + e * 0.12; K.lightAt(c, e * 0.3, 0.9) }, (k) => k)
+      // 2. Время срывается: свет веером из щели, карты
+      K.host.classList.remove('is-slow'); K.timeScale = 1
+      K.flash(0.7); K.shock(c, 8, 700); K.confetti(c, 1, 2.4)
+      await K.tween(380, (k) => { ha(0.17 + k * 0.08); hb(0.17 + k * 0.08); slit.scale.y = 0.17 + k * 0.7; slitMat.opacity = 0.6 + k * 0.4; K.lightAt(c, 0.3 + k * 0.7, 1.2); K.rays(c, k) }, K.back)
+      K.reveal(46)
+      // 3. Створки мягко смыкаются, свет гаснет, пак уходит вниз
+      K.tween(700, (k) => { ha(0.25 * (1 - k)); hb(0.25 * (1 - k)); slitMat.opacity = 1 - k; lineMat.opacity = 1 - k }, (k) => k * k * (3 - 2 * k))
+      K.tween(1100, (k) => { g.position.y = -k * k * 4.4 })
+      await K.tween(1500, (k) => { K.lightAt(c, 1 - k * 0.7, 1.2); K.rays(c, 1 - k * 0.6) })
+    }
+    return {
+      g, open: async () => {},
+      down(e) { if (done) return; drawing = true; trail.push(trail.local(e)); a = K.onPlane(e) },
+      move(e) { if (drawing) trail.push(trail.local(e)) },
+      up(e) {
+        if (!drawing) return; drawing = false
+        const b = K.onPlane(e)
+        if (Cutter.crosses(P.g.worldToLocal(a.clone()), P.g.worldToLocal(b.clone()), W, H)) { K.open(); cut(a, b) } else K.hint('Режь через весь пак — от края до края')
+      },
+      auto() {
+        if (done) return
+        const a0 = P.g.localToWorld(new THREE.Vector3(-W * 0.9, H * 0.18, 0)), b0 = P.g.localToWorld(new THREE.Vector3(W * 0.9, -H * 0.08, 0))
+        K.tween(260, (k) => trail.push(trail.screen(a0.clone().lerp(b0, k))), (k) => k).then(() => { K.open(); cut(a0, b0) })
+      },
+      tick(dt, t) { trail.draw(); if (!done) P.g.position.y = Math.sin(t * 1.5) * 0.05; cutter.update() },
+    }
+  },
+})
+</script>
+</body></html>

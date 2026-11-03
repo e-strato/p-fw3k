@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="../карточка-v3/_v3.css" /><link rel="stylesheet" href="_mini.css" />
+<style>
+/* v1 · Сжатая полная — та же раскладка, что у полной карты Хайперглитч, без статов и героев: язычок с логотипом и номером слева,
+   рейтинг в углу, ник и позиция в плашке снизу, команда язычком у нижнего края. Форма 5:7, 1em = ширина / 16 */
+.m1 { aspect-ratio: 5 / 7; --shape: polygon(1.4em 0, 100% 0, 100% calc(100% - 1.9em), calc(100% - 1.9em) 100%, 0 100%, 0 1.4em); --r: 0; }
+.m1 .mk-logo { left: 1.8em; top: 1.3em; width: 12em; height: 10.5em; }
+.m1 .mk-halo { left: 2em; top: -.4em; width: 12em; height: 10em; }
+.m1 .ph { left: .6em; top: 1em; width: 14.2em; -webkit-mask: linear-gradient(180deg, var(--c-black) 60%, transparent 80%); mask: linear-gradient(180deg, var(--c-black) 60%, transparent 80%); }
+.m1__panel { position: absolute; left: 0; right: 0; bottom: 0; height: 7.6em; z-index: 4;
+  clip-path: polygon(0 0, 8.4em 0, 9.8em 1.4em, 100% 1.4em, 100% 100%, 0 100%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tier-2) 55%, var(--c-card-ink)), var(--c-card-ink)); }
+.m1__tab { position: absolute; left: 0; top: 2em; width: 2.1em; height: 9.6em; z-index: 9; display: flex; flex-direction: column; align-items: center; gap: .5em; padding-top: .9em;
+  clip-path: polygon(0 0, 100% .6em, 100% calc(100% - .6em), 0 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--tier) 30%, var(--c-card-ink)), var(--c-card-ink)); }
+.m1__tab .logo { width: 1.35em; height: 1.35em; }
+.m1__serial { writing-mode: vertical-rl; rotate: 180deg; font-family: 'Archivo', sans-serif; font-weight: 900; font-size: .78em; color: var(--tier-hi); white-space: nowrap; }
+.m1__ovr { position: absolute; right: 0; top: 0; z-index: 9; display: grid; place-content: center; width: 5.4em; height: 4.1em; padding-left: .4em;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 1.1em 100%, 0 calc(100% - 1.1em)); background: linear-gradient(200deg, color-mix(in srgb, var(--tier) 30%, var(--c-card-ink)), var(--c-card-ink)); }
+.m1__ovr b { font-family: 'Archivo', sans-serif; font-weight: 900; font-size: 2.7em; line-height: 1; letter-spacing: -.04em; color: var(--c-white); }
+.m1__role { position: absolute; left: 1.08em; bottom: 5.9em; /* в своих em (кегль 1.02): 6 em карты */ z-index: 7; font-size: 1.02em; font-weight: 700; white-space: nowrap; }
+.m1__role b { font-weight: 900; color: var(--tier-hi); }
+.m1__nick { position: absolute; left: .55em; right: .5em; bottom: 1.3em; /* в своих em (кегль 1.9): 2.5 em карты */ z-index: 7; font-family: 'Archivo', sans-serif; font-stretch: 108%; font-weight: 900; font-size: 1.9em; line-height: .95;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.m1__team { position: absolute; left: 50%; bottom: 0; translate: -50% 0; z-index: 9; display: flex; align-items: center; gap: .4em; padding: .35em 1.3em .4em; font-size: .95em; font-weight: 800; white-space: nowrap;
+  clip-path: polygon(.7em 0, calc(100% - .7em) 0, 100% 100%, 0 100%); background: linear-gradient(0deg, color-mix(in srgb, var(--tier) 30%, var(--c-card-ink)), var(--c-card-ink)); }
+.m1__team .logo { width: 1.3em; height: 1.3em; }
+</style></head>
+<body><section class="section v3">
+  <div class="sec-head"><h2 class="sec-title">v1 · Сжатая полная</h2>
+    <p class="sec-lead">Полная карта Хайперглитч, ужатая до главного. Слева язычок с логотипом и номером карты, в углу рейтинг. Внизу плашка с позицией и ником, команда — язычком у нижнего края. Статов и героев нет: в виджете они не читаются.</p></div>
+  <div id="mini"></div>
+</section>
+<script src="../карточка-v3/_v3.js"></script><script src="_mini.js"></script>
+<script>
+MINI.страница({
+  класс: 'm1',
+  лицо: (п, r, h) => `
+<div class="mk-plate">
+  ${h.маска(п, 'mk-logo')}${h.маска(п, 'mk-logo mk-logo--a').replace('<i ', '<i data-deco="2" ')}${h.маска(п, 'mk-logo mk-logo--b').replace('<i ', '<i data-deco="2" ')}
+  <i class="mk-pix" data-deco="1"></i><i class="mk-halo"></i>${h.фото(п)}<i class="mk-scan" data-deco="3"></i>
+  <div class="m1__panel"></div>${h.блеск(r)}
+</div>
+<svg class="mk-frame" viewBox="0 0 160 224" preserveAspectRatio="none" aria-hidden="true"><polygon points="14,1 159,1 159,205 140,223 1,223 1,14" /></svg>
+<div class="m1__tab">${h.лого(п)}<span class="m1__serial">#${п.номер}</span></div>
+<div class="m1__ovr"><b>${п.рейтинг}</b></div>
+<span class="m1__role"><b>Pos ${п.pos}</b> · ${h.РОЛИ[п.pos]}</span>
+<div class="m1__nick">${п.ник}</div>
+<div class="m1__team">${h.лого(п)}${п.команда.toUpperCase()}</div>`,
+})
+</script>
+</body></html>

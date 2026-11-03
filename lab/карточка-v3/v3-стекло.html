@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Unbounded:wght@500..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_v3.css" />
+<style>
+/* v3 · Стекло — премиальная, как устройство: фон в цветах команды, логотип выдавлен, панель матового стекла.
+   Правки 01.10: рейтинг — плотные цифры в стеклянном бейдже, не на лице; герои — ровным рядом сверху, игрок ниже;
+   команда бейджем снизу; оборот свой. Шрифты: Unbounded — ник и цифры, Inter — подписи */
+.s3 { --r: 1.6em; --shape: inset(0 round 1.6em); --f-disp: 'Unbounded'; --f-ui: 'Inter'; --legend-glow: var(--team); }
+.s3__face { position: absolute; inset: 0; }
+.s3__plate { position: absolute; inset: 0; border-radius: var(--r); overflow: hidden; background: var(--c-card-ink-2);
+  box-shadow: 0 1.4em 2.6em -1em color-mix(in srgb, var(--c-black) 85%, transparent); }
+.s3__glass { background: var(--c-glass); box-shadow: inset 0 0 0 .06em var(--c-glass-line); backdrop-filter: blur(.7em); -webkit-backdrop-filter: blur(.7em); }
+
+/* 2 Фон: «аврора» из цвета команды и силы, логотип команды выдавлен в фоне */
+.s3__bg { position: absolute; inset: 0;
+  background:
+    radial-gradient(60% 40% at 18% 20%, color-mix(in srgb, var(--team) 55%, transparent), transparent 70%),
+    radial-gradient(55% 45% at 90% 45%, color-mix(in srgb, var(--tier) 40%, transparent), transparent 70%),
+    radial-gradient(70% 40% at 40% 72%, color-mix(in srgb, var(--team) 30%, transparent), transparent 75%),
+    linear-gradient(180deg, color-mix(in srgb, var(--team) 25%, var(--c-card-ink)), var(--c-card-ink)); }
+.s3__emb { position: absolute; inset: 0; filter: drop-shadow(.08em .12em .06em color-mix(in srgb, var(--c-black) 55%, transparent)) drop-shadow(-.05em -.06em .04em color-mix(in srgb, var(--c-white) 30%, transparent)); }
+.s3__logo { left: 1.5em; top: 5.4em; width: 19em; height: 14em; background: color-mix(in srgb, var(--team) 40%, var(--c-card-ink)); opacity: .9; }
+
+/* 3 Рамка: тонкий светящийся кант цвета силы (радужный перелив канта снят — правка 01.10) */
+.s3__edge { position: absolute; inset: 0; z-index: 8; border-radius: var(--r); padding: .14em; pointer-events: none;
+  background: linear-gradient(150deg, var(--tier-hi), color-mix(in srgb, var(--tier) 40%, transparent) 30%, transparent 55%, color-mix(in srgb, var(--tier) 60%, transparent));
+  -webkit-mask: linear-gradient(var(--c-black) 0 0) content-box, linear-gradient(var(--c-black) 0 0); -webkit-mask-composite: xor;
+          mask: linear-gradient(var(--c-black) 0 0) content-box, linear-gradient(var(--c-black) 0 0); mask-composite: exclude; }
+
+/* 4 Эффекты: блеск редкости; с Holo — стеклянный отсвет по диагонали */
+.s3__sheen { position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background: linear-gradient(125deg, transparent 30%, color-mix(in srgb, var(--c-white) 14%, transparent) 38%, transparent 46%,
+    transparent 52%, color-mix(in srgb, var(--c-white) 8%, transparent) 56%, transparent 60%); }
+
+/* 5 Фото: ниже верхней строки, туловище уходит под стекло, свечение за головой */
+.s3__halo { position: absolute; left: 11em; top: 9.2em; width: 14em; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; z-index: 1;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--tier-hi) 60%, transparent), color-mix(in srgb, var(--team) 30%, transparent) 55%, transparent); }
+.s3 .ph { left: 2.3em; top: 5.2em; width: 16.8em; z-index: 2;
+  -webkit-mask: linear-gradient(180deg, var(--c-black) 62%, transparent 82%); mask: linear-gradient(180deg, var(--c-black) 62%, transparent 82%); }
+
+/* 6 Игрок: ник в стекле по центру */
+.s3__who { position: absolute; left: 1.4em; right: 1.4em; top: 19.7em; z-index: 6; text-align: center; }
+.s3__nick { font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 2.3em; line-height: 1.05; letter-spacing: -.02em; }
+.s3__name { display: flex; justify-content: center; align-items: center; gap: .5em; margin-top: .45em; font-size: .85em; font-weight: 500; color: color-mix(in srgb, var(--c-white) 72%, transparent); }
+
+/* 7 Раскладка — верхняя строка: три героя ровным рядом слева, рейтинг в бейдже справа; номер карты под рейтингом */
+/* Верхняя строка — заход 3 (правка 01.10: «распредели веса»): три героя равными квадратами и рейтинг — одной высоты, по одной линии */
+.s3__heroes { position: absolute; left: 1em; top: 1em; z-index: 7; display: grid; grid-template-columns: repeat(3, 3.8em); gap: .4em; }
+.s3__heroes div { display: grid; justify-items: center; align-content: center; gap: .3em; height: 3.8em; border-radius: 1em; }
+.s3__heroes .hero-ic { width: 2em; aspect-ratio: 1; border-radius: 50%; }
+.s3__heroes small { font-size: .5em; font-weight: 600; white-space: nowrap; color: color-mix(in srgb, var(--c-white) 70%, transparent); }
+.s3__heroes small b { font-family: 'Unbounded', sans-serif; font-weight: 700; color: var(--c-white); }
+.s3__ovr { position: absolute; right: 1em; top: 1em; z-index: 7; display: grid; place-content: center; width: 5.4em; height: 3.8em; border-radius: 1em; }
+.s3__ovr b { font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 2.6em; line-height: 1; letter-spacing: -.04em; color: var(--c-white); }
+/* Номер карты — в низ панели, справа от команды: одна строка, ничего не выезжает */
+.s3__serial { display: grid; justify-items: end; line-height: 1.3; font-size: .6em; font-weight: 600; color: color-mix(in srgb, var(--c-white) 65%, transparent); }
+.s3__serial b { font-family: 'Unbounded', sans-serif; font-size: 1.15em; color: var(--tier-hi); font-weight: 700; }
+
+/* 8 Инфо: панель матового стекла, роль пилюлей на её краю, статы строкой, команда бейджем */
+.s3__panel { position: absolute; left: .7em; right: .7em; bottom: .7em; height: 12.1em; z-index: 4; border-radius: 1.2em;
+  background: color-mix(in srgb, var(--c-card-ink) 45%, transparent); box-shadow: inset 0 0 0 .06em var(--c-glass-line), inset 0 .08em 0 color-mix(in srgb, var(--c-white) 18%, transparent);
+  backdrop-filter: blur(1em) saturate(1.4); -webkit-backdrop-filter: blur(1em) saturate(1.4); }
+/* Позиция — стеклом, как остальные элементы (правка 01.10: не синей плашкой): матовое стекло, Pos 4 цветом силы */
+.s3__role { position: absolute; left: 50%; top: 17.1em; translate: -50% 0; z-index: 7; padding: .45em 1.1em; border-radius: 2em; white-space: nowrap;
+  font-size: .95em; font-weight: 600; color: var(--c-white); background: color-mix(in srgb, var(--c-white) 12%, transparent);
+  box-shadow: inset 0 0 0 .06em var(--c-glass-line), inset 0 .07em 0 color-mix(in srgb, var(--c-white) 25%, transparent), 0 .4em 1.4em color-mix(in srgb, var(--c-black) 30%, transparent);
+  backdrop-filter: blur(1em) saturate(1.5); -webkit-backdrop-filter: blur(1em) saturate(1.5); }
+.s3__role b { font-weight: 800; color: var(--tier-hi); }
+.s3__stats { position: absolute; left: 1.5em; right: 1.5em; top: 24.1em; z-index: 6; display: grid; grid-template-columns: repeat(6, 1fr); text-align: center; }
+.s3__stats span + span { box-shadow: inset .05em 0 0 var(--c-glass-line); }
+.s3__stats b { display: block; font-family: 'Unbounded', sans-serif; font-size: 1em; font-weight: 700; }
+.s3__stats small { display: block; margin-top: .25em; font-size: .45em; font-weight: 600; color: color-mix(in srgb, var(--c-white) 55%, transparent); }
+/* Низ панели: команда слева, номер карты справа */
+.s3__foot { position: absolute; left: 1.6em; right: 1.6em; bottom: 1.5em; z-index: 6; display: flex; justify-content: space-between; align-items: center; }
+.s3__team { display: flex; align-items: center; gap: .5em; white-space: nowrap; padding: .35em 1.1em .35em .45em; border-radius: 2em; font-size: .82em; font-weight: 700; }
+.s3__team .logo { width: 2.2em; height: 2.2em; }
+
+/* 9 Оборот: стеклянные плитки — статы 3×2 крупными цифрами, герои чипами в ряд, форма точками, кнопка-пилюля */
+.s3 .bk { box-shadow: inset 0 0 0 .1em color-mix(in srgb, var(--tier) 55%, transparent); padding: 1.3em; gap: .7em;
+  background:
+    radial-gradient(60% 35% at 15% 10%, color-mix(in srgb, var(--team) 45%, transparent), transparent 70%),
+    radial-gradient(55% 40% at 95% 60%, color-mix(in srgb, var(--tier) 30%, transparent), transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--team) 20%, var(--c-card-ink)), var(--c-card-ink)); }
+.s3 .bk__top b, .s3 .bk__top em { font-family: 'Unbounded', sans-serif; font-weight: 800; }
+.s3 .bk__top em { font-size: 2em; color: var(--c-white); }
+.s3 .bk__stats { grid-template-columns: repeat(3, 1fr); gap: .4em; }
+.s3 .bk__stats li { grid-template-columns: 1fr; justify-items: center; text-align: center; gap: .1em; padding: .55em .3em .5em; border-radius: .8em;
+  background: var(--c-glass); box-shadow: inset 0 0 0 .06em var(--c-glass-line); }
+.s3 .bk__stats b { order: -1; font-family: 'Unbounded', sans-serif; font-size: 1.55em; font-weight: 700; }
+.s3 .bk__stats i { display: none; }
+.s3 .bk__heroes { grid-template-columns: repeat(3, 1fr); gap: .4em; }
+.s3 .bk__heroes li { grid-template-columns: 1fr; justify-items: center; text-align: center; gap: .2em; padding: .5em .3em; border-radius: .8em;
+  background: var(--c-glass); box-shadow: inset 0 0 0 .06em var(--c-glass-line); }
+.s3 .bk__heroes .hero-ic { width: 2.4em; aspect-ratio: 1; border-radius: 50%; }
+.s3 .bk__heroes em { font-family: 'Unbounded', sans-serif; font-size: .8em; }
+.s3 .bk__form li { height: auto; aspect-ratio: 1; border-radius: 50%; font-size: .55em; }
+.s3 .bk__btn { border-radius: 2em; }
+</style></head>
+<body><section class="section v3">
+  <div class="sec-head">
+    <h2 class="sec-title">v3 · Стекло</h2>
+    <p class="sec-lead">Премиальная, как дорогое устройство. Фон в цветах команды, логотип выдавлен в фоне — карту можно брендировать целиком.
+      Сверху строка: герои ровным рядом и рейтинг в стеклянном бейдже — одной высоты. Номер карты внизу, рядом с командой. Снизу панель из матового стекла. С редкостью добавляется стеклянный отсвет.</p>
+  </div>
+  <div id="v3"></div>
+</section>
+<script src="_v3.js"></script>
+<script>
+V3.страница({
+  класс: 's3',
+  иерархия: [
+    'Скруглённый прямоугольник, радиус крупный, как у устройства.',
+    'Цвета команды «авророй». Логотип команды выдавлен в фоне за игроком — фон брендируется целиком.',
+    'Тонкий светящийся кант цвета силы.',
+    'Блеск редкости. С Holo — стеклянный отсвет по диагонали.',
+    'Игрок ниже верхней строки, туловище уходит под стекло, за головой свечение.',
+    'Ник по центру (Unbounded), ниже флаг и настоящее имя.',
+    'Верхняя строка одной высоты: три героя равными стеклянными квадратами (матчи и винрейт) и рейтинг в стеклянном бейдже. Номер карты и сезон — внизу панели, справа от команды.',
+    'Панель матового стекла снизу. Позиция и роль — стеклянной пилюлей на краю панели, Pos цветом силы. Статы строкой, внизу команда стеклянным бейджем слева и номер карты справа.',
+    'Свой оборот — стеклянные плитки: статы 3×2 крупными цифрами, герои чипами в ряд, форма точками, кнопка-пилюля «Страница игрока».',
+  ],
+  оборот: (п, r, h) => h.оборот(п).replace('<div class="bk">', `<div class="bk" style="--team: var(--c-team-${п.команда})">`),
+  лицо: (п, r, h) => `
+<div class="s3__face" style="--team: var(--c-team-${п.команда})">
+  <div class="s3__plate" data-l="1">
+    <div class="s3__bg" data-l="2"><span class="s3__emb">${h.маска(п, 's3__logo')}</span></div>
+    <i class="s3__halo" data-l="5"></i>
+    ${h.фото(п)}
+    <div class="s3__panel" data-l="8"></div>
+    <i class="s3__sheen" data-l="4" data-deco="1"></i>
+    ${h.блеск(r)}
+  </div>
+  <i class="s3__edge" data-l="3"></i>
+  <div class="s3__heroes" data-l="7">${п.герои.map((г) => `<div class="s3__glass">${h.герой(г)}<small><b>${г[2]} М</b> · ${г[3]}%</small></div>`).join('')}</div>
+  <div class="s3__ovr s3__glass" data-l="7"><b>${п.рейтинг}</b></div>
+  <span class="s3__role" data-l="8"><b>Pos ${п.pos}</b> · ${h.РОЛИ[п.pos]}</span>
+  <div class="s3__who" data-l="6"><div class="s3__nick">${п.ник}</div>${п.имя ? `<div class="s3__name">${h.флаг(п)}${п.имя}</div>` : ''}</div>
+  <div class="s3__stats" data-l="8">${h.статы(п).map((с) => `<span><b data-v="${с.ур}">${с.v}</b><small>${с.к}</small></span>`).join('')}</div>
+  <div class="s3__foot"><div class="s3__team s3__glass" data-l="8">${h.лого(п)}${h.команда(п)}</div><span class="s3__serial" data-l="7"><b>${h.серия(п)}</b>${h.СЕЗОН}</span></div>
+</div>`,
+})
+</script>
+</body></html>

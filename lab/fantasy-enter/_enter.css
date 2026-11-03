@@ -1,0 +1,42 @@
+/* Лаба «Вход в фэнтези». Токены — /p-fw3k/site/styles.css. В рамке — настоящая главная сайта и страница Состава;
+   слой фэнтези поверх сайта открывается маской, фронт рисуется поверх всего. */
+body { margin: 0; background: var(--c-ui-bg); color: var(--c-text); font-family: var(--font); }
+.fe-page { padding: 40px 32px 80px; }
+.fe-page > h1 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.01em; }
+.fe-page > p { max-width: 96ch; margin: 8px 0 0; color: var(--c-muted); font-size: 15px; line-height: 1.5; }
+.fe-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 24px 0 12px; }
+
+.fe-url { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding: 8px 14px; border-radius: 10px; background: var(--c-ui-item); color: var(--c-caption); font-size: 13px; }
+.fe-url b { color: var(--c-text); font-weight: 500; }
+
+.fe-stage { position: relative; overflow: hidden; border-radius: 14px; background: var(--c-bg); box-shadow: 0 0 0 1px var(--c-ui-line), 0 40px 90px -40px var(--c-black); }
+.fe-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.fe-stage iframe { position: absolute; left: 0; top: 0; border: 0; transform-origin: 0 0; background: transparent; }
+.fe-fan { position: absolute; inset: 0; visibility: hidden; }
+.fe-front { pointer-events: none; }
+
+/* Загрузка в центре (circle, expand) */
+.fe-load { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 6px; opacity: 0; transition: opacity .35s; pointer-events: none; }
+.fe-load b { font: 700 44px var(--font-c); letter-spacing: -.01em; color: var(--c-text); }
+.fe-load small { margin-top: -6px; color: var(--c-caption); font-size: 14px; }
+.fe-load span { display: flex; gap: 10px; margin-top: 18px; }
+.fe-load i { width: 8px; height: 8px; border-radius: 50%; background: var(--fe-acc, var(--c-accent)); animation: fe-dot 1s ease-in-out infinite; }
+.fe-load i:nth-child(2) { animation-delay: .12s; } .fe-load i:nth-child(3) { animation-delay: .24s; } .fe-load i:nth-child(4) { animation-delay: .36s; } .fe-load i:nth-child(5) { animation-delay: .48s; }
+.fe-load em { margin-top: 10px; color: var(--c-caption); font-size: 13px; font-style: normal; }
+@keyframes fe-dot { 0%, 100% { opacity: .25; transform: scale(.7); } 50% { opacity: 1; transform: scale(1.25); } }
+
+/* Каркас будущей страницы (v3): снят с настоящего Состава — текст полосами, картинки плотными блоками, карточки контурами; всё из точек */
+.fe-skel { position: absolute; left: 0; top: 0; transform-origin: 0 0; display: none; opacity: 0; transition: opacity .35s; pointer-events: none; }
+.fe-skel i { position: absolute; animation: fe-shim 1.4s ease-in-out infinite; }
+.fe-skel__box { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fe-acc) 35%, transparent); background: color-mix(in srgb, var(--fe-acc) 5%, transparent); }
+.fe-skel__txt { background: radial-gradient(circle, color-mix(in srgb, var(--fe-acc) 80%, transparent) 1.3px, transparent 1.7px) 0 50% / 6px 6px; animation-delay: .15s; }
+.fe-skel__img { background: radial-gradient(circle, color-mix(in srgb, var(--fe-acc) 75%, transparent) 1.6px, transparent 2px) 0 0 / 5px 5px, color-mix(in srgb, var(--fe-acc) 10%, transparent); animation-delay: .3s; }
+@keyframes fe-shim { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+
+/* Страница фэнтези проявляется после загрузки */
+.fe-fanpage { position: absolute; inset: 0; opacity: 0; transform: translateY(16px); transition: opacity .5s, transform .5s; }
+.fe-stage.is-loading .fe-load { opacity: 1; transition-delay: .4s; }
+.fe-stage.is-ready .fe-fanpage { opacity: 1; transform: none; }
+body[data-skeleton] .fe-load { display: none; }
+body[data-skeleton] .fe-skel { display: block; }
+body[data-skeleton] .fe-stage.is-loading .fe-skel { opacity: 1; transition-delay: .3s; }

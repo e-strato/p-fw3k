@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<base href="../" />
+<title>v35 · Остров с логотипами</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../widget-tournament/_w.css" />
+<link rel="stylesheet" href="../widget-tournament-5/_t5.css" />
+<link rel="stylesheet" href="../widget-subs-2/_s2.css" />
+<link rel="stylesheet" href="../widget-subs-2/_s6v6.css" />
+<link rel="stylesheet" href="../widget-subs-2/_s8.css" />
+<link rel="stylesheet" href="../widget-transfers-2/_tr4.css" />
+<link rel="stylesheet" href="../widgets-unified/_type.css" />
+<link rel="stylesheet" href="../widgets-unified/_cons.css" />
+<link rel="stylesheet" href="../widget-tournament-6/_t6.css" />
+<link rel="stylesheet" href="../widget-subs-3/_s3.css" />
+<link rel="stylesheet" href="../widget-transfers-3/_tr5.css" />
+<link rel="stylesheet" href="../widget-mvp-3/_m5.css" />
+<link rel="stylesheet" href="../widgets-23/_uni.css" />
+<link rel="stylesheet" href="_gs.css" />
+<link rel="stylesheet" href="../w-gold/_wgold.css" /><link rel="stylesheet" href="../w-players/_wplayers.css" /><link rel="stylesheet" href="../w-header/_wheader.css" /><link rel="stylesheet" href="../w-bar/_wbar.css" /><link rel="stylesheet" href="../w-maps/_wmseg.css" /><link rel="stylesheet" href="../w-preview/_wstat.css" /><link rel="stylesheet" href="../w-draft/_wdraft.css" />
+</head>
+<!-- v35-logos — как v34, но остров — логотипы команд (w-island v3, дирижёр 27.10: «возьмём V3»): итог — лого 2 : 1 лого, идёт — время и лого того, кто впереди; кнопки бара — рисованные значки с подписями.
+     v34-split — как v33, но два подписанных блока: «Карта N» — сегмент карт, график, драфт; «О матче» — игроки и статистика к матчу; от 1920 — рядом (слева карта, справа матч), уже — друг под другом (gs-res v5, дирижёр 27.10: «V5 норм»).
+     v33-draft — как v32, но драфт карты — карточкой под графиком в стиле Cyberscore: обе команды рядом, 5 героев с никами, баны перечёркнутыми; вкладки «Драфт» у графика нет (w-draft v21, дирижёр 27.10: «давай возьмём как в Cyberscore»).
+     v32-island — как v31, но нижний бар на телефоне прячется, пока листаешь вниз: кнопки гаснут, остров остаётся (w-bar v14, дирижёр 27.10: «V14 берём»).
+     v31-live — как v30, но Live — без паузы (в «сейчас» 33:30 пауза не идёт), а «Live · пауза» — отдельное состояние в панели (дирижёр 27.10: «заебала эта плашка, сделай её доп состоянием»).
+     v30-pip — как v29, но «Статистика к матчу» — последним блоком на любой карте и в «Превью», а трансляция — не вкладкой у графика, а кнопкой в углу → мини-окно без звука (дирижёр 27.10).
+     v29-hd-scroll — как v28, но шапка матча сжимается вслед за прокруткой (w-header v10, window.WH_COLLAPSE = 'scroll'): на сколько прокрутил, на столько и ниже, до одной строки, без порога (дирижёр 27.10).
+     v28-stat — как v27, но «Факты к матчу» и «Очные и форма» до матча и в «Превью» заменены виджетом «Статистика к матчу» из лабы w-preview (v21, ../w-preview/_wstat.js): досье команд и новости таймлайном (дирижёр 26.10: «пока перенесём таймлайн 21»).
+     v27-wide3 — как v26, но на очень широком экране (от 1920) три колонки: главная делится пополам — график слева, игроки справа, карты матча над обеими (дирижёр 27.10).
+     v26-maps-main — как v25, но карты матча — первым виджетом в главной колонке, а не во всю ширину (дирижёр 27.10).
+     v25-maps — как v24, но под шапкой во всю ширину — карты матча из лабы w-maps (v9, ../w-maps/_wmseg.js): «Превью» + все карты серии, не начатые бледные; нажал — ниже превью (факты, очные, составы) или график и игроки этой карты; плашка переезжает плавно (дирижёр 26.10: «9 переноси»).
+     v24-notabs — как v23, но в шапке матча нет вкладок (Обзор, Карты, События, Новости, Статистика) — под шапкой будут карты матча, лаба w-maps (дирижёр 26.10).
+     v23-bar — как v22, но в центре нижнего бара — остров из лабы w-bar (v11 «Вопрос крупно», ../w-bar/_wbar.js): что сейчас у матча; прилетело событие — светится, нажал — карточка с вопросом. На компьютере — в правой колонке. Переключатель «Прилетело событие» (дирижёр 26.10).
+     
+     v22-header — как v21, но шапка матча — виджет из лабы w-header (v5 «Счёт по центру», ../w-header/_wheader.js): вкладки матча в ней же, при скролле — одна строка (дирижёр 26.10).
+      v21-widgets — как v20, но «Перевес по золоту» и «Игроки» — виджеты из лаб w-gold и w-players (../w-gold/_wgold.js, data-wd="gold"): страница собирается только из виджетов (дирижёр 26.10).
+      v20-wide — как v19, но на компьютере без «ушей»: страница во всю ширину окна, главная колонка тянется сколько угодно, поля по бокам 32 (дирижёр 26.10).
+     v19-widgets — как v18, но всё на странице — виджеты трёх мест: во всю ширину (шапка матча с вкладками), главная колонка, правая. Ничего не висит само по себе:
+     плашка паузы — внутри шапки, «последняя карта…» — ссылкой низом виджета графика, «Все новости / Вся статистика» — низом своего виджета.
+     На телефоне: шапка → главная колонка → правая (на любой вкладке). Переключатель «Подписи виджетов» в панели — место и название над каждым.
+     v18-mid — как v17, на телефоне шапка матча одного среднего размера (между полной и сжатой), не сжимается при прокрутке, полные названия всегда.
+     v17-full — как v16, на телефоне виджеты (турнир, замены, трансферы, MVP) — во всю ширину, как остальные карточки.
+     v16-smooth — как v15, на телефоне в шапке нет пилюль килов и строки турнира; при прокрутке вниз шапка плавно сжимается (логотипы и счёт меньше, названия уходят).
+     v15-widgets — как v14, на телефоне виджеты правой колонки (турнир, замены — вошедшему, трансферы, MVP) — под контентом вкладки.
+     v14-shrink — как v13, на телефоне шапка матча ужимается при прокрутке вниз (логотипы, короткие названия, счёт, статус) и раскрывается при прокрутке вверх.
+     v13-sticky — как v12, вкладки матча прилипают к верху под шапкой матча, пока листаешь.
+     v12-tabs — как v11, без вкладок «Турнир» и «Очные».
+     v11-cards — как v10, но график, записи карт и драфт — отдельными карточками; переключатель — только в live.
+     v8-now — «Обзор» — самое интересное сейчас (в live — идущая карта: график, трансляция, драфт, игроки), новости, очные, турнир, статистика — своими вкладками; угадайки одним блоком с «Ты в матче» справа.
+     v7-series — как v6, но «Обзор» — вся серия без разбора одной карты (серия по картам с мини-графиками, трансляция, игроки за серию), разбор карты — только во вкладке «Карты».
+     v6-overview — как v5, но вкладки матча — над главной колонкой; «Обзор» — матч сейчас (идущая или последняя карта, без чипов), разбор по картам — во вкладке «Карты», события — вкладкой «События».
+     v5-gold — страница матча, шапка «Перевес по золоту» (под Доту, от «столбиком»): под счётом — полоса перевеса: кто впереди на карте и на сколько золота, ниже — слоты килов по картам. Иначе — копия v4-typical:
+     v4-typical — по типовым сайтам (Cyberscore, DLTV — Figma, снимки 06.10): шапка матча со счётом в два уровня (серия · карта, время, килы),
+     под ней вкладки матча, в центре график, таблица игроков и сыгранные карты, справа виджеты. Код — _gs.js (window.GS_LAYOUT = v4) -->
+<body class="uni"><div class="app"><header class="pt" id="portal"></header><div id="feed"></div><div id="more"></div></div><nav class="tabbar" id="tabbar" aria-label="Разделы"></nav>
+<dialog class="sh" id="sheet" aria-label="Игрок"></dialog><div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>window.GS_GRAPH = 'w'; window.GS_PLAYERS = 'w'; window.GS_LAYOUT = 'v4'; window.GS_HD = 'w'; window.WH_COLLAPSE = 'scroll'; window.GS_BAR = 'w'; window.GS_TABS = false; window.GS_MSEG = 'w'; window.GS_MSEG_MAIN = true; document.addEventListener('DOMContentLoaded', () => document.body.classList.add('wide3')); window.GS_V20 = true; window.GS_STAT = 'w'; window.GS_PIP = 'w'; window.GS_PAUSE = 'state'; window.GS_BARHIDE = 'island'; window.GS_DRAFT = 'cs'; window.GS_SPLIT = true; window.WB_LOOK = 'logos'; window.TB_LOOK = 'svg'</script><!-- наши виджеты (правая колонка компьютера) — код и данные из их лаб -->
+<script src="../widget-tournament-4/_data.js"></script><script src="../widget-tournament-5/_logos.js"></script><script src="../widget-tournament-5/_demo.js"></script>
+<script src="../widget-subs-2/_data.js"></script><script src="../widget-subs-2/_games.js"></script><script src="../widget-subs-3/_s3data.js"></script>
+<script>window.TR5_BASE = '../widget-transfers-2/'; window.MVP2_BASE = '../widget-mvp-2/'; window.TR5_CFG = { gameDate: true }</script>
+<script src="../widget-transfers/_data.js"></script><script src="../widget-transfers-2/_paths.js"></script><script src="../widget-transfers-2/_mix.js"></script><script src="../widget-transfers-3/_free.js"></script>
+<script src="../widget-mvp/_data.js"></script><script src="../widget-mvp-2/_paths.js"></script>
+<script src="data/_matches.js"></script><script src="data/_tournament.js"></script><script src="_wfit.js"></script>
+<script src="../widgets-unified/_cons.js"></script><script src="../widget-tournament-6/_t6.js"></script><script src="../widget-subs-3/_s3.js"></script><script src="../widget-transfers-3/_tr5.js"></script><script src="../widget-mvp-3/_m5.js"></script>
+<script src="../w-gold/_wgold.js"></script><script src="../w-players/_wplayers.js"></script><script src="../w-header/_wheader.js"></script><script src="../w-bar/_wbar.js"></script><script src="../w-maps/_wmseg.js"></script><script src="../w-preview/_wstat.js"></script><script src="../w-draft/_wdraft.js"></script><script src="_gs.js"></script>
+</body></html>

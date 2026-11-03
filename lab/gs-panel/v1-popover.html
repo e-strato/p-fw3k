@@ -1,0 +1,23 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>v1 · Кнопка со списком</title><link rel="stylesheet" href="_p.css">
+<style>
+.b1{ width:100%; height:36px; display:flex; align-items:center; gap:8px; padding:0 10px; border-radius:8px; background:#333; }
+.b1:hover{ background:#3a3a3a; } .b1 .nm{ flex:1; text-align:left; color:#fff; } .b1 .ar{ color:#a3a3a3; }
+.pop{ position:relative; } .ls{ position:absolute; left:0; right:0; top:40px; z-index:2; padding:6px; border-radius:8px; background:#2f2f2f; box-shadow:0 8px 24px #0008; }
+.ls .g{ padding:8px 8px 4px; font-size:11px; color:#7a7a7a; }
+.ls button{ width:100%; display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:6px; text-align:left; }
+.ls button:hover{ background:#3a3a3a; } .ls button.on{ background:#4c3d7a; color:#fff; }
+.ls .sub{ padding-left:23px; color:#a3a3a3; }
+</style></head><body><script src="_p.js"></script><script>
+const G = [['', ['feed']], ['До матча', ['announce', 'pre', 'delayed']], ['Идёт', ['live', 'nodata', 'offline']], ['После', ['post', 'cancel']]];
+const SUB = { delayed: 1, nodata: 1, offline: 1, cancel: 1 };
+let open = false;
+const dc = (k) => SUB[k] ? 'd-bad' : 'd-' + P.S[k][1];
+P.mount(`<div class="lbl">Состояние матча</div><div class="pop" id="pop"></div>`, () => {
+  const k = P.cur;
+  document.querySelector('#pop').innerHTML = `<button class="b1" id="b"><span class="dot ${dc(k)}"></span><span class="nm">${P.S[k][0]}</span><span class="ar">▾</span></button>`
+    + (open ? `<div class="ls">${G.map(([g, ks]) => (g ? `<div class="g">${g}</div>` : '') + ks.map((x) => `<button data-k="${x}" class="${x === k ? 'on' : ''} ${SUB[x] ? 'sub' : ''}"><span class="dot ${dc(x)}"></span>${P.S[x][0]}</button>`).join('')).join('')}</div>` : '');
+  document.querySelector('#b').onclick = () => { open = !open; P.set(P.cur); };
+  document.querySelectorAll('.ls [data-k]').forEach((b) => b.onclick = () => { open = false; P.set(b.dataset.k); });
+}, `<p>Одна строка в панели: точка-цвет + название текущего состояния. Нажал — выпадает список, сгруппированный по этапам матча.</p>
+<ul><li><b>Место:</b> всегда одна строка, 36 px, сколько бы состояний ни было.</li><li>Особые случаи (перенос, нет данных, отмена) — с отступом под своим этапом, оранжевая точка.</li><li>Минус: чтобы увидеть все состояния, надо открыть.</li></ul>`);
+</script></body></html>

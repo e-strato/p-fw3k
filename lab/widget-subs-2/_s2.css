@@ -1,0 +1,199 @@
+/* Виджет замен, заход 3 (созвон 22.10, решение 29): 320×440, отступы кратны 4, скругления 8 / 6 / 4.
+   Токены, .w, .w-scroll — ../widget-tournament/_w.css. */
+.s6{ position:relative; display:flex; flex-direction:column; height:440px; }
+.s6-cap{ font-size:12px; line-height:16px; color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.s6-sp{ flex:1; }
+.s6-nm{ min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.s6-bd{ padding:0 12px 12px; }
+
+/* Логотипы */
+.s6-lg{ width:20px; height:20px; flex:none; object-fit:contain; border-radius:4px; }
+.s6-lg--16{ width:16px; height:16px; } .s6-lg--28{ width:28px; height:28px; }
+.s6-ini{ display:inline-grid; place-items:center; background:var(--w-muted); font-size:8px; font-weight:600; color:var(--w-muted-fg); }
+.s6-av{ display:grid; place-items:center; width:24px; height:24px; flex:none; border-radius:50%; background:var(--w-muted); font-size:11px; font-weight:600; color:var(--w-fg); }
+
+/* Шапка: «Замены» + архив */
+.s6-hd{ display:flex; align-items:center; gap:8px; flex:none; height:48px; padding:0 12px; }
+.s6-hd > b{ font-size:14px; line-height:18px; font-weight:600; }
+.s6-hd__sub{ font-size:12px; color:var(--w-muted-fg); }
+.s6-hd__m{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.s6-hd__m b{ font-size:13px; line-height:18px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.s6-hd .s6-sp + .s6-chip{ flex:none; }
+.w .s6-arch{ display:inline-flex; align-items:center; gap:2px; font-size:12px; color:var(--w-muted-fg); }
+.w .s6-arch:hover{ color:var(--w-fg); }
+.w .s6-ib{ display:grid; place-items:center; width:28px; height:28px; flex:none; margin-left:-6px; border-radius:6px; color:var(--w-muted-fg); }
+.w .s6-ib:hover{ background:var(--w-muted); color:var(--w-fg); }
+.s6-cnt{ display:grid; place-items:center; min-width:20px; height:20px; padding:0 6px; border-radius:999px; background:#f59e0b; color:#0b0b0d; font-size:12px; font-weight:700; }
+
+/* Плашки */
+.s6-chip{ display:inline-flex; align-items:center; flex:none; height:20px; padding:0 6px; border-radius:4px; background:var(--w-muted); font-size:11px; font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap; color:var(--w-fg); }
+.s6-chip--live{ background:var(--w-down); }
+.s6-tag{ display:inline-flex; align-items:center; height:16px; padding:0 4px; border-radius:4px; font-size:10px; line-height:16px; font-weight:500; white-space:nowrap; }
+.s6-tag--news{ background:rgba(96,165,250,.16); color:#93c5fd; }
+.s6-tag--ids{ background:rgba(245,158,11,.16); color:#fcd34d; }
+.s6-tag--pos{ background:rgba(167,139,250,.16); color:#c4b5fd; }
+.s6-lbl{ display:flex; align-items:baseline; gap:8px; margin:16px 0 4px; font-size:12px; line-height:16px; font-weight:500; color:var(--w-muted-fg); }
+.s6-lbl--top{ margin-top:0; }
+.s6-lbl .s6-cap{ font-weight:400; font-size:11px; opacity:.7; }
+
+/* Матч строкой */
+.s6-m{ display:flex; align-items:center; gap:6px; height:32px; font-size:12px; font-weight:600; }
+.s6-m__n{ min-width:0; max-width:84px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* Замена: Kiritych → Sonneiko · поз. 3 */
+.s6-swap{ display:flex; align-items:center; gap:4px; min-width:0; font-size:13px; line-height:18px; }
+.s6-swap svg{ flex:none; color:var(--w-muted-fg); }
+.s6-swap b{ font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.s6-out{ color:var(--w-muted-fg); text-decoration:line-through; text-decoration-color:rgba(161,161,170,.5); white-space:nowrap; }
+.s6-swap .s6-cap{ flex:none; }
+.s6-dot{ width:8px; height:8px; flex:none; border-radius:50%; background:#f59e0b; }
+.w .s6-undo{ display:grid; place-items:center; width:24px; height:24px; flex:none; border-radius:6px; font-size:13px; color:var(--w-muted-fg); cursor:pointer; }
+.w .s6-undo:hover{ background:var(--w-muted); color:var(--w-fg); }
+.s6-res-st{ display:inline-flex; align-items:center; gap:4px; font-size:11px; line-height:16px; color:var(--w-up-fg); }
+.s6-res-st--no{ color:var(--w-muted-fg); }
+
+/* Редактор замены: кто · позиция · срок · кнопки */
+.s6-ed{ display:flex; flex-direction:column; gap:6px; padding:4px 0 12px; }
+.s6-ed--in{ padding:4px 8px 12px; }
+.s6-ed__l{ margin-top:6px; font-size:11px; line-height:16px; font-weight:500; color:var(--w-muted-fg); }
+.s6-note{ padding:6px 8px; border-radius:6px; background:var(--w-mid-bg); font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+.s6-who{ display:flex; align-items:center; gap:8px; min-height:40px; padding:4px 8px; border-radius:8px; background:var(--w-mid-bg); }
+.s6-who--none{ background:rgba(245,158,11,.1); color:#fcd34d; }
+.s6-who--none b{ color:#fcd34d; }
+.s6-res__m{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.s6-res__m b{ font-size:13px; line-height:18px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.w .s6-lnk{ font-size:12px; color:var(--w-muted-fg); text-decoration:underline; text-underline-offset:3px; }
+.w .s6-lnk:hover{ color:var(--w-fg); }
+
+/* Поиск по базе */
+.s6-find{ position:relative; }
+.s6-find__i{ position:absolute; left:8px; top:8px; color:var(--w-muted-fg); }
+.s6-in{ box-sizing:border-box; width:100%; height:32px; padding:0 8px 0 28px; border-radius:6px; border:1px solid #6d4ad6; background:var(--w-bg); color:var(--w-fg); font:400 12px/16px var(--w-font); outline:none; }
+.s6-in::placeholder{ color:#71717a; }
+.s6-drop{ display:flex; flex-direction:column; padding:4px; border-radius:8px; border:1px solid var(--w-border); background:#0f0f12; }
+.s6-drop__hint, .s6-drop__none{ padding:6px 8px; font-size:11px; line-height:16px; color:var(--w-muted-fg); }
+.s6-drop__none{ color:#fcd34d; }
+.w .s6-res{ display:flex; align-items:center; gap:8px; min-height:40px; padding:4px 8px; border-radius:6px; }
+.w .s6-res:hover{ background:var(--w-muted); }
+.s6-res__p{ flex:none; font-size:11px; color:var(--w-muted-fg); }
+.s6-res__p.is-own{ color:var(--w-up-fg); }
+.w .s6-res--add .s6-av{ background:#6d4ad6; }
+
+/* Позиция кружками 1–5 и срок пилюлями */
+.s6-pp{ display:flex; align-items:center; gap:4px; }
+.w .s6-pp button, .w .s6-maps button{ width:28px; height:28px; border-radius:6px; background:var(--w-mid-bg); font-size:12px; font-weight:600; text-align:center; color:var(--w-muted-fg); }
+.w .s6-pp button.is-on, .w .s6-maps button.is-on{ background:var(--w-fg); color:var(--w-primary-fg); }
+.s6-pp .s6-cap{ margin-left:4px; }
+.s6-terms{ display:flex; flex-wrap:wrap; gap:4px; }
+.w .s6-terms button{ height:28px; padding:0 10px; border-radius:6px; background:var(--w-mid-bg); font-size:12px; font-weight:500; color:var(--w-muted-fg); }
+.w .s6-terms button.is-on{ background:var(--w-fg); color:var(--w-primary-fg); }
+.w .s6-terms--sm button{ height:24px; padding:0 8px; font-size:11px; }
+.s6-terms--col{ flex-direction:column; }
+.w .s6-terms--col button{ height:36px; padding:0 12px; text-align:left; font-size:13px; }
+.s6-maps{ display:flex; align-items:center; gap:4px; margin-top:4px; }
+.s6-maps .s6-cap{ margin-right:4px; }
+.s6-date{ box-sizing:border-box; height:32px; margin-top:4px; padding:0 8px; border-radius:6px; border:1px solid var(--w-border); background:var(--w-bg); color:var(--w-fg); font:400 12px var(--w-font); color-scheme:dark; }
+
+/* Кнопки */
+.s6-act{ display:flex; gap:8px; margin-top:8px; }
+.w .s6-btn{ display:inline-flex; align-items:center; justify-content:center; gap:6px; height:32px; padding:0 12px; border-radius:6px; border:1px solid var(--w-border); font-size:12px; font-weight:600; white-space:nowrap; }
+.w .s6-btn:hover{ background:var(--w-muted); }
+.w .s6-btn--pri{ border-color:transparent; background:var(--w-fg); color:var(--w-primary-fg); }
+.w .s6-btn--pri:hover{ background:#e4e4e7; }
+.w .s6-btn--pri:disabled{ opacity:.35; cursor:default; }
+.w .s6-btn--ghost{ border-color:transparent; color:var(--w-muted-fg); }
+.w .s6-btn--w{ width:100%; }
+
+/* Пусто: «Замен нет» */
+.s6-none{ display:flex; flex-direction:column; align-items:center; gap:6px; padding:40px 12px; text-align:center; }
+.s6-none .s6-lg + .s6-lg{ margin-top:-34px; margin-left:40px; }
+.s6-none b{ margin-top:8px; font-size:14px; }
+.s6-none .s6-cap{ white-space:normal; }
+.s6-none--all svg{ width:28px; height:28px; color:var(--w-up); }
+.s6-none--all .s6-btn{ margin-top:12px; }
+
+/* ——— v2 «Очередь» ——— */
+.s6-prog{ flex:none; padding:0 12px 12px; }
+.s6-prog__t{ display:flex; align-items:baseline; justify-content:space-between; gap:8px; margin-bottom:6px; }
+.s6-prog__t b{ font-size:13px; font-weight:600; }
+.s6-bar{ height:4px; border-radius:2px; background:var(--w-muted); overflow:hidden; }
+.s6-bar i{ display:block; height:100%; background:var(--w-up); transition:width .3s; }
+.s6-card{ padding:8px 8px 4px; border-radius:8px; background:var(--w-mid-bg); }
+.s6-card__t{ display:flex; justify-content:space-between; gap:8px; padding:0 4px; }
+.s6-card .s6-m{ padding:0 4px; margin-bottom:4px; }
+.s6-sr{ border-top:1px solid var(--w-border); }
+.w .s6-sr__h{ display:flex; align-items:center; gap:8px; width:100%; min-height:48px; padding:6px 4px; }
+.s6-sr__m{ flex:1; min-width:0; display:flex; flex-direction:column; align-items:flex-start; gap:2px; }
+.s6-sr.is-open{ }
+.s6-sr.is-open .s6-ed{ padding:0 4px 12px; }
+.s6-sr.is-done .s6-swap b{ color:var(--w-up-fg); }
+.s6-mdone{ display:flex; align-items:center; gap:6px; padding:12px 4px 8px; border-top:1px solid var(--w-border); font-size:13px; font-weight:600; color:var(--w-up-fg); }
+.s6-mdone .s6-btn{ margin-left:auto; }
+.w .s6-qm{ display:flex; align-items:center; gap:6px; width:calc(100% + 16px); min-height:36px; margin:0 -8px; padding:4px 8px; border-radius:6px; font-size:12px; }
+.w .s6-qm:hover{ background:var(--w-mid-bg); }
+.s6-qm__n{ flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.s6-qm .s6-cnt{ min-width:18px; height:18px; font-size:11px; }
+
+/* ——— v3 «Составы» ——— */
+.w .s6-qm--tall{ min-height:52px; gap:10px; }
+.s6-qm__lg{ display:flex; flex:none; }
+.s6-qm__lg .s6-lg + .s6-lg{ margin-left:-4px; }
+.s6-qm__m{ flex:1; min-width:0; display:flex; flex-direction:column; align-items:flex-start; }
+.s6-qm__m .s6-qm__n{ max-width:100%; font-weight:600; }
+.s6-qm__r{ display:flex; flex-direction:column; align-items:flex-end; gap:2px; flex:none; }
+.s6-warn{ display:inline-flex; align-items:center; gap:4px; font-size:11px; color:#fcd34d; }
+.s6-warn svg{ width:12px; height:12px; }
+.s6-okk{ display:inline-flex; align-items:center; gap:4px; font-size:11px; color:var(--w-up-fg); }
+.s6-seg{ display:grid; grid-template-columns:1fr 1fr; gap:2px; padding:2px; border-radius:8px; background:var(--w-mid-bg); }
+.w .s6-seg button{ display:flex; align-items:center; justify-content:center; gap:6px; min-width:0; height:32px; padding:0 8px; border-radius:6px; font-size:12px; font-weight:500; color:var(--w-muted-fg); }
+.w .s6-seg button.is-on{ background:var(--w-muted); color:var(--w-fg); }
+.s6-seg__n{ display:grid; place-items:center; min-width:16px; height:16px; padding:0 4px; border-radius:999px; background:#f59e0b; color:#0b0b0d; font-style:normal; font-size:10px; font-weight:700; }
+.s6-rh{ display:grid; grid-template-columns:20px 1fr auto; gap:8px; margin:12px 0 2px; padding:0 8px; font-size:11px; line-height:16px; font-weight:500; color:var(--w-muted-fg); }
+.s6-rr{ position:relative; display:grid; grid-template-columns:20px 64px 1fr auto; align-items:center; gap:8px; min-height:36px; padding:0 8px; border-radius:6px; font-size:12px; }
+.s6-rr + .s6-rr{ margin-top:2px; }
+.s6-rr__p{ color:var(--w-muted-fg); font-variant-numeric:tabular-nums; }
+.s6-rr__l{ font-size:11px; color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.s6-rr__n{ min-width:0; display:flex; flex-direction:column; align-items:flex-start; gap:2px; font-weight:500; }
+.s6-rr__id{ font-size:11px; color:#71717a; font-variant-numeric:tabular-nums; }
+.s6-rr.is-bad{ display:block; padding:0; background:rgba(245,158,11,.1); }
+.w .s6-rr__h{ display:grid; grid-template-columns:20px 64px 1fr; align-items:center; gap:8px; width:100%; min-height:44px; padding:4px 8px; }
+.s6-rr.is-ok{ background:var(--w-up-bg); }
+.s6-rr.is-ok .s6-rr__n{ color:var(--w-up-fg); }
+.s6-rr.is-no .s6-rr__n{ color:var(--w-muted-fg); }
+.s6-rr .s6-cap{ font-weight:400; }
+.s6-ft{ display:flex; align-items:center; gap:8px; flex:none; min-height:48px; padding:8px 12px; border-top:1px solid var(--w-border); font-size:12px; }
+.s6-ft--warn{ color:#fcd34d; }
+.s6-ft--ok{ color:var(--w-up-fg); }
+
+/* ——— v4 «По шагам» ——— */
+.s6-mtop{ margin-bottom:4px; }
+.w .s6-wi{ display:flex; align-items:center; gap:10px; width:calc(100% + 16px); min-height:52px; margin:0 -8px; padding:6px 8px; border-radius:8px; }
+.w .s6-wi:hover{ background:var(--w-mid-bg); }
+.s6-wi__m{ flex:1; min-width:0; display:flex; flex-direction:column; align-items:flex-start; gap:2px; }
+.s6-wi.is-done .s6-swap b{ color:var(--w-up-fg); }
+.s6-wi__st{ display:grid; place-items:center; width:20px; height:20px; border-radius:4px; background:var(--w-up-bg); color:var(--w-up); }
+.s6-wi__st.is-no{ background:var(--w-muted); color:var(--w-muted-fg); }
+.s6-chev{ color:var(--w-ring); }
+.s6-steps{ display:grid; grid-template-columns:repeat(4, 1fr); gap:4px; flex:none; padding:0 12px 12px; }
+.w .s6-steps button{ display:flex; flex-direction:column; gap:4px; font-size:11px; line-height:16px; color:var(--w-muted-fg); }
+.w .s6-steps button:disabled{ cursor:default; }
+.s6-steps i{ display:block; height:3px; border-radius:2px; background:var(--w-muted); }
+.s6-steps .is-done i{ background:var(--w-up); }
+.s6-steps .is-on i{ background:var(--w-fg); }
+.w .s6-steps .is-on{ color:var(--w-fg); font-weight:600; }
+.s6-bd--wz{ display:flex; flex-direction:column; gap:8px; }
+.s6-q{ font-size:15px; line-height:20px; font-weight:600; }
+.s6-q b{ font-weight:700; }
+.s6-q__s{ margin-top:-4px; white-space:normal; }
+.s6-pl{ display:flex; flex-direction:column; gap:4px; }
+.w .s6-pl button{ display:flex; align-items:center; gap:10px; height:36px; padding:0 12px; border-radius:6px; background:var(--w-mid-bg); font-size:13px; color:var(--w-muted-fg); }
+.w .s6-pl button b{ width:14px; color:var(--w-fg); }
+.w .s6-pl button .s6-cap{ margin-left:auto; font-size:11px; }
+.w .s6-pl button.is-on{ background:var(--w-fg); color:var(--w-primary-fg); }
+.w .s6-pl button.is-on b, .w .s6-pl button.is-on .s6-cap{ color:var(--w-primary-fg); }
+.s6-sum{ padding:12px; border-radius:8px; background:var(--w-mid-bg); }
+.s6-sum > div{ display:flex; align-items:center; gap:10px; }
+.s6-sum dl{ display:grid; grid-template-columns:72px 1fr; gap:6px 8px; margin:12px 0 0; font-size:12px; line-height:16px; }
+.s6-sum dt{ color:var(--w-muted-fg); }
+.s6-sum dd{ margin:0; }
+.s6-ft--wz .s6-btn{ min-width:88px; }

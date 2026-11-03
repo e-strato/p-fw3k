@@ -1,0 +1,48 @@
+/* Лаба «Страница матча» — стили раскладки v5 «Эфир сверху» (общие для v5, match-fantasy, match-odds). */
+.v5 { display: grid; gap: 20px; }
+/* Сцена: эфир во всю ширину + лента справа */
+.v5-stage { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 0; overflow: hidden; border-radius: 14px; background: var(--c-ui-panel); }
+.v5-tv { position: relative; display: grid; align-content: space-between; min-height: 540px; padding: 18px 20px; isolation: isolate;
+  background: radial-gradient(50% 70% at 18% 30%, color-mix(in srgb, var(--ta) 22%, transparent), transparent 70%), radial-gradient(50% 70% at 82% 70%, color-mix(in srgb, var(--tb) 22%, transparent), transparent 70%), linear-gradient(160deg, var(--c-ui-hover), var(--c-ui-bg)); }
+.v5-tv::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, transparent 50%, color-mix(in srgb, var(--c-black) 70%, transparent)); }
+.v5-tv__top { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; font-size: 13px; } .v5-tv__top .p-pill { height: 26px; }
+.v5-tv__top span:not(.r-gt):not(.r-bo) { color: var(--c-muted); }
+.v5-tv__top .v5-viewers { margin-left: auto; padding: 4px 10px; border-radius: 6px; background: color-mix(in srgb, var(--c-black) 55%, transparent); color: var(--c-text) !important; font-weight: 600; }
+.v5-play { justify-self: center; display: grid; place-items: center; width: 84px; height: 84px; border-radius: 50%; background: color-mix(in srgb, var(--c-black) 55%, transparent); font-size: 30px; }
+.v5-big { justify-self: center; display: grid; justify-items: center; gap: 10px; text-align: center; }
+.v5-big b { font: 700 96px/1 var(--font-c); } .v5-big p { color: var(--c-muted); font-size: 15px; } .v5-big .btn-row { display: flex; gap: 8px; }
+/* Плашка счёта поверх эфира — как в трансляции */
+.v5-hud { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 18px; justify-self: center; width: min(100%, 760px); padding: 12px 18px; border-radius: 12px; background: color-mix(in srgb, var(--c-ui-bg) 82%, transparent); backdrop-filter: blur(8px); }
+.v5-hud__t { display: flex; align-items: center; gap: 12px; min-width: 0; font-size: 18px; font-weight: 700; } .v5-hud__t:last-child { justify-content: flex-end; } .v5-hud__t .r-lg { width: 40px; height: 40px; }
+.v5-hud__t span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v5-hud__c { display: grid; justify-items: center; gap: 2px; } .v5-hud__c b { font: 700 40px/1 var(--font-c); } .v5-hud__c small { color: var(--c-caption); font-size: 12px; white-space: nowrap; }
+.v5-hud__c em { color: var(--c-live); font-size: 12.5px; font-weight: 600; font-style: normal; white-space: nowrap; }
+.v5-src { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; } .v5-src button { border: 0; padding: 5px 10px; border-radius: 6px; background: color-mix(in srgb, var(--c-black) 50%, transparent); color: var(--c-muted); font-size: 12px; font-weight: 600; } .v5-src button.is-on { color: var(--c-text); box-shadow: inset 0 0 0 1px var(--c-accent); }
+.v5-feed { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; min-height: 0; border-left: 1px solid var(--c-ui-line); }
+.v5-feed h3 { display: flex; justify-content: space-between; padding: 16px 16px 8px; font-size: 14px; } .v5-feed h3 small { color: var(--c-caption); font-weight: 500; }
+.v5-feed .p-log, .v5-feed .p-feed, .v5-feed .v5-pre { padding: 0 16px; overflow: auto; scrollbar-width: none; }
+.v5-feed footer { padding: 12px 16px; border-top: 1px solid var(--c-ui-line); }
+.v5-pre p { display: grid; gap: 2px; padding: 9px 0; border-top: 1px solid var(--c-ui-line); font-size: 13px; } .v5-pre p:first-child { border-top: 0; } .v5-pre small { color: var(--c-caption); font-size: 11.5px; }
+/* Тикер ключевых цифр под эфиром */
+.v5-tick { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); border-radius: 12px; background: var(--c-ui-panel); }
+.v5-tick > div { display: grid; align-content: center; gap: 6px; min-width: 0; padding: 14px 18px; border-left: 1px solid var(--c-ui-line); } .v5-tick > div:first-child { border-left: 0; }
+.v5-tick small { color: var(--c-caption); font-size: 12px; font-weight: 600; } .v5-tick b { font: 700 22px var(--font-c); } .v5-tick span { color: var(--c-caption); font-size: 12px; }
+.v5-tick .r-bar { height: 6px; }
+.v5-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 330px; gap: 20px; align-items: start; }
+.v5-main { grid-column: 1 / 3; display: grid; gap: 20px; min-width: 0; } .v5-side { display: grid; gap: 20px; min-width: 0; }
+.v5-g2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@container row (max-width: 700px) {
+  .v5 { gap: 12px; } .v5-stage { grid-template-columns: minmax(0, 1fr); border-radius: 0; margin: 0 -12px; }
+  .v5-tv { min-height: 300px; padding: 12px; gap: 12px; } .v5-play { width: 56px; height: 56px; font-size: 20px; } .v5-big b { font-size: 56px; } .v5-big p { font-size: 13px; }
+  .v5-tv__top .v5-viewers { margin-left: 0; }
+  .v5-hud { gap: 8px; padding: 10px; } .v5-hud__t { flex-direction: column; gap: 4px; font-size: 12.5px; text-align: center; } .v5-hud__t:last-child { flex-direction: column-reverse; } .v5-hud__t .r-lg { width: 30px; height: 30px; } .v5-hud__t span { white-space: normal; }
+  .v5-hud__c b { font-size: 30px; }
+  .v5-feed { border-left: 0; border-top: 1px solid var(--c-ui-line); max-height: 300px; }
+  .v5-tick { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); } .v5-tick > div { padding: 10px 12px; border-left: 0; border-top: 1px solid var(--c-ui-line); } .v5-tick > div:nth-child(-n+2) { border-top: 0; } .v5-tick > div:nth-child(even) { border-left: 1px solid var(--c-ui-line); }
+  .v5-tick b { font-size: 18px; }
+  .v5-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; } .v5-main { grid-column: auto; gap: 12px; } .v5-side { gap: 12px; } .v5-g2 { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+}
+
+/* Подсветка нового в лабах на основе v5 (match-fantasy, match-odds): рамка целиком цвета акцента и метка «Новое» — без боковых полос */
+.is-new { box-shadow: inset 0 0 0 1px var(--c-accent) !important; }
+.p-new { display: inline-flex; align-items: center; height: 18px; margin-left: 8px; padding: 0 6px; border-radius: 4px; background: color-mix(in srgb, var(--c-accent) 18%, transparent); color: var(--c-accent); font: 600 11px var(--font); vertical-align: 2px; white-space: nowrap; }

@@ -1,0 +1,58 @@
+/* Шаг 3 виджета турнира: итог прошедшего турнира, рейтинг и форма в строке. Поверх ../widget-tournament/_w.css и ../widget-tournament-2/_t2.css. */
+/* Рейтинг и форма */
+.t3-rk{ flex:none; margin-left:6px; font-size:12px; color:var(--w-muted-fg); font-variant-numeric:tabular-nums; }
+.t3-fm{ display:inline-flex; gap:2px; vertical-align:middle; }
+.t3-fm i{ width:4px; height:12px; border-radius:1px; background:var(--w-ring); }
+.t3-fm i.W{ background:var(--w-up); } .t3-fm i.L{ background:var(--w-down); opacity:.75; }
+.w-tbl.t3-tbl td, .w-tbl.t3-tbl th{ white-space:nowrap; } /* узкие колонки — без переносов, имя обрезается */
+.w-tbl.t3-tbl td.t3-td{ width:36px; font-size:12px; color:var(--w-muted-fg); }
+.w-tbl.t3-tbl .w-team{ overflow:hidden; }
+/* ширины колонок фиксированы — таблица не вылезает за 320, название обрезается */
+.w-tbl.t3-tbl{ table-layout:fixed; }
+.w-tbl.t3-tbl th:nth-child(1){ width:32px; }
+.w-tbl.t3-tbl th:nth-last-child(1), .w-tbl.t3-tbl th:nth-last-child(2){ width:36px; }
+.w-tbl.t3-tbl--inline th:nth-child(3), .w-tbl.t3-tbl--col th:nth-child(3){ width:36px; }
+.w-tbl.t3-pl th:nth-last-child(1){ width:72px; }
+.w-tbl.t3-pl th:nth-child(1){ width:36px; }
+.w-tbl.t3-pl th:nth-last-child(2){ width:auto; } /* у итога колонка команды — вся оставшаяся ширина */
+.t3-two{ display:flex; flex-direction:column; min-width:0; }
+.t3-two__n{ display:flex; align-items:center; min-width:0; }
+.t3-sub{ font-size:11px; line-height:14px; color:var(--w-muted-fg); white-space:nowrap; }
+.t3-l{ font-weight:600; margin-left:2px; }
+.t3-l--W{ color:var(--w-up-fg); } .t3-l--L{ color:var(--w-down-fg); }
+.w-tbl.t3-tbl--sub td{ height:44px; }
+/* Итог прошедшего турнира */
+.t3-win{ display:flex; align-items:center; gap:12px; padding:12px; margin-bottom:12px; border-radius:var(--w-r-sm); background:var(--w-muted); }
+.t3-win__cup{ font-size:20px; }
+.t3-win > span:nth-child(2){ display:flex; flex-direction:column; min-width:0; }
+.t3-win b{ font-weight:600; }
+.t3-win__p{ margin-left:auto; color:var(--w-up-fg); }
+.w-tbl.t3-pl td:first-child{ width:40px; }
+.w-tbl.t3-pl td:last-child{ width:72px; }
+.t3-nx{ color:var(--w-fg); font-weight:600; }
+.t2-p--anchor .t3-cf{ margin-top:12px; }
+
+/* v4–v6: рейтинг и форма — в карточке */
+.t3-dots{ display:inline-flex; gap:3px; vertical-align:middle; }
+.t3-dots i{ width:8px; height:8px; border-radius:50%; }
+.t3-dots i.W{ background:var(--w-up); } .t3-dots i.L{ background:var(--w-down); }
+.t3-cf2{ display:flex; align-items:center; gap:12px; margin-top:8px; font-size:13px; line-height:20px; color:var(--w-muted-fg); }
+.t3-cf2__f{ display:inline-flex; align-items:center; gap:6px; }
+.t3-prof .t2-p__top{ align-items:flex-start; }
+.t3-prof__n{ display:flex; flex-direction:column; flex:1; min-width:0; }
+.t3-prof__n b{ font-size:16px; line-height:24px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t3-prof .t3-dots{ margin-top:6px; }
+.t3-prof__m{ display:flex; align-items:center; gap:8px; margin-top:12px; padding-top:12px; border-top:1px solid var(--w-border); font-size:13px; color:var(--w-muted-fg); white-space:nowrap; min-width:0; }
+.t3-prof__m .t2-p__opp b{ color:var(--w-fg); }
+.t3-prof .t2-p__mini{ margin-top:8px; }
+
+/* v7–v10: варианты карточки-профиля */
+.t3-av{ width:40px; height:40px; flex:none; border-radius:10px; font-size:13px; }
+.t3-lc{ display:inline-flex; gap:2px; flex:none; }
+.t3-lc b{ display:grid; place-items:center; width:20px; height:20px; border-radius:4px; font-size:11px; font-weight:700; }
+.t3-lc__W{ background:var(--w-up-bg); color:var(--w-up-fg); } .t3-lc__L{ background:var(--w-down-bg); color:var(--w-down-fg); }
+.t3-prof__q{ display:flex; align-items:center; gap:8px; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--w-border); font-size:13px; color:var(--w-muted-fg); white-space:nowrap; }
+.t3-prof__q b{ color:var(--w-fg); font-weight:600; overflow:hidden; text-overflow:ellipsis; }
+.t3-prof__q .t3-dots{ margin:0 0 0 auto; }
+.t3-prof--m .t2-p__line{ margin-top:8px; font-size:14px; }
+.t3-prof .t2-p__rk{ margin-top:12px; }

@@ -1,0 +1,77 @@
+/* Лаба «Стадии матча»: виджет стадий в карточке трансляции страницы матча сайта. Цвета — токены сайта. Смотрим только телефон 390 (дирижёр 15.10). */
+
+/* ——— Общее: стадия-метка, точка эфира, ответы прогноза ——— */
+.ms-host { color: var(--c-text); font-family: var(--font); }
+.ms-st { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 999px; background: var(--c-ui-chip); color: var(--c-text); font: 600 var(--fs-app-sm) var(--font); white-space: nowrap; }
+.ms-st::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--c-ui-dim); }
+.ms-st.is-live { background: color-mix(in srgb, var(--c-live) 16%, transparent); }
+.ms-st.is-live::before, .ms-dot.is-live { background: var(--c-live); animation: ms-pulse 1.4s infinite; }
+.ms-dot { display: inline-block; flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--c-ui-dim); }
+@keyframes ms-pulse { 50% { opacity: .35; } }
+.ms-what { display: flex; align-items: baseline; gap: 8px; margin: 0; color: var(--c-muted); font-size: var(--fs-app-sm); line-height: 1.4; }
+.ms-q { display: block; font-size: var(--fs-app-md); line-height: 1.3; }
+.ms-opts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.ms-opts[data-n='3'] { grid-template-columns: repeat(3, 1fr); }
+.ms-opt { position: relative; display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; padding: 6px 10px; border: 0; border-radius: 8px;
+  background: var(--c-ui-item); color: var(--c-text); font: 600 var(--fs-app-sm) var(--font); cursor: pointer; transition: background .15s, box-shadow .15s; }
+.ms-opt:hover { background: var(--c-ui-hover); }
+.ms-opt.is-on { background: color-mix(in srgb, var(--c-accent) 22%, var(--c-ui-item)); box-shadow: inset 0 0 0 1px var(--c-accent); }
+.ms-opt i { color: var(--c-accent); font-style: normal; }
+.ms-hero { width: 34px; height: 20px; border-radius: 3px; object-fit: cover; }
+.ms-till, .ms-took { margin: 0; color: var(--c-caption); font-size: var(--fs-app-xs); }
+.ms-took { color: var(--c-accent); }
+.ms-lg { width: 22px; height: 22px; object-fit: contain; }
+.ms-lg--mono { display: inline-grid; place-items: center; border-radius: 5px; background: var(--c-ui-chip); font: 700 9px var(--font); }
+.ms-sum { display: grid; gap: 2px; }
+.ms-sum b { font-size: var(--fs-app-lg); color: var(--c-coin); }
+.ms-sum span { font-size: var(--fs-app-sm); }
+.ms-sum small { color: var(--c-caption); font-size: var(--fs-app-xs); }
+.ms-host.is-in .ms-v5__q, .ms-host.is-in .ms-v6, .ms-host.is-in .ms-v7__bar { animation: ms-in .45s cubic-bezier(.2, .8, .2, 1); }
+@keyframes ms-in { from { opacity: 0; translate: 0 10px; } }
+
+.ms-time { color: var(--c-caption); font-size: var(--fs-app-xs); white-space: nowrap; }
+.ms-steps { display: flex; gap: 3px; }
+.ms-steps i { flex: 1; height: 3px; border-radius: 2px; background: color-mix(in srgb, var(--c-text) 18%, transparent); cursor: pointer; }
+.ms-steps .is-past { background: color-mix(in srgb, var(--c-accent) 55%, transparent); }
+.ms-steps .is-now { background: var(--c-accent); box-shadow: 0 0 8px var(--c-accent); }
+.ms-opts--chips { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.ms-opts--chips .ms-opt { flex: 1 0 auto; min-height: 28px; padding: 3px 10px; }
+.ms-opts--chips .ms-hero { width: 26px; height: 16px; }
+
+/* ——— v5 · Внутри карточки ——— */
+/* В эфире — поверх видео: стадия справа сверху, прогноз — полосой по низу кадра, шкала — по самому краю */
+.mp-tv > .ms-host--v5 { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.mp-tv > .ms-host--v5 .ms-v5 { height: 100%; display: grid; grid-template-rows: auto 1fr auto auto; }
+.mp-tv > .ms-host--v5 .ms-v5__top { justify-self: end; margin: 8px; padding: 3px; border-radius: 999px; background: color-mix(in srgb, var(--c-black) 60%, transparent); }
+.mp-tv > .ms-host--v5 .ms-v5__q { grid-row: 3; pointer-events: auto; padding: 22px 10px 8px; background: linear-gradient(transparent, color-mix(in srgb, var(--c-black) 85%, transparent) 40%); }
+.mp-tv > .ms-host--v5 .ms-steps { grid-row: 4; gap: 2px; pointer-events: auto; }
+.mp-tv > .ms-host--v5 .ms-steps i { border-radius: 0; }
+/* До и после — строкой внутри карточки матча, под командами */
+.mp-top > .ms-host--v5 { grid-column: 1 / -1; padding-top: 10px; border-top: 1px solid var(--c-ui-line); }
+.mp-top > .ms-host--v5 .ms-v5 { display: grid; gap: 8px; }
+.ms-v5__top { display: flex; align-items: center; gap: 6px; }
+.ms-v5__top em { padding-right: 6px; color: var(--c-caption); font-size: var(--fs-app-xs); font-style: normal; }
+.ms-v5__q { display: grid; gap: 6px; }
+.ms-v5__q > b { font-size: var(--fs-app-sm); }
+.ms-v5__q .ms-sum b { font-size: var(--fs-app-md); }
+
+/* ——— v6 · Продолжение карточки ——— */
+.ms-glued { border-bottom-left-radius: 0 !important; border-bottom-right-radius: 0 !important; }
+/* Приклеиваем к карточке: убираем зазор сетки страницы (до и после — 12px) и колонки эфира (8px) */
+.mp-body > .ms-host--v6, .mp-body > .ms-host--v7 { margin-top: -12px; }
+.mp-main > .ms-host--v6, .mp-main > .ms-host--v7 { margin-top: -8px; }
+.ms-v6 { display: grid; gap: 8px; padding: 10px 12px 12px; border-radius: 0 0 12px 12px; background: var(--c-ui-panel); border-top: 1px solid var(--c-ui-line); }
+.ms-v6__h { display: grid; grid-template-columns: auto auto 1fr; align-items: center; gap: 6px; }
+.ms-v6__h .ms-steps { margin-left: 6px; }
+.ms-v6 .ms-q { font-size: var(--fs-app-sm); }
+
+/* ——— v7 · Язычок ——— */
+.ms-v7 { border-radius: 0 0 12px 12px; background: var(--c-ui-panel); border-top: 1px solid var(--c-ui-line); overflow: hidden; }
+.ms-v7__bar { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 8px; width: 100%; padding: 9px 12px; border: 0; background: none; color: var(--c-text); font: inherit; text-align: left; cursor: pointer; }
+.ms-v7__bar .ms-time { display: none; }
+.ms-v7__bar b { overflow: hidden; font-size: var(--fs-app-sm); text-overflow: ellipsis; white-space: nowrap; }
+.ms-v7__bar em { color: var(--c-coin); font-size: var(--fs-app-xs); font-style: normal; font-weight: 700; }
+.ms-v7__bar i { color: var(--c-caption); font-style: normal; transition: rotate .2s; }
+.ms-v7.is-open .ms-v7__bar i { rotate: 180deg; }
+.ms-v7__body { display: none; gap: 8px; padding: 0 12px 12px; }
+.ms-v7.is-open .ms-v7__body { display: grid; }

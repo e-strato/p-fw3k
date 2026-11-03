@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<base href="../gs-match/" />
+<title>v4 · Таймер кольцом</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../widget-tournament/_w.css" />
+<link rel="stylesheet" href="../widgets-unified/_type.css" />
+<link rel="stylesheet" href="_gs.css" />
+<link rel="stylesheet" href="../w-bar/_wbar.css" />
+<!-- w-barst v4 — как v3, но таймер вопроса — кольцо вокруг значка события, без цифр: в острове только значок и слово (дирижёр 27.10: «чтобы текст не обрезался… событие — просто Убит или Рошан и иконка… везде больше иконок, нажмёт — посмотрит инфу»).
+     Список состояний — _bs.js, остров — _wbar.js (WB_LOOK = 'ring'). -->
+<style>
+  body{ padding:20px 16px 40px; }
+  #bs{ display:flex; flex-direction:column; gap:20px; max-width:760px; margin:0 auto; }
+  .bs-sec{ padding:4px 16px; border:1px solid var(--w-border); border-radius:16px; background:#0e0e10; }
+  .bs-sec h2{ margin:12px 0 4px; font:600 16px/22px var(--w-font); color:var(--w-fg); }
+  .bs-t{ display:grid; grid-template-columns:minmax(0,1fr) 390px; gap:24px; align-items:center; padding:12px 0; }
+  .bs-t + .bs-t{ border-top:1px solid var(--w-border); }
+  .bs-t p{ margin:0; font:400 13px/18px var(--w-font); color:var(--w-muted-fg); } .bs-t p b{ display:block; margin-bottom:2px; font-size:14px; color:var(--w-fg); font-weight:600; }
+  .bs-n{ display:inline-block; min-width:28px; color:var(--w-muted-fg); font-variant-numeric:tabular-nums; }
+  @media (max-width:700px){ .bs-t{ grid-template-columns:minmax(0,1fr); gap:8px; } }
+  /* рамка — низ экрана телефона: за баром кусок страницы, чтобы видно, что бар прозрачный при прокрутке */
+  .bs-ph{ position:relative; height:88px; overflow:hidden; border:1px solid var(--w-border); border-radius:14px; background:var(--w-page); }
+  .bs-ph .bs-bg{ position:absolute; inset:10px 10px auto; } .bs-bg i{ display:block; height:44px; border-radius:12px; background:#18181b; border:1px solid var(--w-border); }
+  .bs-ph .tabbar{ position:absolute; left:0; right:0; bottom:0; max-width:none; }
+</style>
+</head>
+<body>
+<div id="bs"></div>
+<script>window.BS_LOOK = 'ring'</script>
+<script src="../w-bar/_wbar.js"></script>
+<script src="../w-barst/_bs.js"></script>
+</body>
+</html>

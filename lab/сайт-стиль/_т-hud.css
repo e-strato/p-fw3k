@@ -1,0 +1,32 @@
+/* Набор 5 · HUD — как клиент игры: чёрно-бирюзовый, тонкие светящиеся линии, развёртка по фону, прямые углы, свечение у активного.
+   Заголовки и цифры — Tektur (узкий), текст — Inter */
+body.t-hud {
+  --s-page: #03080a; --s-bg: #050c0f; --s-panel: #08151a; --s-panel-2: #0d2128; --s-line: #1a3a44; --s-line-2: #12292f;
+  --s-text: #e4fbff; --s-muted: #7fa6ae; --s-accent: #3ee6f2; --s-accent-soft: #3ee6f21f; --s-on-accent: #021014;
+  --s-live: #ff4d6d; --s-coin: #ffd166; --s-win: #3ef2a0; --s-lose: #ff7a7a; --s-track: #10282f; --s-shadow: #000000;
+  --s-team-a: #3ee6f2; --s-team-b: #ff9f43; --s-hd-bg: #040a0d; --s-hd-h: 58px;
+  --s-medal: linear-gradient(145deg, #d6fcff, #5ee6f2 50%, #0b4752); --s-medal-ink: #021014;
+  --s-gold: #ffd166; --s-silver: #c9e9ee; --s-bronze: #e3a07a;
+  --s-font: 'Inter', system-ui, sans-serif; --s-font-h: 'Tektur', 'Inter', sans-serif; --s-font-num: 'Tektur', 'Inter', sans-serif; --s-fs: 14px;
+  --s-r: 2px; --s-r-s: 2px; --s-r-btn: 2px; --s-r-pill: 2px; --s-pad: 18px; --s-gap: 14px; --s-row-pad: 10px;
+  --s-h3: 15px; --s-h3-w: 600; --s-h1: 40px; --s-h1-w: 700; --s-track-h1: 0; --s-nick-w: 700; --s-num-w: 600; --s-score-w: 600; --s-team-w: 600;
+  --s-panel-edge: inset 0 0 0 1px #1a3a44, inset 0 1px 0 #3ee6f255;
+  --s-btn-glow: 0 0 0 1px #3ee6f2, 0 0 18px -2px #3ee6f2aa;
+}
+.t-hud .ap { font-stretch: 100%; background: repeating-linear-gradient(0deg, #ffffff05 0 1px, transparent 1px 4px), radial-gradient(60% 50% at 50% 0%, #0b4752aa, transparent 70%), var(--s-bg); }
+.t-hud .a-ph h3, .t-hud .a-h1, .t-hud .a-plh__nick, .t-hud .a-feat__team b, .t-hud .a-brand { font-stretch: 85%; }
+.t-hud .a-nav a[aria-current] { background: none; color: var(--s-accent); box-shadow: inset 0 -2px 0 var(--s-accent); border-radius: 0; text-shadow: 0 0 12px #3ee6f2aa; }
+.t-hud .a-brand__mark { background: none; color: var(--s-accent); box-shadow: inset 0 0 0 1px var(--s-accent), 0 0 14px -2px #3ee6f2aa; }
+.t-hud .a-panel { background: linear-gradient(180deg, #0b1c22, #071216); }
+.t-hud .a-feat { background: radial-gradient(60% 100% at 50% 0%, #3ee6f222, transparent 70%), linear-gradient(180deg, #0b1c22, #071216); }
+.t-hud .a-feat__score b, .t-hud .a-nums b, .t-hud .a-tile b { text-shadow: 0 0 18px #3ee6f266; }
+.t-hud .a-chips button[aria-pressed='true'] { background: var(--s-accent); color: var(--s-on-accent); }
+.t-hud .a-btn { box-shadow: inset 0 0 0 1px var(--s-line); background: #0b1c22; }
+.t-hud .a-btn--pri { background: var(--s-accent); box-shadow: var(--s-btn-glow); }
+.t-hud .a-opt.is-on, .t-hud .a-teamt.is-on, .t-hud .a-qq__opts .is-on, .t-hud .a-vote button[aria-pressed='true'] { box-shadow: inset 0 0 0 1px var(--s-accent), 0 0 18px -6px #3ee6f2aa; }
+.t-hud .a-steps .is-now { box-shadow: inset 0 0 0 1px #3ee6f255; }
+.t-hud .a-bar i, .t-hud .a-acc__seg i.is-on { box-shadow: 0 0 10px #3ee6f2aa; }
+.t-hud .a-plh { background: radial-gradient(40% 120% at 12% 50%, #3ee6f233, transparent 70%), linear-gradient(180deg, #0b1c22, #071216); }
+.t-hud .a-road::before { background: linear-gradient(90deg, #1a3a44, var(--s-accent)); box-shadow: 0 0 10px #3ee6f2aa; }
+.t-hud .a-chest { background: radial-gradient(50% 60% at 50% 60%, #3ee6f233, transparent 70%), linear-gradient(180deg, #0b1c22, #071216); }
+.t-hud .a-info__h { background: #0d2128; color: var(--s-accent); }

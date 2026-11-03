@@ -1,0 +1,26 @@
+/* Виджет турнира, заход 6 (созвон 23.10, решение 34) — поверх ../widget-tournament-5/_t5.css и ../widgets-unified/_type.css, _cons.css.
+   Меньше коробок: тир без заливки, группы и сетки — текстовыми табами; лого у тега, мельче; статус «Идёт» словом, не красным. */
+/* Статус в шапке турнира — словом, цветом текста (не красный, без точки) */
+.t6 .t6-st{ font-weight:500; color:var(--w-fg); }
+/* Тир — без заливки, только цвет текста по тиру, приглушённо */
+.t6 .t5-tier, .t6 .t5-tier--fill, .t6 .t5-tier.t5-tier--s{ height:auto; padding:0; background:none; font:var(--t-tag); color:color-mix(in srgb, var(--tc, var(--w-muted-fg)) 60%, var(--w-muted-fg)); }
+/* Лого у тега, мельче (было 16 / 20 и отступ 8) */
+.t6 .t5-tm, .t6 .t5-fm__t, .t6 .t5-pt{ gap:4px; }
+.t6 .t5-tbl .t5-lg, .t6 .t5-fm .t5-lg, .t6 .t5-pt .t5-lg{ width:14px; height:14px; }
+.t6 .t5-bx .t5-lg--20{ width:16px; height:16px; }
+/* Значок игры в строке списка — 16, как .u-game в остальных виджетах */
+.t6 .t5-game{ width:16px; height:16px; }
+/* v3–v6: колонка дат — шире под «до 05.11» / «18 окт»; v6 — полоска прошедшего */
+.t6 .t5-when .u-when, .t6 .u-when{ width:auto; min-width:44px; }
+.t6-bar{ display:block; width:40px; height:3px; margin:6px 0; border-radius:2px; background:var(--w-muted); overflow:hidden; } .t6-bar i{ display:block; height:100%; background:var(--w-muted-fg); }
+/* v9: листок календаря — крупное число, месяц под ним */
+.t6 .t6-cal{ align-items:center; min-width:32px; }
+.t6 .t6-cal b{ font:var(--t-big, 700 18px/22px var(--w-font)); }
+/* v10: начало и конец одним шрифтом — начало серым, конец белым */
+.t6 .t6-pair span, .t6 .t6-pair b{ font:var(--t-num-s, 600 12px/16px var(--w-font)); }
+.t6 .t6-pair span{ color:var(--w-muted-fg); }
+.t6 .t6-pair--mono span, .t6 .t6-pair--mono b{ font-family:Inter, system-ui, sans-serif; font-feature-settings:'tnum' 1; font-variant-numeric:tabular-nums; font-size:11px; line-height:16px; } /* v11 (дирижёр 23.10: размер 11): обычный Inter, цифры одной ширины; ноль без точки и черты */
+/* Сетка (дирижёр 23.10): текущий матч — прижат к низу виджета, сетка — по центру свободного места между сегментом и матчем */
+.t6 .t5-bd:has(> .t5-bk){ display:flex; flex-direction:column; min-height:100%; box-sizing:border-box; }
+.t6 .t5-bd > .t5-bk{ margin-block:auto; }
+.t6 .t5-bd > .t5-fm{ flex:none; }

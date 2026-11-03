@@ -1,0 +1,22 @@
+/* Лаба «Шапка портала», второй заход: только то, чего нет у нынешней шапки сайта (.ui-header в styles.css). Цвета — токены. */
+.hd .ui-header__game .btn { gap: 6px; }
+.hd-gdot { width: 7px; height: 7px; border-radius: 50%; background: var(--gc); }
+.hd-gdot--cs { --gc: var(--c-game-cs); } .hd-gdot--dota { --gc: var(--c-game-dota); } .hd-gdot--lol { --gc: var(--c-game-lol); }
+.hd-gdot--val { --gc: var(--c-game-val); } .hd-gdot--mlbb { --gc: var(--c-game-mlbb); }
+.hd .ui-header__game .btn[aria-pressed='true'] .hd-gdot { background: var(--c-on-accent); }
+/* Вкладка «Фэнтези» в меню — отделена чертой, цвет акцента */
+.hd-sep { align-self: stretch; width: 1px; margin: 6px 4px; background: var(--c-ui-line); }
+.hd .hd-fan-tab { color: var(--c-accent); font-weight: 600; }
+.hd-right { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+.hd-right .ui-header__coins { margin-left: 0; }
+.hd-fan-btn[aria-pressed='true'] { box-shadow: 0 0 0 2px var(--c-ui-bg), 0 0 0 4px var(--c-accent); }
+/* Вторая строка — разделы фэнтези, когда вход открыт */
+.hd .hd-sub { align-items: center; background: color-mix(in srgb, var(--c-accent) 14%, var(--c-ui-chip)); }
+.hd-sub__t { padding: 0 10px 0 8px; color: var(--c-accent); font-size: var(--fs-app-sm); font-weight: 700; }
+/* v6: меню в первой строке, без своего отступа снизу */
+.hd--v6 .ui-header__top .ui-header__nav, .hd--v7 .ui-header__top .ui-header__nav { margin: 0 0 0 12px; }
+.hd-games-row { width: max-content; margin-bottom: 16px; }
+/* v7: тонкая полоса игр над шапкой */
+.hd--v7 .ui-header__in { padding-top: 0; }
+.hd-rail { margin: 0 calc(var(--gutter) * -1) 16px; padding: 6px var(--gutter); border-bottom: 1px solid var(--c-ui-line); }
+.hd-rail .hd-rail__g { padding: 0; background: none; }

@@ -1,0 +1,85 @@
+/* Лаба w-drill v3 — «Разбор» с нуля (_rz.js). Стиль итоговых виджетов (_w.css, _type.css); высота фиксированная, скролл внутри */
+.rz-host{ display:block !important; }
+.w.rz{ width:100%; display:flex; flex-direction:column; height:560px; }
+.rz-hd{ gap:8px; flex:none; }
+.w .rz-back{ display:grid; place-items:center; width:28px; height:28px; margin-left:-8px; border-radius:6px; color:var(--w-muted-fg); }
+.w .rz-back:hover{ background:var(--w-muted); color:var(--w-fg); }
+.rz-live{ display:inline-flex; align-items:center; gap:6px; font:var(--t-sub); color:var(--w-muted-fg); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.rz-live i{ width:6px; height:6px; border-radius:50%; background:#e5484d; }
+/* вкладки — сегментом, как в «Игроках по позициям» */
+.rz-tabs{ flex:none; display:grid; grid-template-columns:repeat(4, 1fr); gap:2px; margin:12px 16px 4px; padding:2px; border-radius:var(--w-r-sm, 8px); background:var(--w-mid-bg, #18181b); }
+.w .rz-tabs button{ height:28px; border-radius:6px; text-align:center; font:var(--t-seg); color:var(--w-muted-fg); }
+.w .rz-tabs button:hover{ color:var(--w-fg); } .w .rz-tabs button.is-on{ background:var(--w-muted); color:var(--w-fg); }
+.rz-body{ flex:1; min-height:0; overflow:auto; overscroll-behavior:contain; scrollbar-width:thin; padding:8px 0 12px; }
+/* ссылка — без подложки: наведение — белый текст и подчёркивание у имени */
+.w .rz-a{ display:inline-flex; align-items:center; gap:6px; min-width:0; color:inherit; }
+.w .rz-a:hover > span, .w .rz-a:hover > small{ color:var(--w-fg); text-decoration:underline; text-underline-offset:3px; text-decoration-color:var(--w-ring); }
+.w .rz-a:hover img{ box-shadow:0 0 0 1px var(--w-fg); }
+.rz-hi{ width:32px; height:18px; border-radius:4px; object-fit:cover; flex:none; background:var(--w-muted); }
+.rz-hs{ width:16px; height:16px; border-radius:4px; object-fit:cover; }
+.rz-tl{ width:16px; height:16px; object-fit:contain; flex:none; }
+.up{ color:var(--w-up); } .dn{ color:#e5484d; }
+/* сводка и «быстрее всего растёт» */
+.rz-sum{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; padding:4px 16px 8px; }
+.rz-kv{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.rz-kv b{ font:var(--t-num); color:var(--w-fg); white-space:nowrap; } .rz-kv.up b{ color:var(--w-up); } .rz-kv.dn b{ color:#e5484d; }
+.rz-kv span{ font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.rz-kv.wide{ grid-column:span 2; }
+.rz-hot{ display:flex; align-items:center; gap:6px; margin:0 16px 4px; padding:8px 10px; border-radius:8px; background:color-mix(in srgb, var(--w-fg) 4%, transparent); font:var(--t-sub); color:var(--w-muted-fg); }
+.rz-hot b{ font-weight:500; color:var(--w-fg); min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.rz-dot{ width:6px; height:6px; border-radius:50%; background:var(--w-up); flex:none; box-shadow:0 0 0 3px color-mix(in srgb, var(--w-up) 25%, transparent); }
+/* вопрос: текст и объём, полоса долей, варианты с % и голосами */
+.rz-q{ padding:12px 16px; border-top:1px solid var(--w-border); }
+.rz-q:first-of-type{ border-top:0; }
+.rz-qh{ display:flex; align-items:baseline; gap:8px; font:var(--t-title); color:var(--w-fg); }
+.rz-qh span{ flex:1; min-width:0; } .rz-qh small{ font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; }
+.rz-qh small::after{ content:' голосов'; }
+.rz-bar{ display:flex; gap:2px; height:6px; margin:8px 0 6px; border-radius:3px; overflow:hidden; }
+.rz-bar i{ display:block; min-width:2px; background:#3f3f46; }
+.rz-bar i.c-a{ background:color-mix(in srgb, var(--w-up) 45%, #27272a); } .rz-bar i.c-b{ background:color-mix(in srgb, #e5484d 45%, #27272a); }
+.rz-bar i.is-lead.c-a{ background:var(--w-up); } .rz-bar i.is-lead.c-b{ background:#e5484d; } .rz-bar i.is-lead.c-n{ background:#d4d4d8; }
+.rz-qo{ display:flex; flex-wrap:wrap; justify-content:space-between; gap:4px 12px; }
+.rz-qo > span{ display:inline-flex; align-items:baseline; gap:6px; font:var(--t-cell); color:var(--w-muted-fg); }
+.rz-qo > span:last-child:not(:first-child){ flex-direction:row-reverse; } .rz-qo > span:nth-child(2):not(:last-child){ flex-direction:row; }
+.rz-qo > span b{ font:var(--t-num-s); color:var(--w-muted-fg); } .rz-qo > span.is-lead b{ color:var(--w-fg); }
+.rz-qo > span small{ font:var(--t-sub); color:#71717a; }
+.rz-qo > span.is-lead .rz-a, .rz-qo > span.is-lead > span{ color:var(--w-fg); }
+.rz-qo .rz-a, .rz-qo > span > span{ align-self:center; }
+/* выбор: две пятёрки героев с лого команд */
+.rz-pick{ display:flex; align-items:center; gap:3px; padding:4px 16px 10px; }
+.rz-pick > i{ flex:1; }
+.rz-pt{ display:grid; place-items:center; width:18px; flex:none; }
+.w .rz-pk{ position:relative; flex:none; width:28px; height:28px; border-radius:6px; overflow:hidden; opacity:.45; transition:opacity .15s; }
+.w .rz-pk img{ width:100%; height:100%; object-fit:cover; display:block; }
+.w .rz-pk:hover{ opacity:.85; } .w .rz-pk.is-on{ opacity:1; box-shadow:inset 0 0 0 2px var(--w-fg); }
+.w .rz-pk.is-on img{ border-radius:6px; }
+/* карточка игрока / героя */
+.rz-card{ display:flex; align-items:center; gap:12px; margin:0 16px; padding:12px; border-radius:10px; background:color-mix(in srgb, var(--w-fg) 4%, transparent); }
+.rz-av{ width:44px; height:44px; border-radius:8px; object-fit:cover; flex:none; background:var(--w-muted); }
+.rz-hw{ width:72px; height:40px; border-radius:6px; object-fit:cover; flex:none; }
+.rz-ct{ display:flex; flex-direction:column; gap:4px; flex:1; min-width:0; }
+.rz-ct > b{ font:600 15px/18px var(--w-font); color:var(--w-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.rz-ct > span{ display:flex; align-items:center; gap:4px; font:var(--t-sub); color:var(--w-muted-fg); min-width:0; }
+.rz-ct > span .rz-a span{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.w .rz-hero{ flex-direction:column; gap:3px; flex:none; }
+.rz-hb{ width:56px; height:32px; border-radius:5px; object-fit:cover; }
+.rz-hero small{ font:var(--t-sub); color:var(--w-muted-fg); max-width:64px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* разделы */
+.rz-sec{ padding:12px 16px 0; }
+.rz-sh{ display:flex; align-items:center; gap:8px; height:24px; margin-bottom:6px; font:var(--t-label); color:var(--w-muted-fg); }
+.rz-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:10px 8px; }
+.rz-items{ display:flex; flex-wrap:wrap; gap:4px; margin-top:10px; }
+.rz-items img{ width:30px; height:22px; border-radius:3px; object-fit:cover; background:var(--w-muted); }
+.rz-list{ margin-top:8px; }
+.rz-li{ display:flex; align-items:center; gap:8px; height:36px; border-top:1px solid var(--w-border); font:var(--t-cell); color:var(--w-fg); }
+.rz-li > .rz-a:first-child, .rz-li > span:not([class]){ flex:1; min-width:0; }
+.rz-li > span:not([class]), .rz-li .rz-a > span{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.rz-li > .rz-a + .rz-a > span{ flex:1; } .rz-li > .rz-a:first-child + .rz-a:has(span){ flex:1; min-width:0; }
+.rz-li small{ font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; }
+.rz-li b{ min-width:40px; text-align:right; font:var(--t-num-s); color:var(--w-fg); } .rz-li b.up{ color:var(--w-up); } .rz-li b.dn{ color:#e5484d; }
+.rz-li--big{ height:40px; border-top:0; }
+.rz-none{ padding:8px 0; font:var(--t-sub); color:var(--w-muted-fg); }
+/* команда — две команды сегментом */
+.rz-seg2{ display:grid; grid-template-columns:1fr 1fr; gap:2px; margin:4px 16px 0; padding:2px; border-radius:8px; background:var(--w-mid-bg, #18181b); }
+.w .rz-seg2 button{ display:flex; align-items:center; justify-content:center; gap:6px; height:32px; border-radius:6px; font:var(--t-seg); color:var(--w-muted-fg); }
+.w .rz-seg2 button.is-on{ background:var(--w-muted); color:var(--w-fg); }

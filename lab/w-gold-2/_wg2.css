@@ -1,0 +1,200 @@
+/* w-gold-2 v6+ — график «Перевес по золоту», визуальные варианты (_wg2.js). Токены — widget-tournament/_w.css; мини-окно трансляции — w-gold/_wgold.css (.wg-pip). */
+.g2{ --up:#22c55e; --dn:#ef4444; position:relative; padding:12px 12px 4px; background:var(--w-bg); border:1px solid var(--w-border); border-radius:var(--w-r);
+  font:13px/1.35 var(--w-font); color:var(--w-fg); }
+.g2 .num{ font-variant-numeric:tabular-nums; } .g2 .up{ color:var(--up); } .g2 .dn{ color:var(--dn); } .g2 .mu{ color:var(--w-muted-fg); }
+/* шапка лежит поверх верха графика: слева текст, справа два значка */
+.g2-hd{ position:absolute; z-index:3; left:12px; right:12px; top:12px; display:flex; align-items:flex-start; gap:8px; pointer-events:none; }
+.g2-l{ flex:1; min-width:0; }
+.g2-ic{ display:flex; gap:2px; pointer-events:auto; }
+.g2-ic button{ width:30px; height:30px; display:grid; place-items:center; border:0; border-radius:8px; background:none; color:#52525b; cursor:pointer; }
+.g2-ic button:hover{ color:var(--w-fg); background:var(--w-muted); } .g2-ic button.on{ color:var(--w-muted-fg); }
+.g2-ic svg{ width:16px; height:16px; }
+.g2-cap{ font-size:12px; color:var(--w-muted-fg); }
+.g2-big{ font-size:28px; line-height:34px; font-weight:600; letter-spacing:-.02em; }
+.g2-sub{ display:flex; align-items:center; gap:6px; font-size:12px; color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; }
+.g2-sub img{ width:14px; height:14px; object-fit:contain; }
+
+.g2-plot{ position:relative; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; }
+.g2-plot svg{ display:block; width:100%; overflow:visible; }
+.g2-plot text{ font:11px var(--w-font); fill:#71717a; font-variant-numeric:tabular-nums; }
+.g2-plot .dm-n{ font-size:10px; font-weight:600; fill:var(--w-muted-fg); }
+.g2-dim{ opacity:.9; }
+.g2-tm{ position:absolute; left:10px; display:flex; align-items:center; gap:6px; font-size:11px; color:#71717a; pointer-events:none; }
+.g2-tm img{ width:14px; height:14px; object-fit:contain; opacity:.85; }
+/* живой край: точка с расходящимся кругом */
+.g2-end{ position:absolute; width:8px; height:8px; margin:-4px 0 0 -4px; border-radius:50%; background:var(--c); pointer-events:none; }
+.g2-end.is-live::after{ content:''; position:absolute; inset:-6px; border-radius:50%; border:2px solid var(--c); animation:g2p 1.6s ease-out infinite; }
+@keyframes g2p{ from{ transform:scale(.4); opacity:.9; } to{ transform:scale(1.6); opacity:0; } }
+/* «к текущему» / «вся карта» — круглая кнопка у правого низа графика */
+.g2-fab{ position:absolute; z-index:2; width:32px; height:32px; display:grid; place-items:center; border-radius:50%; border:1px solid var(--w-border);
+  background:#18181bee; color:var(--w-fg); cursor:pointer; box-shadow:0 6px 16px #0008; }
+.g2-fab svg{ width:16px; height:16px; }
+/* что рядом с пальцем — строкой иконок */
+.g2-near{ position:absolute; display:flex; align-items:center; gap:4px; height:30px; padding:0 4px; border-radius:8px; background:#18181bf2; border:1px solid var(--w-border); pointer-events:none; }
+.g2-near img{ width:20px; height:20px; border-radius:4px; box-shadow:0 2px 0 var(--up); } .g2-near img.b{ box-shadow:0 2px 0 var(--dn); }
+.g2-near small{ color:var(--w-muted-fg); font-size:11px; padding:0 4px; }
+.g2-tw{ width:10px; height:14px; border-radius:2px; background:var(--up); } .g2-tw.b{ background:var(--dn); } .g2-rs{ width:12px; height:12px; border-radius:50%; background:#eab308; }
+/* список смертей драки */
+.g2-pop{ position:absolute; z-index:5; bottom:-6px; transform:translateY(100%); width:240px; padding:8px 0; border-radius:10px; background:#18181b; border:1px solid var(--w-border); box-shadow:0 12px 32px #000a; }
+.g2-pop b{ display:block; padding:0 12px 6px; font-weight:500; }
+.g2-pop .r{ display:flex; align-items:center; gap:10px; padding:3px 12px; border-left:3px solid transparent; }
+.g2-pop .r.a{ border-color:var(--up); } .g2-pop .r.b{ border-color:var(--dn); }
+.g2-pop .r img{ width:22px; height:22px; border-radius:4px; } .g2-pop .r small{ color:var(--w-muted-fg); width:38px; }
+.dm{ cursor:pointer; } .dm.on rect, .dm.on circle:last-of-type{ stroke-width:2; }
+
+/* tv — строка-легенда сверху, метки на шкале, перекрестие */
+.g2-leg{ display:flex; align-items:center; gap:10px; height:30px; font-size:13px; white-space:nowrap; }
+.g2-legt{ display:flex; align-items:center; gap:6px; } .g2-legt img{ width:16px; height:16px; object-fit:contain; } .g2-legt i{ color:#52525b; font-style:normal; }
+.g2-tag{ position:absolute; transform:translateY(-50%); padding:2px 6px; border-radius:4px; font-size:11px; font-weight:600; color:#fff; pointer-events:none; }
+.g2-tag--n{ z-index:1; background:#3f3f46; }
+.g2-xb{ position:absolute; transform:translateX(-50%); padding:1px 6px; border-radius:4px; background:#3f3f46; font-size:11px; pointer-events:none; }
+
+/* pm — пузырь у точки под пальцем */
+.g2-bub{ position:absolute; transform:translate(-50%,calc(-100% - 12px)); display:flex; gap:8px; padding:4px 8px; border-radius:8px; background:#fafafa; color:#09090b; font-size:12px; font-weight:500; white-space:nowrap; pointer-events:none; box-shadow:0 6px 16px #0008; }
+.g2-bub .up{ color:#15803d; } .g2-bub .dn{ color:#b91c1c; }
+.g2--pm .g2-big{ display:flex; align-items:center; gap:8px; font-size:24px; } .g2--pm .g2-big img{ width:24px; height:24px; object-fit:contain; } .g2--pm .g2-big span{ font-weight:500; }
+/* на странице матча (v9+): график внутри окна вкладок — без своей рамки, как .gw в gs-match-2 (_dr3.css, _hd2.css) */
+.d3 .g2, .bw-page .g2{ border:0 !important; border-radius:0 !important; background:none !important; }
+.g2-empty{ display:grid; place-items:center; height:100%; color:var(--w-muted-fg); }
+/* o.big (v13+): команды крупнее — лого 24, полное имя, плашка тоном своей стороны (сверху Radiant, снизу Dire) */
+.g2-tb{ position:absolute; left:8px; z-index:1; display:flex; align-items:center; gap:8px; height:36px; padding:0 12px 0 6px; border-radius:10px;
+  font-size:14px; font-weight:600; pointer-events:none; backdrop-filter:blur(4px); }
+.g2-tb img{ width:24px; height:24px; object-fit:contain; }
+.g2-tb.a{ background:rgba(34,197,94,.12); box-shadow:inset 0 0 0 1px rgba(34,197,94,.35); }
+.g2-tb.b{ background:rgba(239,68,68,.12); box-shadow:inset 0 0 0 1px rgba(239,68,68,.35); }
+.g2-leg--big{ font-size:14px; font-weight:600; } .g2-leg--big .g2-legt img{ width:22px; height:22px; }
+.g2-sub--big{ font-size:13px; color:var(--w-fg); } .g2-sub--big img{ width:20px; height:20px; }
+/* o.out (v15+): плашки команд вне поля графика — Radiant над ним, Dire под осью времени */
+.g2-tb--out{ left:0; height:34px; }
+/* v17 (mx): строки команд снаружи; у ведущей — «ведёт» и крупный перевес её цветом, у другой — тише */
+.g2-row{ left:0; padding-right:12px; transition:background .3s, opacity .3s; }
+.g2-row:not(.is-lead){ background:none; box-shadow:none; opacity:.7; font-weight:500; }
+.g2-row em{ margin-left:auto; font-style:normal; font-size:12px; font-weight:500; color:var(--w-muted-fg); }
+.g2-row b{ font-size:22px; letter-spacing:-.02em; } .g2-row.a b{ color:var(--up); } .g2-row.b b{ color:var(--dn); }
+.g2-cap--mx{ line-height:30px; }
+/* v18 (o.neat): строки команд снаружи — одинаковые, без плашек; ведущая — имя ярче + пилюля «ведёт · 6.4k» её цветом, вторая — приглушённая */
+.g2-r2{ position:absolute; left:4px; display:flex; align-items:center; gap:8px; height:34px; font-size:14px; font-weight:500; color:var(--w-muted-fg); pointer-events:none; }
+.g2-r2 img{ width:22px; height:22px; object-fit:contain; opacity:.6; transition:opacity .3s; }
+.g2-r2.is-lead{ color:var(--w-fg); font-weight:600; } .g2-r2.is-lead img{ opacity:1; }
+.g2-r2 b{ height:24px; display:inline-flex; align-items:center; padding:0 8px; border-radius:6px; font-size:13px; font-weight:600; }
+.g2-r2.a b{ color:var(--up); background:rgba(34,197,94,.14); } .g2-r2.b b{ color:var(--dn); background:rgba(239,68,68,.14); }
+/* v19+ (o.lead): плашка ведущей — без слова «ведёт» */
+.g2-r2 b.g2-ld{ background:none; padding:0; height:auto; }
+/* solid — залитая цветом стороны */
+.g2-r2 b.g2-ld--solid{ height:26px; padding:0 10px; border-radius:7px; font-size:14px; font-weight:700; color:#04130a; }
+.g2-r2.a b.g2-ld--solid{ background:var(--up); box-shadow:0 0 16px rgba(34,197,94,.45); } .g2-r2.b b.g2-ld--solid{ background:var(--dn); color:#fff; box-shadow:0 0 16px rgba(239,68,68,.45); }
+/* arrow — крупная стрелка и число цветом */
+.g2-r2 b.g2-ld--arrow{ font-size:20px; font-weight:700; letter-spacing:-.02em; }
+/* ring — лого в кольце, имя и число цветом стороны, лёгкое свечение */
+.g2-r2--ring.is-lead img{ border-radius:50%; padding:2px; box-shadow:0 0 0 2px var(--c), 0 0 14px var(--c); width:26px; height:26px; }
+.g2-r2--ring.a{ --c:var(--up); } .g2-r2--ring.b{ --c:var(--dn); }
+.g2-r2--ring.is-lead span, .g2-r2 b.g2-ld--ring{ color:var(--c); } .g2-r2 b.g2-ld--ring{ font-size:15px; font-weight:700; }
+/* bar — полоска размера перевеса: полная — максимум перевеса за карту */
+.g2-ld--bar{ display:inline-block; width:72px; height:8px; border-radius:4px; background:#27272a; overflow:hidden; }
+.g2-ld--bar > i{ display:block; height:100%; border-radius:4px; }
+.g2-r2.a .g2-ld--bar > i{ background:var(--up); } .g2-r2.b .g2-ld--bar > i{ background:var(--dn); }
+.g2-r2 b.g2-ld--plain{ font-size:15px; font-weight:700; } .g2-r2.a b.g2-ld--plain{ color:var(--up); } .g2-r2.b b.g2-ld--plain{ color:var(--dn); }
+
+/* ——— v23 (созвон 02.11 §1.5): управление как у карты, минуты контрастнее, ромбы долями по фрагам с числом внутри, пунктир от ромба к линии ——— */
+.g2-plot svg text.g2-tx{ fill:#d4d4d8; }
+.g2-zc{ position:absolute; z-index:3; display:flex; flex-direction:column; border-radius:10px; overflow:hidden; background:#18181bdd; box-shadow:0 0 0 1px #ffffff1a, 0 6px 16px #0008; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); }
+.g2-zc button{ display:grid; place-items:center; width:30px; height:30px; border:0; background:none; color:#fafafa; font:500 18px/1 var(--w-font, system-ui); cursor:pointer; }
+.g2-zc button + button{ border-top:1px solid #ffffff14; }
+.g2-zc button svg{ width:14px; height:14px; }
+.g2-zc button:hover:not(:disabled){ background:#ffffff14; }
+.g2-zc button:disabled{ color:#52525b; cursor:default; }
+.g2-plot.is-pan{ cursor:grabbing; }
+.g2-plot svg .dm2 .dm-st{ stroke:#a1a1aa; stroke-width:1; stroke-dasharray:2 3; opacity:.55; }
+.g2-plot svg .dm2 .dm-pt{ stroke:#09090b; stroke-width:1.5; opacity:.9; }
+.g2-plot svg .dm2:hover .dm-st, .g2-plot svg .dm2.on .dm-st{ opacity:1; stroke:#e4e4e7; }
+.g2-plot svg .dm2:hover .dm-pt, .g2-plot svg .dm2.on .dm-pt{ r:3.6; }
+.g2-plot svg text.dm-n2{ fill:#fff; font:700 9px/1 var(--w-font, system-ui); paint-order:stroke; stroke:#0009; stroke-width:2px; pointer-events:none; }
+
+/* v24 — «+ / − / вернуть» в правом верхнем углу, в группе кнопок графика; пунктир от ромба к линии — прозрачнее, ярче при наведении */
+.g2-ic .g2-zt{ display:inline-flex; gap:inherit; margin-right:6px; padding-right:6px; border-right:1px solid #ffffff14; }
+.g2-ic .g2-zt button{ font:500 16px/1 var(--w-font, system-ui); }
+.g2-ic .g2-zt button svg{ width:14px; height:14px; }
+.g2-ic .g2-zt button:disabled{ opacity:.35; cursor:default; }
+.g2--stl .g2-plot svg .dm2 .dm-st{ opacity:.22; }
+.g2--stl .g2-plot svg .dm2 .dm-pt{ opacity:.45; }
+.g2--stl .g2-plot svg .dm2:hover .dm-st, .g2--stl .g2-plot svg .dm2.on .dm-st{ opacity:.85; }
+.g2--stl .g2-plot svg .dm2:hover .dm-pt, .g2--stl .g2-plot svg .dm2.on .dm-pt{ opacity:1; }
+
+/* ——— v26: без кнопки трансляции; точка на линии — крупнее; подсказка у точки — счёт драки, сдвиг золота, кто кого ——— */
+.g2--dot .g2-plot svg .dm2 .dm-pt{ r:4px; stroke-width:2; opacity:.85; }
+.g2--dot .g2-plot svg .dm2:hover .dm-pt, .g2--dot .g2-plot svg .dm2.on .dm-pt{ r:5.5px; opacity:1; }
+.g2-pop.g2-pop--rich{ bottom:auto; transform:none; width:260px; padding:10px 0 8px; pointer-events:none; }
+.g2-ph{ display:flex; justify-content:space-between; padding:0 12px 6px; font:500 12px/16px var(--w-font); color:var(--w-muted-fg); } .g2-ph span:last-child{ color:var(--w-fg); font-weight:600; }
+.g2-psc{ display:flex; align-items:center; gap:6px; margin:0 12px 8px; padding-bottom:8px; border-bottom:1px solid var(--w-border); font:600 14px/1 var(--w-font); }
+.g2-psc img{ width:18px; height:18px; object-fit:contain; } .g2-psc i{ font-style:normal; color:var(--w-muted-fg); }
+.g2-psc span{ margin-left:auto; font:500 11px/1 var(--w-font); } .g2-psc .up, .g2-pk .up{ color:var(--up); } .g2-psc .dn{ color:var(--dn); }
+.g2-pk{ display:flex; align-items:center; gap:6px; padding:3px 12px; border-left:3px solid transparent; font:400 12px/16px var(--w-font); }
+.g2-pk.a{ border-color:var(--up); } .g2-pk.b{ border-color:var(--dn); }
+.g2-pk small{ width:34px; color:var(--w-muted-fg); font-size:11px; }
+.g2-pk img{ width:22px; height:13px; border-radius:2px; object-fit:cover; }
+.g2-pk span{ max-width:64px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .g2-pk span.v{ color:var(--w-muted-fg); }
+.g2-pk i{ font-style:normal; font-size:10px; color:#71717a; }
+
+/* v27 — точки на линии (куда ведёт пунктир) ещё крупнее; линия чуть тоньше, как на Polymarket */
+.g2--dot2 .g2-plot svg .dm2 .dm-pt{ r:5.5px; stroke-width:2.2; opacity:.9; }
+.g2--dot2 .g2-plot svg .dm2:hover .dm-pt, .g2--dot2 .g2-plot svg .dm2.on .dm-pt{ r:7px; opacity:1; }
+
+/* ——— v28: подсказка драки — в стиле наших виджетов (.w): карточка, шапка, счёт строкой, плотный список через тонкие линии ——— */
+.g2-pop.g2-tip{ bottom:auto; transform:none; width:272px; padding:0; overflow:hidden; border-radius:12px; background:var(--w-bg, #09090b); border:1px solid var(--w-border); box-shadow:0 16px 40px #000c; pointer-events:none; font-family:var(--w-font); }
+.g2-tip__hd{ display:flex; align-items:center; gap:8px; height:36px; padding:0 12px; border-bottom:1px solid var(--w-border); }
+.g2-tip__hd b{ font:var(--t-title, 600 14px/20px var(--w-font)); color:var(--w-fg); padding:0; }
+.g2-tip__hd span{ font:500 11px/1 ui-monospace, "SF Mono", Menlo, monospace; color:var(--w-muted-fg); }
+.g2-tip__hd em{ margin-left:auto; height:20px; padding:0 6px; border-radius:5px; font:600 11px/20px var(--w-font); font-style:normal; background:color-mix(in srgb, currentColor 14%, transparent); }
+.g2-tip .up{ color:var(--up); } .g2-tip .dn{ color:var(--dn); }
+.g2-tip__sc{ display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:10px; height:40px; padding:0 12px; border-bottom:1px solid var(--w-border); }
+.g2-tip__sc .t{ display:flex; align-items:center; gap:6px; min-width:0; font:500 12px/1 var(--w-font); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; }
+.g2-tip__sc .t.r{ justify-content:flex-end; } .g2-tip__sc .t.is-w{ color:var(--w-fg); }
+.g2-tip__sc img{ width:18px; height:18px; object-fit:contain; flex:none; }
+.g2-tip__sc b{ display:flex; gap:4px; font:700 18px/1 var(--w-font); color:var(--w-muted-fg); } .g2-tip__sc b i{ font-style:normal; }
+.g2-tip__ls{ padding:2px 0; }
+.g2-tip__r{ position:relative; display:grid; grid-template-columns:34px minmax(0, 1fr) 10px minmax(0, 1fr); align-items:center; gap:6px; height:30px; padding:0 12px; color:#71717a; }
+.g2-tip__r + .g2-tip__r::before{ content:''; position:absolute; left:12px; right:12px; top:0; height:1px; background:var(--w-border); }
+.g2-tip__r small{ font:500 10px/1 ui-monospace, "SF Mono", Menlo, monospace; color:var(--w-muted-fg); }
+.g2-tip__r .k, .g2-tip__r .v{ display:flex; align-items:center; gap:5px; min-width:0; font:500 12px/1 var(--w-font); }
+.g2-tip__r .k span{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.g2-tip__r .v{ color:var(--w-muted-fg); } .g2-tip__r .v span{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.g2-tip__r img{ width:24px; height:14px; border-radius:3px; object-fit:cover; flex:none; }
+.g2-tip__r .v img{ filter:grayscale(1) brightness(.7); }
+.g2-tip__sc b, .g2-tip__hd b{ padding:0; }
+
+/* ——— v29–v31: ещё три вида подсказки драки ——— */
+.g2-tip__hd .sc{ display:inline-flex; align-items:center; gap:3px; margin-left:4px; font:700 13px/1 var(--w-font); color:var(--w-muted-fg); } .g2-tip__hd .sc img{ width:14px; height:14px; object-fit:contain; } .g2-tip__hd .sc i{ font-style:normal; }
+/* v29 line — плитка пар иконок */
+.g2-tip--line{ width:240px; }
+.g2-tip__grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:4px; padding:8px 12px 10px; }
+.g2-tip__grid .p{ display:flex; align-items:center; gap:4px; height:26px; padding:0 6px; border-radius:6px; background:color-mix(in srgb, currentColor 10%, transparent); }
+.g2-tip__grid .p img{ width:28px; height:16px; border-radius:3px; object-fit:cover; } .g2-tip__grid .p img.v{ filter:grayscale(1) brightness(.7); } .g2-tip__grid .p svg{ color:#a1a1aa; flex:none; }
+/* v30 cols — две колонки по командам */
+.g2-tip__cols{ display:grid; grid-template-columns:1fr 1fr; }
+.g2-tip__cols .c + .c{ border-left:1px solid var(--w-border); }
+.g2-tip__cols .ch{ display:flex; align-items:center; gap:6px; height:32px; padding:0 10px; border-bottom:1px solid var(--w-border); font:500 12px/1 var(--w-font); color:var(--w-fg); }
+.g2-tip__cols .ch img{ width:16px; height:16px; object-fit:contain; } .g2-tip__cols .ch b{ margin-left:auto; padding:0; font:700 14px/1 var(--w-font); }
+.g2-tip__cols .cr{ display:flex; align-items:center; gap:6px; height:28px; padding:0 10px; font:500 12px/1 var(--w-font); color:var(--w-muted-fg); }
+.g2-tip__cols .cr img{ width:24px; height:14px; border-radius:3px; object-fit:cover; filter:grayscale(1) brightness(.75); flex:none; }
+.g2-tip__cols .cr span{ flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--w-fg); }
+.g2-tip__cols .cr small{ font:500 10px/1 ui-monospace, "SF Mono", Menlo, monospace; } .g2-tip__cols .cr.none{ font-size:11px; }
+.g2-tip__ft{ padding:6px 12px 8px; border-top:1px solid var(--w-border); font:var(--t-sub); color:var(--w-muted-fg); }
+/* v31 feed — мини-график золота и лента */
+.g2-tip__sp{ display:block; width:calc(100% - 24px); height:36px; margin:8px 12px 2px; }
+.g2-tip__sp line{ stroke:#3f3f46; stroke-width:1; } .g2-tip__sp polyline{ fill:none; stroke:#e4e4e7; stroke-width:1.6; stroke-linejoin:round; vector-effect:non-scaling-stroke; }
+.g2-tip__fd{ padding:4px 0 6px; }
+.g2-tip__fd .fr{ display:flex; align-items:center; gap:7px; height:26px; padding:0 12px; font:400 12px/1 var(--w-font); color:var(--w-muted-fg); }
+.g2-tip__fd .fr i{ width:6px; height:6px; border-radius:50%; background:currentColor; flex:none; }
+.g2-tip__fd .fr small{ font:500 10px/1 ui-monospace, "SF Mono", Menlo, monospace; }
+.g2-tip__fd .fr span{ flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .g2-tip__fd .fr b{ padding:0; display:inline; font-weight:600; color:var(--w-fg); } .g2-tip__fd .fr b.v{ color:var(--w-muted-fg); font-weight:500; }
+.g2-tip__fd .fr img{ width:24px; height:14px; border-radius:3px; object-fit:cover; filter:grayscale(1) brightness(.75); }
+
+/* v34 — смерть иконкой: череп, больше одной — «×2» */
+.g2-tip__cols .cr .g2-dth{ flex:none; width:auto; height:auto; background:none; display:inline-flex; align-items:center; gap:2px; color:#e5484d; } .g2-tip__cols .cr .g2-dth em{ font:600 11px/1 var(--w-font); font-style:normal; }
+.g2-tip__cols .cr .g2-dth .g2-skl{ display:block; width:13px; height:13px; padding:0; flex:none; background:currentColor; -webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M8%201.5c-3.3%200-5.5%202.3-5.5%205.2%200%201.7.8%203%202%203.8v2.2c0%20.5.4.8.8.8h.9v-1.6h1.1v1.6h1.4v-1.6h1.1v1.6h.9c.4%200%20.8-.3.8-.8v-2.2c1.2-.8%202-2.1%202-3.8%200-2.9-2.2-5.2-5.5-5.2Zm-2.3%205.2a1.3%201.3%200%201%201%200%202.6%201.3%201.3%200%200%201%200-2.6Zm4.6%200a1.3%201.3%200%201%201%200%202.6%201.3%201.3%200%200%201%200-2.6Z%22/%3E%3C/svg%3E") center/contain no-repeat; mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M8%201.5c-3.3%200-5.5%202.3-5.5%205.2%200%201.7.8%203%202%203.8v2.2c0%20.5.4.8.8.8h.9v-1.6h1.1v1.6h1.4v-1.6h1.1v1.6h.9c.4%200%20.8-.3.8-.8v-2.2c1.2-.8%202-2.1%202-3.8%200-2.9-2.2-5.2-5.5-5.2Zm-2.3%205.2a1.3%201.3%200%201%201%200%202.6%201.3%201.3%200%200%201%200-2.6Zm4.6%200a1.3%201.3%200%201%201%200%202.6%201.3%201.3%200%200%201%200-2.6Z%22/%3E%3C/svg%3E") center/contain no-repeat; }
+/* v35–v37 — другая иконка смерти: крестик, надгробие, кинжал */
+.g2-tip__cols .cr .g2-dth .g2-skl--x{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M3.5%203.5l9%209M12.5%203.5l-9%209%22%20stroke%3D%22%23000%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M3.5%203.5l9%209M12.5%203.5l-9%209%22%20stroke%3D%22%23000%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22/%3E%3C/svg%3E"); }
+.g2-tip__cols .cr .g2-dth .g2-skl--grave{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cmask%20id%3D%22m%22%3E%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%23fff%22/%3E%3Cpath%20d%3D%22M8%205.2v5M6%207h4%22%20stroke%3D%22%23000%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22/%3E%3C/mask%3E%3Cg%20mask%3D%22url%28%23m%29%22%3E%3Cpath%20d%3D%22M4%2014.5V7a4%204%200%200%201%208%200v7.5Z%20M2.5%2014h11v1.5h-11Z%22/%3E%3C/g%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cmask%20id%3D%22m%22%3E%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%23fff%22/%3E%3Cpath%20d%3D%22M8%205.2v5M6%207h4%22%20stroke%3D%22%23000%22%20stroke-width%3D%221.4%22%20stroke-linecap%3D%22round%22/%3E%3C/mask%3E%3Cg%20mask%3D%22url%28%23m%29%22%3E%3Cpath%20d%3D%22M4%2014.5V7a4%204%200%200%201%208%200v7.5Z%20M2.5%2014h11v1.5h-11Z%22/%3E%3C/g%3E%3C/svg%3E"); }
+.g2-tip__cols .cr .g2-dth .g2-skl--dagger{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M11.8%201.5l2.7.1.1%202.7-6.3%206.3-2.8-2.8Z%22/%3E%3Cpath%20d%3D%22M3.6%208.2l4.2%204.2-1%201-1.3-1.3-2%202a1%201%200%200%201-1.4-1.4l2-2-1.5-1.5Z%22/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M11.8%201.5l2.7.1.1%202.7-6.3%206.3-2.8-2.8Z%22/%3E%3Cpath%20d%3D%22M3.6%208.2l4.2%204.2-1%201-1.3-1.3-2%202a1%201%200%200%201-1.4-1.4l2-2-1.5-1.5Z%22/%3E%3C/svg%3E"); }
+/* v38 dWh — иконка смерти белая, «×2» тоже */
+.g2-tip__cols .cr .g2-dth:has(.g2-skl--wh){ color:var(--w-fg); }

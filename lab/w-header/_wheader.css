@@ -1,0 +1,129 @@
+/* w-header — виджет «Шапка матча» (_wheader.js, v5 «Счёт по центру»): один CSS для лабы и страницы матча. Токены — widget-tournament/_w.css. */
+.wh{ font:13px/1.35 var(--w-font); color:var(--w-fg); background:var(--w-bg); border-bottom:1px solid var(--w-border); }
+.wh:not(.is-narrow){ border:1px solid var(--w-border); border-top:0; border-radius:0 0 var(--w-r) var(--w-r); }
+.wh .num{ font-variant-numeric:tabular-nums; }
+.wh button{ font:inherit; color:inherit; border:0; background:none; cursor:pointer; padding:0; }
+.wh-mini{ display:none; } .wh.is-mini .wh-full{ display:none; } .wh.is-mini .wh-mini{ display:block; }
+.wh-lg{ width:20px; height:20px; object-fit:contain; flex:none; } .wh-lg--l{ width:32px; height:32px; }
+.wh-nm{ white-space:nowrap; } .wh-nm.wh-w{ font-weight:600; } /* победитель — wh-w: класс «w» занят карточкой виджетов (_w.css) и рисовал рамку */
+.wh-sc{ display:inline-flex; align-items:baseline; gap:4px; font-size:22px; font-weight:700; color:var(--w-muted-fg); } .wh-sc i{ font-style:normal; font-weight:400; }
+.wh-sc b{ font-weight:700; color:var(--w-fg); } .wh-sc--none{ font-weight:400; }
+.wh-st{ font-size:12px; color:var(--w-muted-fg); white-space:nowrap; }
+.wh-st.is-live{ display:inline-flex; align-items:center; gap:6px; color:#f87171; }
+.wh-st.is-live::before{ content:''; width:6px; height:6px; border-radius:50%; background:#ef4444; animation:wh-pl 1.4s ease-in-out infinite; }
+@keyframes wh-pl{ 50%{ opacity:.35; } }
+.wh-bell{ width:32px; height:32px; display:grid; place-items:center; border-radius:8px; color:var(--w-muted-fg); flex:none; }
+.wh-bell:hover{ background:var(--w-muted); color:var(--w-fg); } .wh-bell.on{ color:#facc15; } .wh-bell:disabled{ opacity:.35; cursor:default; } .wh-bell svg{ width:18px; height:18px; }
+
+/* развёрнутая: турнир · Bo и колокольчик; команды по краям, счёт и что сейчас — по центру; вкладки */
+.wh-full{ padding-top:8px; }
+.wh-meta{ display:flex; align-items:center; justify-content:space-between; padding:0 12px 0 16px; font-size:12px; color:var(--w-muted-fg); }
+.wh-row{ display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px; padding:2px 16px 12px; }
+.wh-t{ display:flex; align-items:center; gap:10px; font-size:16px; min-width:0; } .wh-t--b{ justify-content:flex-end; }
+.wh-c{ display:flex; flex-direction:column; align-items:center; gap:2px; }
+.wh.is-narrow .wh-t{ flex-direction:column; gap:4px; font-size:14px; } .wh.is-narrow .wh-t--b{ flex-direction:column-reverse; }
+.wh-note{ margin:0 16px 10px; padding:8px 12px; border-radius:8px; background:var(--w-muted); font-size:12px; color:var(--w-muted-fg); text-align:center; }
+
+/* вкладки матча — одни и те же в обоих состояниях */
+.wh-tabs{ display:flex; gap:2px; padding:0 8px; overflow-x:auto; scrollbar-width:none; }
+.wh-full .wh-tabs{ border-top:1px solid var(--w-border); }
+.wh-tab{ position:relative; display:flex; align-items:center; gap:4px; height:40px; padding:0 10px; white-space:nowrap; color:var(--w-muted-fg); text-decoration:none; }
+.wh-tab small{ color:#71717a; } .wh-tab:hover, .wh-tab.on{ color:var(--w-fg); }
+.wh-tab.on::after{ content:''; position:absolute; left:10px; right:10px; bottom:0; height:2px; border-radius:2px; background:var(--w-fg); }
+
+/* при скролле: одна строка (на компьютере вкладки в ней же, на телефоне — второй строкой) */
+.wh-line{ display:flex; align-items:center; gap:8px; height:48px; padding:0 12px 0 16px; }
+.wh-line .wh-sc{ font-size:15px; margin:0 2px; } .wh-line .wh-tabs{ margin-left:16px; padding:0; } .wh-line .wh-tab{ height:48px; }
+.wh-sp{ flex:1; }
+.wh.is-narrow .wh-mini .wh-tabs{ border-top:1px solid var(--w-border); }
+
+/* на странице матча шапка-хозяин (.gm-hd) — только место и липкость, вид — у виджета */
+.gm-hd.wh-host{ padding:0; background:none; border:0; backdrop-filter:none; -webkit-backdrop-filter:none; }
+.is-desk .gm-hd.wh-host{ padding:0; border:0; }
+
+/* способы сжатия (v8–v10, дирижёр 27.10) — у обычного: .wh-fw / .wh-mw просто обёртки */
+.wh--anim .wh-mini, .wh--scroll .wh-mini, .wh--slide .wh-mini{ display:block; } .wh--anim.is-mini .wh-full, .wh--scroll.is-mini .wh-full, .wh--slide.is-mini .wh-full{ display:block; }
+/* anim — медленно: обе части всегда в разметке, высота через grid-rows 1fr ↔ 0fr */
+.wh--anim .wh-fw, .wh--anim .wh-mw{ display:grid; transition:grid-template-rows .45s cubic-bezier(.4,0,.2,1), opacity .35s ease; }
+.wh--anim .wh-fw > *, .wh--anim .wh-mw > *{ min-height:0; overflow:hidden; }
+.wh--anim .wh-fw{ grid-template-rows:1fr; } .wh--anim .wh-mw{ grid-template-rows:0fr; opacity:0; }
+.wh--anim.is-mini .wh-fw{ grid-template-rows:0fr; opacity:0; } .wh--anim.is-mini .wh-mw{ grid-template-rows:1fr; opacity:1; }
+/* scroll — высоту развёрнутой ведёт прокрутка (JS), строка — поверх, проявляется к концу */
+.wh--scroll{ position:relative; } .wh--scroll .wh-fw{ overflow:hidden; }
+.wh--scroll .wh-mw{ position:absolute; left:0; right:0; bottom:0; opacity:0; pointer-events:none; transition:opacity .2s ease; background:var(--w-bg); border-radius:inherit; }
+.wh--scroll.is-mini .wh-mw{ opacity:1; pointer-events:auto; }
+/* slide — развёрнутая уезжает со страницей, строка выезжает сверху (fixed, ширина — как у шапки) */
+.gm-hd.wh-host.wh-host--slide{ position:relative; top:auto; }
+.wh--slide .wh-mw{ position:fixed; top:52px; z-index:6; transform:translateY(-120%); opacity:0; pointer-events:none; background:var(--w-bg); border:1px solid var(--w-border); border-top:0; border-radius:0 0 var(--w-r) var(--w-r);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1), opacity .2s ease, top .2s ease; box-shadow:0 8px 24px #0008; }
+body.pt-off .wh--slide .wh-mw{ top:0; }
+.wh--slide.is-mini .wh-mw{ transform:none; opacity:1; pointer-events:auto; }
+
+/* лаба w-desk (27.10): справа в шапке — остров, кнопки сообщества, «Трансляция» (o.tools) */
+.wh-tools{ display:flex; align-items:center; gap:6px; margin-left:auto; margin-right:6px; font-size:13px; color:var(--w-fg); }
+.wh-tools .wb-isl{ height:36px; width:auto; min-width:150px; box-shadow:none; }
+.wh-soc{ display:flex; align-items:center; gap:6px; }
+.wh-tools .wsc-r{ width:36px; height:36px; box-shadow:none; background:var(--w-muted, #27272a); border-color:transparent; }
+.wh-tools .wsc-r svg{ width:17px; height:17px; } .wh-tools .wsc-r .num{ top:-6px; right:-8px; }
+.wh-pip{ display:flex; align-items:center; gap:6px; height:36px; padding:0 12px; border:0; border-radius:18px; background:var(--w-muted, #27272a); color:var(--w-fg); font:500 13px/1 var(--w-font); cursor:pointer; }
+.wh-pip i{ font-style:normal; font-size:10px; color:#ef4444; } .wh-pip.is-on{ background:#3b1d1d; }
+.wh-tools .wb-isl{ background:#18181b; border:1px solid var(--w-border); border-radius:18px; } .wh-tools .wb-isl.is-ev{ background:#1c1708; border-color:#eab308; }
+.wh-tools .wh-pip{ background:#27272a; } .wh-tools .wh-pip.is-on{ background:#3b1d1d; }
+
+/* w-header-2 v8 «Карточка» (28.10): скругления со всех сторон, команды у счёта, турнир над счётом; сжатая — строка по центру */
+.gm-hd.wh-host:has(.wh--card){ padding:8px 0 0; background:var(--w-page, #000); }
+.wh.wh--card, .wh.wh--card:not(.is-narrow){ border:1px solid var(--w-border); border-radius:var(--w-r); overflow:hidden; }
+.wh--card.is-narrow{ margin:0 8px; }
+.wh-cd{ position:relative; padding:10px 0 14px; }
+.wh-cd-top{ display:flex; justify-content:center; height:20px; align-items:center; }
+.wh-cd-mt{ font-size:12px; color:var(--w-muted-fg); }
+.wh-cd-r{ position:absolute; right:8px; top:6px; display:flex; align-items:center; gap:6px; }
+.wh-cd-row{ display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:20px; padding:4px 16px 0; }
+.wh-cd .wh-t{ justify-content:flex-end; font-size:18px; font-weight:500; } .wh-cd .wh-t--b{ justify-content:flex-start; }
+.wh-lg.wh-lg--xl{ width:40px; height:40px; }
+.wh-cd .wh-sc{ font-size:30px; } .wh-cd .wh-c{ min-width:96px; }
+.wh--card.is-narrow .wh-cd-row{ gap:10px; padding:4px 8px 0; }
+.wh--card.is-narrow .wh-cd .wh-t{ flex-direction:column-reverse; gap:4px; font-size:14px; } .wh--card.is-narrow .wh-cd .wh-t--b{ flex-direction:column; }
+.wh--card.is-narrow .wh-lg--xl{ width:36px; height:36px; } .wh--card.is-narrow .wh-cd .wh-sc{ font-size:26px; }
+.wh-line--c{ justify-content:center; position:relative; padding:0 48px; } .wh-line--c .wh-cd-r{ top:50%; transform:translateY(-50%); }
+/* v15: назад (в шапке турнира и в сжатой) */
+.wh-back{ display:inline-flex; align-items:center; justify-content:center; height:28px; border-radius:8px; color:var(--w-muted-fg); }
+.wh-back:hover{ background:var(--w-muted); color:var(--w-fg); } .wh-back svg{ width:18px; height:18px; }
+.wh-back--s{ width:28px; flex:none; }
+.wh-back--i{ position:absolute; left:6px; top:50%; transform:translateY(-50%); width:32px; }
+/* tour — турнир-родитель: верхний этаж карточки */
+.wh-cd--tour{ padding-top:0; }
+.wh-band{ display:flex; align-items:center; gap:10px; height:52px; padding:0 8px; margin-bottom:12px; background:var(--w-muted); border-bottom:1px solid var(--w-border); }
+.wh-band-ic{ width:32px; height:32px; display:grid; place-items:center; border-radius:8px; background:var(--w-bg); color:#facc15; flex:none; } .wh-band-ic svg{ width:18px; height:18px; }
+.wh-band-tx{ display:flex; flex-direction:column; min-width:0; flex:1; } .wh-band-tx b{ font-size:14px; font-weight:600; } .wh-band-tx small{ font-size:12px; color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.wh-band-go{ display:inline-flex; align-items:center; gap:4px; height:32px; padding:0 12px; border-radius:16px; background:var(--w-bg); color:var(--w-fg); text-decoration:none; font-size:13px; flex:none; } .wh-band-go i{ font-style:normal; color:var(--w-muted-fg); }
+.wh-band-r{ display:flex; align-items:center; }
+
+/* v16–v19 — версии от v15 (WH_TOUR) */
+/* link — турнир строкой-ссылкой */
+.wh-tl{ display:flex; align-items:center; gap:4px; height:44px; padding:0 8px; margin-bottom:10px; border-bottom:1px solid var(--w-border); }
+.wh-tl-a{ display:flex; align-items:center; gap:8px; min-width:0; flex:1; height:32px; padding:0 8px 0 4px; border-radius:8px; color:var(--w-muted-fg); text-decoration:none; font-size:13px; white-space:nowrap; overflow:hidden; }
+.wh-tl-a:hover{ background:var(--w-muted); } .wh-tl-a b{ color:var(--w-fg); font-weight:600; } .wh-tl-a i{ font-style:normal; opacity:.6; } .wh-tl-a span:last-child{ overflow:hidden; text-overflow:ellipsis; }
+.wh-tl-ic{ display:grid; place-items:center; color:#facc15; } .wh-tl-ic svg{ width:16px; height:16px; }
+.wh-tl-mini{ position:absolute; left:40px; top:50%; transform:translateY(-50%); width:28px; height:28px; display:grid; place-items:center; border-radius:8px; color:#facc15; } .wh-tl-mini:hover{ background:var(--w-muted); } .wh-tl-mini svg{ width:16px; height:16px; }
+.wh--card .wh-mw .wh-line--c:has(.wh-tl-mini){ padding-left:76px; }
+/* prog — полоса турнира по дням */
+.wh-cd--prog .wh-band{ margin-bottom:0; }
+.wh-prog{ display:flex; gap:10px; padding:8px 16px 10px; margin-bottom:12px; border-bottom:1px solid var(--w-border); background:var(--w-muted); }
+.wh-pg{ display:flex; flex-direction:column; gap:4px; min-width:0; } .wh-pg small{ font-size:11px; color:var(--w-muted-fg); white-space:nowrap; } .wh-pg.is-now small{ color:var(--w-fg); font-weight:600; }
+.wh-pg-b{ display:flex; gap:2px; } .wh-pg-b i{ flex:1; height:4px; border-radius:2px; background:var(--w-border); }
+.wh-pg-b i.on{ background:var(--w-muted-fg); } .wh-pg-b i.cur{ background:#22c55e; box-shadow:0 0 0 2px #22c55e33; }
+/* side — турнир колонкой слева (компьютер) */
+.wh-cd--side{ display:grid; grid-template-columns:280px 1fr; padding:0; }
+.wh-sd{ position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:4px; padding:12px 16px 14px 48px; background:var(--w-muted); border-right:1px solid var(--w-border); }
+.wh-sd .wh-back{ position:absolute; left:8px; top:10px; } .wh-sd b{ font-size:15px; font-weight:600; } .wh-sd small{ font-size:12px; color:var(--w-muted-fg); }
+.wh-sd .wh-band-ic{ margin-bottom:4px; } .wh-sd .wh-band-go{ margin-top:6px; height:28px; }
+.wh-sd-m{ position:relative; display:flex; flex-direction:column; justify-content:center; padding:12px 0; } .wh-sd-r{ position:absolute; right:8px; top:6px; display:flex; align-items:center; }
+/* brand — этаж турнира в цветах турнира */
+.wh-band--brand{ position:relative; overflow:hidden; height:64px; background:linear-gradient(120deg, #0f3d46 0%, #1b2a55 55%, #2d1b4e 100%); border-bottom-color:#ffffff14; }
+.wh-band--brand .wh-band-tx b{ font-size:16px; } .wh-band--brand .wh-band-tx small{ color:#ffffffa6; }
+.wh-band--brand .wh-band-ic{ background:#ffffff14; } .wh-band--brand .wh-back, .wh-band--brand .wh-bell{ color:#ffffffb3; }
+.wh-band--brand .wh-band-go{ background:#fff; color:#0b0b0f; font-weight:600; } .wh-band--brand .wh-band-go i{ color:#0b0b0f99; }
+.wh-band--brand::after{ content:''; position:absolute; right:150px; top:-18px; width:110px; height:110px; opacity:.08; pointer-events:none;
+  background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.5'%3E%3Cpath d='M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22M18 2H6v7a6 6 0 0 0 12 0V2Z'/%3E%3C/svg%3E"); }
+.wh-band--brand > *{ position:relative; z-index:1; }

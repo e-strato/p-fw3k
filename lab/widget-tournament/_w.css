@@ -1,0 +1,297 @@
+/* Виджеты 320 (созвон 20.10): стиль shadcn/ui, один шрифт Google Sans, все отступы кратны 4.
+   Общий для разборов widget-tournament, widget-roster, widgets-skeleton. Сайт не трогает. */
+:root{
+  /* Тёмная тема (дирижёр 20.10), палитра shadcn/ui dark (zinc) */
+  color-scheme:dark;
+  --w-page:#000; --w-bg:#09090b; --w-fg:#fafafa; --w-muted:#27272a; --w-muted-fg:#a1a1aa; --w-border:#27272a; --w-ring:#52525b;
+  --w-hover:#3f3f46; --w-skel:#3f3f46;
+  --w-primary:#fafafa; --w-primary-fg:#18181b;
+  --w-up:#22c55e; --w-up-bg:rgba(34,197,94,.12); --w-up-fg:#86efac;
+  --w-down:#ef4444; --w-down-bg:rgba(239,68,68,.14); --w-down-fg:#fca5a5; --w-mid-bg:#18181b;
+  --w-star:#facc15; --w-a:#60a5fa; --w-a-bg:rgba(96,165,250,.26); --w-a-fg:#bfdbfe; --w-b:#f59e0b; /* команды открытого матча */
+  --w-r:12px; --w-r-sm:8px;
+  --w-font:"Google Sans","Google Sans Flex","Google Sans Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+.w{ box-sizing:border-box; width:320px; background:var(--w-bg); color:var(--w-fg); border:1px solid var(--w-border);
+  border-radius:var(--w-r); font:400 14px/20px var(--w-font); overflow:hidden; text-align:left; }
+.w *{ box-sizing:border-box; }
+.w button{ font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer; text-align:inherit; }
+
+/* Шапка виджета */
+.w-hd{ display:flex; align-items:center; gap:8px; height:48px; padding:0 16px; border-bottom:1px solid var(--w-border); }
+.w-hd__t{ flex:1; min-width:0; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.w-hd__back{ display:grid; place-items:center; width:28px; height:28px; margin-left:-8px; border-radius:var(--w-r-sm); color:var(--w-muted-fg); }
+.w-hd__back:hover{ background:var(--w-muted); color:var(--w-fg); }
+.w-game{ font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+.w-bd{ padding:12px 16px 16px; }
+.w-ft{ display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-top:1px solid var(--w-border); font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+.w-link{ color:var(--w-muted-fg); text-decoration:none; }
+.w-link:hover{ color:var(--w-fg); }
+
+/* Мелочи */
+.w-cap{ font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+.w-lbl{ font-size:12px; line-height:16px; font-weight:500; color:var(--w-muted-fg); margin:12px 0 4px; }
+.w-lbl:first-child{ margin-top:0; }
+.w-badge{ display:inline-flex; align-items:center; gap:4px; height:20px; padding:0 8px; border-radius:999px; border:1px solid var(--w-border);
+  font-size:12px; line-height:16px; font-weight:500; white-space:nowrap; }
+.w-badge--live{ border-color:transparent; background:var(--w-down-bg); color:var(--w-down); }
+.w-badge--up{ border-color:transparent; background:var(--w-up-bg); color:var(--w-up); }
+.w-badge--down{ border-color:transparent; background:var(--w-down-bg); color:var(--w-down); }
+.w-dot{ width:8px; height:8px; border-radius:50%; background:var(--w-down); flex:none; }
+.w-dot--soon{ background:var(--w-ring); }
+.w-logo{ display:inline-grid; place-items:center; width:24px; height:24px; flex:none; border-radius:6px; background:var(--w-muted);
+  border:1px solid var(--w-border); font-size:10px; line-height:12px; font-weight:600; color:var(--w-fg); }
+.w-logo--sm{ width:20px; height:20px; border-radius:50%; font-size:8px; margin-left:-4px; border-color:var(--w-bg); border-width:2px; }
+.w-logo--sm:first-child{ margin-left:0; }
+.w-stack{ display:flex; }
+.w-sep{ height:1px; background:var(--w-border); margin:12px -16px; }
+
+/* Строки */
+.w-row{ display:flex; align-items:center; gap:8px; min-height:40px; }
+.w-row + .w-row{ border-top:1px solid var(--w-border); }
+.w-row--btn{ width:100%; margin:0 -8px; padding:0 8px; width:calc(100% + 16px); border-radius:0; }
+.w-row--btn:hover{ background:var(--w-muted); }
+.w-hd__back:hover, .w-seg button:hover{ color:var(--w-fg); }
+.w-row__main{ flex:1; min-width:0; }
+.w-row__t{ font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.w-num{ font-variant-numeric:tabular-nums; }
+.w-chev{ color:var(--w-ring); flex:none; }
+
+/* Таблица */
+.w-tbl{ width:100%; border-collapse:collapse; font-size:13px; line-height:20px; }
+.w-tbl th{ font-size:12px; line-height:16px; font-weight:500; color:var(--w-muted-fg); text-align:right; padding:0 0 4px; }
+.w-tbl th:nth-child(2){ text-align:left; }
+.w-tbl td{ height:32px; padding:0; text-align:right; border-top:1px solid var(--w-border); }
+.w-tbl td:nth-child(1){ width:20px; text-align:left; color:var(--w-muted-fg); }
+.w-tbl td:nth-child(2){ text-align:left; }
+.w-tbl td:nth-child(n+3){ width:40px; font-variant-numeric:tabular-nums; }
+.w-tbl tr.is-hl td{ background:var(--w-muted); font-weight:600; }
+.w-tbl tr.is-hl td:first-child{ border-radius:6px 0 0 6px; }
+.w-tbl tr.is-hl td:last-child{ border-radius:0 6px 6px 0; }
+.w-team{ display:flex; align-items:center; gap:8px; }
+.w-team .w-logo{ width:20px; height:20px; font-size:8px; border-radius:5px; }
+
+/* Шаги турнира */
+.w-steps{ display:flex; gap:4px; margin:4px 0 12px; }
+.w-step{ flex:1; }
+.w-step__bar{ height:4px; border-radius:2px; background:var(--w-muted); }
+.w-step.is-done .w-step__bar{ background:var(--w-fg); }
+.w-step.is-now .w-step__bar{ background:linear-gradient(90deg,var(--w-fg) 50%,var(--w-muted) 50%); }
+.w-step__t{ margin-top:4px; font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+.w-step.is-now .w-step__t{ color:var(--w-fg); font-weight:500; }
+
+/* Сегменты (shadcn Tabs) */
+.w-seg{ display:flex; gap:4px; padding:4px; margin:12px 16px 0; background:var(--w-muted); border-radius:var(--w-r-sm); }
+.w-seg button{ border:0; background:none; font-family:inherit; cursor:pointer; flex:1; height:28px; padding:0 8px; border-radius:6px; font-size:13px; line-height:16px; font-weight:500; color:var(--w-muted-fg);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.w-seg button.is-on{ background:var(--w-bg); color:var(--w-fg); box-shadow:0 1px 2px rgba(0,0,0,.4); }
+
+/* Карточка команды в матче (состояние 3) */
+.w-side{ padding:12px; border:1px solid var(--w-border); border-radius:var(--w-r-sm); }
+.w-side + .w-side{ margin-top:8px; }
+.w-side__top{ display:flex; align-items:center; gap:8px; }
+.w-side__name{ flex:1; font-weight:600; }
+.w-side__pos{ margin-top:4px; font-size:13px; line-height:20px; }
+.w-side__meta{ display:flex; gap:12px; margin-top:4px; font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+.w-stake{ margin-top:8px; padding:8px; border-radius:6px; background:var(--w-muted); font-size:13px; line-height:16px; }
+.w-stake--risk{ background:var(--w-down-bg); color:var(--w-down-fg); }
+.w-stake--safe{ background:var(--w-up-bg); color:var(--w-up-fg); }
+.w-form{ display:inline-flex; gap:2px; }
+.w-form i{ width:6px; height:12px; border-radius:2px; background:var(--w-ring); }
+.w-form i.W{ background:var(--w-up); } .w-form i.L{ background:var(--w-down); opacity:.7; }
+
+/* Швейцарка */
+.w-sw{ display:flex; flex-direction:column; gap:4px; }
+.w-sw__r{ display:flex; align-items:center; gap:8px; min-height:32px; padding:4px 8px; border-radius:6px; background:var(--w-mid-bg); }
+.w-sw__r--up{ background:var(--w-up-bg); } .w-sw__r--down{ background:var(--w-down-bg); }
+.w-sw__rec{ width:28px; font-weight:600; font-variant-numeric:tabular-nums; }
+.w-sw__teams{ flex:1; display:flex; flex-wrap:wrap; gap:4px; }
+.w-sw__teams .w-logo{ width:20px; height:20px; font-size:8px; border-radius:5px; }
+.w-sw__teams .w-logo.is-hl{ outline:2px solid var(--w-fg); outline-offset:1px; }
+
+/* Сетка — матчи раунда */
+.w-br{ display:flex; flex-direction:column; gap:8px; }
+.w-br__m{ border:1px solid var(--w-border); border-radius:var(--w-r-sm); }
+.w-br__m.is-hl{ border-color:var(--w-fg); }
+.w-br__l{ display:flex; align-items:center; gap:8px; height:32px; padding:0 8px; font-size:13px; }
+.w-br__l + .w-br__l{ border-top:1px solid var(--w-border); }
+.w-br__l .w-logo{ width:20px; height:20px; font-size:8px; border-radius:5px; }
+.w-br__l b{ margin-left:auto; font-variant-numeric:tabular-nums; }
+.w-br__l.is-lose{ color:var(--w-muted-fg); }
+
+/* Аккордеон (v4) */
+.w-acc{ border-top:1px solid var(--w-border); }
+.w-acc:first-child{ border-top:0; }
+.w-acc__body{ padding:4px 0 12px; }
+
+/* ===== Доска варианта в лаборатории ===== */
+/* без min-height:100vh: песочница растягивает iframe по высоте содержимого — с vh высота росла бы бесконечно */
+html:has(.lab-board), body:has(.lab-board){ background:var(--w-page); }
+.lab-board{ padding:40px 48px; background:var(--w-page); font:400 14px/20px var(--w-font); color:var(--w-fg); }
+.lab-board h1{ margin:0; font-size:24px; line-height:32px; font-weight:600; }
+.lab-board__lead{ max-width:880px; margin:8px 0 0; color:var(--w-muted-fg); }
+.lab-live{ display:flex; gap:48px; align-items:flex-start; margin-top:32px; }
+.lab-ctrl{ display:flex; flex-direction:column; gap:16px; padding-top:4px; }
+.lab-ctrl__g b{ display:block; margin-bottom:8px; font-size:12px; line-height:16px; font-weight:500; color:var(--w-muted-fg); }
+.lab-ctrl__g .w-seg{ margin:0; display:inline-flex; }
+.lab-ctrl__g .w-seg button{ flex:none; padding:0 12px; overflow:visible; }
+.lab-ctrl__note{ max-width:360px; color:var(--w-muted-fg); font-size:13px; }
+.lab-h2{ margin:48px 0 16px; font-size:16px; line-height:24px; font-weight:600; }
+.lab-grid{ display:flex; flex-wrap:wrap; gap:32px 24px; align-items:flex-start; }
+.lab-cell__t{ margin-bottom:8px; font-size:12px; line-height:16px; color:var(--w-muted-fg); width:320px; }
+
+/* Кнопка «На весь экран» (_full.js) */
+.lab-full{ position:fixed; top:16px; right:16px; z-index:10; display:inline-flex; align-items:center; height:32px; padding:0 12px; border-radius:var(--w-r-sm);
+  background:var(--w-primary); color:var(--w-primary-fg); font:500 13px/16px var(--w-font); text-decoration:none; }
+.lab-full:hover{ opacity:.9; }
+
+/* ===== Виджет турнира v5: фиксированный размер 320×400, скролл внутри (дирижёр 20.10) ===== */
+.w--fixed{ height:400px; display:flex; flex-direction:column; }
+.w--fixed .w-hd{ flex:none; }
+.w-scroll{ flex:1; min-height:0; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--w-ring) transparent; }
+.t-tier{ display:grid; place-items:center; width:24px; height:24px; flex:none; border-radius:6px; border:1px solid var(--w-border); font-size:12px; font-weight:600; color:var(--w-muted-fg); }
+.t-prize{ font-size:12px; color:var(--w-muted-fg); }
+.t-meta{ display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+.t-pass{ display:grid; grid-template-columns:1fr 1fr; gap:12px 16px; margin-top:12px; }
+.t-pass span{ display:block; font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+.t-pass b{ font-weight:500; }
+.t-win{ display:flex; align-items:center; gap:8px; padding:12px; border-radius:var(--w-r-sm); background:var(--w-muted); }
+.t-win span{ color:var(--w-muted-fg); font-size:13px; }
+.t-win b{ font-weight:600; }
+.t-mtag{ display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+.t-side{ padding:8px 0; }
+.t-side + .t-side{ border-top:1px solid var(--w-border); }
+.t-side__top{ display:flex; align-items:center; gap:8px; }
+.t-side__n{ flex:1; min-width:0; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t-side__pos{ font-size:13px; color:var(--w-muted-fg); white-space:nowrap; }
+.t-side__stake{ margin-top:4px; padding-left:32px; font-size:13px; line-height:16px; }
+.t-side__stake--risk{ color:var(--w-down-fg); } .t-side__stake--safe{ color:var(--w-up-fg); }
+.t-side__r{ padding-left:32px; margin-top:4px; }
+.w-tbl tr.t-cut + tr td{ border-top:1px dashed var(--w-ring); }
+
+/* Снятые v6–v9 (_отклонено) */
+.b-sub{ display:flex; align-items:center; gap:8px; flex:none; height:36px; padding:0 16px; border-bottom:1px solid var(--w-border); font-size:13px; color:var(--w-muted-fg); }
+.b-sub--in{ height:auto; padding:0; border:0; margin-bottom:12px; }
+.w--fixed .w-seg{ flex:none; }
+.b-m{ min-height:56px; }
+.b-m__t{ width:48px; flex:none; font-size:12px; color:var(--w-muted-fg); }
+.b-m__t.is-live{ color:var(--w-down); font-weight:500; }
+.b-m .w-row__main{ font-size:13px; line-height:20px; }
+.b-m__s{ font-weight:600; }
+.lab-pair{ display:flex; gap:24px; align-items:flex-start; margin-top:32px; }
+
+/* Базовый виджет турнира v10–v13: один турнир + переключение */
+.tt-st{ display:flex; align-items:center; gap:8px; flex:none; height:36px; padding:0 16px; border-bottom:1px solid var(--w-border); font-size:13px; }
+.tt-st__r{ margin-left:auto; font-size:12px; color:var(--w-muted-fg); white-space:nowrap; }
+.tt-pick{ flex:1; min-width:0; display:flex; align-items:center; gap:4px; font-weight:600; white-space:nowrap; overflow:hidden; }
+.tt-pick svg{ flex:none; color:var(--w-muted-fg); }
+.tt-ok{ color:var(--w-fg); display:grid; }
+.tt-chips{ display:flex; gap:8px; flex:none; padding:12px 16px 8px; overflow-x:auto; scrollbar-width:none; }
+.tt-chips::-webkit-scrollbar{ display:none; }
+.w .tt-chip{ display:inline-flex; align-items:center; gap:6px; flex:none; height:28px; padding:0 12px; border-radius:999px; border:1px solid var(--w-border); font-size:13px; font-weight:500; color:var(--w-muted-fg); white-space:nowrap; }
+.w .tt-chip.is-on{ background:var(--w-fg); color:var(--w-bg); border-color:var(--w-fg); }
+.tt-name{ flex:none; padding:4px 16px 8px; font-weight:600; border-bottom:1px solid var(--w-border); }
+.w .w-hd__back:disabled{ opacity:.3; cursor:default; }
+.tt-nx{ margin:0 -8px 0 0; }
+.tt-dots{ display:flex; align-items:center; justify-content:center; gap:4px; flex:none; height:32px; border-top:1px solid var(--w-border); font-size:12px; color:var(--w-muted-fg); }
+.tt-dots i{ width:6px; height:6px; border-radius:50%; background:var(--w-ring); }
+.tt-dots i.is-on{ background:var(--w-fg); }
+.tt-dots span{ margin-left:8px; }
+.tt-teams{ display:flex; flex-direction:column; }
+.tt-team{ display:flex; align-items:center; gap:8px; height:32px; font-size:13px; }
+.tt-team + .tt-team{ border-top:1px solid var(--w-border); }
+.tt-team .w-logo{ width:20px; height:20px; font-size:8px; border-radius:5px; }
+/* v12 заново, v14, v15 */
+.tt-hd2{ height:56px; }
+.tt-hd2__t{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.tt-hd2__t b{ font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tt-arrows{ display:flex; gap:4px; flex:none; }
+.w .tt-arr{ display:grid; place-items:center; width:32px; height:32px; border-radius:var(--w-r-sm); border:1px solid var(--w-border); color:var(--w-fg); }
+.w .tt-arr:hover{ background:var(--w-muted); }
+.w .tt-arr:disabled{ opacity:.3; cursor:default; background:none; }
+.tt-search{ flex:none; padding:12px 16px 0; }
+.tt-search input{ width:100%; height:36px; padding:0 12px; border-radius:var(--w-r-sm); border:1px solid var(--w-border); background:transparent; color:var(--w-fg); font:400 14px/20px var(--w-font); outline:none; }
+.tt-search input:focus{ border-color:var(--w-ring); }
+.tt-none{ padding:12px 0; }
+.tt-split{ flex:1; min-height:0; display:flex; }
+.tt-rail{ flex:none; width:56px; display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px 0; border-right:1px solid var(--w-border); overflow-y:auto; scrollbar-width:none; }
+.w .tt-rail__b{ position:relative; display:grid; place-items:center; width:36px; height:36px; flex:none; border-radius:var(--w-r-sm); background:var(--w-muted); font-size:11px; font-weight:600; color:var(--w-muted-fg); }
+.w .tt-rail__b.is-on{ background:var(--w-fg); color:var(--w-bg); }
+.tt-rail__b .w-dot{ position:absolute; top:-2px; right:-2px; width:8px; height:8px; border:2px solid var(--w-bg); box-sizing:content-box; }
+.tt-main{ flex:1; min-width:0; min-height:0; display:flex; flex-direction:column; }
+.tt-main .tt-st__r{ display:none; }
+/* v16–v19 */
+.tt-rel{ position:relative; flex:1; min-height:0; display:flex; flex-direction:column; }
+.tt-shade{ position:absolute; inset:0; background:rgba(0,0,0,.6); }
+.tt-sheet{ position:absolute; left:0; right:0; bottom:0; max-height:85%; display:flex; flex-direction:column; background:var(--w-bg); border-top:1px solid var(--w-border); border-radius:var(--w-r) var(--w-r) 0 0; }
+.tt-sheet__bar{ display:flex; justify-content:space-between; align-items:center; flex:none; height:44px; padding:0 16px; border-bottom:1px solid var(--w-border); }
+.tt-sheet__bar b{ font-weight:600; }
+.tt-sheet__list{ overflow-y:auto; padding:4px 16px 12px; scrollbar-width:thin; }
+.w .tt-foot{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex:none; height:44px; padding:0 16px; border-top:1px solid var(--w-border); font-size:13px; font-weight:500; }
+.w .tt-foot:hover{ background:var(--w-mid-bg); }
+.w .tt-foot span:first-child{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tt-prog{ display:flex; gap:4px; flex:none; padding:0 16px 8px; }
+.tt-prog i{ flex:1; height:3px; border-radius:2px; background:var(--w-muted); }
+.tt-prog i.is-on{ background:var(--w-fg); }
+.tt-swipe{ flex:1; min-height:0; display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; }
+.tt-swipe::-webkit-scrollbar{ display:none; }
+.tt-page{ flex:none; width:100%; min-height:0; scroll-snap-align:start; display:flex; flex-direction:column; }
+.tt-tiles{ display:grid; grid-template-columns:1fr 1fr; gap:4px; flex:none; padding:12px 16px; border-bottom:1px solid var(--w-border); }
+.w .tt-tile{ display:flex; align-items:center; gap:8px; height:32px; padding:0 8px; border-radius:6px; background:var(--w-mid-bg); font-size:12px; font-weight:500; color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; }
+.w .tt-tile.is-on{ background:var(--w-muted); color:var(--w-fg); box-shadow:inset 0 0 0 1px var(--w-ring); }
+.tt-drawer{ position:absolute; top:0; bottom:0; left:0; width:85%; overflow-y:auto; background:var(--w-bg); border-right:1px solid var(--w-border); box-shadow:8px 0 24px rgba(0,0,0,.5); }
+/* v20–v23 */
+.w .tt-hd2__btn{ text-align:left; }
+.tt-hd2__btn b{ display:flex; align-items:center; gap:4px; }
+.tt-hd2__btn b svg{ flex:none; color:var(--w-muted-fg); }
+.tt-nb{ display:flex; justify-content:space-between; flex:none; height:36px; padding:0 8px; border-bottom:1px solid var(--w-border); }
+.w .tt-nb__b{ display:flex; align-items:center; gap:4px; max-width:50%; padding:0 8px; border-radius:6px; font-size:13px; color:var(--w-muted-fg); white-space:nowrap; }
+.w .tt-nb__b span{ overflow:hidden; text-overflow:ellipsis; }
+.w .tt-nb__b:hover{ color:var(--w-fg); background:var(--w-muted); }
+.w .tt-nb__b:disabled{ opacity:.3; cursor:default; background:none; }
+.tt-star{ display:grid; place-items:center; width:28px; height:28px; flex:none; border-radius:6px; color:var(--w-ring); }
+.tt-star:hover{ color:var(--w-fg); }
+.tt-star.is-on{ color:var(--w-star); }
+.tt-star.is-on svg path{ fill:currentColor; }
+.tt-star--sm{ width:16px; height:16px; margin-right:4px; }
+.tt-pick .tt-star svg{ color:inherit; }
+/* v20 бургер, v21 соседи в шапке */
+.tt-burger{ margin-right:4px; }
+.w .tt-burger.is-on{ background:var(--w-muted); color:var(--w-fg); }
+.tt-nb2{ display:flex; align-items:center; gap:4px; min-width:0; font-size:12px; line-height:16px; color:var(--w-muted-fg); }
+.w .tt-nb2 button{ min-width:0; max-width:50%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--w-muted-fg); }
+.w .tt-nb2 button:hover{ color:var(--w-fg); }
+.w .tt-nb2 button:disabled{ opacity:.4; cursor:default; }
+.tt-nb2 i{ font-style:normal; }
+/* v21: название и переключение — в подвале */
+.tt-foot2{ display:flex; align-items:center; gap:8px; flex:none; height:56px; padding:0 16px; border-top:1px solid var(--w-border); }
+.w .tt-star{ flex:none; }
+.w-hd .tt-star, .tt-foot2 .tt-star{ margin-left:auto; }
+.tt-hd2 .tt-star{ margin-left:0; }
+/* v24–v27: переключение снизу */
+.tt-bot{ position:relative; display:flex; align-items:center; justify-content:center; flex:none; height:48px; padding:0 12px; border-top:1px solid var(--w-border); }
+.tt-bot .tt-arrows{ position:absolute; inset:8px 12px; justify-content:space-between; pointer-events:none; }
+.w .tt-bot .tt-arr{ pointer-events:auto; }
+.tt-bot__n{ font-size:13px; color:var(--w-muted-fg); }
+.w .tt-lens.is-on{ background:var(--w-muted); color:var(--w-fg); }
+.tt-halves{ display:grid; grid-template-columns:1fr 1fr; flex:none; height:48px; border-top:1px solid var(--w-border); }
+.w .tt-halves button{ display:flex; align-items:center; gap:4px; padding:0 12px; font-size:13px; font-weight:500; white-space:nowrap; overflow:hidden; }
+.w .tt-halves button span{ overflow:hidden; text-overflow:ellipsis; }
+.w .tt-halves button + button{ justify-content:flex-end; border-left:1px solid var(--w-border); }
+.w .tt-halves button:hover{ background:var(--w-mid-bg); }
+.w .tt-halves button:disabled{ color:var(--w-ring); cursor:default; background:none; }
+.tt-search--btn{ padding-bottom:12px; border-bottom:1px solid var(--w-border); }
+.w .tt-search--btn button{ display:flex; align-items:center; gap:8px; width:100%; height:36px; padding:0 12px; border-radius:var(--w-r-sm); border:1px solid var(--w-border); color:var(--w-muted-fg); font-size:14px; }
+.tt-close{ display:flex; justify-content:flex-end; flex:none; padding:8px 16px 0; font-size:13px; }
+.tt-pips{ display:flex; gap:8px; }
+.w .tt-pips button{ width:8px; height:8px; border-radius:50%; background:var(--w-ring); }
+.w .tt-pips button.is-on{ background:var(--w-fg); transform:scale(1.25); }
+.tt-tabbar{ display:grid; grid-template-columns:repeat(6, 1fr); flex:none; height:48px; border-top:1px solid var(--w-border); }
+.w .tt-tabbar button{ position:relative; display:grid; place-items:center; font-size:11px; font-weight:600; color:var(--w-muted-fg); }
+.w .tt-tabbar button.is-on{ color:var(--w-fg); box-shadow:inset 0 2px 0 var(--w-fg); }
+.w .tt-tabbar .w-dot{ position:absolute; top:10px; right:8px; width:6px; height:6px; }
+/* Кнопки шапки одного вида (v20, бургер в v24–v26) */
+.w .tt-arr.is-on{ background:var(--w-muted); }
+.w .tt-arr.tt-star{ width:32px; height:32px; margin-left:0; }
+.w .w-hd > .tt-arr:first-child{ margin-left:-4px; }
+.lab-one{ margin-top:16px; zoom:2; } /* виджет на доске — в 2× для отсмотра (дирижёр 20.10) */

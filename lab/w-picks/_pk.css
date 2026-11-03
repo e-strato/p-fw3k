@@ -1,0 +1,39 @@
+/* Лаба w-picks — «Пики» (созвон 02.11 §1.6). Поверх ../gs-match-2/_dr3.css. */
+/* 1.6.1 · номер позиции — маленький чёрный квадратик внутри иконки */
+.pk .d3-i b { right: 2px; bottom: 2px; min-width: 14px; height: 14px; padding: 0 2px; border-radius: 4px; background: rgba(0,0,0,.82); color: #fff; font: 700 9px/1 var(--w-font); box-shadow: none; }
+.pk--tl .d3-i b { right: auto; bottom: auto; left: 2px; top: 2px; }
+/* 1.6.2 · карточка ловит мышь (раньше pointer-events: none), ссылки внутри */
+.pk .d3-hc { pointer-events: none; }
+.pk .d3-hc.on { pointer-events: auto; }
+.pk-a { color: inherit; text-decoration: none; cursor: pointer; }
+.pk-a b { text-decoration: underline; text-decoration-color: rgba(255,255,255,.25); text-underline-offset: 3px; transition: text-decoration-color .15s; }
+.pk-a:hover b { text-decoration-color: currentColor; }
+.hc-hero .pk-a b { display: block; }
+
+/* v4–v5 · без подчёркивания (дирижёр 02.11) */
+.pk-l--row .pk-a b, .pk-l--arrow .pk-a b { text-decoration: none; }
+/* v4 · весь блок — ссылка: подсветка при наведении и «›» справа */
+.pk-row { position: relative; cursor: pointer; border-radius: 8px; transition: background .15s; }
+.hc-hd.pk-row { margin: -6px -6px 4px; padding: 6px; }
+.pk-row:hover { background: rgba(255,255,255,.06); }
+.hc-hero.pk-row:hover { background: color-mix(in srgb, var(--w-muted) 80%, #fff 8%); }
+.pk-chev { margin-left: auto; padding-left: 8px; font: 400 18px/1 var(--w-font); font-style: normal; color: var(--w-muted-fg); transition: color .15s, transform .15s; }
+.pk-row:hover .pk-chev { color: var(--w-fg); transform: translateX(2px); }
+/* v5 · у имени при наведении — «→», имя светлеет */
+.pk-l--arrow .pk-a b { display: inline-flex !important; align-items: center; gap: 4px; transition: color .15s; }
+.pk-l--arrow .pk-a b::after { content: '→'; font-weight: 400; opacity: 0; transform: translateX(-4px); transition: opacity .15s, transform .15s; }
+.pk-l--arrow .pk-a:hover b { color: #fff; } .pk-l--arrow .pk-a:hover b::after { opacity: .7; transform: none; }
+.pk-l--arrow .hc-hd .pk-a b { font-size: 15px; }
+
+/* v6 · оба блока карточки — одинаковые строки-кнопки (как .w-row--btn в _w.css), стрелка .w-chev справа по центру */
+.pk-row2 { display: flex !important; align-items: center; gap: 10px; min-height: 48px; margin: 0 -8px !important; padding: 4px 8px !important; border-radius: 8px; background: none !important; }
+.pk-row2:hover { background: var(--w-muted) !important; }
+.hc-hd.pk-row2 { margin-bottom: 4px !important; }
+.pk-row2 > div { flex: 1; min-width: 0; }
+.pk-row2 .pk-chev2 { margin-left: auto; transform: none; }
+.pk-row2:hover .pk-chev2 { color: var(--w-muted-fg); }
+/* v6 · вспышка при открытии: класс .pk-row2 ставится скриптом на кадр позже — в этот кадр нижний блок был со своей серой подложкой
+   (_dr3.css), потом она плавно гасла. Вид строк задаём сразу по классу страницы, без ожидания скрипта */
+.pk-l--row2 .d3-hc .hc-hd, .pk-l--row2 .d3-hc .hc-hero { display: flex; align-items: center; gap: 10px; min-height: 48px; margin: 0 -8px; padding: 4px 8px; border-radius: 8px; background: none; }
+.pk-l--row2 .d3-hc .hc-hd { margin-bottom: 4px; }
+.pk-l--row2 .d3-hc .hc-hd:hover, .pk-l--row2 .d3-hc .hc-hero:hover { background: var(--w-muted); }

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_lineup.css" />
+<style>
+/* v1 · Пьедестал — сцена: пять слотов дугой, свет снизу цветом акцента; карта на сцене крупно, под ней матч, прогноз, капитан */
+.v1-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.v1-top .lu-sum { flex: 1; }
+.v1-stage { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; padding: 26px 24px 30px; border-radius: 16px; overflow: hidden;
+  background: radial-gradient(60% 55% at 50% 110%, color-mix(in srgb, var(--c-accent) 26%, transparent), transparent 70%), radial-gradient(40% 50% at 50% -10%, color-mix(in srgb, var(--c-white) 6%, transparent), transparent 70%), var(--c-ui-panel); }
+.v1-slot { display: grid; justify-items: center; gap: 8px; translate: 0 calc(var(--d) * 14px); }
+.v1-role { display: grid; justify-items: center; line-height: 1.1; }
+.v1-role b { font: 800 18px var(--font-c); color: var(--c-text); }
+.v1-role small { color: var(--c-caption); font-size: 12px; }
+.v1-place { position: relative; display: grid; place-items: center; width: 180px; aspect-ratio: 4 / 5; border-radius: 8px; cursor: pointer;
+  background: color-mix(in srgb, var(--c-white) 3%, transparent); box-shadow: inset 0 0 0 1px var(--c-ui-line); color: var(--c-caption); font-size: 13px; }
+.v1-place.is-empty { border: 1px dashed color-mix(in srgb, var(--c-white) 18%, transparent); box-shadow: none; }
+.v1-place.is-empty b { display: block; font-size: 30px; font-weight: 300; text-align: center; }
+.v1-place::after { content: ''; position: absolute; left: 8%; right: 8%; bottom: -20px; height: 16px; border-radius: 50%; background: radial-gradient(closest-side, color-mix(in srgb, var(--c-accent) 45%, transparent), transparent); }
+.v1-place .kc { position: absolute; inset: 0; --w: 180px; }
+.v1-info { display: grid; justify-items: center; gap: 4px; min-height: 58px; font-size: 12.5px; color: var(--c-caption); text-align: center; }
+.v1-info b { color: var(--c-coin); font: 700 18px var(--font-c); }
+.v1-info.is-out { color: var(--c-live); }
+.v1-acts { display: flex; align-items: center; gap: 6px; }
+.v1-x { border: 0; background: none; color: var(--c-caption); font: inherit; font-size: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.v1-row { display: flex; align-items: center; gap: 12px; margin: 16px 0 26px; }
+.v1-row .lu-warn { flex: 1; }
+.v1-bh { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.v1-bh h3 { margin: 0; font-size: 18px; }
+.v1-bh .lu-search { margin-left: auto; width: 240px; }
+.v1-bench { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 18px 12px; }
+.v1-bc { display: grid; justify-items: center; gap: 6px; font-size: 12px; color: var(--c-caption); text-align: center; }
+.v1-bc .kc { --w: 128px; cursor: pointer; }
+.v1-bc.is-out .kc { filter: grayscale(.8) brightness(.6); }
+.v1-bc b { color: var(--c-text); }
+@container lu (max-width: 600px) {
+  .v1-stage { grid-template-columns: repeat(5, 132px); overflow-x: auto; padding: 16px 12px 22px; gap: 10px; scrollbar-width: none; }
+  .v1-slot { translate: none; }
+  .v1-place, .v1-place .kc { width: 128px; --w: 128px !important; }
+  .v1-row { flex-wrap: wrap; margin: 12px 0 18px; }
+  .v1-row .btn { width: 100%; }
+  .v1-bh { flex-wrap: wrap; }
+  .v1-bh .lu-search { width: 100%; margin: 0; }
+  .v1-bench { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 8px; }
+  .v1-bc .kc { --w: 104px !important; }
+}
+</style></head>
+<body><main class="lu-page">
+  <h1>v1 · Пьедестал</h1>
+  <p>Пятёрка крупно на сцене, как состав перед матчем: пять пьедесталов по ролям, свет снизу, у каждой карты — матч, прогноз и капитан. Ниже — твои карты с фильтром по роли и поиском; клик по карте ставит её на свою позицию, клик по карте на сцене — убирает. На десктопе карту можно взять мышью: она приподнимается и едет за курсором, свой пьедестал светится и притягивает, чужой — краснеет; карту со сцены можно унести обратно в «Твои карты». Переключатель Dota / LoL / CS 2 меняет только подписи ролей — состав один.</p>
+  <p class="lu-cap">Десктоп · 1440</p><div class="lu-frame lu-frame--desk" data-lu></div>
+  <p class="lu-cap">Телефон · 390</p><div class="lu-frame lu-frame--phone" data-lu></div>
+</main>
+<script src="_lineup.js"></script>
+<script>
+LINEUP.page({
+  drag: true,
+  render: (S, h) => `${h.шапка()}<div class="lu-app hg">
+  <div class="lu-h"><div><h2>Твоя пятёрка на сегодня</h2><p>Один состав для всех игр — меняются только роли</p></div>${h.игры()}</div>
+  <div class="v1-top">${h.итог()}</div>
+  <div class="v1-stage">${h.РОЛИ().map(([код, имя], i) => { const id = S.slots[i], x = id && h.п(id)
+    return `<div class="v1-slot" style="--d: ${Math.abs(i - 2)}"><span class="v1-role"><b>${код}</b><small>${имя}</small></span>
+      ${id ? `<span class="v1-place" data-out="${id}" data-drop="${i}" title="Убрать или перетащи">${h.карта(id, 180)}</span>` : `<span class="v1-place is-empty" data-slot="${i}" data-drop="${i}"><span><b>+</b>Выбрать</span></span>`}
+      <span class="v1-info${x && !x.матч ? ' is-out' : ''}">${x ? `<span>${h.матч(x)}</span><b>${(x.очки * (id === S.cap ? 1.5 : 1)).toFixed(1)}</b><span class="v1-acts"><button class="lu-cap-b" type="button" aria-pressed="${id === S.cap}" data-cap="${id}" title="Капитан ×1.5">C</button><button class="v1-x" type="button" data-out="${id}">Убрать</button></span>` : 'Пусто — 0 очков'}</span></div>` }).join('')}</div>
+  <div class="v1-row">${h.авто()}<button class="btn btn--quiet" type="button">Сохранить состав</button>${h.предупреждение()}</div>
+  <div class="v1-bh"><h3>Твои карты <span class="lu-muted">· ${h.скамейка().length}</span></h3>${h.позиции()}${h.поиск()}</div>
+  <div class="v1-bench" data-drop-bench>${h.скамейка().map((id) => { const x = h.п(id); return `<div class="v1-bc${x.матч ? '' : ' is-out'}" data-add="${id}" draggable="true">${h.карта(id, 128)}<span><b>${x.очки ? x.очки.toFixed(1) : '0'}</b> · ${x.матч ? h.матч(x) : '<span class="lu-out">не играет сегодня</span>'}</span></div>` }).join('')}</div>
+</div>${h.таббар()}`,
+})
+</script>
+</body></html>

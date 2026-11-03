@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../бустеры/_бустер.css" /><link rel="stylesheet" href="../обёртка/_обёртка.css" /><link rel="stylesheet" href="_свет.css" />
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+</head>
+<body>
+<!-- v3 · Мягкие лучи. Из-за колоды веером расходятся тонкие длинные лучи, медленно вращаются, гаснут к концам. Пятна в центре нет. -->
+<div class="bs swap"></div>
+<script type="module">
+import { run, glowRays } from './_свет.js'
+run('Мягкие лучи', 'Тонкие длинные лучи веером из-за колоды, медленно вращаются и гаснут к концам. Пятна в центре нет.', glowRays)
+</script>
+</body></html>

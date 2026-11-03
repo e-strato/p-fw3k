@@ -1,0 +1,188 @@
+<!doctype html>
+<!--
+  FantasyWeb — каркас страницы.
+  ⚠️ *.html в корне website/ СГЕНЕРИРОВАНЫ: этот каркас + pages/<имя>.html + blocks/**/*.html → `node build.mjs`.
+  Правьте блоки, страницы и layout.html, не собранные файлы (гейт `node build.mjs --check` поймает ручную правку).
+  Витрина компонентов — ../storybook.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>9Class — игрок — FantasyWeb</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..900;1,400..900&family=Archivo:ital,wdth,wght@0,62..125,700..900;1,62..125,700..900&family=Cinzel:wght@700;900&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..700&display=swap" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<main>
+<!-- Шапка продукта: бренд, игра (Dota / LoL — переключает турниры в списке матчей), монеты, разделы. Внизу на телефоне — таб-бар.
+     Разделы, которых ещё нет, — data-soon (плашка «скоро»). Текущий раздел (aria-current) ставит app.js по адресу страницы. -->
+<header class="ui-header">
+  <div class="ui-header__in">
+    <div class="ui-header__top">
+      <a class="ui-header__brand" href="index.html">Fantasy · Dota 2</a>
+      <div class="btn-row ui-header__game" role="group" aria-label="Игра">
+        <button class="btn btn--quiet btn--xs" type="button" aria-pressed="true" data-game-pick="dota">Dota</button>
+        <button class="btn btn--quiet btn--xs" type="button" aria-pressed="false" data-game-pick="lol">LoL</button>
+      </div>
+      <div class="ui-header__coins"><span>Монеты</span><b>1 000</b><button class="btn btn--quiet btn--sm" type="button" data-soon="Забрать +50">Забрать +50</button></div>
+    </div>
+    <nav class="ui-tabs ui-header__nav" aria-label="Разделы">
+      <a class="ui-tabs__a" href="index.html">Главная</a>
+      <a class="ui-tabs__a" href="schedule.html">Матчи</a>
+      <a class="ui-tabs__a" href="match-center.html">Match Center</a>
+      <a class="ui-tabs__a" href="lineup.html">Состав</a>
+      <a class="ui-tabs__a" href="#" data-soon="Бустеры">Бустеры</a>
+      <a class="ui-tabs__a" href="gallery.html">Коллекция</a>
+      <a class="ui-tabs__a" href="#" data-soon="Квесты">Квесты</a>
+      <a class="ui-tabs__a" href="#" data-soon="Лидеры">Лидеры</a>
+      <a class="ui-tabs__a" href="#" data-soon="История">История</a>
+      <a class="ui-tabs__a" href="onboarding.html">Как это работает</a>
+    </nav>
+  </div>
+  <nav class="ui-tabbar" aria-label="Разделы">
+    <a href="schedule.html"><i>▦</i>Матчи</a>
+    <a href="#" data-soon="Поиск"><i>⌕</i>Поиск</a>
+    <a href="lineup.html"><i>★</i>Состав</a>
+    <a href="#app-matches" data-list-go="fav"><i>☆</i>Избранное</a>
+    <a href="#" data-soon="Профиль"><i>◉</i>Профиль</a>
+  </nav>
+</header>
+<!-- Страница игрока 9Class (решение 11; перенос лабы «страница-игрока» v5 «Две колонки, как на главной»).
+     Данные реальные на 30.09.2026: Liquipedia, OpenDota, Telegram игрока. Иконки героев, которых нет в img/heroes, и превью видео — ссылками (CDN Valve, i.ytimg.com).
+     Стили — styles.css [=== Страница игрока ===], поведение (переход с карточки, плашка игрока) — app.js [Страница игрока]. -->
+<section class="pl" id="player">
+  <div class="h-bar" data-pl-bar><div class="pl-in h-bar__in">
+    <img class="h-bar__mini" src="img/players/9class.webp" alt="" />
+    <div class="h-bar__id"><b>9Class</b><small><img class="pl-logo" src="img/teams/pv.png" alt="" />PARIVISION · позиция 4 · Эдгар Налтакян</small></div>
+    <div class="h-now"><i></i><b>BLAST SLAM VIII</b><span>2.10 · PARIVISION — LGD</span></div>
+    <button class="btn btn--sm" type="button" data-soon="Следить">Следить</button>
+  </div></div>
+  <div class="pl-in">
+    <div class="d-hero" data-pl-hero><div class="d-hero__in">
+      <img class="d-hero__ph" src="img/players/9class.webp" alt="9Class" />
+      <div class="d-hero__txt">
+        <div class="d-hero__meta"><i class="d-flag"></i>Россия · 23 года · родился 19.07.2003</div>
+        <h1>9Class</h1>
+        <p class="d-hero__name">Эдгар Налтакян</p>
+        <div class="d-hero__team"><img class="pl-logo" src="img/teams/pv.png" alt="" /><b>PARIVISION</b><span>Позиция 4 · Саппорт</span></div>
+        <div class="d-hero__acts"><button class="btn btn--sm" type="button" data-soon="Следить">Следить</button><button class="btn btn--quiet btn--sm" type="button" data-soon="Взять в пятёрку">Взять в пятёрку</button><button class="btn btn--quiet btn--sm" type="button" data-soon="Все карточки игрока">Все карточки игрока</button></div>
+        <div class="d-now"><i></i><b>BLAST SLAM VIII</b><span>2.10 · PARIVISION — LGD — за первое место в группе A</span></div>
+      </div>
+      <div class="d-hero__card" data-pl-slot>
+
+<!-- Карта «Хайперглитч» (дирижёр 05.10: базовая карта финала) — полная форма, 9Class · Elite · Legend. Перенос лабы «карточка-v3» v1:
+     разметка снята со страницы лабы; герои и форма сведены к данным страницы игрока (дирижёр 05.10) (слои data-l — шаги иерархии). Размер — --w на .kc (по умолчанию 440px).
+     Стили — styles.css [=== Карта «Хайперглитч» ===], наклон и оборот по клику — app.js [Карта Хайперглитч]. -->
+<div class="hg"><div class="kc kc--elite kc--legend g1" data-tilt="">
+  <div class="kc__in"><div class="kc__flip">
+    <div class="kc__face">
+<div class="g1__face">
+  <div class="g1__plate" data-l="1">
+    <div class="g1__bg" data-l="2">
+      <i class="logo-mask g1__logo" data-l="2" style="--logo: url('img/teams/pv.png')"></i>
+      <i data-deco="2" class="logo-mask g1__logo g1__logo--a" data-l="4" style="--logo: url('img/teams/pv.png')"></i>
+      <i data-deco="2" class="logo-mask g1__logo g1__logo--b" data-l="4" style="--logo: url('img/teams/pv.png')"></i>
+      <i class="g1__pix" data-l="4" data-deco="1"></i>
+    </div>
+    <i class="g1__halo" data-l="5"></i>
+    <img class="ph " data-l="5" src="img/players/9class.webp" alt="9Class">
+    <i class="g1__slices" data-l="4" data-deco="2"></i>
+    <i class="g1__scan" data-l="4" data-deco="3"></i>
+    <div class="g1__panel" data-l="8"></div>
+    <i class="fx fx-shine" data-l="4"></i><i class="fx fx-spark" data-l="4"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+  </div>
+  <svg class="g1__frame" data-l="3" viewBox="0 0 220 308" preserveAspectRatio="none" aria-hidden="true">
+  <polygon class="out" points="18,1 219,1 219,284 196,307 1,307 1,18"></polygon>
+</svg>
+  <div class="g1__tab" data-l="3"><span data-l="8"><img class="logo " src="img/teams/pv.png" alt="PARIVISION"></span><hr data-l="7"><span class="g1__serial" data-l="7"><b>#012 / 400</b><small>Сезон 1</small></span></div>
+  <div class="g1__ovr" data-l="7"><b>95</b></div>
+  <div class="g1__heroes" data-l="7"><div><img class="hero-ic " src="img/heroes/rubick.webp" alt="Rubick" loading="lazy"><small><b>95 М</b><br>67%</small></div><div><img class="hero-ic " src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/dark_willow.png" alt="Dark Willow" loading="lazy"><small><b>73 М</b><br>67%</small></div><div><img class="hero-ic " src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/monkey_king.png" alt="Monkey King" loading="lazy"><small><b>72 М</b><br>65%</small></div></div>
+  <span class="g1__role" data-l="8"><b>Pos 4</b> · Support</span>
+  <div class="g1__who" data-l="6"><div class="g1__nick">9Class</div><div class="g1__name"><i class="flag flag--ru" aria-label="RU"></i>Эдгар Налтакян</div></div>
+  <div class="g1__stats" data-l="8"><span><b data-v="hi">82</b><small>FRM</small></span><span><b data-v="mid">60</b><small>FGT</small></span><span><b data-v="lo">47</b><small>POOL</small></span><span><b data-v="hi">91</b><small>SUR</small></span><span><b data-v="lo">36</b><small>VIS</small></span><span><b data-v="mid">67</b><small>FORM</small></span></div>
+  <div class="g1__team" data-l="8"><img class="logo " src="img/teams/pv.png" alt="PARIVISION">PARIVISION</div>
+</div><i class="fx fx-glare"></i></div>
+    <div class="kc__back">
+<div class="bk">
+  <i class="logo-mask bk__mask" data-l="9" style="--logo: url('img/teams/pv.png')"></i>
+  <div class="bk__top"><img class="logo " src="img/teams/pv.png" alt="PARIVISION"><span><b>9Class</b><small>#012 / 400 · Сезон 1</small></span><em>95</em></div>
+  <ul class="bk__stats"><li><span>Форма</span><b data-v="hi">82</b><i style="--v: 82%"></i></li><li><span>Драки</span><b data-v="mid">60</b><i style="--v: 60%"></i></li><li><span>Пул героев</span><b data-v="lo">47</b><i style="--v: 47%"></i></li><li><span>Выживание</span><b data-v="hi">91</b><i style="--v: 91%"></i></li><li><span>Обзор</span><b data-v="lo">36</b><i style="--v: 36%"></i></li><li><span>Игра сейчас</span><b data-v="mid">67</b><i style="--v: 67%"></i></li></ul>
+  <ul class="bk__heroes"><li><img class="hero-ic " src="img/heroes/rubick.webp" alt="Rubick" loading="lazy"><span><b>Rubick</b><small>95 матчей</small></span><em>67%</em></li><li><img class="hero-ic " src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/dark_willow.png" alt="Dark Willow" loading="lazy"><span><b>Dark Willow</b><small>73 матчей</small></span><em>67%</em></li><li><img class="hero-ic " src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/monkey_king.png" alt="Monkey King" loading="lazy"><span><b>Monkey King</b><small>72 матчей</small></span><em>65%</em></li></ul>
+  <p class="bk__lbl">Последние 10 матчей</p>
+  <ol class="bk__form"><li data-w="true">В</li><li data-w="true">В</li><li data-w="false">П</li><li data-w="true">В</li><li data-w="false">П</li><li data-w="true">В</li><li data-w="false">П</li><li data-w="true">В</li><li data-w="false">П</li><li data-w="true">В</li></ol>
+  <span class="bk__btn">Страница игрока</span>
+</div><svg class="g1__frame" data-l="3" viewBox="0 0 220 308" preserveAspectRatio="none" aria-hidden="true">
+  <polygon class="out" points="18,1 219,1 219,284 196,307 1,307 1,18"></polygon>
+</svg></div>
+  </div></div>
+</div></div>
+</div>
+    </div></div>
+    <div class="d-strip">
+      <div class="d-num"><b>1018</b><small>профматчей</small></div><div class="d-num"><b>65 %</b><small>побед</small></div><div class="d-num"><b>5</b><small>титулов Tier 1</small></div><div class="d-num"><b>$964K</b><small>призовых</small></div>
+      <div class="d-shelf"><div class="d-cups"><i class="d-cup"></i><i class="d-cup"></i><i class="d-cup"></i><i class="d-cup"></i><i class="d-cup"></i><i class="d-cup d-cup--s"></i></div><p><b>5 титулов Tier 1 и финал TI</b>EWC 2026, DreamLeague ×2, ESL One ×2</p></div>
+    </div>
+    <div class="pl-sec">
+      <h2 class="pl-h2">Путь <small>от пабликов до финала The International</small></h2>
+      <div class="d-road"><div class="d-stop"><span class="d-stop__y">2020 — 2022</span><span class="pl-logo pl-logo--mono">9</span><b>Паблик и миксы</b><p>Moscow Esports 2020 (CSB), открытые квалификации. 16 000 пабликов впереди</p></div><div class="d-stop"><span class="d-stop__y">12.2022</span><span class="pl-logo pl-logo--mono">WB</span><b>Winter Bear</b><p>Квалификации DPC EEU 2023 Tour 1</p></div><div class="d-stop"><span class="d-stop__y">01.2023 — 11.2023</span><span class="pl-logo pl-logo--mono">SX</span><b>Team Sexy</b><p>Второй дивизион DPC: 3-е и 2-е место. European Pro League S10 и S11 — победы</p></div><div class="d-stop"><span class="d-stop__y">01.2024 — 10.2024</span><img class="pl-logo" src="img/teams/tun.png" alt="" /><b>Tundra Esports</b><p>Первый Tier 1: 3-е место ESL One Birmingham, 4-е Riyadh Masters</p></div><div class="d-stop d-stop--now"><span class="d-stop__y">10.2024 — сейчас</span><img class="pl-logo" src="img/teams/pv.png" alt="" /><b>PARIVISION</b><p>5 титулов Tier 1, 3-е место TI 2025, 2-е место TI 2026</p></div></div>
+      <div class="d-mmr"><span><b>12 000</b>30.09.2023</span><span><b>13 000</b>24.02.2024</span><span><b>14 000</b>07.10.2024</span><span><b>16 000</b>21.05.2025</span><span><b>1-й ранг</b>26.09.2026</span></div>
+    </div>
+    <div class="pl-grid">
+      <div class="pl-main">
+        <a class="h-feat" href="https://youtu.be/o3W28o7jLYo" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/o3W28o7jLYo/hqdefault.jpg" alt="" /><i class="pl-vid__play"></i><span class="h-feat__txt"><b>Гранд-финал TI 2026, карта 5 — Team Spirit</b><small>dota2 · 23.08.2026</small></span></a>
+        <h2 class="pl-h2 pl-h3">YouTube <small>матчи TI 2026 и влоги команды</small></h2>
+        <div class="pl-vids"><a class="pl-vid " href="https://youtu.be/q3bzGpyETVE" target="_blank" rel="noopener"><span class="pl-vid__img"><img src="https://i.ytimg.com/vi/q3bzGpyETVE/hqdefault.jpg" alt="" loading="lazy" /><i class="pl-vid__play"></i></span><b>Гранд-финал TI 2026, карта 1 — Team Spirit</b><small>dota2 · 23.08.2026</small></a><a class="pl-vid " href="https://youtu.be/WEj83vr1Plo" target="_blank" rel="noopener"><span class="pl-vid__img"><img src="https://i.ytimg.com/vi/WEj83vr1Plo/hqdefault.jpg" alt="" loading="lazy" /><i class="pl-vid__play"></i></span><b>Влог: чемпионы Esports World Cup 2026</b><small>PARIVISION · 07.2026</small></a><a class="pl-vid " href="https://youtu.be/y7wWO2FMlUo" target="_blank" rel="noopener"><span class="pl-vid__img"><img src="https://i.ytimg.com/vi/y7wWO2FMlUo/hqdefault.jpg" alt="" loading="lazy" /><i class="pl-vid__play"></i></span><b>Финал верхней сетки TI 2026 — Team Yandex</b><small>dota2 · 22.08.2026</small></a><a class="pl-vid " href="https://youtu.be/6ENUP6u_dMc" target="_blank" rel="noopener"><span class="pl-vid__img"><img src="https://i.ytimg.com/vi/6ENUP6u_dMc/hqdefault.jpg" alt="" loading="lazy" /><i class="pl-vid__play"></i></span><b>Влог: чемпионы DreamLeague S29</b><small>PARIVISION · 05.2026</small></a><a class="pl-vid " href="https://youtu.be/gqFnmILXoO4" target="_blank" rel="noopener"><span class="pl-vid__img"><img src="https://i.ytimg.com/vi/gqFnmILXoO4/hqdefault.jpg" alt="" loading="lazy" /><i class="pl-vid__play"></i></span><b>MIND GAMES: Satanic, No[o]ne, 9Class, Dukalis</b><small>PARIVISION · 02.2026</small></a><a class="pl-vid " href="https://youtu.be/8QM6rCySGME" target="_blank" rel="noopener"><span class="pl-vid__img"><img src="https://i.ytimg.com/vi/8QM6rCySGME/hqdefault.jpg" alt="" loading="lazy" /><i class="pl-vid__play"></i></span><b>Why 9class is JUST BETTER!</b><small>Tundra · 04.2024</small></a></div>
+        <h2 class="pl-h2 pl-h3">Соцсети</h2>
+        <div class="pl-socs"><a class="pl-soc pl-soc--tg" href="https://t.me/nineclassdota" target="_blank" rel="noopener"><i class="pl-soc__ic">✈</i><span><b>Telegram</b><small>девятыйкласс</small></span><em><b>13,3 тыс.</b><small>подписчиков</small></em></a><a class="pl-soc pl-soc--tw" href="https://www.twitch.tv/9class" target="_blank" rel="noopener"><i class="pl-soc__ic">▶</i><span><b>Twitch</b><small>twitch.tv/9class</small></span><em><b>1 203</b><small>зрителей в среднем</small></em></a><a class="pl-soc pl-soc--ig" href="https://www.instagram.com/9class_ed" target="_blank" rel="noopener"><i class="pl-soc__ic">◎</i><span><b>Instagram</b><small>9class_ed</small></span><em><small>фото с турниров</small></em></a><a class="pl-soc pl-soc--vk" href="https://vk.com/id582302782" target="_blank" rel="noopener"><i class="pl-soc__ic">в</i><span><b>VK</b><small>id582302782</small></span><em><small>страница</small></em></a></div>
+        <div class="pl-panel pl-matches"><h2 class="pl-h2">Последние матчи <small>K / D / A · GPM</small></h2><div class="pl-m is-w"><img src="img/heroes/rubick.webp" alt="" /><span><b>Rubick</b><small>BLAST SLAM VIII</small></span><span class="pl-m__kda">2 / 2 / 9</span><span class="pl-m__gpm">262<small> GPM</small></span><b class="pl-m__res">Победа</b><small class="pl-m__d">29.09</small></div><div class="pl-m is-w"><img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/dark_willow.png" alt="" /><span><b>Dark Willow</b><small>BLAST SLAM VIII</small></span><span class="pl-m__kda">3 / 8 / 12</span><span class="pl-m__gpm">313<small> GPM</small></span><b class="pl-m__res">Победа</b><small class="pl-m__d">29.09</small></div><div class="pl-m"><img src="img/heroes/rubick.webp" alt="" /><span><b>Rubick</b><small>TI 2026 · финал, карта 5</small></span><span class="pl-m__kda">2 / 11 / 23</span><span class="pl-m__gpm">285<small> GPM</small></span><b class="pl-m__res">Поражение</b><small class="pl-m__d">23.08</small></div><div class="pl-m is-w"><img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/keeper_of_the_light.png" alt="" /><span><b>Keeper of the Light</b><small>TI 2026 · финал, карта 4</small></span><span class="pl-m__kda">3 / 4 / 20</span><span class="pl-m__gpm">461<small> GPM</small></span><b class="pl-m__res">Победа</b><small class="pl-m__d">23.08</small></div><div class="pl-m"><img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/marci.png" alt="" /><span><b>Marci</b><small>TI 2026 · финал, карта 3</small></span><span class="pl-m__kda">2 / 8 / 11</span><span class="pl-m__gpm">277<small> GPM</small></span><b class="pl-m__res">Поражение</b><small class="pl-m__d">23.08</small></div><div class="pl-m is-w"><img src="img/heroes/rubick.webp" alt="" /><span><b>Rubick</b><small>TI 2026 · финал, карта 2</small></span><span class="pl-m__kda">0 / 13 / 38</span><span class="pl-m__gpm">338<small> GPM</small></span><b class="pl-m__res">Победа</b><small class="pl-m__d">23.08</small></div><div class="pl-m"><img src="img/heroes/hoodwink.webp" alt="" /><span><b>Hoodwink</b><small>TI 2026 · финал, карта 1</small></span><span class="pl-m__kda">5 / 14 / 8</span><span class="pl-m__gpm">300<small> GPM</small></span><b class="pl-m__res">Поражение</b><small class="pl-m__d">23.08</small></div><div class="pl-m is-w"><img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/dark_willow.png" alt="" /><span><b>Dark Willow</b><small>TI 2026 · верхняя сетка</small></span><span class="pl-m__kda">8 / 6 / 16</span><span class="pl-m__gpm">381<small> GPM</small></span><b class="pl-m__res">Победа</b><small class="pl-m__d">22.08</small></div><div class="pl-m"><img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/dark_willow.png" alt="" /><span><b>Dark Willow</b><small>TI 2026 · верхняя сетка</small></span><span class="pl-m__kda">3 / 6 / 6</span><span class="pl-m__gpm">301<small> GPM</small></span><b class="pl-m__res">Поражение</b><small class="pl-m__d">22.08</small></div><div class="pl-m is-w"><img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/keeper_of_the_light.png" alt="" /><span><b>Keeper of the Light</b><small>TI 2026 · верхняя сетка</small></span><span class="pl-m__kda">7 / 0 / 20</span><span class="pl-m__gpm">561<small> GPM</small></span><b class="pl-m__res">Победа</b><small class="pl-m__d">22.08</small></div></div>
+        <div class="pl-panel pl-facts"><h2 class="pl-h2">Факты <small>из интервью и статистики</small></h2><div class="pl-facts__g"><div class="pl-fact"><b>9 класс</b><small>Ник остался со школы: думал, что с высоким рейтингом и таким ником возьмут в академию</small></div><div class="pl-fact"><b>19.07</b><small>Выиграл Esports World Cup 2026 в свой день рождения — финал 3:1 с BetBoom</small></div><div class="pl-fact"><b>1400 dpi</b><small>«Играл всю жизнь на 2000 dpi, поставил 1400 во время плей-офф — и выиграл турнир»</small></div><div class="pl-fact"><b>16 000</b><small>MMR в мае 2025 — один из немногих саппортов, кто взял 16k</small></div><div class="pl-fact"><b>955</b><small>Игр на Pudge в пабликах. Puppey: «лучший игрок на Пудже в мире»</small></div><div class="pl-fact"><b>0 / 13 / 38</b><small>Rubick во второй карте финала TI 2026 — 38 ассистов и победа</small></div></div></div>  <!-- Факты — из концепта «Сайт в одном стиле» (финал, дирижёр 05.10) -->
+      </div>
+      <aside class="pl-aside">
+        <div class="h-box h-next"><h3>Ближайший матч · завтра, 15:00</h3><div class="h-next__vs"><span><img class="pl-logo" src="img/teams/pv.png" alt="" />PARIVISION</span><b>vs</b><span><span class="pl-logo pl-logo--mono">LGD</span>LGD</span></div><small>BLAST SLAM VIII · за первое место в группе A</small><button class="btn btn--sm" type="button" data-soon="Сделать прогноз">Сделать прогноз</button></div>
+        <div class="h-box"><h3>Форма · 10 последних карт</h3><div class="h-form"><i class="is-w">W</i><i class="is-w">W</i><i class="">L</i><i class="is-w">W</i><i class="">L</i><i class="is-w">W</i><i class="">L</i><i class="is-w">W</i><i class="">L</i><i class="is-w">W</i></div>
+          <div class="h-kv"><span><b>3,49</b><small>убийств</small></span><span><b>14,36</b><small>ассистов</small></span><span><b>356</b><small>GPM</small></span><span><b>485</b><small>XPM</small></span></div></div>
+        <div class="h-box pl-side"><h3>Герои <small>профматчи с 2022</small></h3><div class="pl-h"><img src="img/heroes/rubick.webp" alt="" /><span><b>Rubick</b><small>2,8 / 5,5 / 15,2</small></span><span class="pl-h__bar"><i style="--p: 100%"></i></span><span class="pl-h__n">95<small> матчей</small></span><span class="pl-h__wr is-hi">67 %</span></div><div class="pl-h"><img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/dark_willow.png" alt="" /><span><b>Dark Willow</b><small>3,8 / 6,2 / 12,6</small></span><span class="pl-h__bar"><i style="--p: 76.84210526315789%"></i></span><span class="pl-h__n">73<small> матчей</small></span><span class="pl-h__wr is-hi">67 %</span></div><div class="pl-h"><img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/monkey_king.png" alt="" /><span><b>Monkey King</b><small>3,5 / 6,6 / 14,8</small></span><span class="pl-h__bar"><i style="--p: 75.78947368421053%"></i></span><span class="pl-h__n">72<small> матчей</small></span><span class="pl-h__wr">65 %</span></div><div class="pl-h"><img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/techies.png" alt="" /><span><b>Techies</b><small>4,8 / 7,5 / 14,3</small></span><span class="pl-h__bar"><i style="--p: 72.63157894736842%"></i></span><span class="pl-h__n">69<small> матчей</small></span><span class="pl-h__wr">65 %</span></div><div class="pl-h"><img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/batrider.png" alt="" /><span><b>Batrider</b><small>3,8 / 6,0 / 15,2</small></span><span class="pl-h__bar"><i style="--p: 68.42105263157895%"></i></span><span class="pl-h__n">65<small> матчей</small></span><span class="pl-h__wr is-hi">69 %</span></div><div class="pl-h"><img src="https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/keeper_of_the_light.png" alt="" /><span><b>Keeper of the Light</b><small>1,8 / 3,9 / 13,4</small></span><span class="pl-h__bar"><i style="--p: 57.89473684210527%"></i></span><span class="pl-h__n">55<small> матчей</small></span><span class="pl-h__wr is-hi">73 %</span></div></div>
+        <div class="h-box"><h3>Турниры</h3><div class="pl-cups"><div class="is-2"><i>2</i><span>The International 2026<small>Финал 2:3 Team Spirit</small></span><em>2026</em></div><div class="is-1"><i>1</i><span>Esports World Cup 2026<small>Финал 3:1 BetBoom</small></span><em>2026</em></div><div class="is-1"><i>1</i><span>DreamLeague S29<small>Финал 3:2 Aurora</small></span><em>2026</em></div><div class="is-3"><i>3</i><span>The International 2025<small>Финал 1:2 Xtreme Gaming</small></span><em>2025</em></div><div class="is-1"><i>1</i><span>DreamLeague S26<small>Финал 3:0 BetBoom</small></span><em>2025</em></div><div class="is-1"><i>1</i><span>ESL One Raleigh 2025<small>Финал 3:1 Team Spirit</small></span><em>2025</em></div><div class="is-1"><i>1</i><span>ESL One Bangkok 2024<small>Финал 3:1 Liquid</small></span><em>2024</em></div></div></div>
+        <div class="h-box"><h3>Состав PARIVISION</h3><div class="h-mates"><span class="">1 · Satanic</span><span class="">2 · No[o]ne</span><span class="">3 · Dukalis</span><span class="is-me">4 · 9Class</span><span class="">5 · Noticed</span></div></div>
+      </aside>
+    </div>
+    <div class="d-foot"></div>
+  </div>
+</section>
+<!-- Футер продукта (правка начальника 30.09: «не хватает футера»; дирижёр 05.10: из лабы «Футер» берём v2 «По мотивам Esports World Cup»).
+     Постер: ссылки тремя колонками, огромный знак Fantasy / Dota 2 на диагональной фактуре, «Честная игра» тремя значками, внизу полоса —
+     копирайт, приложения, соцсети, язык. Иконки — свои SVG. Разделов, которых нет, — data-soon (плашка «скоро»). Телефон — container query «ft»
+     на обёртке .site-ft. Стили — styles.css [=== Футер ===]. -->
+<div class="site-ft">
+<footer class="ft f2">
+  <div class="f2__main">
+    <div class="f2__links">
+      <div><h4>Играть</h4><ul><li><a href="onboarding.html">Как это работает</a></li><li><a href="#" data-soon="Как считаются очки">Как считаются очки</a></li><li><a href="chest.html?form=booster">Бустеры</a></li><li><a href="gallery.html">Маркет карт</a></li><li><a href="#" data-soon="Лидеры">Лидеры</a></li></ul></div>
+      <div><h4>Помощь</h4><ul><li><a href="#" data-soon="Вопросы и ответы">Вопросы и ответы</a></li><li><a href="#" data-soon="Поддержка">Поддержка</a></li><li><a href="#" data-soon="Статус сервиса">Статус сервиса</a></li><li><a href="#" data-soon="Партнёрам и командам">Партнёрам и командам</a></li><li><a href="#" data-soon="Пресса">Пресса</a></li></ul></div>
+      <div><h4>Правила</h4><ul><li><a href="#" data-soon="Соглашение">Соглашение</a></li><li><a href="#" data-soon="Бустеры и шансы">Бустеры и шансы</a></li><li><a href="#" data-soon="Честная игра">Честная игра</a></li><li><a href="#" data-soon="Конфиденциальность">Конфиденциальность</a></li><li><a href="#" data-soon="Cookies">Cookies</a></li></ul></div>
+    </div>
+    <div class="f2__mark"><b>Fantasy</b><b>Dota 2</b><p>Сезон 1 · DreamLeague, BLAST, The International</p></div>
+  </div>
+  <div class="f2__fair" aria-label="Честная игра">
+    <span><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 3.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11Zm-1 2v7h2v-7h-2Z" /></svg>Монеты не покупаются и не выводятся</span>
+    <span><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 4a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Zm9 9a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7ZM18.3 4.3l1.4 1.4L5.7 19.7l-1.4-1.4L18.3 4.3Z" /></svg>Шансы каждого бустера открыты</span>
+    <span><span class="ft-age">18+</span>Fantasy — не ставки, играй в удовольствие</span>
+  </div>
+  <div class="f2__band">
+    <div><small>Fantasy · Dota 2</small><p class="ft-fine">© 2026 Fantasy · Dota 2. Не связан с Valve и Riot Games. Данные матчей — Liquipedia и OpenDota.</p></div>
+    <div><small>Играй с телефона</small><div class="f2__apps"><a class="f2__app" href="#" data-soon="Приложение"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.5 2-3.6a4.3 4.3 0 0 0-3.4-1.8c-1.4-.1-2.8.9-3.5.9s-1.8-.9-3-.8a4.5 4.5 0 0 0-3.8 2.3c-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7 2-1.2 2.8-2.3c.9-1.3 1.3-2.6 1.3-2.6s-2.5-1-2.5-3.7ZM14.1 5.6A4 4 0 0 0 15 2.7a4.1 4.1 0 0 0-2.7 1.4 3.8 3.8 0 0 0-1 2.8 3.4 3.4 0 0 0 2.8-1.3Z" /></svg><span><i>Скачать в</i>App Store</span></a><a class="f2__app" href="#" data-soon="Приложение"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 2.9v18.2c0 .6.6.9 1.1.6L20 13.1c.5-.3.5-1.1 0-1.4L5.6 2.3c-.5-.3-1.1 0-1.1.6Z" /></svg><span><i>Доступно в</i>Google Play</span></a></div></div>
+    <div><small>Мы в соцсетях</small><div class="f2__soc"><a href="#" aria-label="Telegram" data-soon="Telegram"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 3.6 2.9 10.8c-1.3.5-1.3 1.2-.2 1.6l4.8 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.3-2.2 4.8 3.5c.9.5 1.5.2 1.7-.8l3.1-14.7c.3-1.3-.5-1.9-1.5-1.4Zm-3.4 4-8.6 7.8-.3 3.5-1.6-5 10.1-6.4c.5-.3.9 0 .4.1Z" /></svg></a><a href="#" aria-label="Twitch" data-soon="Twitch"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3 3 6v13h4v2h2.5l2-2H15l5-5V3H4Zm14 10-3 3h-3.5l-2 2v-2H6V5h12v8Zm-3-6h-2v5h2V7Zm-5 0H8v5h2V7Z" /></svg></a><a href="#" aria-label="YouTube" data-soon="YouTube"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12c0 1.6.1 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.3-1.6.4-3.2.4-4.8s-.1-3.2-.4-4.8ZM10 15V9l5.2 3-5.2 3Z" /></svg></a><a href="#" aria-label="Discord" data-soon="Discord"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.3 5.3A16 16 0 0 0 15.4 4l-.5 1a14 14 0 0 0-5.8 0L8.6 4a16 16 0 0 0-3.9 1.3C2.2 9 1.6 12.7 1.9 16.3a16 16 0 0 0 4.8 2.5l1-1.6c-.6-.2-1.1-.5-1.6-.8l.4-.3a11 11 0 0 0 11 0l.4.3c-.5.3-1 .6-1.6.8l1 1.6a16 16 0 0 0 4.8-2.5c.4-4.2-.7-7.8-2.8-11ZM8.8 14.2c-1 0-1.7-.9-1.7-2s.8-2 1.7-2 1.8.9 1.7 2c0 1.1-.8 2-1.7 2Zm6.4 0c-1 0-1.7-.9-1.7-2s.8-2 1.7-2 1.8.9 1.7 2c0 1.1-.7 2-1.7 2Z" /></svg></a><a href="#" aria-label="X" data-soon="X"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.8 3h3.1l-6.8 7.8L22 21h-6.2l-4.9-6.4L5.3 21H2.2l7.3-8.3L2 3h6.4l4.4 5.8L17.8 3Zm-1.1 16.2h1.7L7.4 4.7H5.6l11.1 14.5Z" /></svg></a></div></div>
+    <div><small>Язык</small><span class="ft-lang"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm6.9 6h-3a15 15 0 0 0-1.3-3.9A8 8 0 0 1 18.9 8ZM12 4c.8 1.1 1.5 2.5 1.9 4h-3.8c.4-1.5 1.1-2.9 1.9-4ZM4.3 14a8 8 0 0 1 0-4h3.4a16 16 0 0 0 0 4H4.3Zm.8 2h3c.3 1.4.7 2.7 1.3 3.9A8 8 0 0 1 5.1 16Zm3-8h-3a8 8 0 0 1 4.3-3.9C8.8 5.3 8.4 6.6 8.1 8ZM12 20c-.8-1.1-1.5-2.5-1.9-4h3.8c-.4 1.5-1.1 2.9-1.9 4Zm2.3-6H9.7a14 14 0 0 1 0-4h4.6a14 14 0 0 1 0 4Zm.3 5.9c.6-1.2 1-2.5 1.3-3.9h3a8 8 0 0 1-4.3 3.9Zm1.7-5.9a16 16 0 0 0 0-4h3.4a8 8 0 0 1 0 4h-3.4Z" /></svg>Русский<svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5H7Z" /></svg></span></div>
+  </div>
+</footer>
+</div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

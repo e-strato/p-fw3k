@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_v3.css" />
+<style>
+/* v18 · Квадрат сверху — вариант v16 (дирижёр 01.10: «сверху всё в квадрат, полноценная, а снизу только отступ для контента»): квадрат во всю ширину
+   от верха карты — игрок, паук навыков, в углах номер карты и рейтинг; снизу — ник, позиция и имя, герои строкой, команда. Шрифт — IBM Plex Sans */
+.d18 { --r: .9em; --shape: inset(0 round .9em); --f-disp: 'IBM Plex Sans'; --f-ui: 'IBM Plex Sans'; }
+.d18__face, .d18 .bk { font-family: 'IBM Plex Sans', sans-serif; }
+.d18__face { position: absolute; inset: 0; }
+.d18__plate { position: absolute; inset: 0; border-radius: var(--r); background: var(--c-card-ink);
+  box-shadow: 0 1.4em 2.6em -1em color-mix(in srgb, var(--c-black) 85%, transparent); }
+
+/* 2 Фон: квадрат посередине — тёмный цвет силы, логотип команды за игроком */
+.d18__sq { position: absolute; left: 0; top: 0; width: 22em; height: 22em; overflow: hidden; border-radius: var(--r) var(--r) 0 0;
+  background:
+    radial-gradient(60% 50% at 50% 38%, color-mix(in srgb, var(--tier) 30%, transparent), transparent 75%),
+    linear-gradient(180deg, color-mix(in srgb, var(--tier-2) 90%, var(--c-card-ink)), color-mix(in srgb, var(--tier-2) 35%, var(--c-card-ink))); }
+.d18__logo { left: 3.5em; top: 3.4em; width: 15em; height: 12.5em; background: color-mix(in srgb, var(--tier) 20%, transparent); }
+
+/* 3 Рамка: кант по краю карты и тонкий кант квадрата */
+.d18__edge { position: absolute; inset: 0; z-index: 12; border-radius: var(--r); pointer-events: none; box-shadow: inset 0 0 0 .15em var(--tier); }
+.d18__sqline { position: absolute; left: 0; right: 0; top: 0; height: 22em; z-index: 8; pointer-events: none;
+  box-shadow: inset 0 -.08em 0 color-mix(in srgb, var(--tier) 70%, transparent); }
+
+/* 5 Фото: игрок по центру квадрата, свечение за головой */
+.d18__halo { position: absolute; left: 11.3em; top: 7em; width: 10em; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--tier-hi) 55%, transparent), color-mix(in srgb, var(--tier) 22%, transparent) 55%, transparent); }
+.d18 .ph { left: 3.2em; top: 3em; width: 15.6em;
+  -webkit-mask: linear-gradient(180deg, var(--c-black) 62%, transparent 84%); mask: linear-gradient(180deg, var(--c-black) 62%, transparent 84%); }
+
+/* 8 Паук навыков — заход 4 (01.10: «паук некрасивый, допридумать»): тонкие оси-лучи от центра, фигура — яркий контур без заливки,
+   точки — кольца; подписи вынесены на концы осей по кругу, к ним — пунктир от точки. С Prism — второй тонкий контур внутри.
+   Лицо игрока свободно от цифр. Сетка svg = квадрат 144 × 144 */
+.d18__radar { left: 0; top: 0; width: 22em; height: 22em; }
+.d18__radar .shape { fill: none; stroke: var(--tier-hi); stroke-width: 1.6; stroke-linejoin: round;
+  filter: drop-shadow(0 0 1.2px color-mix(in srgb, var(--c-black) 90%, transparent)); }
+.d18__radar .rd__holo { fill: none !important; stroke: color-mix(in srgb, var(--tier-hi) 50%, transparent); stroke-width: .6; transform: scale(.9); mix-blend-mode: normal; opacity: 1; }
+.d18__radar .dot { r: 2px; fill: var(--c-card-ink); stroke: var(--tier-hi); stroke-width: 1.2; }
+.d18__radar .v { font-size: 13px; paint-order: stroke; stroke: color-mix(in srgb, var(--c-card-ink) 85%, transparent); stroke-width: 3px; }
+.d18__radar .k { font-size: 5.6px; letter-spacing: .04em; fill: color-mix(in srgb, var(--c-white) 80%, transparent); paint-order: stroke; stroke: color-mix(in srgb, var(--c-card-ink) 85%, transparent); stroke-width: 2px; }
+/* 4 Эффекты: с Holo — внешнее свечение контура */
+.d18__radar .rd__glow { fill: none; stroke: var(--tier); stroke-width: 5; opacity: .35; filter: blur(1.5px); }
+
+/* 7 В углах квадрата: номер карты слева, рейтинг справа — поверх фото */
+.d18__serial { position: absolute; left: 1em; top: 1em; z-index: 9; display: grid; padding: .35em .65em; border-radius: .45em; line-height: 1.2;
+  background: color-mix(in srgb, var(--c-card-ink) 72%, transparent); }
+.d18__serial b { font-size: .8em; font-weight: 700; color: var(--tier-hi); }
+.d18__serial small { font-size: .56em; font-weight: 500; color: var(--c-muted); }
+.d18__ovr { position: absolute; right: 1.1em; top: .7em; z-index: 9; }
+.d18__ovr b { font-size: 3em; font-weight: 700; line-height: 1; letter-spacing: -.04em; color: var(--c-white); text-shadow: 0 .05em .4em color-mix(in srgb, var(--c-black) 55%, transparent); }
+
+/* 7 Герои — строкой в нижней области, под ником */
+.d18__heroes { position: absolute; left: 1.2em; right: 1.2em; top: 25.4em; z-index: 6; display: grid; grid-template-columns: repeat(3, 1fr); }
+.d18__heroes div { display: flex; justify-content: center; align-items: center; gap: .45em; }
+.d18__heroes div + div { box-shadow: inset .05em 0 0 color-mix(in srgb, var(--c-white) 10%, transparent); }
+.d18__heroes .hero-ic { width: 2em; aspect-ratio: 1; border-radius: 50%; box-shadow: 0 0 0 .08em color-mix(in srgb, var(--tier) 70%, transparent); }
+.d18__heroes small { display: grid; font-size: .58em; font-weight: 500; line-height: 1.2; color: var(--c-muted); }
+.d18__heroes small b { font-weight: 700; color: var(--c-white); }
+
+/* 6 + 8 Нижняя область: ник слева, напротив — позиция и имя; команда строкой во всю ширину */
+.d18__who { position: absolute; left: 1.2em; top: 22.7em; z-index: 6; }
+.d18__nick { font-weight: 700; line-height: 1; letter-spacing: -.02em; white-space: nowrap; }
+.d18__side { position: absolute; right: 1.2em; top: 22.75em; z-index: 6; display: grid; justify-items: end; gap: .3em; text-align: right; }
+.d18__role { font-size: .95em; font-weight: 600; white-space: nowrap; }
+.d18__role b { font-weight: 700; color: var(--tier-hi); }
+.d18__name { display: flex; align-items: center; gap: .45em; font-size: .72em; font-weight: 500; color: var(--c-muted); white-space: nowrap; }
+.d18__team { position: absolute; left: 0; right: 0; bottom: 0; height: 2.4em; z-index: 9; display: flex; justify-content: center; align-items: center; gap: .5em;
+  font-size: .88em; font-weight: 700; border-radius: 0 0 var(--r) var(--r); border-top: .06em solid color-mix(in srgb, var(--c-white) 10%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tier) 22%, var(--c-card-ink)), color-mix(in srgb, var(--tier) 6%, var(--c-card-ink)) 50%, color-mix(in srgb, var(--tier) 22%, var(--c-card-ink))); }
+.d18__team .logo { width: 1.7em; height: 1.7em; }
+
+/* 9 Оборот: подробно — статы полосками с полными названиями, герои, форма, кнопка */
+.d18 .bk { box-shadow: inset 0 0 0 .15em var(--tier); padding: 1.3em; gap: .7em; }
+.d18 .bk__top b, .d18 .bk__top em { font-weight: 700; }
+.d18 .bk__top em { color: var(--c-white); }
+.d18 .bk__stats { grid-template-columns: 1fr; gap: .35em; }
+.d18 .bk__stats li { grid-template-columns: 6.5em 1fr 2em; align-items: center; gap: .6em; font-size: .72em; }
+.d18 .bk__stats b { order: 3; text-align: right; font-size: 1.1em; }
+.d18 .bk__stats i { grid-column: auto; height: .45em; }
+.d18 .bk__heroes { grid-template-columns: repeat(3, 1fr); }
+.d18 .bk__heroes li { grid-template-columns: 1fr; justify-items: center; text-align: center; gap: .2em; }
+.d18 .bk__heroes .hero-ic { width: 2.2em; aspect-ratio: 1; border-radius: 50%; }
+.d18 .bk__btn { border-radius: .6em; }
+
+/* Заход 2 (01.10): паук меньше и тусклее; при наведении курсор выбирает стат по кругу, как колесо оружия в GTA 5 —
+   подсвечивается сектор, луч, точка и подпись этого стата (выбор — data-sel на svg, считает скрипт ниже) */
+.d18__radar .shape { stroke: color-mix(in srgb, var(--tier-hi) 60%, transparent); stroke-width: 1.3; }
+.d18__radar .k, .d18__radar .v, .d18__radar .lead, .d18__radar .dot { opacity: .55; transition: opacity .2s; }
+.d18__radar .sec { fill: color-mix(in srgb, var(--tier-hi) 16%, transparent); stroke: color-mix(in srgb, var(--tier-hi) 45%, transparent); stroke-width: .5; opacity: 0; transition: opacity .2s; }
+.d18__radar[data-sel='0'] [data-i='0'], .d18__radar[data-sel='1'] [data-i='1'], .d18__radar[data-sel='2'] [data-i='2'],
+.d18__radar[data-sel='3'] [data-i='3'], .d18__radar[data-sel='4'] [data-i='4'], .d18__radar[data-sel='5'] [data-i='5'] { opacity: 1; }
+.d18__radar[data-sel='0'] .ray[data-i='0'], .d18__radar[data-sel='1'] .ray[data-i='1'], .d18__radar[data-sel='2'] .ray[data-i='2'],
+.d18__radar[data-sel='3'] .ray[data-i='3'], .d18__radar[data-sel='4'] .ray[data-i='4'], .d18__radar[data-sel='5'] .ray[data-i='5'] { stroke: var(--tier-hi); stroke-width: .9; }
+.d18__radar[data-sel] .v[data-i] { font-size: 13px; }
+</style></head>
+<body><section class="section v3">
+  <div class="sec-head">
+    <h2 class="sec-title">v18 · Квадрат сверху</h2>
+    <p class="sec-lead">Сверху — полноценный квадрат во всю ширину: игрок, паук навыков контуром, в углах номер карты и рейтинг. Наведите: курсор выбирает стат по кругу, как колесо оружия в GTA 5. Снизу — только область для контента: ник, напротив позиция и имя, строка героев, команда. Паук двигается в 3D. Шрифт один — IBM Plex Sans.</p>
+  </div>
+  <div id="v3"></div>
+</section>
+<script src="_v3.js"></script>
+<script>
+V3.страница({
+  класс: 'd18',
+  иерархия: [
+    'Скруглённый прямоугольник: сверху квадрат во всю ширину от самого верха, снизу — область для контента.',
+    'Квадрат: тёмный цвет силы, логотип команды за игроком.',
+    'Кант цвета силы по краю карты и черта по низу квадрата.',
+    'Блеск редкости в квадрате. С Holo контур паука светится, с Prism внутри появляется второй тонкий контур.',
+    'Игрок по центру квадрата, за головой свечение.',
+    'Нижняя область: ник крупно слева, напротив — флаг и настоящее имя.',
+    'В углах квадрата: номер карты слева, рейтинг справа — крупно, без обводок. Три героя — строкой под ником (матчи и винрейт).',
+    'Паук навыков в квадрате — меньше и тусклее, контуром без заливки, подписи на концах осей; двигается в 3D. При наведении курсор выбирает стат по кругу, как колесо оружия в GTA 5: подсвечиваются сектор, луч и подпись. Позиция — напротив ника, цветом силы. Команда — строкой внизу.',
+    'Свой оборот — подробный: статы полосками с полными названиями, герои, форма, кнопка «Страница игрока».',
+  ],
+  оборот: (п, r, h) => h.оборот(п),
+  лицо: (п, r, h) => `
+<div class="d18__face">
+  <div class="d18__plate" data-l="1"></div>
+  <div class="d18__sq" data-l="2">
+    ${h.маска(п, 'd18__logo')}
+    <i class="d18__halo" data-l="5"></i>
+    ${h.фото(п)}
+    ${h.радар(п, 'd18__radar rd--3d', { R: 40, сетка: false, мин: .3, наОсях: 55, сектора: true, вид: '-72 -72 144 144' })}
+    ${h.блеск(r)}
+  </div>
+  <i class="d18__sqline" data-l="3"></i>
+  <i class="d18__edge" data-l="3"></i>
+  <div class="d18__serial" data-l="7"><b>${h.серия(п)}</b><small>${h.СЕЗОН}</small></div>
+  <div class="d18__ovr" data-l="7"><b>${п.рейтинг}</b></div>
+  <div class="d18__heroes" data-l="7">${п.герои.map((г) => `<div>${h.герой(г)}<small><b>${г[2]} М</b>${г[3]}%</small></div>`).join('')}</div>
+  <div class="d18__who" data-l="6"><div class="d18__nick" style="font-size: ${Math.min(2.1, 10 / (п.ник.length * .58)).toFixed(2)}em">${п.ник}</div></div>
+  <div class="d18__side"><span class="d18__role" data-l="8"><b>Pos ${п.pos}</b> · ${h.РОЛИ[п.pos]}</span>${п.имя ? `<span class="d18__name" data-l="6">${h.флаг(п)}${п.имя}</span>` : ''}</div>
+  <div class="d18__team" data-l="8">${h.лого(п)}${h.команда(п)}</div>
+</div>`,
+})
+// Колесо выбора: угол от центра паука до курсора → ближайшая из шести осей (оси по часовой от верха, через 60°)
+document.querySelectorAll('.d18__radar').forEach((svg) => {
+  const карта = svg.closest('.kc')
+  if (!карта || карта.hasAttribute('data-step')) return
+  карта.addEventListener('pointermove', (e) => {
+    const б = svg.getBoundingClientRect()
+    const угол = Math.atan2(e.clientY - (б.top + б.height / 2), e.clientX - (б.left + б.width / 2)) * 180 / Math.PI
+    svg.dataset.sel = String(((Math.round((угол + 90) / 60) % 6) + 6) % 6)
+  })
+  карта.addEventListener('pointerleave', () => delete svg.dataset.sel)
+})
+</script>
+</body></html>

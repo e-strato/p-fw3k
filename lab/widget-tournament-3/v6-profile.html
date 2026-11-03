@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<title>v6 · Карточка-профиль</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="../widget-tournament-2/_t2.css" /><link rel="stylesheet" href="_t3.css" /></head>
+<body><div class="lab-board">
+  <h1>Виджет турнира · v6 · Карточка-профиль</h1>
+  <p class="lab-board__lead">Основа — v27. Таблица чистая: место, команда, В–П, очки — детали только в карточке по клику. Прошедший турнир (BLAST Slam VIII, последний ‹ › или «Прошли» в списке): победитель и места с призовыми, в карточке — место, призовые, рейтинг, форма и следующий турнир. Карточка как мини-профиль: сверху команда, «#67 в мире» и форма точками; ниже одной строкой ближайший матч (время · против · ›) и «победа — / поражение —».</p>
+  <div class="t2-one"><div id="w"></div></div>
+</div>
+<script src="../widget-tournament/_full.js"></script><script src="../widget-tournament-2/_t2.js"></script>
+<script>T2.render(document.getElementById('w'), { start: 'epl', tap: 11, marks: 'arrows', live: true, sheet: 'anchor', when: 'chip', past: true, rf: 'profile' })</script>
+</body></html>

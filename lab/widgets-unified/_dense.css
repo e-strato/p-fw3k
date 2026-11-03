@@ -1,0 +1,7 @@
+/* v2 — тот же набор токенов, но плотнее: шапка и строки списка 44, таблица 28 */
+:root{ --g-hd: 44px; --g-row: 44px; --g-cell: 28px; }
+.t5-tbl td{ height:var(--g-cell); }
+.s6-qm--tall{ min-height:var(--g-row) !important; padding-top:4px !important; padding-bottom:4px !important; }
+.t2--sk .t2-r{ min-height:var(--g-row); }
+.t2-rows--tint .t2-r{ min-height:var(--g-row); padding-top:2px; padding-bottom:2px; }
+.s8-r--a{ height:40px; }

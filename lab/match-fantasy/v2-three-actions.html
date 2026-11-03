@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_mf.css" />
+<style>
+.ta-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; margin-top: 6px; }
+.ta-head h2 { font-size: 24px; font-weight: 800; letter-spacing: -.01em; } .ta-head p { margin-top: 4px !important; color: var(--c-muted); font-size: 14px; }
+/* Три карточки-действия, как Fantasy / Rewards / Predictions на главной Dota во время TI */
+.ta-acts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.ta-act { position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-rows: auto 1fr auto; min-height: 340px; padding: 0; border: 0; border-radius: 14px; background: var(--c-ui-panel); text-align: left; transition: transform .25s, box-shadow .25s; }
+.ta-act::before { content: ''; position: absolute; inset: 0; z-index: -1; background: radial-gradient(80% 60% at 50% 30%, color-mix(in srgb, var(--glow) 22%, transparent), transparent 70%); opacity: .6; transition: opacity .3s; }
+.ta-act:hover { transform: translateY(-3px); } .ta-act:hover::before { opacity: 1; }
+.ta-act[aria-expanded='true'] { box-shadow: inset 0 0 0 2px var(--c-accent), 0 24px 60px -30px var(--c-accent); }
+.ta-act[aria-expanded='true']::before { opacity: 1; }
+.ta-act__t { display: grid; gap: 2px; padding: 18px 20px 0; } .ta-act__t b { font-size: 20px; font-weight: 800; } .ta-act__t small { color: var(--c-caption); font-size: 13px; }
+.ta-act__art { position: relative; display: grid; place-items: center; min-height: 190px; padding: 10px; }
+.ta-act__bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 20px; background: color-mix(in srgb, var(--c-ui-item) 70%, transparent); }
+.ta-act__bar span { color: var(--c-muted); font-size: 13.5px; } .ta-act__bar b { color: var(--c-text); }
+.ta-act__bar em { color: var(--c-accent); font-size: 14px; font-weight: 700; font-style: normal; white-space: nowrap; }
+.ta-act__done { position: absolute; top: 16px; right: 16px; }
+/* Веер карт в карточке «Фэнтези» */
+.ta-fan { display: flex; justify-content: center; } .ta-fan .mf-card { margin: 0 -18px; transition: transform .3s; }
+.ta-fan .mf-card:nth-child(1) { transform: rotate(-9deg) translateY(10px); } .ta-fan .mf-card:nth-child(3) { transform: rotate(9deg) translateY(10px); } .ta-fan .mf-card:nth-child(2) { z-index: 2; }
+.ta-act:hover .ta-fan .mf-card:nth-child(1) { transform: rotate(-13deg) translate(-8px, 12px); } .ta-act:hover .ta-fan .mf-card:nth-child(3) { transform: rotate(13deg) translate(8px, 12px); }
+/* «Прогнозы»: логотипы и доли зрителей */
+.ta-duel { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 14px; width: 100%; max-width: 320px; }
+.ta-duel > span { display: grid; justify-items: center; gap: 6px; font-weight: 700; } .ta-duel .mf-lg.lg { width: 64px; height: 64px; }
+.ta-duel i { color: var(--c-ui-dim); font: 700 18px var(--font-c); font-style: normal; }
+.ta-duel small { color: var(--c-caption); font: 600 13px var(--font-c); }
+.ta-duel > span.is-on { color: var(--c-accent); } .ta-duel > span.is-on .mf-lg { filter: drop-shadow(0 0 18px var(--tc)); }
+/* «Награды»: дорожка из трёх наград */
+.ta-track { display: grid; grid-template-columns: repeat(3, 1fr); align-items: end; gap: 10px; width: 100%; max-width: 330px; }
+.ta-track > span { position: relative; display: grid; justify-items: center; gap: 8px; text-align: center; }
+.ta-track > span > i { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 16px; background: var(--c-ui-item); font: 800 18px var(--font-c); font-style: normal; color: var(--c-coin); }
+.ta-track > span.is-done > i { background: color-mix(in srgb, var(--c-stat-high) 16%, var(--c-ui-item)); box-shadow: inset 0 0 0 2px var(--c-stat-high); }
+.ta-track small { color: var(--c-caption); font-size: 12px; line-height: 1.3; }
+.ta-track .mf-card { margin-bottom: -4px; }
+/* Раскрытие под карточками */
+.ta-open { position: relative; padding: 22px; border-radius: 14px; background: var(--c-ui-panel); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-accent) 30%, transparent); }
+.ta-open::before { content: ''; position: absolute; top: -9px; left: var(--arrow); width: 18px; height: 18px; rotate: 45deg; background: var(--c-ui-panel); box-shadow: -1px -1px 0 0 color-mix(in srgb, var(--c-accent) 30%, transparent); }
+.ta-open__h { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
+.ta-open__h h3 { font-size: 20px; font-weight: 800; } .ta-open__h p { color: var(--c-muted); font-size: 13.5px; margin-top: 2px !important; }
+.ta-clocks { display: flex; gap: 28px; }
+/* Пятёрка: слоты 1–5 */
+.ta-slots { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-bottom: 20px; }
+.ta-slot { position: relative; display: grid; justify-items: center; align-content: start; gap: 8px; min-height: 230px; padding: 12px 6px; border: 0; border-radius: 12px; background: var(--c-ui-item); }
+.ta-slot.is-empty { background: repeating-linear-gradient(135deg, var(--c-ui-item) 0 10px, color-mix(in srgb, var(--c-ui-item) 70%, var(--c-ui-bg)) 10px 20px); }
+.ta-slot__pos { color: var(--c-caption); font-size: 12.5px; font-weight: 600; }
+.ta-slot.is-empty .ta-slot__ph { display: grid; place-items: center; width: 120px; height: 150px; border-radius: 10px; box-shadow: inset 0 0 0 2px var(--c-ui-hover); color: var(--c-ui-dim); font: 700 30px var(--font-c); }
+.ta-slot__cap { border: 0; padding: 4px 10px; border-radius: 6px; background: var(--c-ui-hover); color: var(--c-muted); font-size: 12px; font-weight: 600; }
+.ta-slot__cap em, .ta-slot__pos em { font-style: normal; } .ta-slot__cap i { display: none; font-style: normal; }
+.ta-slot__cap[aria-pressed='true'] { background: var(--c-coin); color: var(--c-card-dark-text); }
+.ta-pool { display: grid; gap: 14px; }
+.ta-pool > div { display: grid; grid-template-columns: 170px repeat(5, minmax(0, 1fr)); align-items: center; gap: 12px; }
+.ta-pool > div > p { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+.ta-pick { position: relative; display: grid; justify-items: center; gap: 6px; padding: 8px 4px; border: 0; border-radius: 12px; background: none; transition: background .2s; }
+.ta-pick:hover:not(:disabled) { background: var(--c-ui-item); }
+.ta-pick.is-on { background: color-mix(in srgb, var(--c-accent) 16%, var(--c-ui-item)); box-shadow: inset 0 0 0 2px var(--c-accent); }
+.ta-pick:disabled { cursor: default; } .ta-pick:disabled .hg { opacity: .35; filter: grayscale(.7); }
+.ta-pick small { color: var(--c-caption); font-size: 12px; } .ta-pick small b { color: var(--c-text); font-family: var(--font-c); font-size: 14px; }
+.ta-total { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--c-ui-line); }
+.ta-total p { display: flex; flex-wrap: wrap; gap: 6px 24px; color: var(--c-muted); font-size: 13.5px; } .ta-total b { color: var(--c-text); font: 700 22px var(--font-c); }
+/* Прогноз внутри раскрытия */
+.ta-qs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.ta-q { display: grid; align-content: start; gap: 10px; padding: 16px; border-radius: 12px; background: var(--c-ui-item); }
+.ta-q > b { font-size: 15px; } .ta-q > small { color: var(--c-caption); font-size: 12.5px; }
+.ta-opts { display: grid; gap: 6px; }
+.ta-opt { display: flex; align-items: center; justify-content: space-between; gap: 10px; height: 44px; padding: 0 12px; border: 0; border-radius: 9px; background: var(--c-ui-hover); font-size: 14px; font-weight: 600; }
+.ta-opt span { display: flex; align-items: center; gap: 8px; } .ta-opt em { color: var(--c-caption); font: 600 13px var(--font-c); font-style: normal; }
+.ta-opt.is-on { background: color-mix(in srgb, var(--c-accent) 22%, var(--c-ui-hover)); box-shadow: inset 0 0 0 2px var(--c-accent); }
+/* Награды внутри раскрытия */
+.ta-rw { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.ta-rw > div { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 16px; padding: 16px; border-radius: 12px; background: var(--c-ui-item); }
+.ta-rw > div.is-done { background: color-mix(in srgb, var(--c-stat-high) 10%, var(--c-ui-item)); }
+.ta-rw__ic { display: grid; place-items: center; width: 72px; height: 72px; border-radius: 16px; background: var(--c-ui-hover); color: var(--c-coin); font: 800 22px var(--font-c); }
+.ta-rw b { display: block; font-size: 15px; } .ta-rw small { display: block; margin-top: 4px; color: var(--c-caption); font-size: 12.5px; }
+.ta-rw em { display: inline-block; margin-top: 8px; font-size: 12.5px; font-weight: 700; font-style: normal; }
+.ta-rw .is-done em { color: var(--c-stat-high); } .ta-rw div:not(.is-done) em { color: var(--c-ui-dim); }
+@container mf (max-width: 700px) {
+  .ta-head h2 { font-size: 19px; } .ta-acts { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .ta-act { grid-template-rows: auto; grid-template-columns: minmax(0, 1fr) 130px; min-height: 0; }
+  .ta-act__t { padding: 14px 0 0 14px; } .ta-act__t b { font-size: 17px; }
+  .ta-act__art { grid-row: 1 / 3; grid-column: 2; min-height: 130px; padding: 6px; overflow: hidden; }
+  .ta-act__bar { grid-column: 1; align-items: start; flex-direction: column; gap: 4px; padding: 10px 14px 14px; background: none; }
+  .ta-fan .mf-card { margin: 0 -26px; } .ta-duel { gap: 4px; } .ta-duel .mf-lg.lg { width: 38px; height: 38px; } .ta-duel > span { font-size: 12px; }
+  .ta-track { gap: 4px; } .ta-track > span > i { width: 36px; height: 36px; border-radius: 10px; font-size: 12px; } .ta-track small { display: none; }
+  .ta-act__done { top: 12px; right: auto; left: auto; position: static; justify-self: start; }
+  .ta-open { padding: 14px; } .ta-open::before { display: none; } .ta-open__h h3 { font-size: 17px; } .ta-clocks { gap: 18px; }
+  .ta-slots { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; } .ta-slot { min-height: 0; padding: 6px 2px; gap: 4px; }
+  .ta-slot.is-empty .ta-slot__ph { width: 52px; height: 66px; font-size: 16px; } .ta-slot__cap { padding: 2px 5px; font-size: 10px; } .ta-slot__pos { font-size: 10.5px; }
+  .ta-pool > div { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; } .ta-pool > div > p { grid-column: 1 / -1; }
+  .ta-pick { padding: 4px 0; } .ta-pick small { font-size: 10px; } .ta-pick small b { font-size: 12px; }
+  .ta-qs, .ta-rw { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .ta-pick .kc { --w: 62px !important; } .ta-slot .kc { --w: 60px !important; } .ta-rw .kc { --w: 56px !important; }
+  .ta-slot__pos em, .ta-slot__cap em { display: none; } .ta-slot__cap i { display: inline; }
+  .ta-clocks .mf-clock small { font-size: 11px; }
+  .ta-total .mf-btn { width: 100%; }
+}
+</style></head>
+<body><main class="mf-page">
+  <h1>v2 · Три действия</h1>
+  <p>Как главная Dota 2 во время The International: под сценой матча — блок «Участвуй» из трёх больших карточек: Фэнтези (собери пятёрку из игроков этого матча), Прогнозы, Награды. Карточка показывает, что уже сделано; клик раскрывает её на месте, под рядом — пятёрка по позициям из 10 игроков обеих команд (капитан ×1.5), вопросы прогноза или дорожка наград. Награды отмечаются сами, когда собран состав и сделан прогноз. Карт без своей карточки в коллекции выбрать нельзя.</p>
+  <div class="mf-tools" data-tools></div>
+  <p class="mf-cap">Десктоп · 1440 (рамка уменьшена под ширину окна)</p><div class="mf-wrap"><div class="mf-frame mf-frame--desk" data-mf></div></div>
+  <p class="mf-cap">Телефон · 390 — листается внутри рамки</p><div class="mf-frame mf-frame--phone" data-mf></div>
+</main>
+<script>
+window.MF = {
+  нач: { open: 'f', slots: [null, null, 'collapse', null, null], cap: null, win: null, sc: null, fb: null, savedF: false, savedP: false },
+  инструменты: [['open', 'Раскрыто', [['f', 'Фэнтези'], ['p', 'Прогнозы'], ['r', 'Награды'], ['none', 'Ничего']]], ['demo', 'Пример', [['empty', 'Ничего не сделано'], ['half', 'Состав собран'], ['all', 'Всё сделано']]]],
+  сброс: (S, k) => {
+    if (k !== 'demo') return
+    if (S.demo === 'empty') Object.assign(S, { slots: [null, null, null, null, null], cap: null, win: null, sc: null, fb: null, savedF: false, savedP: false })
+    if (S.demo === 'half') Object.assign(S, { slots: ['pure', 'larl', 'collapse', 'rue', 'miposhka'], cap: 'pure', win: null, sc: null, fb: null, savedF: true, savedP: false })
+    if (S.demo === 'all') Object.assign(S, { slots: ['yatoro', 'larl', 'collapse', 'rue', 'whitemon'], cap: 'yatoro', win: 'ts', sc: '2:1', fb: 'ts', savedF: true, savedP: true })
+  },
+  действия: {
+    open: (S, el) => { S.open = S.open === el.dataset.v ? 'none' : el.dataset.v },
+    pick: (S, el, x) => { const id = el.dataset.v, p = x.п(id), i = p.pos - 1; S.slots[i] = S.slots[i] === id ? null : id; if (S.cap && !S.slots.includes(S.cap)) S.cap = null; S.savedF = false },
+    cap: (S, el) => { S.cap = S.cap === el.dataset.v ? null : el.dataset.v; S.savedF = false },
+    saveF: (S, el, x) => { S.savedF = true; setTimeout(() => x.тост('Состав сохранён — замены до 16:50'), 30) },
+    q: (S, el) => { S[el.dataset.k] = el.dataset.v; if (el.dataset.k === 'win') S.sc = null; S.savedP = false },
+    saveP: (S, el, x) => { S.savedP = true; setTimeout(() => x.тост('Прогноз сохранён'), 30) },
+  },
+}
+MF.вариант = (S, x) => {
+  const { имя, кор, лого, ЦВЕТ, карта, п, часы, РОЛЬ } = x
+  const в = S.slots.filter(Boolean).length, прогноз = !!(S.win && S.sc && S.fb)
+  const очки = S.slots.reduce((s, id) => s + (id ? п(id).очки * (id === S.cap ? 1.5 : 1) : 0), 0)
+  const цели = [[S.savedF && в === 5, '50', 'Собрать пятёрку из игроков матча', '50 монет'], [S.savedP, '100', 'Сделать прогноз на матч', '100 монет'], [false, 'card', 'Капитан наберёт 15+ очков', 'Карта Yatoro · Holo']]
+  const готово = цели.filter((c) => c[0]).length
+  const знак = (ok) => (ok ? '<span class="mf-pill mf-pill--ok ta-act__done">✓ Готово</span>' : '')
+  const карточка = (id, t, sub, арт, бар, cta, glow, ok) => `<button type="button" class="ta-act" style="--glow:${glow}" data-act="open" data-v="${id}" aria-expanded="${S.open === id}">
+    <span class="ta-act__t"><b>${t}</b><small>${sub}</small></span>${знак(ok)}<span class="ta-act__art">${арт}</span><span class="ta-act__bar"><span>${бар}</span><em>${S.open === id ? 'Свернуть ▲' : cta + ' ›'}</em></span></button>`
+  const веер = `<span class="ta-fan">${['yatoro', 'pure', 'rue'].map((id) => `<span class="mf-card">${карта(id, 104)}</span>`).join('')}</span>`
+  const дуэль = `<span class="ta-duel"><span class="${S.win === 'ts' ? 'is-on' : ''}" style="--tc:${ЦВЕТ.ts}">${лого('ts', 'lg')}${кор('ts')}<small>58%</small></span><i>vs</i><span class="${S.win === 'tun' ? 'is-on' : ''}" style="--tc:${ЦВЕТ.tun}">${лого('tun', 'lg')}${кор('tun')}<small>42%</small></span></span>`
+  const дорожка = `<span class="ta-track">${цели.map(([ok, ic, t]) => `<span class="${ok ? 'is-done' : ''}">${ic === 'card' ? `<span class="mf-card">${карта('yatoro', 58)}</span>` : `<i>${ok ? '✓' : '+' + ic}</i>`}<small>${t}</small></span>`).join('')}</span>`
+  const ряд = `<div class="ta-acts">
+    ${карточка('f', 'Фэнтези', 'пятёрка из игроков этого матча', веер, `<b>${в} из 5</b> в составе${S.cap ? ' · капитан ' + п(S.cap).ник : ''}`, S.savedF && в === 5 ? 'Изменить' : в ? 'Дособрать' : 'Собрать пятёрку', 'var(--c-accent)', S.savedF && в === 5)}
+    ${карточка('p', 'Прогнозы', 'победитель, счёт, первая кровь', дуэль, прогноз && S.savedP ? `<b>${кор(S.win)} ${S.sc.replace(':', ' : ')}</b> · сохранён` : '<b>3 вопроса</b> · до +300 очков', прогноз && S.savedP ? 'Изменить' : 'Сделать прогноз', ЦВЕТ.tun, S.savedP)}
+    ${карточка('r', 'Награды', 'за этот матч, бесплатно', дорожка, `<b>${готово} из 3</b> получено`, 'Смотреть', 'var(--c-coin)', готово === 3)}</div>`
+
+  // Раскрытия
+  const таймеры = `<div class="ta-clocks"><div class="mf-clock"><small>Матч начнётся через</small>${часы('start')}</div><div class="mf-clock is-warn"><small>Состав и прогнозы закроются через</small>${часы('lock')}</div></div>`
+  const стрелка = { f: '16%', p: '50%', r: '83%' }[S.open]
+  let тело = ''
+  if (S.open === 'f') {
+    const слот = (i) => { const id = S.slots[i]
+      if (!id) return `<div class="ta-slot is-empty"><span class="ta-slot__pos">P${i + 1}<em> · ${РОЛЬ[i + 1]}</em></span><span class="ta-slot__ph">${i + 1}</span></div>`
+      return `<div class="ta-slot"><span class="ta-slot__pos">P${i + 1}<em> · ${РОЛЬ[i + 1]}</em></span><span class="mf-card" data-act="pick" data-v="${id}">${id === S.cap ? '<span class="mf-cap-mark">×1.5</span>' : ''}${карта(id, 120)}</span><button class="ta-slot__cap" type="button" data-act="cap" data-v="${id}" aria-pressed="${id === S.cap}">${id === S.cap ? 'Капитан' : '<em>Сделать капитаном</em><i>×1.5</i>'}</button></div>` }
+    const игр = (k) => `<div><p>${лого(k)}${имя(k)}</p>${Object.keys(x.ИГРОКИ).filter((id) => п(id).к === k).map((id) => { const pl = п(id), on = S.slots.includes(id)
+      return `<button class="ta-pick ${on ? 'is-on' : ''}" type="button" data-act="pick" data-v="${id}" ${pl.есть ? '' : 'disabled'}><span class="mf-card">${on ? '<span class="mf-mine">✓</span>' : ''}${карта(id, 92)}</span><small>${pl.есть ? `прогноз <b>${pl.очки.toFixed(1)}</b>` : 'нет карты'}</small></button>` }).join('')}</div>`
+    тело = `<div class="ta-open__h"><div><h3>Фэнтези на матч</h3><p>Одна карта на позицию: клик по игроку ставит его в свой слот, клик по капитану — ×1.5 очков</p></div>${таймеры}</div>
+      <div class="ta-slots">${[0, 1, 2, 3, 4].map(слот).join('')}</div><div class="ta-pool">${игр('ts')}${игр('tun')}</div>
+      <div class="ta-total"><p><span>Прогноз очков <b class="mf-num">${очки.toFixed(1)}</b></span><span>Игроков матча <b class="mf-num">${в} / 5</b></span><span>Капитан <b>${S.cap ? п(S.cap).ник : '—'}</b></span></p>
+      <button class="mf-btn mf-btn--main mf-btn--lg" type="button" data-act="saveF" ${в === 5 && !S.savedF ? '' : 'disabled'}>${S.savedF && в === 5 ? '✓ Состав сохранён' : в === 5 ? 'Сохранить состав' : `Ещё ${5 - в} в состав`}</button></div>`
+  }
+  if (S.open === 'p') {
+    const опц = (k, v, html, em) => `<button class="ta-opt ${S[k] === v ? 'is-on' : ''}" type="button" data-act="q" data-k="${k}" data-v="${v}"><span>${html}</span><em>${em}</em></button>`
+    const сч = S.win === 'tun' ? [['2:0', 'Tundra 2 : 0'], ['2:1', 'Tundra 2 : 1']] : [['2:0', 'Spirit 2 : 0'], ['2:1', 'Spirit 2 : 1']]
+    тело = `<div class="ta-open__h"><div><h3>Прогноз на матч</h3><p>Три вопроса — до 300 очков в таблице турнира</p></div>${таймеры}</div><div class="ta-qs">
+      <div class="ta-q"><b>Кто выиграет серию</b><small>+100 очков</small><div class="ta-opts">${опц('win', 'ts', лого('ts', 'sm') + имя('ts'), '58%')}${опц('win', 'tun', лого('tun', 'sm') + имя('tun'), '42%')}</div></div>
+      <div class="ta-q"><b>Счёт серии</b><small>+150 очков${S.win ? '' : ' · сначала победитель'}</small><div class="ta-opts">${S.win ? сч.map(([v, t]) => опц('sc', v, t, v === '2:1' ? '41%' : '22%')).join('') : '<p class="mf-mut">—</p>'}</div></div>
+      <div class="ta-q"><b>Первая кровь на карте 1</b><small>+50 очков</small><div class="ta-opts">${опц('fb', 'ts', лого('ts', 'sm') + кор('ts'), '55%')}${опц('fb', 'tun', лого('tun', 'sm') + кор('tun'), '45%')}</div></div></div>
+      <div class="ta-total"><p><span>Отвечено <b class="mf-num">${[S.win, S.sc, S.fb].filter(Boolean).length} / 3</b></span><span>Можно получить <b class="mf-num">300</b></span></p>
+      <button class="mf-btn mf-btn--main mf-btn--lg" type="button" data-act="saveP" ${прогноз && !S.savedP ? '' : 'disabled'}>${S.savedP ? '✓ Прогноз сохранён' : прогноз ? 'Сохранить прогноз' : 'Ответьте на 3 вопроса'}</button></div>`
+  }
+  if (S.open === 'r') {
+    тело = `<div class="ta-open__h"><div><h3>Награды за матч</h3><p>Бесплатно: отмечаются сами, итог — после матча</p></div>${таймеры}</div><div class="ta-rw">${цели.map(([ok, ic, t, приз], i) =>
+      `<div class="${ok ? 'is-done' : ''}">${ic === 'card' ? `<span class="mf-card">${карта('yatoro', 72)}</span>` : `<span class="ta-rw__ic">+${ic}</span>`}<span><b>${t}</b><small>${приз}</small><em>${ok ? '✓ Выполнено' : i === 2 ? 'Узнаем после матча' : 'Не выполнено'}</em></span></div>`).join('')}</div>`
+  }
+  const раскрытие = S.open && S.open !== 'none' ? `<section class="ta-open" style="--arrow:${стрелка}">${тело}</section>` : ''
+  return `${x.сцена(S)}<div class="ta-head"><div><h2>Участвуй в матче</h2><p>Собери пятёрку и поставь прогноз — награды за матч бесплатные</p></div><div class="mf-clock is-warn" style="justify-items:end;text-align:right"><small>Всё закроется через</small>${часы('lock', 'words')}</div></div>${ряд}${раскрытие}`
+}
+</script>
+<script src="_mf.js"></script>
+</body></html>

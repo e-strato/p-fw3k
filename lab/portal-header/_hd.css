@@ -1,0 +1,204 @@
+/* Лаба «Шапка портала», третий заход: шапки по образцу киберсайтов. Цвета — токены сайта, шрифт — Inter сайта, без капса. */
+body { min-height: 100vh; background: var(--c-ui-bg); }
+.hd { color: var(--c-text); font-family: var(--font); font-size: var(--fs-app-sm); }
+:where(.hd) a { color: inherit; text-decoration: none; }
+:where(.hd) button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+.hd-in { display: flex; align-items: center; gap: 8px; max-width: 1400px; height: 100%; margin: 0 auto; padding: 0 20px; }
+.hd-sp { flex: 1; }
+.hd-logo { margin-right: 16px; font-size: var(--fs-app-lg); font-weight: 800; letter-spacing: -.03em; }
+.hd-ic { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 8px; color: var(--c-muted); }
+.hd-ic:hover { background: var(--c-ui-item); color: var(--c-text); }
+.hd-ic svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.hd-btn { height: 34px; padding: 0 16px; border-radius: 6px; background: var(--c-accent); color: var(--c-on-accent); font-weight: 600; }
+.hd-btn--line { background: none; color: var(--c-accent); box-shadow: inset 0 0 0 1.5px var(--c-accent); }
+/* Логотип игры (дирижёр 15.10: «логотипы игр добавить»): силуэт из games/*.svg (Simple Icons) цветом игры; MLBB — своей картинкой */
+.hd-gi { display: inline-block; flex: none; width: 22px; height: 22px; background: var(--gc); font-size: 0;
+  -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat; }
+.hd-gi--cs { --gc: var(--c-game-cs); --logo: url('/lab-files/portal-header/games/cs.svg'); }
+.hd-gi--dota { --gc: var(--c-game-dota); --logo: url('/lab-files/portal-header/games/dota.svg'); }
+.hd-gi--lol { --gc: var(--c-game-lol); --logo: url('/lab-files/portal-header/games/lol.svg'); }
+.hd-gi--val { --gc: var(--c-game-val); --logo: url('/lab-files/portal-header/games/val.svg'); }
+.hd-gi--mlbb { border-radius: 5px; background: url('/lab-files/portal-header/games/mlbb.jpg') center / cover; -webkit-mask: none; mask: none; }
+
+/* ——— v8 · bo3.gg: игры вкладками, разделы игры второй строкой ——— */
+.hd8__top { height: 56px; background: var(--c-ui-panel); }
+.hd8__games { display: flex; align-self: stretch; }
+.hd8__g { display: flex; align-items: center; gap: 8px; padding: 0 16px; font-weight: 500; color: var(--c-muted); }
+.hd8__g:hover { color: var(--c-text); }
+.hd8__g[aria-pressed='true'] { background: var(--c-ui-bg); color: var(--c-text); }
+.hd8__sub { height: 48px; background: var(--c-ui-bg); border-bottom: 1px solid var(--c-ui-line); }
+.hd8__cur { margin-right: 12px; }
+.hd8__nav { display: flex; align-self: stretch; gap: 4px; }
+.hd8__a { display: flex; align-items: center; padding: 0 14px; color: var(--c-muted); box-shadow: inset 0 -2px 0 transparent; }
+.hd8__a:hover { color: var(--c-text); }
+.hd8__a[aria-current] { color: var(--c-text); font-weight: 600; box-shadow: inset 0 -2px 0 var(--c-accent); }
+.hd8__a[data-n='fan'] { color: var(--c-accent); }
+.hd8__promo { display: grid; margin-left: 16px; padding: 5px 14px; border-radius: 8px; background: linear-gradient(100deg, var(--c-ui-item), color-mix(in srgb, var(--c-accent) 30%, var(--c-ui-item))); line-height: 1.25; }
+.hd8__promo small { color: var(--c-caption); font-size: var(--fs-app-xs); }
+
+/* ——— v9 · Strafe: игры значками, фэнтези выпадающим, разделы второй строкой ——— */
+.hd9__top { height: 60px; background: var(--c-ui-bg); border-bottom: 1px solid var(--c-ui-line); }
+.hd9__top .hd-logo { align-self: stretch; display: flex; align-items: center; margin: 0 12px 0 -20px; padding: 0 22px; background: var(--c-ui-panel); }
+.hd9__games { display: flex; gap: 2px; }
+.hd9__g { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 8px; }
+.hd9__g .hd-gi { width: 26px; height: 26px; }
+.hd9__g:hover { background: var(--c-ui-item); }
+.hd9__g[aria-pressed='true'] { background: var(--c-ui-item); box-shadow: inset 0 0 0 1px var(--c-ui-line); }
+.hd9__fan { position: relative; margin-left: 8px; }
+.hd9__fanbtn { height: 36px; padding: 0 12px; border-radius: 8px; color: var(--c-accent); font-weight: 600; }
+.hd9__fanbtn:hover, .hd9__fanbtn[aria-expanded='true'] { background: var(--c-ui-item); }
+.hd9__fanbtn b { font-size: 10px; }
+.hd-drop { position: absolute; top: 42px; left: 0; z-index: 5; display: grid; min-width: 200px; padding: 6px; border-radius: 10px; background: var(--c-ui-panel); box-shadow: 0 0 0 1px var(--c-ui-line), 0 20px 40px -10px var(--c-black); }
+.hd-drop a { padding: 8px 10px; border-radius: 6px; } .hd-drop a:hover { background: var(--c-ui-item); }
+.hd9__lang { padding: 0 8px; color: var(--c-muted); font-weight: 600; }
+.hd9__sub { height: 50px; background: var(--c-ui-panel); }
+.hd9__nav { display: flex; align-self: stretch; gap: 2px; }
+.hd9__a { display: flex; align-items: center; padding: 0 16px; color: var(--c-muted); box-shadow: inset 0 -2px 0 transparent; }
+.hd9__a:hover { color: var(--c-text); }
+.hd9__a[aria-current] { color: var(--c-text); font-weight: 600; box-shadow: inset 0 -2px 0 var(--c-accent); }
+
+/* ——— v10 · BLAST.tv: одна строка, игры крупно, фэнтези — главная кнопка ——— */
+.hd10 { height: 64px; background: var(--c-ui-panel); }
+.hd10__games { display: flex; gap: 6px; }
+.hd10__g { display: flex; align-items: center; gap: 9px; height: 40px; padding: 0 14px; border-radius: 8px; font-size: var(--fs-app-md); font-weight: 700; letter-spacing: -.01em; }
+.hd10__g .hd-gi { width: 24px; height: 24px; }
+.hd10__g:hover { background: var(--c-ui-item); }
+.hd10__g[aria-pressed='true'] { background: var(--c-ui-item); }
+.hd10__search { display: flex; align-items: center; gap: 10px; width: 210px; height: 36px; padding: 0 4px 0 14px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--c-accent); color: var(--c-muted); }
+.hd10__search kbd { margin-left: auto; color: var(--c-caption); font: 500 var(--fs-app-xs) var(--font); }
+.hd10__search .hd-ic { width: 28px; height: 28px; }
+.hd10__in { padding: 0 14px; font-weight: 700; }
+.hd10__fan { height: 38px; padding: 0 20px; font-size: var(--fs-app-md); }
+
+/* ——— v11 · «Кибер» Sports.ru: одна строка, игры — пункты меню ——— */
+.hd11 { height: 56px; background: var(--c-black); }
+.hd11 .hd-logo { margin-right: 4px; font-size: 26px; }
+.hd11__menu { margin-right: 8px; }
+.hd11__nav { display: flex; align-items: center; gap: 2px; }
+.hd11__a { padding: 8px 11px; border-radius: 6px; font-weight: 600; }
+.hd11__a:hover { background: var(--c-ui-item); }
+.hd11__a[aria-current] { color: var(--c-accent); }
+.hd11__sep { width: 1px; height: 20px; margin: 0 8px; background: var(--c-ui-line); }
+.hd11__fan { color: var(--c-accent); }
+.hd11__me { display: grid; place-items: center; width: 32px; height: 32px; margin-left: 6px; border-radius: 50%; background: var(--c-text); color: var(--c-black); font-weight: 700; }
+
+/* ——— Ещё 11 по образцам (дирижёр 15.10: «штук 15») ——— */
+.hd-svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.hd-btn--pill { border-radius: 999px; }
+.hd-btn--sm { height: 28px; padding: 0 10px; font-size: var(--fs-app-xs); }
+
+/* v12 · Dot Esports */
+.hd12 { height: 68px; background: var(--c-ui-bg); border-bottom: 2px solid var(--c-text); }
+.hd12__nav { display: flex; gap: 2px; margin-right: 8px; }
+.hd12__a { padding: 8px 10px; font-size: var(--fs-app-md); font-weight: 800; letter-spacing: -.01em; }
+.hd12__a:hover, .hd12__a[aria-current] { color: var(--c-accent); }
+.hd12__fan { color: var(--c-accent); }
+
+/* v13 · Esports.net */
+.hd13__top { height: 66px; background: var(--c-ui-panel); }
+.hd13__a { padding: 0 12px; color: var(--c-muted); font-size: var(--fs-app-md); font-weight: 600; }
+.hd13__fan { color: var(--c-accent); }
+.hd13__games { display: flex; justify-content: center; gap: 8px; height: 52px; background: var(--c-ui-bg); border-bottom: 3px solid var(--c-accent); }
+.hd13__g { display: flex; align-items: center; gap: 8px; padding: 0 14px; font-weight: 600; }
+.hd13__g[aria-pressed='true'] { color: var(--c-accent); }
+
+/* v14 · LoL Esports */
+.hd14 { height: 76px; background: var(--c-ui-panel); }
+.hd14__brand { display: grid; grid-template-columns: auto auto; align-items: center; gap: 0 10px; text-align: left; margin-right: 28px; }
+.hd14__brand .hd-gi { grid-row: span 2; width: 30px; height: 30px; }
+.hd14__brand b { font-size: var(--fs-app-md); font-weight: 800; }
+.hd14__brand small { color: var(--c-caption); font-size: var(--fs-app-xs); }
+.hd14__nav { display: flex; gap: 4px; }
+.hd14__a { padding: 8px 14px; font-weight: 600; letter-spacing: .02em; }
+.hd14__a[aria-current] { color: var(--c-accent); }
+.hd .hd-drop a { display: flex; align-items: center; gap: 10px; }
+
+/* v15 · The Spike */
+.hd15 { height: 62px; background: var(--c-black); border-bottom: 1px solid var(--c-ui-line); }
+.hd15__game { display: flex; align-items: center; gap: 8px; height: 38px; margin: 0 24px 0 8px; padding: 0 10px; border-radius: 8px; }
+.hd15__game:hover { background: var(--c-ui-item); }
+.hd15__nav { display: flex; align-self: stretch; }
+.hd15__a { display: flex; align-items: center; padding: 0 16px; color: var(--c-muted); font-weight: 600; box-shadow: inset 0 -2px 0 transparent; }
+.hd15__a[aria-current] { color: var(--c-accent); box-shadow: inset 0 -2px 0 var(--c-accent); }
+.hd15__box { display: grid; place-items: center; min-width: 36px; height: 32px; padding: 0 8px; border-radius: 6px; background: var(--c-ui-item); color: var(--c-muted); font-weight: 600; }
+.hd15__box .hd-ic { width: 28px; height: 28px; }
+
+/* v16 · Dexerto */
+.hd16__top { height: 100px; background: var(--c-ui-bg); }
+.hd16 .hd-logo { font-size: 26px; letter-spacing: .12em; font-weight: 500; margin-right: 48px; }
+.hd16__nav { display: flex; gap: 20px; }
+.hd16__a { font-size: var(--fs-app-md); font-weight: 800; }
+.hd16__a[aria-current] { color: var(--c-accent); }
+.hd16__ghost { height: 44px; padding: 0 16px; border-radius: 6px; background: var(--c-ui-item); font-weight: 600; }
+.hd16 .hd-btn { height: 44px; }
+.hd16__sq { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 6px; background: var(--c-accent); color: var(--c-on-accent); }
+.hd16__sq .hd-ic { color: inherit; }
+.hd16__trend { height: 52px; border-top: 1px solid var(--c-ui-line); border-bottom: 1px solid var(--c-ui-line); }
+.hd16__trend .hd-in { justify-content: center; gap: 28px; }
+.hd16__trend b { font-weight: 800; }
+.hd16__trend a { display: flex; align-items: center; gap: 8px; color: var(--c-muted); }
+.hd16__trend a i { width: 8px; height: 8px; border-radius: 2px; background: var(--gc); }
+.hd16__trend .hd-gi--cs { --gc: var(--c-game-cs); } .hd16__trend .hd-gi--dota { --gc: var(--c-game-dota); } .hd16__trend .hd-gi--lol { --gc: var(--c-game-lol); }
+.hd16__trend .hd-gi--val { --gc: var(--c-game-val); } .hd16__trend .hd-gi--mlbb { --gc: var(--c-game-mlbb); }
+
+/* v17 · Esports World Cup: вертикальная панель */
+.hd17 { display: flex; flex-direction: column; align-items: center; width: 92px; min-height: 100vh; padding-bottom: 16px; background: var(--c-ui-panel); }
+.hd17__logo { display: grid; place-items: center; width: 100%; height: 64px; font-size: var(--fs-app-lg); font-weight: 900; font-style: italic; }
+.hd17__a { display: grid; justify-items: center; gap: 4px; width: 100%; padding: 12px 0; color: var(--c-muted); font-size: var(--fs-app-xs); font-weight: 600; }
+.hd17__a[aria-current] { background: var(--c-ui-item); color: var(--c-text); }
+.hd17__sep { width: 40px; height: 1px; margin: 10px 0; background: var(--c-ui-line); }
+.hd17__g, .hd22__g { display: grid; place-items: center; width: 44px; height: 40px; border-radius: 8px; }
+.hd17__g[aria-pressed='true'], .hd22__g[aria-pressed='true'] { background: var(--c-ui-item); }
+
+/* v18 · Twitch */
+.hd18__top { display: flex; align-items: center; gap: 8px; height: 50px; padding: 0 12px; background: var(--c-ui-panel); box-shadow: 0 1px 0 var(--c-ui-line); }
+.hd18__top .hd-logo { margin-right: 8px; }
+.hd18__go { padding: 0 8px; color: var(--c-accent); font-size: var(--fs-app-md); font-weight: 600; }
+.hd18__search { display: flex; align-items: center; justify-content: space-between; width: 400px; height: 34px; padding: 0 0 0 12px; border-radius: 6px; box-shadow: inset 0 0 0 1px var(--c-ui-line); color: var(--c-caption); }
+.hd18 .hd16__ghost { height: 30px; border-radius: 999px; }
+.hd18 .hd-btn { height: 30px; }
+.hd18__side { width: 240px; min-height: calc(100vh - 50px); padding: 10px 0; background: var(--c-ui-panel); }
+.hd18__side p { margin: 0 0 6px; padding: 0 12px; font-weight: 700; }
+.hd18__row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; width: 100%; padding: 6px 12px; text-align: left; }
+.hd18__row:hover, .hd18__row[aria-pressed='true'] { background: var(--c-ui-item); }
+.hd18__row .hd-gi { width: 28px; height: 28px; }
+.hd18__row span { display: grid; } .hd18__row small { color: var(--c-caption); font-size: var(--fs-app-xs); }
+.hd18__row em { color: var(--c-live); font-size: var(--fs-app-xs); font-style: normal; }
+
+/* v19 · ONE Esports */
+.hd19__top { height: 50px; background: var(--c-ui-panel); }
+.hd19__nav { display: flex; gap: 6px; }
+.hd19__a { padding: 6px 12px; font-weight: 700; }
+.hd19__a[aria-current] { color: var(--c-coin); }
+.hd19__trend { height: 40px; background: var(--c-ui-bg); }
+.hd19__trend .hd-in { justify-content: center; gap: 18px; color: var(--c-coin); }
+.hd19__trend a { color: var(--c-muted); font-size: var(--fs-app-xs); letter-spacing: .04em; }
+.hd19__trend i { color: var(--c-coin); font-style: normal; }
+
+/* v20 · ESPN */
+.hd20__top { display: flex; align-items: center; gap: 4px; height: 46px; padding-right: 20px; background: var(--c-ui-panel); }
+.hd20__logo { align-self: stretch; display: flex; align-items: center; margin-right: 14px; padding: 0 30px 0 20px; background: var(--c-accent); color: var(--c-on-accent); font-size: var(--fs-app-lg); font-weight: 900; font-style: italic; clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%); }
+.hd20__games { display: flex; }
+.hd20__g { display: flex; align-items: center; gap: 6px; padding: 0 10px; font-weight: 600; }
+.hd20__g .hd-gi { width: 16px; height: 16px; }
+.hd20__g[aria-pressed='true'] { color: var(--c-accent); }
+.hd20__x { display: flex; align-items: center; gap: 6px; padding: 0 10px; font-weight: 600; }
+.hd20__x .hd-svg { width: 18px; height: 18px; }
+.hd20__sub { display: flex; align-items: center; gap: 8px; height: 46px; padding: 0 28px; background: var(--c-ui-bg); box-shadow: 0 1px 0 var(--c-ui-line); }
+.hd20__sub b { font-weight: 700; }
+.hd20__a { align-self: stretch; display: flex; align-items: center; padding: 0 12px; box-shadow: inset 0 -3px 0 transparent; }
+.hd20__a[aria-current] { box-shadow: inset 0 -3px 0 var(--c-accent); }
+
+/* v21 · FotMob */
+.hd21 { height: 76px; background: var(--c-ui-bg); border-bottom: 1px solid var(--c-ui-line); }
+.hd21__search { display: flex; align-items: center; gap: 4px; width: 280px; height: 40px; margin-left: 24px; padding-left: 6px; border-radius: 999px; background: var(--c-ui-item); color: var(--c-caption); }
+.hd21__a { padding: 0 16px; font-size: var(--fs-app-md); font-weight: 700; }
+.hd21__a[aria-current], .hd21__a[data-n='fan'] { color: var(--c-accent); }
+.hd21__app { display: grid; place-items: center; height: 32px; padding: 0 10px; border-radius: 999px; background: var(--c-ui-item); color: var(--c-muted); font-size: var(--fs-app-xs); font-weight: 600; }
+
+/* v22 · start.gg: узкая панель значков */
+.hd22 { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 56px; min-height: 100vh; padding: 10px 0; background: var(--c-ui-panel); }
+.hd22__logo { display: grid; place-items: center; width: 36px; height: 36px; margin-bottom: 6px; border-radius: 8px; background: var(--c-accent); color: var(--c-on-accent); font-weight: 900; }
+.hd22__g { width: 40px; }
+.hd22__a { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 8px; color: var(--c-muted); }
+.hd22__a[aria-current] { background: var(--c-ui-item); color: var(--c-accent); }

@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_игрок.css" />
+<style>
+/* v4 · Досье + движуха (смесь v1 и v3). Сверху — шапка v1 на цвете команды: фото, ник, команда, карточка летит в угол шапки;
+   полоса цифр и трофеев; путь линией. Дальше — лента v3 в три колонки: слева форма, герои, соцсети; в центре большое видео и лента
+   с фильтром (матчи, посты, голосование, рекорды, факты); справа ближайший матч, турниры, состав. Когда шапка ушла за экран,
+   сверху выезжает плашка игрока из v3. Справа — ближайший матч, 8 последних матчей, состав. */
+.d-hero { position: relative; overflow: hidden; margin-top: 8px; border-radius: 24px;
+  background: radial-gradient(120% 140% at 30% 0%, color-mix(in srgb, var(--team) 38%, var(--c-ui-panel)), var(--c-ui-panel) 62%); }
+.d-hero__in { position: relative; display: grid; grid-template-columns: 340px minmax(0, 1fr) auto; align-items: end; gap: 40px; min-height: 520px; padding: 40px 48px 0; }
+.d-hero__ph { align-self: end; width: 100%; max-height: 500px; object-fit: contain; object-position: bottom; filter: drop-shadow(0 30px 40px color-mix(in srgb, var(--c-black) 60%, transparent)); }
+.d-hero__txt { align-self: center; padding-bottom: 40px; }
+.d-hero__meta { display: flex; align-items: center; gap: 10px; color: var(--c-muted); font-size: var(--fs-small); }
+.d-flag { width: 22px; height: 15px; border-radius: 3px; background: linear-gradient(var(--c-flag-white) 0 33.4%, var(--c-flag-ru-blue) 0 66.7%, var(--c-flag-ru-red) 0); }
+.d-hero h1 { margin: 12px 0 4px; font-size: clamp(64px, 7vw, 120px); line-height: .9; font-weight: 900; letter-spacing: -.045em; }
+.d-hero__name { margin: 0; font-size: 22px; color: var(--c-muted); }
+.d-hero__team { display: flex; align-items: center; gap: 12px; margin-top: 28px; font-size: 18px; }
+.d-hero__team b { font-weight: 700; } .d-hero__team span { color: var(--c-muted); }
+.d-hero__acts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.d-now { display: inline-flex; align-items: center; gap: 10px; margin-top: 24px; padding: 10px 16px; border-radius: 999px; background: color-mix(in srgb, var(--c-black) 35%, transparent); font-size: var(--fs-small); }
+.d-now i { width: 8px; height: 8px; border-radius: 50%; background: var(--c-live); box-shadow: 0 0 0 4px color-mix(in srgb, var(--c-live) 25%, transparent); }
+.d-now span { color: var(--c-muted); }
+.d-hero__card { align-self: center; padding-bottom: 40px; }
+
+.d-strip { display: grid; grid-template-columns: repeat(4, 1fr) 1.4fr; gap: 12px; margin-top: 12px; }
+.d-num { padding: 22px 24px; border-radius: var(--radius); background: var(--c-ui-panel); }
+.d-num b { display: block; font-size: 40px; font-weight: 900; letter-spacing: -.03em; line-height: 1; }
+.d-num small { color: var(--c-caption); font-size: var(--fs-small); }
+.d-shelf { display: flex; align-items: center; gap: 18px; padding: 18px 24px; border-radius: var(--radius); background: var(--c-ui-panel); }
+.d-cups { display: flex; gap: 6px; }
+.d-cup { width: 26px; height: 34px; background: var(--c-coin); clip-path: polygon(8% 0, 92% 0, 88% 34%, 64% 58%, 60% 76%, 78% 84%, 78% 100%, 22% 100%, 22% 84%, 40% 76%, 36% 58%, 12% 34%); }
+.d-cup--s { background: var(--c-tier-silver); }
+.d-shelf p { margin: 0; font-size: var(--fs-small); color: var(--c-muted); } .d-shelf p b { display: block; color: var(--c-text); font-size: 16px; }
+
+/* Путь */
+.d-road { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; padding-top: 34px; }
+.d-road::before { content: ''; position: absolute; left: 20px; right: 20px; top: 53px; height: 3px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--c-ui-item), var(--c-muted) 55%, var(--team)); }
+.d-stop { position: relative; display: grid; align-content: start; gap: 10px; }
+.d-stop .pl-logo { position: relative; width: 42px; height: 42px; border-radius: 12px; background: var(--c-ui-panel); box-shadow: 0 0 0 6px var(--c-ui-bg); padding: 4px; }
+.d-stop .pl-logo--mono { background: var(--c-ui-item); }
+.d-stop__y { position: absolute; top: -30px; left: 0; font-size: var(--fs-app-sm); color: var(--c-caption); }
+.d-stop b { font-size: 18px; font-weight: 800; } .d-stop p { margin: 0; color: var(--c-muted); font-size: var(--fs-small); line-height: 1.45; }
+.d-stop--now b { color: var(--team); }
+.d-mmr { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+.d-mmr span { padding: 8px 14px; border-radius: 999px; background: var(--c-ui-panel); font-size: var(--fs-small); color: var(--c-muted); }
+.d-mmr b { color: var(--c-text); margin-right: 6px; }
+
+/* Места */
+.d-places { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.d-pl { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 16px 18px; border-radius: 14px; background: var(--c-ui-panel); }
+.d-pl__n { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; font-size: 24px; font-weight: 900; background: var(--c-ui-item); }
+.d-pl--1 .d-pl__n { background: color-mix(in srgb, var(--c-coin) 22%, var(--c-ui-item)); color: var(--c-coin); }
+.d-pl--2 .d-pl__n { color: var(--c-tier-silver); } .d-pl--3 .d-pl__n { color: var(--c-tier-bronze); }
+.d-pl span { display: grid; min-width: 0; } .d-pl span b { font-weight: 700; } .d-pl small { color: var(--c-caption); font-size: var(--fs-app-sm); }
+.d-pl__pr { text-align: right; font-weight: 700; } .d-pl__pr small { display: block; font-weight: 500; }
+
+/* Хайлайты */
+.d-vids { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: auto auto; gap: 20px; }
+.d-vids .pl-vid:first-child { grid-row: span 2; } .d-vids .pl-vid:first-child b { font-size: 20px; }
+
+/* Факты */
+.d-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.d-fact { padding: 24px; border-radius: var(--radius); background: var(--c-ui-panel); }
+.d-fact b { display: block; margin-bottom: 10px; font-size: 34px; font-weight: 900; letter-spacing: -.03em; color: var(--team); }
+.d-fact p { margin: 0; color: var(--c-muted); line-height: 1.5; }
+
+.d-two { display: grid; grid-template-columns: 1fr 1.25fr; gap: 20px; }
+.d-socs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.d-team { display: flex; flex-wrap: wrap; gap: 10px; }
+.d-mate { display: flex; align-items: center; gap: 10px; padding: 10px 16px 10px 10px; border-radius: 999px; background: var(--c-ui-panel); }
+.d-mate i { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--c-ui-item); font-style: normal; font-size: var(--fs-app-sm); font-weight: 800; color: var(--c-muted); }
+.d-mate.is-me { background: color-mix(in srgb, var(--team) 18%, var(--c-ui-panel)); } .d-mate.is-me i { background: var(--team); color: var(--c-black); }
+.d-foot { height: 80px; }
+
+@media (max-width: 1100px) {
+  .d-hero__in { grid-template-columns: 1fr; padding: 32px 24px 0; } .d-hero__ph { max-height: 320px; order: 3; } .d-hero__card { order: 2; padding: 0; }
+  .d-strip { grid-template-columns: repeat(2, 1fr); } .d-shelf { grid-column: 1 / -1; }
+  .d-road { grid-template-columns: 1fr; } .d-road::before { display: none; } .d-stop__y { position: static; }
+  .d-vids, .d-facts, .d-two, .d-socs { grid-template-columns: 1fr; } .d-vids .pl-vid:first-child { grid-row: auto; }
+}
+.h-bar { position: sticky; top: 0; z-index: 20; margin-top: 8px; background: color-mix(in srgb, var(--c-ui-bg) 88%, transparent); backdrop-filter: blur(14px); }
+.h-bar__in { display: flex; align-items: center; gap: 18px; padding: 14px 0; border-bottom: 1px solid var(--c-ui-line); }
+.h-bar__card { width: 64px; flex: none; }
+.h-bar__id { display: grid; gap: 2px; } .h-bar__id b { font-size: 26px; font-weight: 900; letter-spacing: -.02em; line-height: 1; }
+.h-bar__id small { display: flex; align-items: center; gap: 8px; color: var(--c-muted); font-size: var(--fs-small); } .h-bar__id .pl-logo { width: 20px; height: 20px; }
+.h-now { display: flex; align-items: center; gap: 10px; margin-left: auto; padding: 10px 16px; border-radius: 999px; background: var(--c-ui-panel); font-size: var(--fs-small); }
+.h-now i { width: 8px; height: 8px; border-radius: 50%; background: var(--c-live); } .h-now span { color: var(--c-muted); }
+
+.h-grid { display: grid; grid-template-columns: 300px minmax(0, 1fr) 320px; gap: 24px; margin-top: 24px; padding-bottom: 80px; }
+.h-col { display: grid; gap: 16px; align-content: start; position: sticky; top: 96px; }
+.h-box { padding: 20px; border-radius: var(--radius); background: var(--c-ui-panel); }
+.h-box h3 { margin: 0 0 14px; font-size: 16px; font-weight: 700; }
+.h-form { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
+.h-form i { aspect-ratio: 1; border-radius: 6px; background: color-mix(in srgb, var(--c-stat-low) 70%, var(--c-ui-item)); display: grid; place-items: center; font-style: normal; font-size: 11px; font-weight: 800; color: var(--c-black); }
+.h-form i.is-w { background: var(--c-stat-high); }
+.h-kv { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.h-kv span { padding: 12px; border-radius: 12px; background: var(--c-ui-item); } .h-kv b { display: block; font-size: 22px; font-weight: 800; } .h-kv small { color: var(--c-caption); font-size: var(--fs-app-sm); }
+.h-hero3 { display: grid; gap: 10px; }
+.h-hero3 div { display: grid; grid-template-columns: 36px 1fr auto; align-items: center; gap: 10px; } .h-hero3 img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; }
+.h-hero3 em { font-style: normal; font-weight: 800; color: var(--c-stat-high); } .h-hero3 small { display: block; color: var(--c-caption); font-size: var(--fs-app-sm); }
+.h-socs { display: grid; gap: 8px; } .h-socs .pl-soc { padding: 10px; } .h-socs .pl-soc__ic { width: 36px; height: 36px; font-size: 16px; } .h-socs em b { font-size: 15px; }
+
+/* Лента */
+.h-feat { position: relative; display: block; border-radius: 20px; overflow: hidden; aspect-ratio: 16 / 8; background: var(--c-ui-panel); }
+.h-feat img { width: 100%; height: 100%; object-fit: cover; }
+.h-feat::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 40%, color-mix(in srgb, var(--c-black) 85%, transparent)); }
+.h-feat__txt { position: absolute; left: 28px; right: 28px; bottom: 24px; z-index: 1; }
+.h-feat__txt b { display: block; font-size: 30px; font-weight: 900; letter-spacing: -.02em; line-height: 1.1; } .h-feat__txt small { color: var(--c-muted); }
+.h-feat .pl-vid__play { z-index: 1; width: 76px; height: 76px; margin: -38px 0 0 -38px; } .h-feat .pl-vid__play::after { left: 30px; top: 24px; border-width: 14px; border-left-width: 20px; }
+.h-chips { display: flex; gap: 6px; margin: 24px 0 16px; }
+.h-feed { display: grid; gap: 14px; }
+.h-it { padding: 20px 22px; border-radius: var(--radius); background: var(--c-ui-panel); }
+.h-it[hidden] { display: none; }
+.h-it__top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: var(--fs-app-sm); color: var(--c-caption); }
+.h-it__top i { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; font-style: normal; font-size: 14px; background: var(--c-ui-item); color: var(--c-text); }
+.h-it__top time { margin-left: auto; }
+.h-it p { margin: 0; font-size: 17px; line-height: 1.55; }
+.h-it .h-big { font-size: 22px; font-weight: 700; line-height: 1.35; }
+.h-post { padding: 16px 18px; border-radius: 16px 16px 16px 4px; background: #2b5278; font-size: 18px; }
+.h-score { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+.h-score .pl-logo { width: 36px; height: 36px; } .h-score b { font-size: 28px; font-weight: 900; } .h-score span { color: var(--c-muted); }
+.h-rec { display: flex; align-items: center; gap: 18px; }
+.h-rec img { width: 72px; height: 72px; border-radius: 14px; object-fit: cover; }
+.h-rec b { display: block; font-size: 40px; font-weight: 900; letter-spacing: -.03em; line-height: 1; color: var(--team); }
+.h-poll { display: grid; gap: 8px; margin-top: 12px; }
+.h-poll button { position: relative; display: flex; justify-content: space-between; padding: 12px 16px; border-radius: 12px; background: var(--c-ui-item); overflow: hidden; font-weight: 600; }
+.h-poll button i { position: absolute; inset: 0 auto 0 0; width: 0; background: color-mix(in srgb, var(--team) 30%, transparent); transition: width .6s; }
+.h-poll button span, .h-poll button em { position: relative; font-style: normal; }
+.h-poll button em { opacity: 0; transition: opacity .3s; } .h-poll.is-voted button em { opacity: 1; }
+.h-poll button[aria-pressed="true"] { outline: 2px solid var(--team); }
+.h-cup { display: flex; align-items: center; gap: 16px; }
+.h-cup i { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; font-style: normal; font-size: 26px; font-weight: 900; color: var(--c-coin); background: color-mix(in srgb, var(--c-coin) 18%, var(--c-ui-item)); }
+.h-cup b { display: block; font-size: 20px; }
+
+/* Правая колонка */
+.h-next { display: grid; gap: 14px; }
+.h-next__vs { display: flex; align-items: center; justify-content: space-between; } .h-next__vs span { display: grid; justify-items: center; gap: 6px; font-weight: 700; }
+.h-next__vs .pl-logo { width: 48px; height: 48px; } .h-next__vs b { font-size: 22px; color: var(--c-caption); }
+.h-next small { color: var(--c-caption); text-align: center; }
+.h-road { display: grid; gap: 0; }
+.h-road div { display: grid; grid-template-columns: 32px 1fr; gap: 12px; padding: 8px 0; }
+.h-road .pl-logo { width: 32px; height: 32px; } .h-road b { font-weight: 700; } .h-road small { display: block; color: var(--c-caption); font-size: var(--fs-app-sm); }
+.h-road div:last-child b { color: var(--team); }
+.h-mates { display: flex; flex-wrap: wrap; gap: 6px; } .h-mates span { padding: 6px 12px; border-radius: 999px; background: var(--c-ui-item); font-size: var(--fs-small); } .h-mates .is-me { background: var(--team); color: var(--c-black); font-weight: 700; }
+
+
+@media (max-width: 1250px) { .h-grid { grid-template-columns: 280px minmax(0, 1fr); } .h-right { display: none; } }
+@media (max-width: 860px) { .h-grid { grid-template-columns: 1fr; } .h-col { position: static; } .h-now { display: none; } }
+
+/* v4: плашка игрока появляется, когда шапка ушла за экран */
+.h-bar { position: fixed; top: 0; left: 0; right: 0; margin: 0; transform: translateY(-100%); transition: transform .3s; }
+.h-bar.is-show { transform: none; }
+.h-bar__mini { width: 44px; height: 44px; flex: none; border-radius: 12px; object-fit: cover; object-position: top; background: color-mix(in srgb, var(--team) 30%, var(--c-ui-panel)); }
+.v4-grid { margin-top: 56px; }
+.v4-cups { display: grid; gap: 8px; }
+.v4-cups div { display: grid; grid-template-columns: 32px 1fr auto; align-items: center; gap: 10px; font-size: var(--fs-small); }
+.v4-cups i { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; font-style: normal; font-weight: 900; background: var(--c-ui-item); }
+.v4-cups .is-1 i { color: var(--c-coin); background: color-mix(in srgb, var(--c-coin) 18%, var(--c-ui-item)); } .v4-cups .is-2 i { color: var(--c-tier-silver); } .v4-cups .is-3 i { color: var(--c-tier-bronze); }
+.v4-cups small { display: block; color: var(--c-caption); font-size: var(--fs-app-xs); } .v4-cups em { font-style: normal; color: var(--c-muted); }
+/* Герои и матчи в боковых колонках — компактные строки; колонки длиннее экрана, поэтому не липнут */
+.v4-grid .h-col { position: static; }
+.v4-side h3 small { font-weight: 500; font-size: var(--fs-app-sm); color: var(--c-caption); margin-left: 6px; }
+.v4-side .pl-h { grid-template-columns: 36px minmax(0, 1fr) auto auto; gap: 10px; padding: 8px 0; }
+.v4-side .pl-h img { width: 36px; height: 36px; border-radius: 8px; }
+.v4-side .pl-h__bar { display: none; }
+.v4-side .pl-h__n small { display: none; }
+.v4-side .pl-m { grid-template-columns: 32px minmax(0, 1fr) auto 18px; gap: 10px; padding: 8px; }
+.v4-side .pl-m img { width: 32px; height: 32px; }
+.v4-side .pl-m__gpm, .v4-side .pl-m__d { display: none !important; }
+.v4-side .pl-m__res { font-size: 0; width: 18px; height: 18px; border-radius: 5px; background: var(--c-stat-low); }
+.v4-side .pl-m.is-w .pl-m__res { background: var(--c-stat-high); }
+/* Строки в колонках — в одну строку, длинное обрезается */
+.v4-side .pl-h span b, .v4-side .pl-h small, .v4-side .pl-m span b, .v4-side .pl-m small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.v4-cups span { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.v4-h { margin-top: 32px; font-size: 20px; }
+.v4-vids { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.v4-socs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+@media (max-width: 700px) { .v4-vids, .v4-socs { grid-template-columns: 1fr; } }
+</style></head>
+<body>
+<div class="pl" data-pl></div>
+<button class="btn btn--quiet btn--sm pl-replay" type="button" data-replay>Повторить переход</button>
+<script src="_игрок.js"></script>
+<script>
+(() => {
+  const П = ИГРОК, feat = ВИДЕО[0], maxM = Math.max(...ГЕРОИ.map((h) => h.м))
+
+  const ЛЕНТА_ВИДЕО = ВИДЕО.slice(1, 7)
+
+  document.querySelector('[data-pl]').innerHTML = `${шапка()}
+  <div class="h-bar" data-bar><div class="pl-in h-bar__in">
+    <img class="h-bar__mini" src="${П.фото}" alt="" />
+    <div class="h-bar__id"><b>${П.ник}</b><small>${лого(П.команда.лого)}${П.команда.имя} · позиция ${П.позиция} · ${П.имя}</small></div>
+    <div class="h-now"><i></i><b>${СЕЙЧАС.турнир}</b><span>${СЕЙЧАС.далее}</span></div>
+    <button class="btn btn--sm" type="button">Следить</button>
+  </div></div>
+  <main class="pl-in">
+    <section class="d-hero" data-hero><div class="d-hero__in">
+      <img class="d-hero__ph" src="${П.фото}" alt="${П.ник}" />
+      <div class="d-hero__txt">
+        <div class="d-hero__meta"><i class="d-flag"></i>${П.страна} · ${П.возраст} года · родился ${П.родился}</div>
+        <h1>${П.ник}</h1>
+        <p class="d-hero__name">${П.имя}</p>
+        <div class="d-hero__team">${лого(П.команда.лого)}<b>${П.команда.имя}</b><span>Позиция ${П.позиция} · ${П.роль}</span></div>
+        <div class="d-hero__acts"><button class="btn btn--sm" type="button">Следить</button><button class="btn btn--quiet btn--sm" type="button">Взять в пятёрку</button><button class="btn btn--quiet btn--sm" type="button">Все карточки игрока</button></div>
+        <div class="d-now"><i></i><b>${СЕЙЧАС.турнир}</b><span>${СЕЙЧАС.далее} — за ${СЕЙЧАС.за}</span></div>
+      </div>
+      <div class="d-hero__card" data-slot>${картаИгрока(340)}</div>
+    </div></section>
+
+    <section class="d-strip">
+      ${П.цифры.map((c) => `<div class="d-num"><b>${c.v}</b><small>${c.t}</small></div>`).join('')}
+      <div class="d-shelf"><div class="d-cups">${'<i class="d-cup"></i>'.repeat(5)}<i class="d-cup d-cup--s"></i></div><p><b>5 титулов Tier 1 и финал TI</b>EWC 2026, DreamLeague ×2, ESL One ×2</p></div>
+    </section>
+
+    <section class="pl-sec">
+      <h2 class="pl-h2">Путь <small>от пабликов до финала The International</small></h2>
+      <div class="d-road">${ПУТЬ.map((s, i) => `<div class="d-stop${i === ПУТЬ.length - 1 ? ' d-stop--now' : ''}"><span class="d-stop__y">${s.с}${s.по !== s.с ? ` — ${s.по}` : ''}</span>${лого(s.лого, s.мон)}<b>${s.команда}</b><p>${s.что}</p></div>`).join('')}</div>
+      <div class="d-mmr">${П.mmr.map((m) => `<span><b>${m.v}</b>${m.дата}</span>`).join('')}</div>
+    </section>
+
+    <div class="h-grid v4-grid">
+      <aside class="h-col">
+        <div class="h-box"><h3>Форма · 10 последних карт</h3><div class="h-form">${МАТЧИ.map((m) => `<i class="${m.w ? 'is-w' : ''}">${m.w ? 'W' : 'L'}</i>`).join('')}</div>
+          <div class="h-kv"><span><b>${П.средние.k.toString().replace('.', ',')}</b><small>убийств</small></span><span><b>${П.средние.a.toString().replace('.', ',')}</b><small>ассистов</small></span><span><b>${П.средние.gpm}</b><small>GPM</small></span><span><b>${П.средние.xpm}</b><small>XPM</small></span></div></div>
+        <div class="h-box v4-side"><h3>Герои <small>профматчи с 2022</small></h3>${ГЕРОИ.map((h) => геройСтрока(h, maxM)).join('')}</div>
+            <div class="h-box"><h3>Турниры</h3><div class="v4-cups">${ТРОФЕИ.map((t) => `<div class="is-${t.место}"><i>${t.место}</i><span>${t.турнир}<small>Финал ${t.финал}</small></span><em>${t.дата.slice(-4)}</em></div>`).join('')}</div></div>
+      </aside>
+
+      <section>
+        <a class="h-feat" href="https://youtu.be/${feat.id}" target="_blank" rel="noopener"><img src="${превью(feat.id)}" alt="" /><i class="pl-vid__play"></i><span class="h-feat__txt"><b>${feat.имя}</b><small>${feat.где}</small></span></a>
+        <h2 class="pl-h2 v4-h">YouTube <small>матчи TI 2026 и влоги команды</small></h2>
+        <div class="v4-vids">${ЛЕНТА_ВИДЕО.map((v) => видеоПлитка(v)).join('')}</div>
+        <h2 class="pl-h2 v4-h">Соцсети</h2>
+        <div class="v4-socs">${П.соцсети.map(соцПлитка).join('')}</div>
+      </section>
+
+      <aside class="h-col h-right">
+        <div class="h-box h-next"><h3>Ближайший матч · сегодня</h3><div class="h-next__vs"><span>${лого('pv')}PARIVISION</span><b>vs</b><span>${лого('', 'LGD')}LGD</span></div><small>BLAST SLAM VIII · за ${СЕЙЧАС.за}</small><button class="btn btn--sm" type="button">Сделать прогноз</button></div>
+        <div class="h-box v4-side"><h3>Последние матчи <small>K / D / A</small></h3>${МАТЧИ.slice(0, 8).map(матчСтрока).join('')}</div>
+        <div class="h-box"><h3>Состав ${П.команда.имя}</h3><div class="h-mates">${СОСТАВ.map((m) => `<span class="${m.я ? 'is-me' : ''}">${m.поз} · ${m.ник}</span>`).join('')}</div></div>
+      </aside>
+    </div>
+
+    <div class="d-foot"></div>
+  </main>`
+
+  подключитьНаклон()
+
+  // Плашка игрока — когда шапка ушла за экран
+  const bar = document.querySelector('[data-bar]')
+  new IntersectionObserver(([e]) => bar.classList.toggle('is-show', !e.isIntersecting)).observe(document.querySelector('[data-hero]'))
+  // Переход: карточка из коллекции летит в угол шапки (как v1)
+  const слот = document.querySelector('[data-slot]')
+  const run = () => { scrollTo(0, 0); переход(слот) }
+  document.querySelector('[data-replay]').addEventListener('click', run)
+  run()
+})()
+</script>
+</body></html>

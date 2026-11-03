@@ -1,0 +1,86 @@
+/* Статистика героев (_hs.js) — стиль итоговых виджетов (_w.css, _type.css); тепловой WR — как на странице турнира */
+.hsw{ width:100%; max-width:1180px; }
+.is-phone .hsw{ max-width:none; border-radius:0; border-left:0; border-right:0; }
+.hsw .w-hd{ gap:12px; } .hsw-sub{ margin-left:auto; font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; }
+.hsw .mut{ color:var(--w-muted-fg); }
+.hsw-box{ max-height:560px; overflow:auto; overscroll-behavior:contain; scrollbar-width:thin; }
+/* раскладка фиксированная: ширина колонок не зависит от содержимого и сортировки */
+.hsw-t{ width:100%; min-width:940px; table-layout:fixed; border-collapse:collapse; }
+.is-phone .hsw-t{ min-width:0; }
+.hsw-t col.c-k{ width:40px; } .hsw-t col.c-h{ width:200px; } .hsw-t col.c-n{ width:62px; } .hsw-t col.c-wr{ width:66px; }
+.is-phone .hsw-t col.c-h{ width:auto; } .is-phone .hsw-t col.c-k{ width:28px; }
+.hsw-t thead{ position:sticky; top:0; z-index:2; background:var(--w-bg); box-shadow:0 1px 0 var(--w-border); }
+.hsw-t th{ height:32px; padding:0 8px; background:var(--w-bg); text-align:left; font:var(--t-label); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; }
+.hsw-t tr.grp th{ height:26px; text-align:center; color:var(--w-fg); }
+.hsw-t td{ height:40px; padding:0 8px; border-top:1px solid var(--w-border); font:var(--t-cell); font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.hsw-t td b{ font:var(--t-num-s); }
+.hsw-t .gs{ border-left:1px solid var(--w-border); }
+.hsw-t .k{ text-align:right; }
+/* сортировка: стрелка всегда занимает место, у неактивных — невидима */
+.hsw-t th.srt{ cursor:pointer; user-select:none; }
+.hsw-t th.srt:hover, .hsw-t th.srt.is-on{ color:var(--w-fg); }
+.hsw-t th.srt .ar{ display:inline-block; width:10px; margin-left:3px; font-style:normal; font-size:10px; visibility:hidden; }
+.hsw-t th.srt .ar.is-on{ visibility:visible; } .hsw-t th.srt:hover .ar:not(.is-on){ visibility:visible; opacity:.4; }
+.hsw .hero{ display:inline-flex; align-items:center; gap:8px; min-width:0; max-width:100%; font:var(--t-title); overflow:hidden; text-overflow:ellipsis; }
+.hsw .hero img{ width:36px; height:20px; border-radius:4px; object-fit:cover; flex:none; background:var(--w-muted); }
+.is-phone .hsw .hero img{ width:28px; height:16px; }
+.hsw .wrh{ display:inline-block; min-width:44px; padding:2px 6px; border-radius:6px; text-align:center; font:var(--t-num-s); background:var(--tc, transparent); color:var(--tf, var(--w-fg)); }
+.is-phone .hsw .wrh{ min-width:0; padding:2px 4px; }
+.hsw .w2{ --tc:color-mix(in srgb, var(--w-up) 55%, transparent); --tf:#fff; } .hsw .w1{ --tc:color-mix(in srgb, var(--w-up) 22%, transparent); --tf:var(--w-up-fg, var(--w-up)); }
+.hsw .l2{ --tc:color-mix(in srgb, var(--w-down, #e5484d) 55%, transparent); --tf:#fff; } .hsw .l1{ --tc:color-mix(in srgb, var(--w-down, #e5484d) 22%, transparent); --tf:var(--w-down-fg, #e5484d); }
+/* низ: подсказка и сброс */
+.hsw-ft{ display:flex; align-items:center; gap:12px; min-height:44px; padding:0 16px; border-top:1px solid var(--w-border); font:var(--t-sub); }
+.w .hsw-reset{ margin-left:auto; height:28px; padding:0 10px; border-radius:6px; background:var(--w-muted); color:var(--w-fg); font:500 12px/1 var(--w-font); }
+.w .hsw-reset:hover{ background:var(--w-ring); } .w .hsw-reset:disabled{ opacity:.35; cursor:default; background:var(--w-muted); }
+/* v2 — плашка «Сортировка: … × Сбросить» над таблицей */
+.hsw-chip{ display:flex; align-items:center; gap:8px; height:36px; padding:0 16px; font:var(--t-sub); color:var(--w-muted-fg); border-bottom:1px solid var(--w-border); }
+.hsw-chip b{ font-weight:500; color:var(--w-fg); }
+.w .hsw-chip button{ height:24px; padding:0 8px; border-radius:999px; background:var(--w-muted); color:var(--w-fg); font:500 12px/1 var(--w-font); }
+.w .hsw-chip button:hover{ background:var(--w-ring); }
+/* телефон: группа сегментом */
+.hsw-seg{ display:grid; grid-template-columns:repeat(4, 1fr); gap:2px; margin:8px 12px; padding:2px; border-radius:var(--w-r-sm); background:var(--w-mid-bg); }
+.w .hsw-seg button{ height:28px; border-radius:6px; color:var(--w-muted-fg); font:500 12px/1 var(--w-font); text-align:center; }
+.w .hsw-seg button.is-on{ background:var(--w-muted); color:var(--w-fg); }
+
+/* ——— v3 nice: красивее — строки ниже и спокойнее, группы заголовков тоном, сортируемая колонка подсвечена, наведение — строка и колонка ——— */
+.hsw--nice .hsw-t th{ height:30px; font:500 11px/1 var(--w-font); letter-spacing:.01em; }
+.hsw--nice .hsw-t tr.grp th{ height:28px; font:600 12px/1 var(--w-font); color:var(--w-fg); background:color-mix(in srgb, var(--w-fg) 3%, var(--w-bg)); }
+.hsw--nice .hsw-t td{ height:38px; border-top-color:color-mix(in srgb, var(--w-border) 60%, transparent); }
+.hsw--nice .hsw-t td:not(.h):not(.k), .hsw--nice .hsw-t th:not(.h):not(.k){ text-align:right; }
+.hsw--nice .hsw-t tr.grp th{ text-align:center !important; }
+.hsw--nice .hsw-t td .mut{ color:color-mix(in srgb, var(--w-muted-fg) 80%, transparent); }
+.hsw--nice .hsw-t td.k{ color:var(--w-ring); font:var(--t-num-s); }
+.hsw--nice .hero{ font:500 13px/16px var(--w-font); gap:10px; }
+.hsw--nice .hero img{ width:40px; height:22px; border-radius:5px; box-shadow:0 0 0 1px #ffffff14; }
+.hsw--nice .wrh{ min-width:46px; padding:3px 7px; border-radius:999px; font:600 11px/14px var(--w-font); }
+.hsw--nice .gs{ border-left-color:color-mix(in srgb, var(--w-border) 80%, transparent); }
+/* колонка сортировки — лёгкий фон; наведение — строка и колонка */
+.hsw--nice .hsw-t col.is-sort{ background:color-mix(in srgb, var(--w-fg) 4%, transparent); }
+.hsw--nice .hsw-t col.is-hc{ background:color-mix(in srgb, #a78bfa 9%, transparent); }
+.hsw--nice .hsw-t col.is-sort.is-hc{ background:color-mix(in srgb, #a78bfa 13%, transparent); }
+.hsw--nice .hsw-t tr.is-hr td{ background:color-mix(in srgb, #a78bfa 9%, transparent); }
+.hsw--nice .hsw-t tr.is-hr td.h .hero{ color:#fff; }
+.hsw--nice .hsw-t th.srt.is-on{ color:#c4b5fd; }
+.hsw--nice .hsw-t td, .hsw--nice .hsw-t col{ transition:background .12s ease; }
+.hsw--nice .hsw-ft{ border-top-color:color-mix(in srgb, var(--w-border) 60%, transparent); }
+
+/* v4 dim — наведение как в «Игроках по позициям» (v5): остальные строки тише, наведённая — яркая; в наведённой колонке остальные строки чуть ярче; без цветной подсветки */
+.hsw--dim .hsw-t col.is-hc, .hsw--dim .hsw-t col.is-sort.is-hc{ background:transparent; }
+.hsw--dim .hsw-t col.is-sort.is-hc{ background:color-mix(in srgb, var(--w-fg) 4%, transparent); }
+.hsw--dim .hsw-t tr.is-hr td{ background:transparent; }
+.hsw--dim .hsw-t tbody td{ transition:opacity .18s ease; }
+@media (hover:hover){
+  .hsw--dim .hsw-t tbody:has(tr.is-hr) tr:not(.is-hr) td{ opacity:.3; }
+  .hsw--dim .hsw-t tbody:has(tr.is-hr) tr:not(.is-hr) td.is-cc{ opacity:.65; }
+}
+
+/* v5 sortHi — колонка сортировки видна сразу: фон заметнее, цифры ярче, у заголовка полоска снизу; при наведении на строку она затемняется меньше остальных */
+.hsw--sorthi .hsw-t col.is-sort, .hsw--sorthi.hsw--dim .hsw-t col.is-sort.is-hc{ background:color-mix(in srgb, var(--w-fg) 8%, transparent); }
+.hsw--sorthi .hsw-t td.is-sc{ color:var(--w-fg); } .hsw--sorthi .hsw-t td.is-sc b, .hsw--sorthi .hsw-t td.is-sc .mut{ color:var(--w-fg); font-weight:600; }
+.hsw--sorthi .hsw-t th.srt.is-on{ color:var(--w-fg); box-shadow:inset 0 -2px 0 var(--w-fg); }
+@media (hover:hover){ .hsw--sorthi.hsw--dim .hsw-t tbody:has(tr.is-hr) tr:not(.is-hr) td.is-sc{ opacity:.65; } }
+
+/* v6 — сброс сортировки в правом верхнем углу виджета; пока сортировка по умолчанию — неактивен */
+.w .hsw-rc{ display:inline-flex; align-items:center; gap:5px; height:28px; padding:0 10px; border-radius:6px; background:var(--w-muted); color:var(--w-fg); font:500 12px/1 var(--w-font); white-space:nowrap; }
+.w .hsw-rc:hover{ background:var(--w-ring); } .w .hsw-rc:disabled{ opacity:.35; cursor:default; background:var(--w-muted); }
+.hsw-sub + .hsw-rc{ margin-left:4px; }

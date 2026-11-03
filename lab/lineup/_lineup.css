@@ -1,0 +1,95 @@
+/* Лаба «Состав» — общее для вариантов: страница лабы (две рамки: десктоп 1440 и телефон 390), общие куски экрана (переключатель игры,
+   чипы, поиск, итог, предупреждение, таб-бар). Токены — /p-fw3k/site/styles.css (--c-ui-*, --font-c, «Финал»). Телефон — container query «lu»:
+   рамка 390 px, та же разметка; правила вариантов для телефона — в их файлах под @container lu (max-width: 600px). */
+body { margin: 0; background: var(--c-ui-bg); color: var(--c-text); font-family: var(--font); }
+.lu-page { padding: 40px 32px 80px; }
+.lu-page > h1 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.01em; }
+.lu-page > p { max-width: 90ch; margin: 8px 0 0; color: var(--c-muted); font-size: 15px; line-height: 1.5; }
+.lu-cap { margin: 36px 0 12px; font-size: 13px; font-weight: 600; color: var(--c-caption); }
+.lu-frame { container: lu / inline-size; position: relative; overflow: hidden; border-radius: 14px; background: var(--c-ui-bg); box-shadow: 0 0 0 1px var(--c-ui-line), 0 30px 80px -30px var(--c-black); }
+.lu-frame--desk { width: 100%; max-width: 1440px; }
+.lu-frame--phone { width: 390px; min-height: 844px; border-radius: 40px; box-shadow: 0 0 0 10px color-mix(in srgb, var(--c-text) 8%, var(--c-ui-bg)), 0 0 0 11px var(--c-ui-line); margin-left: 11px; }
+.lu-frame .ui-header__in { padding-top: 20px; }
+.lu-app { padding: 20px 28px 32px; }
+
+/* Общие куски */
+.lu-h { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 12px 20px; margin-bottom: 18px; }
+.lu-h h2 { margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -.01em; }
+.lu-h p { margin: 4px 0 0; color: var(--c-caption); font-size: var(--fs-app-sm); }
+.lu-h .lu-seg { margin-left: auto; }
+.lu-seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 8px; background: var(--c-ui-chip); }
+.lu-seg button { border: 0; padding: 7px 14px; border-radius: 6px; background: none; color: var(--c-ui-dim); font: 600 var(--fs-app-sm) var(--font); cursor: pointer; }
+.lu-seg button[aria-pressed='true'] { background: var(--c-ui-panel); color: var(--c-accent); }
+.lu-chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.lu-chips button { flex: none; border: 0; padding: 6px 11px; border-radius: 6px; background: var(--c-ui-chip); color: var(--c-ui-dim); font: 600 12.5px var(--font); cursor: pointer; }
+.lu-chips button[aria-pressed='true'] { background: var(--c-ui-item); color: var(--c-accent); }
+.lu-search { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; border-radius: 6px; background: var(--c-ui-item); color: var(--c-caption); }
+.lu-search i { font-style: normal; }
+.lu-search input { flex: 1; min-width: 0; border: 0; background: none; color: var(--c-text); font: 500 var(--fs-app-sm) var(--font); outline: none; }
+.lu-sum { display: flex; gap: 10px; }
+.lu-sum span { display: grid; gap: 2px; padding: 10px 14px; border-radius: 8px; background: var(--c-ui-panel); }
+.lu-sum small { color: var(--c-caption); font-size: 12px; }
+.lu-sum b { font: 700 22px/1.1 var(--font-c); }
+.lu-sum span:first-child b { color: var(--c-coin); }
+.lu-clock { color: var(--c-accent); font-variant-numeric: tabular-nums; }
+.lu-warn { margin: 0; padding: 10px 14px; border-radius: 8px; background: color-mix(in srgb, var(--c-live) 12%, var(--c-ui-panel)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-live) 40%, transparent); font-size: var(--fs-app-sm); color: var(--c-muted); }
+.lu-warn b { color: var(--c-text); }
+.lu-dot { display: inline-block; width: 7px; height: 7px; margin-right: 5px; border-radius: 50%; background: var(--c-live); vertical-align: 1px; }
+.lu-logo { width: 18px; height: 18px; object-fit: contain; vertical-align: -4px; }
+.lu-muted { color: var(--c-caption); }
+.lu-out { color: var(--c-live); }
+.lu-cap-b { display: inline-grid; place-items: center; width: 24px; height: 24px; border: 0; border-radius: 6px; background: var(--c-ui-item); color: var(--c-caption); font: 800 12px var(--font); cursor: pointer; }
+.lu-cap-b[aria-pressed='true'] { background: var(--c-coin); color: var(--c-card-dark-text); }
+.lu-tabbar { display: none; }
+.kc[draggable] { cursor: grab; }
+
+@container lu (max-width: 600px) {
+  .lu-frame .ui-header__in { padding: 44px 16px 0; }
+  .lu-frame .ui-header__nav, .lu-frame .ui-header__coins span, .lu-frame .ui-header__coins .btn { display: none; }
+  .lu-app { padding: 16px 16px 90px; }
+  .lu-h h2 { font-size: 24px; }
+  .lu-h .lu-seg { margin-left: 0; }
+  .lu-sum { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .lu-sum span { padding: 8px 10px; }
+  .lu-sum small { font-size: 10.5px; line-height: 1.2; }
+  .lu-sum b { font-size: 17px; }
+  .lu-tabbar { position: absolute; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: repeat(5, 1fr); padding: 6px 6px 22px; background: var(--c-ui-panel); border-top: 1px solid var(--c-ui-line); }
+  .lu-tabbar a { display: grid; justify-items: center; gap: 2px; font-size: 10.5px; font-weight: 600; color: var(--c-caption); }
+  .lu-tabbar i { font-style: normal; font-size: 18px; }
+  .lu-tabbar a[aria-current] { color: var(--c-accent); }
+}
+
+/* ——— Игровое перетаскивание (v1, v3; _lineup.js тащить()) ———
+   Копия карты в слое .lu-layer: приподнята (×1.08), тень, свет цвета редкости (--glow), наклон по скорости (--tilt).
+   На месте — пунктирный след. Слоты: свой — светится и подписан, чужие приглушены, под курсором — магнит, чужой при броске — трясётся. */
+body.lu-drag [data-add] .kc, body.lu-drag [data-out] > .kc, body.lu-drag .v1-place[data-out] .kc { cursor: grab; }
+body.lu-dragging, body.lu-dragging * { cursor: grabbing !important; user-select: none; }
+.lu-layer { position: fixed; inset: 0; z-index: 9999; pointer-events: none; }
+.lu-ghost { position: fixed; margin: 0; pointer-events: none; transform-origin: 50% 40%; will-change: left, top, transform;
+  transform: perspective(900px) var(--tilt, rotate(0deg)) scale(1); transition: transform .18s ease, box-shadow .18s, filter .18s; }
+.lu-ghost.is-up { transform: perspective(900px) var(--tilt, rotate(0deg)) scale(1.08);
+  filter: drop-shadow(0 26px 30px color-mix(in srgb, var(--c-black) 75%, transparent)) drop-shadow(0 0 22px color-mix(in srgb, var(--glow) 55%, transparent)); }
+.lu-trail { position: relative; }
+.lu-trail .kc { opacity: .16; filter: grayscale(1); }
+.lu-trail::after { content: ''; position: absolute; inset: -4px; border: 2px dashed color-mix(in srgb, var(--c-white) 28%, transparent); border-radius: 10px; pointer-events: none; }
+.v1-bc.lu-trail::after, .v3-bc.lu-trail::after { inset: -4px -4px 22px; }
+[data-drop] { transition: scale .18s ease, box-shadow .2s, opacity .2s, filter .2s; }
+[data-drop].lu-no { opacity: .45; filter: saturate(.4); }
+.v1-place.lu-ok { box-shadow: 0 0 0 2px var(--c-accent), 0 0 28px -4px var(--c-accent); }
+.v3-spot.lu-ok .kc, .v3-spot.lu-ok .v3-emp { box-shadow: 0 0 0 2px var(--c-accent), 0 0 24px -4px var(--c-accent); border-radius: 6px; }
+.v3-spot.lu-ok .v3-emp { border-color: var(--c-accent); color: var(--c-accent); }
+[data-drop].lu-ok.is-hover { scale: 1.06; } /* scale, не transform: у точек v3 своя translate */
+.v1-place.lu-ok::before { content: 'Сюда'; position: absolute; top: -26px; left: 50%; translate: -50% 0; padding: 2px 8px; border-radius: 6px; background: var(--c-accent); color: var(--c-on-accent); font: 700 11px var(--font); white-space: nowrap; z-index: 3; }
+[data-drop].is-bad { animation: lu-shake .45s; }
+.v1-place.is-bad { box-shadow: 0 0 0 2px var(--c-live), 0 0 24px -4px var(--c-live); }
+.v3-spot.is-bad .kc, .v3-spot.is-bad .v3-emp { box-shadow: 0 0 0 2px var(--c-live); }
+@keyframes lu-shake { 20% { translate: -6px 0; } 40% { translate: 6px 0; } 60% { translate: -4px 0; } 80% { translate: 3px 0; } }
+.v3-spot.is-bad { animation: none; }
+.v3-spot.is-bad > :first-child { animation: lu-shake .45s; }
+[data-drop-bench] { transition: background .2s, box-shadow .2s; border-radius: 12px; }
+[data-drop-bench].lu-bench-on { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--c-white) 14%, transparent); }
+[data-drop-bench].lu-bench-on.is-hover { background: color-mix(in srgb, var(--c-accent) 10%, transparent); box-shadow: inset 0 0 0 2px var(--c-accent); }
+.kc.lu-land { animation: lu-land .5s cubic-bezier(.2, 1.6, .4, 1); }
+@keyframes lu-land { from { scale: 1.14; filter: brightness(1.5); } }
+@media (prefers-reduced-motion: reduce) { .lu-ghost, [data-drop] { transition: none; } [data-drop].is-bad, .v3-spot.is-bad > :first-child, .kc.lu-land { animation: none; } }
+

@@ -1,0 +1,295 @@
+/* Лаба w-drill v4+ — «Разбор»: унифицированные блоки (начальник 03.11). Поверх _rz.css (v3, Claude-B). Одна рамка на все 4 типа: таблица · показатель · два показателя · показатель с динамикой */
+.w.rz.sb { height: 640px; }
+.sb-body { padding-top: 4px; }
+.sb-bs { display: flex; flex-direction: column; gap: 8px; padding: 8px 16px 0; }
+.sb-body .sb-b { margin: 8px 16px 0; } .sb-bs .sb-b { margin: 0; }
+/* рамка блока */
+.sb-b { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px 12px; border-radius: 10px; background: var(--w-mid-bg, #18181b); box-shadow: inset 0 0 0 1px var(--w-border); }
+.sb-bh { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; min-width: 0; }
+.sb-bh > span { font: 500 12px/16px var(--w-font); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-bh > small { font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.w .sb-src { color: var(--w-muted-fg); } .w .sb-src:hover { color: var(--w-fg); }
+/* 1 · таблица: подпись слева, значение справа */
+.sb-tr { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 28px; border-top: 1px solid var(--w-border); font: var(--t-cell); }
+.sb-tr:first-child { border-top: 0; }
+.sb-tr > span { color: var(--w-muted-fg); white-space: nowrap; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.sb-tr > b { font: var(--t-num-s); color: var(--w-fg); white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; }
+.sb-tr > b small { font: var(--t-sub); color: var(--w-muted-fg); }
+.sb-tr .rz-a span { white-space: nowrap; }
+.sb-hn { display: inline-flex; align-items: center; gap: 8px; color: var(--w-fg); } .sb-hn img { width: 32px; height: 18px; border-radius: 3px; object-fit: cover; }
+/* 2 · показатель */
+.sb-1 { display: flex; flex-direction: column; gap: 2px; } .sb-1 b { font: 600 24px/28px var(--w-font); color: var(--w-fg); } .sb-1 span { font: var(--t-sub); color: var(--w-muted-fg); }
+/* 3 · два показателя */
+.sb-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } .sb-2 > div { display: flex; flex-direction: column; gap: 2px; }
+.sb-2 b { font: 600 20px/24px var(--w-font); color: var(--w-fg); } .sb-2 span { font: var(--t-sub); color: var(--w-muted-fg); }
+.sb-2 b.up, .sb-1 b.up { color: var(--w-up); } .sb-2 b.dn, .sb-1 b.dn { color: #e5484d; }
+/* 4 · показатель с динамикой */
+.sb-d { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.sb-sp { width: 120px; height: 32px; flex: none; } .sb-sp path { fill: none; stroke: var(--w-fg); stroke-width: 1.5; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+/* рейтинг: общий показатель + 6 частных */
+.sb-r { display: grid; grid-template-columns: 72px 1fr; gap: 12px; align-items: center; }
+.sb-r .sb-1 b { font-size: 32px; line-height: 36px; }
+.sb-r6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 6px; } .sb-r6 > div { display: flex; flex-direction: column; } .sb-r6 b { font: 600 15px/18px var(--w-font); color: var(--w-fg); }
+.sb-r6 b.up { color: var(--w-up); } .sb-r6 b.dn { color: #e5484d; } .sb-r6 span { font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; }
+.sb .rz-items { margin-top: 0; }
+/* у прогнозов и команды старые разделы — тоже в рамке блока */
+.sb .rz-q { margin: 0 16px; } .sb .rz-sum { margin-bottom: 4px; }
+.sb-q .rz-bar { margin: 0; } 
+
+/* ——— v5–v6 · плоский вид (дирижёр 03.11: «визуально другое»): без карточек-коробок — разделы как в виджетах турнира: подпись, строки с линиями ——— */
+.sb--flat .rz-pick { display: none; }
+.sb--flat .sb-bs { gap: 0; padding: 0 16px; }
+.sb--flat .sb-b { gap: 6px; padding: 12px 0; border-radius: 0; background: none; box-shadow: none; border-top: 1px solid var(--w-border); }
+.sb--flat .sb-bs > .sb-b:first-child { border-top: 0; }
+.sb--flat .sb-body .sb-b { margin: 0 16px; }
+.sb--flat .sb-bh > span { font: var(--t-label, var(--t-sub)); color: var(--w-muted-fg); }
+.sb--flat .rz-card { margin-bottom: 4px; }
+/* шапка карточки сущности: «‹ Разбор» и имя */
+.w .sb-bk { display: inline-flex; align-items: center; gap: 4px; height: 28px; margin-left: -6px; padding: 0 6px; border-radius: 6px; font: var(--t-sub); color: var(--w-muted-fg); }
+.w .sb-bk:hover { background: var(--w-muted); color: var(--w-fg); }
+.sb-tt { flex: 1; min-width: 0; font: var(--t-title); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* «Обзор»: разделы и строки-кнопки (как .w-row--btn, стрелка .w-chev) */
+.sb-sec { padding: 4px 16px 8px; } .sb-sec + .sb-sec { border-top: 1px solid var(--w-border); padding-top: 8px; }
+.sb-sl { display: flex; align-items: center; gap: 6px; height: 28px; font: var(--t-label, var(--t-sub)); color: var(--w-muted-fg); }
+.w .sb-row { display: flex; align-items: center; gap: 10px; width: calc(100% + 16px); height: 40px; margin: 0 -8px; padding: 0 8px; border-radius: 6px; text-align: left; font: var(--t-cell); color: var(--w-fg); }
+.w .sb-row:hover { background: var(--w-muted); }
+.sb-rn { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-row small { font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; } .sb-row b { min-width: 36px; text-align: right; font: var(--t-num-s); color: var(--w-fg); } .sb-row b.up { color: var(--w-up); }
+.sb-row .w-chev { color: var(--w-ring); flex: none; }
+.sb-qq { display: flex; flex-direction: column; gap: 6px; padding: 2px 0 8px; } .sb-qq > span { font: var(--t-cell); color: var(--w-fg); } .sb-qq .rz-bar { margin: 0; }
+.sb-qv { display: flex; justify-content: space-between; gap: 8px; font: var(--t-sub); color: var(--w-muted-fg); } .sb-qv .is-lead { color: var(--w-fg); } .sb-qv b { font-weight: 600; }
+/* v6 · полоса выбора сущности */
+.sb-strip { flex: none; display: flex; align-items: center; gap: 3px; padding: 8px 16px; border-bottom: 1px solid var(--w-border); }
+.sb-strip > i { flex: 1; }
+.w .sb-st { display: grid; place-items: center; flex: none; width: 26px; height: 26px; border-radius: 6px; overflow: hidden; opacity: .5; transition: opacity .15s; color: var(--w-fg); }
+.w .sb-st img { width: 100%; height: 100%; object-fit: cover; } .w .sb-st--t img { width: 18px; height: 18px; object-fit: contain; }
+.w .sb-st--q, .w .sb-st--t { background: var(--w-muted); }
+.w .sb-st:hover { opacity: .85; } .w .sb-st.is-on { opacity: 1; box-shadow: inset 0 0 0 2px var(--w-fg); }
+/* v7 · под полосой — выбранный игрок и переключатель «Игрок · Герой»; карточка в теле не повторяется */
+.sb--v7 .sb-strip { border-bottom: 0; padding-bottom: 6px; }
+.sb-tog { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 16px 10px; border-bottom: 1px solid var(--w-border); }
+.sb-tog-n { display: grid; grid-template-columns: 40px 1fr; grid-template-rows: auto auto; column-gap: 8px; align-items: center; min-width: 0; }
+.sb-tog-h { grid-row: 1 / 3; width: 40px; height: 23px; border-radius: 4px; object-fit: cover; }
+.sb-tog-n b { font: 600 14px/18px var(--w-font); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .sb-tog-n small { font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; }
+.sb-seg { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; flex: none; padding: 2px; border-radius: 8px; background: var(--w-mid-bg, #18181b); }
+.w .sb-seg button { height: 26px; padding: 0 10px; border-radius: 6px; font: var(--t-seg, 500 12px/1 var(--w-font)); color: var(--w-muted-fg); } .w .sb-seg button.is-on { background: var(--w-muted); color: var(--w-fg); }
+.sb--v7 .sb-body .rz-card { display: none; }
+/* v7 · полоса в две строки: [прогнозы] | лого + 5 героев · лого + 5 героев; герои тянутся по ширине колонки */
+.sb-strip--2 { display: grid; grid-template-columns: 32px 28px repeat(5, minmax(0, 1fr)); grid-auto-rows: 28px; gap: 4px; }
+.sb-strip--2 .sb-st--q { grid-row: 1 / 3; width: 32px; height: 100%; }
+.sb-strip--2 .sb-st { width: 100%; height: 28px; } .sb-strip--2 .sb-st--q { height: 60px; }
+.sb-strip--2 .sb-st:not(.sb-st--q):not(.sb-st--t) img { object-fit: cover; }
+/* v8 · полоса кружками: фото игроков (в «Герой» — герои), выбранный — кольцом с зазором; аватар выбранного меняется переключателем */
+.sb--v8 .sb-strip--2 { grid-template-columns: 32px 28px repeat(5, 28px); justify-content: space-between; }
+.sb--v8 .sb-st:not(.sb-st--q) { width: 28px; height: 28px; border-radius: 50%; overflow: visible; opacity: .6; }
+.sb--v8 .sb-st:not(.sb-st--q) img, .sb--v8 .sb-st .sb-ini { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+.sb--v8 .sb-st--t { background: none; } .sb--v8 .sb-st--t img { width: 20px; height: 20px; border-radius: 0; object-fit: contain; }
+.sb--v8 .sb-st.is-on { opacity: 1; box-shadow: 0 0 0 2px var(--w-bg), 0 0 0 3.5px var(--w-fg); }
+.sb--v8 .sb-st--q { border-radius: 10px; }
+.sb-ini { display: grid; place-items: center; background: var(--w-muted); font: 600 10px/1 var(--w-font); color: var(--w-muted-fg); }
+.sb--v8 .sb-tog-av { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: block; box-shadow: 0 0 0 2px var(--w-bg), 0 0 0 3.5px var(--w-fg); }
+.sb--v8 .sb-tog-av img, .sb--v8 .sb-tog-av .sb-ini { width: 100%; height: 100%; object-fit: cover; display: grid; }
+.sb--v8 .sb-tog-n { grid-template-columns: 40px 1fr; }
+
+/* ——— v9 · язык «Участников» (widget-participants/_wp.css): маленькие переключатели (белый — включён), плотные строки 32, номер в квадратике, больше значков; высота — по содержимому, без скролла внутри ——— */
+.w.rz.sb.sb--v9 { height: auto; } .sb--v9 .rz-body { overflow: visible; flex: none; padding: 0 0 8px; }
+.sb-hdr { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; }
+.w .sb-ic { display: inline-flex; gap: 2px; padding: 2px; border-radius: 7px; background: var(--w-mid-bg); flex: none; }
+.w .sb-ic button { min-width: 24px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 5px; color: var(--w-muted-fg); }
+.w .sb-ic button:not(.is-on):hover { color: var(--w-fg); background: var(--w-muted); } .w .sb-ic button.is-on { background: var(--w-fg); color: var(--w-bg); }
+/* полоса — плотнее: кружки 24 */
+.sb--v9 .sb-strip--2 { grid-template-columns: 28px 24px repeat(5, 24px); grid-auto-rows: 24px; gap: 4px 6px; padding: 8px 16px 6px; }
+.sb--v9 .sb-st:not(.sb-st--q), .sb--v9 .sb-st:not(.sb-st--q) img, .sb--v9 .sb-st .sb-ini { width: 24px; height: 24px; }
+.sb--v9 .sb-st--q { width: 28px; height: 52px !important; border-radius: 7px; }
+.sb--v9 .sb-st--t img { width: 18px; height: 18px; }
+/* выбранный — одна строка 36: аватар, ник и герой, справа У/С/П цветом и состояние */
+.sb--v9 .sb-tog { padding: 4px 16px 8px; }
+.sb--v9 .sb-tog-n { grid-template-columns: 28px 1fr; column-gap: 8px; flex: 1; }
+.sb--v9 .sb-tog-av { width: 28px; height: 28px; box-shadow: 0 0 0 2px var(--w-bg), 0 0 0 3px var(--w-fg); }
+.sb--v9 .sb-tog-n b { font: var(--t-cell); font-weight: 600; } .sb--v9 .sb-tog-n small { font: var(--t-sub); }
+.sb-tog-k { display: flex; flex-direction: column; align-items: flex-end; flex: none; } .sb-tog-k b { font: var(--t-num-s); color: var(--w-fg); } .sb-tog-k i { font-style: normal; } .sb-tog-k small { font: var(--t-sub); color: var(--w-muted-fg); }
+/* блоки — плотнее: подпись 24, строки таблицы 32 */
+.sb--v9 .sb-b { gap: 2px; padding: 8px 0; }
+.sb--v9 .sb-bh { min-height: 20px; align-items: center; }
+.sb--v9 .sb-tr { min-height: 32px; }
+.sb--v9 .sb-2 b { font-size: 16px; line-height: 20px; } .sb--v9 .sb-1 b { font-size: 20px; line-height: 24px; }
+.sb--v9 .sb-r { grid-template-columns: 56px 1fr; gap: 8px; } .sb--v9 .sb-r .sb-1 b { font-size: 26px; line-height: 30px; }
+.sb--v9 .sb-r6 { gap: 4px; } .sb--v9 .sb-r6 > div { flex-direction: row; align-items: center; gap: 6px; height: 24px; }
+.sb--v9 .sb-r6 b { display: grid; place-items: center; min-width: 26px; height: 20px; padding: 0 4px; border-radius: 4px; background: var(--w-muted); font: var(--t-tag, 600 11px/1 var(--w-font)); }
+.sb--v9 .sb-d .sb-sp { height: 24px; }
+.sb--v9 .rz-items img { width: 26px; height: 19px; }
+.sb--v9 .sb-hn img { width: 28px; height: 16px; }
+
+/* ——— v10–v12 · переключатель «Игрок · Герой» — у аватарки выбранного; у команды и прогнозов — просто название ——— */
+.sb-tog--t { justify-content: flex-start; gap: 8px; min-height: 40px; } .sb-tog--t img { width: 20px; height: 20px; object-fit: contain; } .sb-tog--t b { font: var(--t-cell); font-weight: 600; color: var(--w-fg); }
+.sb-tog-tx { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; } .sb-tog-tx b { font: var(--t-cell); font-weight: 600; color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .sb-tog-tx small { font: var(--t-sub); color: var(--w-muted-fg); }
+/* v10 · аватар-переключатель: большой кружок — то, что открыто; маленький на углу — второе, нажал — меняются местами */
+.sb-tog--av { gap: 12px; }
+.sb-av2 { position: relative; flex: none; width: 40px; height: 40px; }
+.sb-av2-b { display: block; width: 40px; height: 40px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 2px var(--w-bg), 0 0 0 3px var(--w-fg); }
+.sb-av2-b img, .sb-av2-b .sb-ini { width: 100%; height: 100%; object-fit: cover; display: grid; }
+.w .sb-av2-s { position: absolute; right: -8px; bottom: -6px; width: 22px; height: 22px; border-radius: 50%; overflow: visible; box-shadow: 0 0 0 2px var(--w-bg); }
+.w .sb-av2-s img, .w .sb-av2-s .sb-ini { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; display: grid; }
+.w .sb-av2-s i { position: absolute; right: -4px; top: -4px; display: grid; place-items: center; width: 12px; height: 12px; border-radius: 50%; background: var(--w-fg); color: var(--w-bg); }
+.w .sb-av2-s:hover img { filter: brightness(1.2); }
+/* v11 · сегмент у имени (как сортировка «Участников»: маленький, включённый — белым) */
+.sb-tog-av1 { flex: none; width: 36px; height: 36px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 2px var(--w-bg), 0 0 0 3px var(--w-fg); }
+.sb-tog-av1 img, .sb-tog-av1 .sb-ini { width: 100%; height: 100%; object-fit: cover; display: grid; }
+.sb-tog--seg { gap: 10px; }
+.w .sb-mseg { display: inline-flex; align-self: flex-start; gap: 2px; padding: 2px; border-radius: 7px; background: var(--w-mid-bg); }
+.w .sb-mseg button { height: 20px; padding: 0 8px; border-radius: 5px; font: 500 11px/1 var(--w-font); color: var(--w-muted-fg); white-space: nowrap; max-width: 120px; overflow: hidden; text-overflow: ellipsis; }
+.w .sb-mseg button:not(.is-on):hover { color: var(--w-fg); background: var(--w-muted); } .w .sb-mseg button.is-on { background: var(--w-fg); color: var(--w-bg); }
+/* v12 · две плашки: игрок и его герой; включённая — светлая подложка */
+.sb-tog--ch { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.w .sb-chp { display: flex; align-items: center; gap: 8px; min-width: 0; height: 44px; padding: 0 8px; border-radius: 8px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); text-align: left; }
+.w .sb-chp:hover { background: var(--w-muted); } .w .sb-chp.is-on { background: var(--w-muted); box-shadow: inset 0 0 0 1px var(--w-fg); }
+.sb-chp-i { flex: none; width: 28px; height: 28px; border-radius: 50%; overflow: hidden; } .sb-chp-i img, .sb-chp-i .sb-ini { width: 100%; height: 100%; object-fit: cover; display: grid; }
+.sb-chp-i--h { width: 40px; height: 23px; border-radius: 4px; }
+.sb-chp > span:last-child { display: flex; flex-direction: column; min-width: 0; } .sb-chp b { font: var(--t-cell); font-weight: 600; color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .sb-chp small { font: var(--t-sub); color: var(--w-muted-fg); }
+/* v12 правки (дирижёр 03.11): в «Команде» переключателя команд нет — команда выбирается в полосе; плашки «игрок / герой» — аккуратнее, меньше, отступ сверху больше */
+.sb--v7 .rz-seg2 { display: none; }
+.sb-tog--ch { gap: 6px; padding-top: 10px; }
+.w .sb-chp { height: 36px; gap: 8px; padding: 0 10px 0 6px; border-radius: 8px; box-shadow: none; background: var(--w-mid-bg); }
+.w .sb-chp.is-on { background: var(--w-muted); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--w-fg) 55%, transparent); }
+.sb-chp .sb-chp-i { width: 24px; height: 24px; } .sb-chp .sb-chp-i--h { width: 36px; height: 20px; border-radius: 4px; }
+.sb-chp > span:last-child { flex-direction: row; align-items: baseline; gap: 6px; } .sb-chp b { font: 500 13px/16px var(--w-font); } .sb-chp small { font: 400 11px/14px var(--w-font); }
+
+/* ——— v13–v16 · перенос в «Разбор» не обычным кликом ——— */
+.sb-fl { position: fixed; z-index: 9999; pointer-events: none; display: none; font: 500 12px/16px var(--w-font, system-ui); }
+/* hold — кружок у курсора заполняется 0,7 с */
+.sb-fl--ring { display: block; transform: translate(10px, 10px); }
+.sb-fl--ring svg { display: block; transform: rotate(-90deg); filter: drop-shadow(0 1px 4px rgba(0,0,0,.6)); }
+.sb-fl--ring circle { fill: none; stroke-width: 3; } .sb-fl--ring .bg { stroke: rgba(255,255,255,.18); fill: rgba(9,9,11,.75); }
+.sb-fl--ring .fg { stroke: #fafafa; stroke-linecap: round; stroke-dasharray: 56.6; stroke-dashoffset: 56.6; }
+.sb-fl--ring.is-run .fg { transition: stroke-dashoffset .7s linear; stroke-dashoffset: 0; }
+/* key / drag — подсказка у курсора */
+.sb-fl--tip { display: block; transform: translate(14px, 16px); padding: 6px 10px; border-radius: 8px; background: #18181b; color: #a1a1aa; box-shadow: 0 0 0 1px #27272a, 0 6px 20px rgba(0,0,0,.5); white-space: nowrap; }
+.sb-fl--tip kbd { display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 4px; background: #27272a; color: #fafafa; font: 600 11px/1 var(--w-font, system-ui); }
+/* btn — маленькая кнопка у элемента */
+.sb-fl--btn { display: block; pointer-events: auto; transform: translate(-100%, -100%); }
+.sb-fl--btn button { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 8px; border-radius: 6px; background: #fafafa; color: #09090b; font: 600 11px/1 var(--w-font, system-ui); box-shadow: 0 4px 14px rgba(0,0,0,.5); cursor: pointer; }
+/* «Разбор» коротко подсвечивается, когда в него что-то перенесли; при перетаскивании — рамка-приёмник */
+@keyframes sbFlash { 0% { box-shadow: 0 0 0 2px var(--w-fg, #fafafa); } 100% { box-shadow: 0 0 0 2px transparent; } }
+.sb-flash .w.rz { animation: sbFlash .8s ease-out; border-radius: 12px; }
+.sb-dragging .rz-host .w.rz { box-shadow: 0 0 0 1px var(--w-ring, #52525b); border-radius: 12px; }
+.sb-drop .w.rz { box-shadow: 0 0 0 2px var(--w-fg, #fafafa) !important; }
+.sb-dragging [draggable="true"] { cursor: grab; }
+/* v18 · время кружка — из настройки (3 с) */
+.sb-fl--ring.is-run .fg { transition-duration: var(--hold, .7s); }
+/* v19 · своё меню по правому клику */
+.sb-fl--menu { display: flex; flex-direction: column; gap: 2px; pointer-events: auto; padding: 4px; border-radius: 10px; background: #18181b; box-shadow: 0 0 0 1px #27272a, 0 10px 30px rgba(0,0,0,.6); }
+.sb-fl--menu button { display: flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px; border-radius: 6px; color: #fafafa; font: 500 13px/1 var(--w-font, system-ui); text-align: left; white-space: nowrap; cursor: pointer; }
+.sb-fl--menu button:hover { background: #27272a; } .sb-fl--menu svg { color: #a1a1aa; }
+/* v20 · кружок заливается целиком от центра, внутри — значок «i» */
+.sb-fill { position: relative; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: rgba(9,9,11,.8); box-shadow: 0 0 0 1.5px rgba(255,255,255,.35), 0 2px 8px rgba(0,0,0,.5); overflow: hidden; }
+.sb-fill i { position: absolute; inset: 0; border-radius: 50%; background: #fafafa; transform: scale(0); }
+.sb-fill b { position: relative; font: italic 700 13px/1 Georgia, serif; color: #fafafa; mix-blend-mode: difference; }
+.sb-fl--ring.is-run .sb-fill i { transition: transform var(--hold, .7s) linear; transform: scale(1); }
+/* ровнее (дирижёр 03.11, скрин «Прогнозы на матч»): сводка — три числа сверху, подписи под ними, без квадратиков; рейтинг — по 2 в строку, чтобы подписи не налезали */
+.sb-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.sb-3 > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sb-3 b { font: 600 16px/20px var(--w-font); color: var(--w-fg); white-space: nowrap; } .sb-3 b.up { color: var(--w-up); }
+.sb-3 span { font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; }
+.sb--v9 .sb-r6 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 12px; }
+.sb--v9 .sb-r6 > div { min-width: 0; } .sb--v9 .sb-r6 span { overflow: hidden; text-overflow: ellipsis; }
+/* наведение на подписи команд графика (w-gold-2 делает их прозрачными для мыши) — только название и лого, сам график под ними по-прежнему ведётся */
+.sb-xf .g2-r2 > img, .sb-xf .g2-r2 > span, .sb-xf .g2-tm, .sb-xf .g2-tb { pointer-events: auto; }
+
+/* ——— v23–v24 · единообразно: у любой сущности 4 места «Сейчас · Динамика · Турнир · Справка»; высота виджета постоянная, внутри скролл ——— */
+.w.rz.sb.sb--uni { height: 600px; } .sb--uni .rz-body { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.sb--uni .sb-tog--t { min-height: 44px; }
+.sb--uni .sb-tr > span { max-width: 62%; } .sb--uni .sb-tr > b { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+/* ——— v25 · прогнозы плитками, как «О матче» в превью (классы ws49-c / ws50 / ws5-bar из w-preview-2/_ws2.css) ——— */
+.sb-qt { display: flex; flex-direction: column; gap: 8px; }
+.sb-qt .ws43-t small:first-of-type { flex: 1; min-width: 0; color: var(--w-fg); }
+.sb-qt .sb-qt-n { color: var(--w-muted-fg); }
+.sb-qt-o { display: inline-flex; align-items: center; gap: 6px; min-width: 0; font: 600 12px/16px var(--w-font); }
+.sb-qt-o small { font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-qt .ws50 .sb-qh { border-radius: 4px; object-fit: cover; }
+.sb-qt-t { font: 600 11px/14px var(--w-font); }
+/* v25 · плитки компактнее: одна строка заголовка, меньше отступы, тонкая полоса */
+.sb--qt .sb-qt { gap: 6px; }
+.sb--qt .sb-qt .ws49-c { gap: 6px; padding: 8px 10px; border-radius: 10px; }
+.sb--qt .sb-qt .ws43-t { gap: 6px; } .sb--qt .sb-qt .ws43-t small:first-of-type { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb--qt .sb-qt .ws43-t .ws41-ic { width: 18px; height: 18px; }
+.sb--qt .sb-qt .ws50 { height: 22px; gap: 4px; padding: 0 6px 0 3px; font-size: 11px; } .sb--qt .sb-qt .ws50 .ws41-lg { width: 16px; height: 16px; }
+.sb--qt .sb-qt .ws43-v b { padding: 0 5px; }
+.sb--qt .sb-qt .ws5-bar { height: 2px; }
+.sb--qt .sb-qt-sum { padding: 6px 10px; }
+/* ——— v27 (дирижёр 03.11) · строка под полосой одной высоты (44) у прогнозов, команды, игрока; «игрок / герой» — сегмент пониже;
+   отступ сверху у прокрутки = зазор между плитками; без лишней линии над первым блоком ——— */
+.sb--qt2 .sb-tog { box-sizing: border-box; height: 44px; min-height: 0; padding: 0 16px; align-items: center; }
+.sb--qt2 .sb-tog--ch { display: flex; padding: 0 16px; }
+.sb-sg { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 2px; border-radius: 8px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.w .sb-sg .sb-chp { height: 26px; padding: 0 8px 0 3px; gap: 6px; border-radius: 6px; background: none; box-shadow: none; }
+.w .sb-sg .sb-chp:not(.is-on):hover { background: var(--w-muted); }
+.w .sb-sg .sb-chp.is-on { background: var(--w-muted); box-shadow: none; }
+.sb-sg .sb-chp .sb-chp-i { width: 20px; height: 20px; } .sb-sg .sb-chp .sb-chp-i--h { width: 32px; height: 18px; border-radius: 3px; }
+.sb-sg .sb-chp b { font: 500 12px/16px var(--w-font); }
+.sb--qt2 .rz-body { padding-top: 8px; } .sb--qt2 .sb-qt { gap: 8px; }
+.sb--qt2 .rz-body > .sb-b:first-child, .sb--qt2 .rz-seg2 + .sb-b, .sb--qt2 .rz-body > .sb-bs:first-child > .sb-b:first-child { border-top: 0; }
+/* ——— v28 · сегмент ещё ниже (22), содержимое по центру, «игрок / герой» — значками вместо слов ——— */
+.sb--qt3 .sb-sg { padding: 1px; border-radius: 7px; }
+.w .sb--qt3 .sb-sg .sb-chp { height: 20px; justify-content: center; padding: 0 8px; gap: 5px; border-radius: 6px; }
+.sb--qt3 .sb-sg .sb-chp .sb-chp-i { width: 16px; height: 16px; } .sb--qt3 .sb-sg .sb-chp .sb-chp-i--h { width: 26px; height: 15px; border-radius: 3px; }
+.sb--qt3 .sb-sg .sb-chp > span:last-child { flex: none; align-items: center; gap: 5px; max-width: calc(100% - 34px); }
+.sb--qt3 .sb-sg .sb-chp b { font: 500 12px/14px var(--w-font); }
+.sb-sg-ic { flex: none; color: var(--w-muted-fg); }
+/* ——— v29 · сегмент как общий .seg страницы (gs-match/_gs.css): подложка mid-bg без обводки, зазор 2, выбранная половина — muted;
+   содержимое по центру каждой половины (в v28 правило не срабатывало: .w и .sb--qt3 — один элемент) ——— */
+.w.sb--qt4 .sb-sg { gap: 2px; padding: 2px; border-radius: var(--w-r-sm); background: var(--w-mid-bg); box-shadow: none; }
+.w.sb--qt4 .sb-sg .sb-chp { height: 24px; justify-content: center; padding: 0 8px; gap: 6px; border-radius: 6px; background: none; box-shadow: none; color: var(--w-muted-fg); }
+.w.sb--qt4 .sb-sg .sb-chp:hover { background: none; } .w.sb--qt4 .sb-sg .sb-chp:hover b { color: var(--w-fg); }
+.w.sb--qt4 .sb-sg .sb-chp.is-on { background: var(--w-muted); }
+.w.sb--qt4 .sb-sg .sb-chp b { font: var(--t-seg); color: var(--w-muted-fg); } .w.sb--qt4 .sb-sg .sb-chp.is-on b { color: var(--w-fg); }
+.w.sb--qt4 .sb-sg .sb-chp-i { width: 18px; height: 18px; opacity: .6; } .w.sb--qt4 .sb-sg .sb-chp-i--h { width: 28px; height: 16px; border-radius: 3px; }
+.w.sb--qt4 .sb-sg .sb-chp.is-on .sb-chp-i { opacity: 1; }
+.w.sb--qt4 .sb-sg .sb-chp > span:last-child { flex: 0 1 auto; min-width: 0; align-items: center; gap: 5px; }
+/* ——— v30 · сегмент «игрок / герой» с переездом подсветки; кружки в полосе — карточка-переворот (игрок ↔ герой) и маленький значок второго в углу;
+   всё переключается разом от класса .sb-hm на корне ——— */
+.sb--qt5 .sb-sg { position: relative; }
+.sb--qt5 .sb-sg::before { content: ''; position: absolute; top: 2px; bottom: 2px; left: 2px; width: calc(50% - 3px); border-radius: 6px; background: var(--w-muted); transition: transform .28s cubic-bezier(.3,.7,.2,1); }
+.sb--qt5.sb-hm .sb-sg::before { transform: translateX(calc(100% + 2px)); }
+.w.sb--qt5 .sb-sg .sb-chp, .w.sb--qt5 .sb-sg .sb-chp.is-on { position: relative; background: none; }
+.w.sb--qt5 .sb-sg .sb-chp b, .w.sb--qt5 .sb-sg .sb-chp-i { transition: color .2s, opacity .2s; }
+.sb--qt5 .sb-st:not(.sb-st--q):not(.sb-st--t) { position: relative; perspective: 200px; }
+.sb-fc { position: relative; display: block; width: 28px; height: 28px; transform-style: preserve-3d; transition: transform .45s cubic-bezier(.3,.7,.2,1); }
+.sb-fc > span { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; backface-visibility: hidden; display: grid; }
+.sb-fc-b { transform: rotateY(180deg); }
+.sb--qt5.sb-hm .sb-fc { transform: rotateY(180deg); }
+.sb-bd { position: absolute; right: -4px; bottom: -3px; width: 13px; height: 13px; border-radius: 50%; box-shadow: 0 0 0 1.5px var(--w-bg); background: var(--w-bg); }
+.sb-bd > span { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; display: grid; transition: opacity .3s, transform .3s; }
+.sb-bd-b { opacity: 0; transform: scale(.4); }
+.sb--qt5.sb-hm .sb-bd-f { opacity: 0; transform: scale(.4); } .sb--qt5.sb-hm .sb-bd-b { opacity: 1; transform: none; }
+.sb--v8.sb--qt5 .sb-st .sb-bd img, .sb--qt5 .sb-bd .sb-ini { width: 13px; height: 13px; border-radius: 50%; object-fit: cover; font-size: 6px; }
+.sb--v9.sb--qt5 .sb-fc { width: 24px; height: 24px; } .sb--v9.sb--qt5 .sb-fc img, .sb--v9.sb--qt5 .sb-fc .sb-ini { width: 24px; height: 24px; }
+/* v31 · без линии между шапкой «Разбор» и полосой */
+.w.sb--qt6 .rz-hd { border-bottom: 0; }
+/* v32 · высота виджета 540 (было 600) */
+.w.rz.sb.sb--uni.sb--qt7 { height: 540px; }
+/* v33 · у прокрутки слева и справа тот же отступ 8, что сверху, снизу и между плитками; внизу — затемнение с размытием, пока есть куда листать */
+.w.sb--qt8 { position: relative; }
+.sb--qt8 .rz-body { padding-bottom: 8px; } .sb--qt8 .sb-qt { padding: 0 8px; }
+.w.sb--qt8::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 56px; border-bottom-left-radius: inherit; border-bottom-right-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .2s;
+  background: linear-gradient(to top, rgba(0,0,0,.5), rgba(0,0,0,0)); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  -webkit-mask-image: linear-gradient(to top, #000 30%, transparent); mask-image: linear-gradient(to top, #000 30%, transparent); }
+.w.sb--qt8.sb-more::after { opacity: 1; }
+/* ——— v34 · затемнение и сверху, когда пролистали; свернуть / развернуть значком в правом нижнем углу (как widget-expand peek2):
+   развёрнут — под прокруткой своё место 38 и значок с рамкой; свёрнут — шапка, полоса и строка под ней, значок полупрозрачный, чуть заходит на строку ——— */
+.w.sb--qt9::before { content: ''; position: absolute; left: 0; right: 0; top: var(--sb-bt, 0); height: 40px; z-index: 1; pointer-events: none; opacity: 0; transition: opacity .2s;
+  background: linear-gradient(to bottom, rgba(0,0,0,.5), rgba(0,0,0,0)); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  -webkit-mask-image: linear-gradient(to bottom, #000 30%, transparent); mask-image: linear-gradient(to bottom, #000 30%, transparent); }
+.w.sb--qt9.sb-top::before { opacity: 1; }
+.w.sb--qt9:not(.sb-c) { padding-bottom: 38px; box-sizing: border-box; }
+.w.sb--qt9:not(.sb-c)::after { bottom: 38px; border-radius: 0; }
+.w.sb--qt9 .sb-cb { right: 8px; bottom: 6px; z-index: 2; }
+.w.sb--qt9:not(.sb-c) .sb-cb { background: none; border: 1px solid var(--w-border); color: var(--w-muted-fg); }
+.w.rz.sb.sb--uni.sb--qt9.sb-c { height: auto; padding-bottom: 14px; box-sizing: border-box; } .w.sb--qt9.sb-c .rz-body { display: none; } .w.sb--qt9.sb-c .sb-tog { border-bottom: 0; }
+.w.sb--qt9.sb-c .sb-cb { background: rgba(24,24,27,.55); border: 1px solid rgba(255,255,255,.12); color: var(--w-muted-fg); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.w.sb--qt9 .sb-cb:hover { color: var(--w-fg); border-color: var(--w-ring); }
+/* v35 · развёрнутый тянется: ручка-точки (как у чата, widget-promo/_disc.css .ch-grip--dots) по центру нижней полосы */
+.sb-gr { position: absolute; left: 0; right: 0; bottom: 0; height: 38px; z-index: 2; pointer-events: none; } .sb-gr .ch-grip { pointer-events: auto; }
+/* v36 · низ развёрнутого (дирижёр 03.11: «полупрозрачный пиксель в самом низу, линия просвечивает блюр»): размытие у нижней полосы уходит в фон виджета, без резкого края; полоса с ручкой — фоном виджета */
+.w.sb--qt11:not(.sb-c)::after { background: linear-gradient(to top, var(--w-bg) 0, var(--w-bg) 10px, rgba(0,0,0,0) 100%); -webkit-mask-image: linear-gradient(to top, #000 50%, transparent); mask-image: linear-gradient(to top, #000 50%, transparent); }
+.w.sb--qt11 .sb-gr { background: var(--w-bg); border-bottom-left-radius: inherit; border-bottom-right-radius: inherit; }
+.w.sb--qt11 .sb-cb { z-index: 3; }

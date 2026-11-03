@@ -1,0 +1,59 @@
+/* w-header v5–v7 — шапка матча: развёрнутая вверху, одна строка при скролле (_hs.js). Токены — widget-tournament/_w.css. */
+*{ box-sizing:border-box; }
+html, body{ height:100%; }
+body{ margin:0; background:var(--w-page); color:var(--w-fg); font:13px/1.35 var(--w-font); }
+.stage{ height:100vh; margin:0 auto; } .stage.is-phone{ width:390px; border-left:1px solid var(--w-border); border-right:1px solid var(--w-border); }
+.scroll{ height:100%; overflow-y:auto; } .is-desk .scroll{ padding:0 32px; }
+.num{ font-variant-numeric:tabular-nums; }
+button{ font:inherit; color:inherit; border:0; background:none; cursor:pointer; padding:0; }
+.lg{ width:20px; height:20px; object-fit:contain; } .lg--l{ width:32px; height:32px; }
+.sp{ flex:1; }
+
+.mh{ position:sticky; top:0; z-index:5; background:var(--w-bg); border-bottom:1px solid var(--w-border); }
+.is-desk .mh{ border:1px solid var(--w-border); border-top:0; border-radius:0 0 var(--w-r) var(--w-r); }
+.mh-mini{ display:none; } .mh.is-mini .mh-full{ display:none; } .mh.is-mini .mh-mini{ display:block; }
+
+.meta{ display:flex; align-items:center; justify-content:space-between; font-size:12px; color:var(--w-muted-fg); }
+.nm{ color:var(--w-muted-fg); white-space:nowrap; } .nm.w{ color:var(--w-fg); font-weight:600; }
+.v5 .nm, .v7 .nm, .mini .nm{ color:var(--w-fg); } .mh .nm.w{ font-weight:600; }
+.sc{ display:inline-flex; align-items:baseline; gap:4px; font-weight:700; font-size:22px; } .sc i{ font-style:normal; color:var(--w-muted-fg); font-weight:400; }
+.sc b{ font-weight:700; } .sc b.w{ color:var(--w-fg); } .sc--pre{ color:var(--w-muted-fg); }
+.st{ font-size:12px; color:var(--w-muted-fg); white-space:nowrap; }
+.st--live{ display:inline-flex; align-items:center; gap:6px; color:#f87171; } .st--live::before{ content:''; width:6px; height:6px; border-radius:50%; background:#ef4444; animation:pl 1.4s ease-in-out infinite; }
+@keyframes pl{ 50%{ opacity:.35; } }
+.bell{ width:32px; height:32px; display:grid; place-items:center; border-radius:8px; color:var(--w-muted-fg); flex:none; }
+.bell:hover{ background:var(--w-muted); color:var(--w-fg); } .bell.on{ color:#facc15; } .bell svg{ width:18px; height:18px; }
+
+/* вкладки матча — одни и те же в обоих состояниях */
+.tabs{ display:flex; gap:2px; padding:0 8px; overflow-x:auto; scrollbar-width:none; }
+.tab{ position:relative; height:40px; padding:0 10px; white-space:nowrap; color:var(--w-muted-fg); }
+.tab:hover, .tab.on{ color:var(--w-fg); } .tab.on::after{ content:''; position:absolute; left:10px; right:10px; bottom:0; height:2px; border-radius:2px; background:var(--w-fg); }
+.mh-full .tabs{ border-top:1px solid var(--w-border); }
+
+/* v5: команды по краям, счёт по центру */
+.f5{ padding:8px 12px 12px 16px; } .f5 .meta{ margin-bottom:4px; }
+.f5-row{ display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px; }
+.f5-t{ display:flex; align-items:center; gap:10px; font-size:16px; } .f5-t--b{ justify-content:flex-end; }
+.f5-c{ display:flex; flex-direction:column; align-items:center; gap:2px; }
+.is-phone .f5-t{ flex-direction:column; gap:4px; font-size:14px; } .is-phone .f5-t--b{ flex-direction:column-reverse; }
+
+/* v6: табло слева, что сейчас — справа */
+.f6{ display:flex; align-items:flex-start; gap:12px; padding:10px 12px 10px 16px; }
+.f6-l{ flex:1; display:flex; flex-direction:column; gap:4px; } .f6 .meta{ margin-bottom:2px; }
+.f6-r{ display:flex; align-items:center; gap:8px; font-size:15px; } .f6-r .nm{ flex:1; } .f6-r b{ font-size:18px; color:var(--w-muted-fg); min-width:16px; text-align:right; } .f6-r b.w{ color:var(--w-fg); }
+.f6-s{ display:flex; align-items:center; gap:8px; }
+
+/* v7: одна крупная строка */
+.f7{ padding:8px 12px 10px 16px; } .f7 .meta{ margin-bottom:6px; }
+.f7-row{ display:flex; align-items:center; gap:10px; font-size:16px; } .f7-row .st{ margin-left:8px; }
+.is-phone .f7-row{ flex-wrap:wrap; gap:8px; } .is-phone .f7-row .st{ order:9; width:100%; margin:0; }
+
+/* сжатая: одна строка */
+.mini{ display:flex; align-items:center; gap:8px; height:48px; padding:0 12px 0 16px; }
+.mini .sc{ font-size:15px; margin:0 2px; } .mini .tabs{ margin-left:16px; padding:0; } .mini .tab{ height:48px; }
+
+.body{ margin:16px 0 0; padding:24px; border:1px dashed var(--w-border); border-radius:var(--w-r); color:var(--w-muted-fg); text-align:center; }
+.is-phone .body{ margin:16px; }
+.ph{ height:180px; margin:16px 0 0; border-radius:var(--w-r); background:var(--w-bg); border:1px solid var(--w-border); } .is-phone .ph{ margin:16px; }
+/* v5 через виджет (_wheader.js): шапка липкая в прокрутке лабы */
+.hd{ position:sticky; top:0; z-index:5; }

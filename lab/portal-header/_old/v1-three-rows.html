@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_host.css" /></head>
+<body><main class="p-page">
+  <h1>v1 · Три строки: разделы + кнопка «Фэнтези»</h1>
+  <p>Три строки. Верх — бренд Cybersport, поиск, вход (у игрока — монеты и аватар). Середина — 4 раздела портала: Расписание · Турниры · Новости · Команды и игроки, справа одна яркая кнопка «Фэнтези» — раскрывает панель: день игрока (гостю — «что это») и 7 фэнтези-разделов. Низ — 5 игр чипами со счётчиком матчей в эфире.</p>
+  <div class="p-tools"><div class="p-seg" data-user-seg><button type="button" data-v="guest" aria-pressed="true">Гость</button><button type="button" data-v="fan" aria-pressed="false">Играет в фэнтези</button></div></div>
+  <p class="p-cap">Десктоп · 1440 (уменьшено под ширину окна) — всё кликается: игры, разделы, вход в фэнтези. Телефон пока не смотрим (дирижёр 15.10)</p>
+  <div class="p-wrap"><div class="p-desk"><iframe src="_frame.html?v=1" title="Десктоп · первый экран"></iframe></div></div>
+  <p class="p-cap">Кнопка «Фэнтези» раскрыта: день игрока и разделы фэнтези.</p>
+  <div class="p-wrap"><div class="p-desk"><iframe src="_frame.html?v=1&open=1&user=fan" title="Десктоп · фэнтези"></iframe></div></div>
+</main>
+<script src="_host.js"></script></body></html>

@@ -1,0 +1,160 @@
+/* Тема v4 · Скевоморфизм — поверх v2 «Унифицировано» (widgets-23). Всё под body.th-skeuo
+   Тёмный «тактильный» прибор: корпус графит с фаской и бликом сверху, шум материала; сегменты — утопленный трек,
+   активное — выпуклая клавиша; списки — под губой шапки; главная кнопка — физическая клавиша. Шрифты и разметка — как в v2. */
+
+/* Токены: графит, а не чёрный — у объёма должны быть и свет, и тень */
+.th-skeuo{
+  --w-bg:#1b1b1f; --w-fg:#f4f4f5; --w-muted:#2c2c31; --w-muted-fg:#a3a3ad; --w-border:#0b0b0d; --w-ring:#5b5b64;
+  --w-hover:#35353b; --w-mid-bg:#141417; --w-r:14px; --w-r-sm:8px;
+  --sk-hi:rgba(255,255,255,.09);   /* блик верхней кромки */
+  --sk-lo:rgba(0,0,0,.55);         /* тень нижней кромки */
+  --sk-well:#111114;               /* дно утопленного */
+  --sk-led:#ff5a4e;                /* LIVE — диод */
+  --sk-noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Страница — стол под мягким верхним светом */
+body.th-skeuo{ background:
+  radial-gradient(1200px 700px at 30% -10%, rgba(255,255,255,.07), transparent 60%),
+  radial-gradient(900px 600px at 90% 110%, rgba(0,0,0,.6), transparent 70%),
+  #0e0e10; background-repeat:no-repeat; }
+.th-skeuo .slot > b{ color:#8b8b95; text-shadow:0 1px 0 rgba(0,0,0,.8); }
+
+/* ===== Корпус: фаска, блик сверху, толщина и тень на столе ===== */
+.th-skeuo .w:not(.m6), .th-skeuo .m6-main{
+  border:1px solid #050506;
+  background:linear-gradient(180deg, #2b2b31 0, #222227 48px, var(--w-bg) 140px);
+  box-shadow:
+    inset 0 1px 0 var(--sk-hi),               /* верхняя кромка ловит свет */
+    inset 0 0 0 1px rgba(255,255,255,.025),    /* тонкая фаска по контуру */
+    inset 0 -1px 0 rgba(0,0,0,.6),
+    0 1px 0 rgba(255,255,255,.05),             /* отсвет стола под нижним краем */
+    0 2px 3px rgba(0,0,0,.6),
+    0 18px 36px -12px rgba(0,0,0,.85);
+}
+/* Материал: тонкий шум поверх корпуса (не мешает кликам) */
+.th-skeuo .w:not(.m6)::after, .th-skeuo .m6-main::after{ content:''; position:absolute; inset:0; z-index:4; pointer-events:none;
+  border-radius:inherit; background:var(--sk-noise); opacity:.05; mix-blend-mode:overlay; }
+
+/* Текст — чуть вдавлен в материал */
+.th-skeuo .w b, .th-skeuo .t5-ttl, .th-skeuo .s6-hd > b, .th-skeuo .t2-hd b{ text-shadow:0 1px 0 rgba(0,0,0,.65); }
+
+/* ===== Шапка — крышка прибора, под ней гравированный шов ===== */
+.th-skeuo .t5-hd, .th-skeuo .s6-hd, .th-skeuo .t2-hd{ position:relative; z-index:2; box-shadow:0 1px 0 rgba(0,0,0,.6), 0 2px 0 rgba(255,255,255,.04); }
+/* Список уходит под губу шапки: мягкая внутренняя тень сверху */
+.th-skeuo .w:not(.m6) .w-scroll{ background:rgba(0,0,0,.14); box-shadow:inset 0 10px 12px -10px rgba(0,0,0,.8); }
+
+/* Ссылки в шапке («Архив», «Смотреть все») — гравировка */
+.th-skeuo .w .t5-arch, .th-skeuo .w .s6-arch, .th-skeuo .w .t2-top{ text-shadow:0 1px 0 rgba(0,0,0,.7); transition:color .15s; }
+
+/* Кнопка «назад» — маленькая выпуклая шайба */
+.th-skeuo .w .t5-ib, .th-skeuo .w .s6-ib{ border-radius:50%;
+  background:linear-gradient(#34343a, #232328); color:#d4d4d8;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12), inset 0 -1px 0 rgba(0,0,0,.4), 0 1px 2px rgba(0,0,0,.7), 0 0 0 1px #08080a; }
+.th-skeuo .w .t5-ib:hover, .th-skeuo .w .s6-ib:hover{ background:linear-gradient(#3c3c43, #29292e); color:var(--w-fg); }
+.th-skeuo .w .t5-ib:active, .th-skeuo .w .s6-ib:active{ background:linear-gradient(#202024, #2a2a2f); box-shadow:inset 0 1px 3px rgba(0,0,0,.7), 0 0 0 1px #08080a; }
+
+/* ===== Строки: наведение — строка чуть утапливается (цвет команды / тира — как в v2) ===== */
+.th-skeuo .w .t5-tr, .th-skeuo .w .s3-r, .th-skeuo .w .t2-r, .th-skeuo .w button.s8-r, .th-skeuo .w .s6-qm{ transition:background .15s, box-shadow .15s; }
+.th-skeuo .w .t5-tr:hover, .th-skeuo .w .s3-r:hover, .th-skeuo .w.tr5 .t2-r:hover, .th-skeuo .w button.s8-r:hover{
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.55), inset 0 -1px 0 rgba(255,255,255,.04); }
+.th-skeuo .w .s3-r:not([style*='--ta']):hover, .th-skeuo .w.s3 button.s8-r.is-bad:hover{ background:rgba(0,0,0,.22); }
+/* Подписи разделов («Идут», «Скоро», шапка колонок) — гравировка */
+.th-skeuo .t5-lbl, .th-skeuo .t2-th, .th-skeuo .t5-tbl th, .th-skeuo .s8-rh, .th-skeuo .s6-lbl{ text-shadow:0 1px 0 rgba(0,0,0,.7); }
+
+/* LIVE — горящий диод */
+.th-skeuo .u-when .u-live, .th-skeuo .s3 .s6-cap .u-live, .th-skeuo .t5-live, .th-skeuo .s6-chip--live{ color:var(--sk-led) !important;
+  text-shadow:0 0 6px rgba(255,90,78,.55), 0 0 1px rgba(255,90,78,.9); }
+
+/* ===== Сегмент: утопленный трек, активное — выпуклая клавиша ===== */
+.th-skeuo .t5-seg, .th-skeuo .m6-seg, .th-skeuo .s6-seg{ background:var(--sk-well);
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.8), inset 0 0 0 1px rgba(0,0,0,.5), 0 1px 0 rgba(255,255,255,.06); }
+.th-skeuo .w .t5-seg button, .th-skeuo .w .m6-seg button, .th-skeuo .w .s6-seg button{ text-shadow:0 1px 0 rgba(0,0,0,.8); transition:color .15s, background .15s; }
+.th-skeuo .w .t5-seg button.is-on, .th-skeuo .w .m6-seg button.is-on, .th-skeuo .w .s6-seg button.is-on{
+  background:linear-gradient(#3b3b42, #2b2b30); color:var(--w-fg);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16), inset 0 -1px 0 rgba(0,0,0,.35), 0 1px 2px rgba(0,0,0,.7), 0 0 0 .5px #050506; }
+.th-skeuo .w .t5-seg button:not(.is-on):hover, .th-skeuo .w .m6-seg button:not(.is-on):hover{ color:#d4d4d8; }
+/* MVP: в варианте «глубина» сегмент парит — тень остаётся, но клавиша та же */
+.th-skeuo .m6--depth .m6-seg.m6-up{ box-shadow:inset 0 1px 3px rgba(0,0,0,.8), inset 0 0 0 1px rgba(0,0,0,.5), 0 1px 0 rgba(255,255,255,.06), 0 10px 18px rgba(0,0,0,.5); }
+
+/* ===== Турнир ===== */
+/* Тир в списке — цвет тира, как гравировка с подсветкой */
+.th-skeuo .t6 .t5-tier{ text-shadow:0 1px 0 rgba(0,0,0,.7); }
+/* Таблица группы: строки — стёкла индикатора, между ними шов корпуса */
+.th-skeuo .t5--v3 .t5-tbl tbody tr + tr td{ border-top:1px solid #0d0d10; box-shadow:inset 0 1px 0 rgba(255,255,255,.035); }
+.th-skeuo .t5-tbl tr.t5-z--up td{ background:linear-gradient(rgba(34,197,94,.16), rgba(34,197,94,.09)); }
+.th-skeuo .t5-tbl tr.t5-z--mid td{ background:linear-gradient(rgba(245,158,11,.16), rgba(245,158,11,.09)); }
+.th-skeuo .t5-tbl tr.t5-z--down td{ background:linear-gradient(rgba(239,68,68,.15), rgba(239,68,68,.08)); }
+/* Форма — светодиоды */
+.th-skeuo .t5-form i{ box-shadow:inset 0 -1px 1px rgba(0,0,0,.35), 0 0 3px currentColor; }
+.th-skeuo .t5-form i.is-w{ color:rgba(34,197,94,.55); background:radial-gradient(circle at 40% 35%, #86efac, #22c55e 70%); }
+.th-skeuo .t5-form i.is-l{ color:rgba(239,68,68,.5); background:radial-gradient(circle at 40% 35%, #fca5a5, #ef4444 70%); }
+.th-skeuo .t5-sq{ box-shadow:0 0 4px currentColor, inset 0 1px 0 rgba(255,255,255,.3); }
+.th-skeuo .t5-sq.t5-z--up{ color:rgba(34,197,94,.6); } .th-skeuo .t5-sq.t5-z--down{ color:rgba(239,68,68,.6); } .th-skeuo .t5-sq.t5-z--mid{ color:rgba(245,158,11,.6); }
+.th-skeuo .w .t5-inf{ border-color:transparent; background:linear-gradient(#34343a, #24242a); box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 1px 1px rgba(0,0,0,.7); }
+.th-skeuo .t5-pop{ background:linear-gradient(#2a2a2f, #1f1f23); border-color:#050506; box-shadow:inset 0 1px 0 var(--sk-hi), 0 10px 24px rgba(0,0,0,.7); }
+/* Сетка: матчи — выпуклые плитки, линии — гравировка; матч страницы — подсвеченная рамка */
+.th-skeuo .t5-bx, .th-skeuo .t5-fc{ background:linear-gradient(#2a2a2f, #212125);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 -1px 0 rgba(0,0,0,.4), 0 1px 2px rgba(0,0,0,.7), 0 0 0 1px #08080a; }
+.th-skeuo .t5-bx.is-on{ box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 0 0 1px #d6a24a, 0 0 10px rgba(214,162,74,.25), 0 1px 2px rgba(0,0,0,.7); }
+.th-skeuo .t5-ln path{ stroke:#3a3a41; filter:drop-shadow(0 1px 0 rgba(0,0,0,.8)); }
+.th-skeuo .t5-fm, .th-skeuo .t5-ch__ru{ border-top-color:#0b0b0d; box-shadow:inset 0 1px 0 rgba(255,255,255,.04); }
+.th-skeuo .t6-bar{ background:var(--sk-well); box-shadow:inset 0 1px 1px rgba(0,0,0,.8), 0 1px 0 rgba(255,255,255,.05); }
+.th-skeuo .t5-ini, .th-skeuo .s6-ini, .th-skeuo .t2-ini{ background:linear-gradient(#34343a, #26262b); box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 1px 1px rgba(0,0,0,.6); }
+
+/* ===== Замены ===== */
+/* Шаги замены — утопленный паз, пройденное — зелёная подсветка, текущее — белая */
+.th-skeuo .s6-steps i{ background:var(--sk-well); box-shadow:inset 0 1px 1px rgba(0,0,0,.9), 0 1px 0 rgba(255,255,255,.05); }
+.th-skeuo .s6-steps .is-done i{ background:var(--w-up); box-shadow:0 0 6px rgba(34,197,94,.5); }
+.th-skeuo .s6-steps .is-on i{ background:linear-gradient(#fff, #d4d4d8); box-shadow:0 0 6px rgba(255,255,255,.35); }
+/* Карточки внутри — утопленные лунки */
+.th-skeuo .s6-who, .th-skeuo .s6-note, .th-skeuo .s6-drop, .th-skeuo .s6-card{ background:var(--sk-well);
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.75), inset 0 0 0 1px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.05); border-color:transparent; }
+.th-skeuo .s6-who--none{ background:linear-gradient(rgba(245,158,11,.12), rgba(245,158,11,.07)), var(--sk-well); }
+.th-skeuo .s6-av{ background:linear-gradient(#3a3a40, #27272c); box-shadow:inset 0 1px 0 rgba(255,255,255,.14), 0 1px 2px rgba(0,0,0,.7); }
+.th-skeuo .s6-in, .th-skeuo .s6-date{ background:var(--sk-well); border-color:#050506; box-shadow:inset 0 1px 3px rgba(0,0,0,.8), 0 1px 0 rgba(255,255,255,.05); }
+/* Позиция и срок — клавиши, выбранная — светлая */
+.th-skeuo .w .s6-pp button, .th-skeuo .w .s6-maps button, .th-skeuo .w .s6-terms button{
+  background:linear-gradient(#2f2f35, #242428); box-shadow:inset 0 1px 0 rgba(255,255,255,.09), inset 0 -1px 0 rgba(0,0,0,.35), 0 1px 2px rgba(0,0,0,.7), 0 0 0 1px #08080a; }
+.th-skeuo .w .s6-pp button.is-on, .th-skeuo .w .s6-maps button.is-on, .th-skeuo .w .s6-terms button.is-on{
+  background:linear-gradient(#fafafa, #d4d4d8); color:#18181b; box-shadow:inset 0 1px 0 #fff, inset 0 -1px 0 rgba(0,0,0,.2), 0 1px 2px rgba(0,0,0,.7), 0 0 0 1px #08080a; text-shadow:none; }
+/* Подвал мастера — шов сверху */
+.th-skeuo .s6-ft{ border-top-color:#0b0b0d; box-shadow:inset 0 1px 0 rgba(255,255,255,.04); }
+.th-skeuo .s6-ft--warn, .th-skeuo .s6-ft--ok{ box-shadow:inset 0 1px 3px rgba(0,0,0,.6), 0 1px 0 rgba(255,255,255,.05); }
+/* Кнопки: обычная — тёмная клавиша, главная «Дальше» — светлая физическая клавиша с толщиной */
+.th-skeuo .w .s6-btn{ border-color:#08080a; background:linear-gradient(#303036, #242429);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 2px 0 #0c0c0e, 0 3px 5px rgba(0,0,0,.5); transition:transform .08s, box-shadow .08s, background .15s; }
+.th-skeuo .w .s6-btn:hover{ background:linear-gradient(#38383e, #2a2a2f); }
+.th-skeuo .w .s6-btn--pri{ border-color:#6b6b73; background:linear-gradient(#ffffff, #e4e4e7 55%, #cfcfd4); color:#18181b; text-shadow:0 1px 0 rgba(255,255,255,.7);
+  box-shadow:inset 0 1px 0 #fff, inset 0 -1px 0 rgba(0,0,0,.12), 0 2px 0 #7c7c84, 0 3px 0 #3f3f46, 0 5px 8px rgba(0,0,0,.55); }
+.th-skeuo .w .s6-btn--pri:hover{ background:linear-gradient(#ffffff, #ededf0 55%, #d8d8dc); }
+.th-skeuo .w .s6-btn--ghost{ background:none; border-color:transparent; box-shadow:none; text-shadow:0 1px 0 rgba(0,0,0,.7); }
+.th-skeuo .w .s6-btn:active:not(:disabled){ transform:translateY(2px); box-shadow:inset 0 1px 2px rgba(0,0,0,.25), 0 0 0 #0c0c0e, 0 1px 2px rgba(0,0,0,.5); }
+.th-skeuo .w .s6-btn--ghost:active{ box-shadow:none; }
+.th-skeuo .w .s8-id{ background:var(--sk-well); box-shadow:inset 0 1px 2px rgba(0,0,0,.8), 0 1px 0 rgba(255,255,255,.05); }
+.th-skeuo .s8-toast{ background:linear-gradient(#fafafa, #d9d9de); box-shadow:inset 0 1px 0 #fff, 0 2px 0 #6b6b73, 0 10px 24px -6px #000; }
+
+/* ===== Трансферы ===== */
+/* Фото игрока — вставка в корпус: тонкая утопленная рамка */
+.th-skeuo .t2-av{ box-shadow:inset 0 0 0 1px rgba(0,0,0,.5), 0 0 0 1px #08080a, 0 1px 0 1px rgba(255,255,255,.06); }
+
+/* ===== MVP ===== */
+/* Карточка — тот же корпус; затемнение под ником — в цвет корпуса */
+.th-skeuo .m6-main{ background:radial-gradient(120% 70% at 50% 0, #2a2a30, transparent 70%), linear-gradient(180deg, #232328, var(--w-bg) 60%); }
+.th-skeuo .m6-fade{ background:linear-gradient(transparent, rgba(27,27,31,.86) 60%, var(--w-bg)); }
+.th-skeuo .m6-bg{ opacity:.06; }
+/* Кнопка из-под карточки — физическая клавиша: толщина снизу, нажатие проседает */
+.th-skeuo .w a.m6-dock{ border:1px solid #050506; border-top:0; background:linear-gradient(#26262b, #1d1d21);
+  box-shadow:inset 0 -1px 0 rgba(255,255,255,.04), 0 3px 0 #0a0a0c, 0 4px 0 #050506, 0 14px 22px -8px rgba(0,0,0,.85);
+  text-shadow:0 1px 0 rgba(0,0,0,.7); transition:background .15s, transform .08s, box-shadow .08s; }
+.th-skeuo .w a.m6-dock:hover{ background:linear-gradient(#2d2d33, #222227); }
+.th-skeuo .w a.m6-dock:active{ transform:translateY(3px); box-shadow:inset 0 -1px 0 rgba(255,255,255,.03), 0 0 0 #0a0a0c, 0 1px 0 #050506, 0 6px 12px -6px rgba(0,0,0,.8); }
+/* Цена — утопленная лунка с монетой */
+.th-skeuo .m6-dock--split .m6-dock__c{ background:var(--sk-well); box-shadow:inset 0 1px 3px rgba(0,0,0,.85), 0 1px 0 rgba(255,255,255,.06); }
+.th-skeuo .m6-dock__c::before{ box-shadow:inset 0 0 0 1px rgba(0,0,0,.25), 0 0 4px rgba(245,158,11,.45); }
+.th-skeuo .w a.m6-dock.is-mine{ color:#4ade80; text-shadow:0 0 6px rgba(34,197,94,.45); }
+
+@media (prefers-reduced-motion: reduce){
+  .th-skeuo .w *, .th-skeuo .w{ transition:none !important; }
+  .th-skeuo .w .s6-btn:active, .th-skeuo .w a.m6-dock:active{ transform:none; }
+}

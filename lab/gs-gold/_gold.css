@@ -1,0 +1,5 @@
+/* gs-gold — один виджет на своём месте на странице матча: он обычный, всё остальное затемнено (дирижёр 26.10).
+   Затемнение — одна тёмная пелена поверх всей страницы (и правой колонки, и липкой шапки), выбранный виджет (.is-focus, ставит _gold.js) — над пеленой */
+.focus-gold::after{ content:''; position:fixed; inset:0; z-index:9; background:rgba(0,0,0,.78); pointer-events:none; }
+.focus-gold .is-focus{ z-index:10; box-shadow:0 0 0 1px var(--w-ring), 0 12px 40px rgba(0,0,0,.6); }
+.focus-gold .is-focus:not(.gm-hd):not(.mt-tabs):not(.pt){ position:relative; }

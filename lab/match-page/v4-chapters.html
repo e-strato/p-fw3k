@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../match-row/_rich.css" /><link rel="stylesheet" href="_page.css" />
+<style>
+.v4 { display: grid; gap: 20px; }
+.v4-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 330px; gap: 20px; align-items: start; }
+.v4-main { grid-column: 1 / 3; display: grid; gap: 14px; min-width: 0; } .v4-side { display: grid; gap: 20px; min-width: 0; }
+.v4-g2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+/* Глава = этап матча: до начала, карта 1, карта 2, карта 3, итог */
+.v4-ch { border-radius: 12px; background: var(--c-ui-panel); }
+.v4-ch > header { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto auto; align-items: center; gap: 14px; padding: 16px 18px; }
+.v4-ch__n { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--c-ui-item); color: var(--c-caption); font: 700 15px var(--font-c); }
+.v4-ch header h2 { font-size: 18px; font-weight: 700; } .v4-ch header h2 small { margin-left: 8px; color: var(--c-caption); font-size: 13px; font-weight: 500; }
+.v4-ch header p { color: var(--c-caption); font-size: 12.5px; }
+.v4-ch__s { display: flex; align-items: center; gap: 10px; font: 700 26px var(--font-c); } .v4-ch__s .r-lg { width: 22px; height: 22px; }
+.v4-ch__st { padding: 4px 10px; border-radius: 12px; background: var(--c-ui-item); color: var(--c-caption); font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+.v4-ch__body { display: grid; gap: 14px; padding: 0 18px 18px; }
+.v4-ch__body .p-sec { background: var(--c-ui-item); }
+.v4-ch.is-done .v4-ch__n { background: color-mix(in srgb, var(--c-stat-high) 18%, transparent); color: var(--c-stat-high); }
+.v4-ch.is-now { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-live) 45%, transparent); background: linear-gradient(180deg, color-mix(in srgb, var(--c-live) 7%, var(--c-ui-panel)), var(--c-ui-panel) 160px); }
+.v4-ch.is-now .v4-ch__n { background: var(--c-live); color: var(--c-white); } .v4-ch.is-now .v4-ch__st { background: color-mix(in srgb, var(--c-live) 16%, transparent); color: var(--c-live); }
+.v4-ch.is-wait { background: none; box-shadow: inset 0 0 0 1px var(--c-ui-line); } .v4-ch.is-wait header { padding: 12px 18px; } .v4-ch.is-wait h2 { color: var(--c-muted); font-size: 16px; }
+.v4-ch__more { justify-self: start; border: 0; padding: 0; background: none; color: var(--c-accent); font-size: 13px; font-weight: 500; }
+.v4-sum { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+.v4-side .p-sec:first-child { position: sticky; top: 0; }
+@container row (max-width: 700px) {
+  .v4 { gap: 12px; } .v4-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; } .v4-main { grid-column: auto; gap: 10px; } .v4-side { gap: 12px; }
+  .v4-g2, .v4-sum { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .v4-ch > header { grid-template-columns: 32px minmax(0, 1fr) auto; gap: 10px; padding: 12px; } .v4-ch__n { width: 32px; height: 32px; font-size: 13px; }
+  .v4-ch header h2 { font-size: 15px; } .v4-ch header h2 small { display: block; margin: 0; } .v4-ch__st { grid-column: 2 / -1; justify-self: start; } .v4-ch__s { font-size: 20px; }
+  .v4-ch__body { padding: 0 12px 12px; gap: 10px; }
+}
+</style></head>
+<body><main class="p-page">
+  <h1>v4 · Серия по главам</h1>
+  <p>Как cyberscore Summary и hltv «счёт по каждой карте», но развёрнуто: матч читается сверху вниз главами — «До начала», «Карта 1», «Карта 2», «Карта 3», «Итог». Сыгранная глава свёрнута в сводку (победитель, счёт, герои или половины, игрок карты), идущая — раскрыта целиком (шанс, ход, таблица, что происходит), будущая — тонкой строкой с условием. Сверху табло, справа липкая трансляция, паспорт, турнир и другие матчи.</p>
+  <div class="p-tools"><div class="p-seg" data-moments></div><div class="p-seg"><button type="button" data-g="dota">Dota 2 · Spirit — Tundra</button><button type="button" data-g="cs">CS2 · G2 — FaZe</button></div></div>
+  <p class="p-cap">Десктоп · 1440 (рамка уменьшена под ширину окна)</p><div class="p-wrap"><div class="p-frame p-frame--desk" data-mp></div></div>
+  <p class="p-cap">Телефон · 390 — листается внутри рамки</p><div class="p-frame p-frame--phone" data-mp></div>
+</main>
+<script src="../match-row/_rich.js"></script>
+<script>
+window.MP = {}
+MP.вариант = (m, x) => {
+  const мом = m.S.мом, сек = x.сек, h = x.h, cs = m.g === 'cs', g2 = (...a) => `<div class="v4-g2">${a.join('')}</div>`
+  const ход = cs ? 'Раунды' : 'Золото по минутам'
+  const N = cs ? ['Mirage', 'Inferno', 'Ancient'] : ['Карта 1', 'Карта 2', 'Карта 3']
+  const кто = cs ? ['выбор G2', 'выбор FaZe', 'решающая'] : ['Spirit — свет', 'Spirit — тьма', '']
+  const сч = cs ? ['13 : 9', '13 : 11'] : ['34 : 21', '27 : 20']
+  const сыграно = { pre: 0, draft: 0, live1: 0, break: 1, live2: 1, done: 2 }[мом], идёт = { live1: 0, live2: 1 }[мом]
+  const глава = (n, имя, под, кл, статус, счёт, тело) => `<section class="v4-ch is-${кл}"><header><span class="v4-ch__n">${n}</span><div><h2>${имя}${под ? `<small>${под}</small>` : ''}</h2></div>${счёт ? `<b class="v4-ch__s">${счёт}</b>` : '<span></span>'}<span class="v4-ch__st">${статус}</span></header>${тело ? `<div class="v4-ch__body">${тело}</div>` : ''}</section>`
+  // Сыгранная карта — сводка
+  const сводкаКарты = (i) => {
+    const герои = (k, с) => `<p class="v4-picks">${h.лого(m[k], 'sm')}${[0, 1, 2, 3, 4].map((j) => x.гер(j + с)).join('')}</p>`
+    const лево = cs ? сек('Половины', `<div class="p-series__half"><small>Первая</small><b>${['7 : 5', '5 : 7'][i]}</b></div><div class="p-series__half"><small>Вторая</small><b>${['6 : 4', '8 : 4'][i]}</b></div>`)
+      : сек('Драфт', `<div class="p-series__picks">${герои('a', i * 2)}${герои('b', 5 + i)}</div>`)
+    const mvp = cs ? [['m0NESY', '1.52 · 31 убийство'], ['huNter-', '1.34 · 24 убийства']][i] : [['Yatoro', '14 / 2 / 11 · 812 GPM'], ['Larl', '11 / 3 / 14 · 701 GPM']][i]
+    return `<div class="v4-sum">${лево}${сек('Игрок карты', `<div class="x-mvp">${x.ава(mvp[0])}<div><b>${mvp[0]}</b><p>${mvp[1]}</p></div></div>`)}</div>`
+      + сек('Команды рядом', x.рядом(m)) + `<button class="v4-ch__more" type="button">Полная таблица карты ›</button>`
+  }
+  // Идущая карта — всё
+  const живая = () => g2(сек('Шанс победы', x.шанс(m)), сек(cs ? 'Раунды по закупке' : 'Объекты карты', x.объекты(m))) + сек(ход, x.ход(m))
+    + сек('', x.скорборд(m, 'a')) + сек('', x.скорборд(m, 'b')) + g2(сек('Что происходит', x.лог(m)), сек('Лучшие на карте', x.рекорды(m).replace('p-recs', 'p-recs p-recs--col')))
+  const до = мом === 'pre'
+    ? глава('0', 'До начала', 'превью', 'now', 'через 25 мин', '', сек('Перед матчем', x.показатели(m)) + g2(сек('Прогноз счёта', x.прогноз(m)), сек('Личные встречи', x.встречи(m))) + g2(сек('Форма', x.форма(m, 'a')), сек('Форма', x.форма(m, 'b'))) + сек(cs ? 'Карты: победы за 3 месяца' : 'Любимые герои', x.пул(m)) + сек('Аналитика', x.инсайты(m)))
+    : мом === 'draft'
+      ? глава('0', cs ? 'Вето карт' : 'Драфт карты 1', m.S.под, 'now', 'идёт', '', g2(сек(cs ? 'По шагам' : 'Герои', x.вето(m)), сек(cs ? 'Карты: победы за 3 месяца' : 'Любимые герои', x.пул(m))) + g2(сек('Шанс победы', x.шанс(m)), сек('Прогноз счёта', x.прогноз(m))))
+      : глава('0', 'До начала', '', 'done', cs ? 'вето · 7 шагов' : 'прогноз 2 : 1', '', '')
+  const карты = [0, 1, 2].map((i) => {
+    if (i < сыграно) return глава(i + 1, N[i], кто[i], 'done', 'победа ' + h.имя(m.a), `${h.лого(m.a)}${сч[i]}`, сводкаКарты(i))
+    if (i === идёт) return глава(i + 1, N[i], кто[i], 'now', '● ' + m.S.гл, m.S.под.split(' · ')[0].replace(/[^0-9: ]/g, '').trim(), живая())
+    if (мом === 'break' && i === 1) return глава(2, N[1], кто[1], 'now', 'через 6 мин', '', g2(сек('Шанс победы в серии', x.шанс(m)), сек('Прогноз счёта', x.прогноз(m))) + сек('Видео', x.видео(m)))
+    return глава(i + 1, N[i], кто[i], 'wait', мом === 'done' ? 'не понадобилась' : i === 2 ? 'если 1 : 1' : 'после карты ' + i, '', '')
+  }).join('')
+  const итог = мом === 'done' ? глава('✓', 'Итог', m.S.под, 'done', 'завершён', `${m.S.серия.join(' : ')}`, g2(сек('', x.mvp(m)), сек('Рейтинг после матча', x.рейтинг(m))) + сек('Лучшие в матче', x.рекорды(m)) + сек('Видео', x.видео(m)) + сек('Новости матча', x.новости(m))) : ''
+  const бок = (m.S.live || мом === 'draft' ? сек('Трансляция', x.стрим(m)) : мом === 'done' ? сек('Запись', x.стрим(m)) : '') + сек('О матче', x.паспорт(m))
+    + `<section class="p-sec"><h3 class="p-h">Турнир</h3>${x.турнир(m).replace('p-trn', 'p-trn p-trn--col')}</section>` + сек('Твои игроки', x.мои(m)) + сек('Другие матчи', x.другие())
+  return `<div class="p-body v4">${x.табло(m)}<div class="v4-grid"><div class="v4-main">${до}${карты}${итог}</div><aside class="v4-side">${бок}</aside></div></div>`
+}
+</script>
+<script src="_page.js"></script>
+</body></html>

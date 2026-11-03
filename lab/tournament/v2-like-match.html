@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" />
+<style>
+.p-page { padding: 40px 32px 80px; }
+.p-page > h1 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.01em; }
+.p-page > p { max-width: 100ch; margin: 8px 0 0; color: var(--c-muted); font-size: 15px; line-height: 1.5; }
+.p-cap { margin: 28px 0 10px; font-size: 13px; font-weight: 600; color: var(--c-caption); }
+.p-wrap { width: 100%; }
+.p-desk { width: 1440px; border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px var(--c-ui-line), 0 30px 80px -30px var(--c-black); }
+.p-desk iframe { display: block; width: 1440px; height: 1600px; border: 0; }
+.p-board { display: flex; flex-wrap: wrap; gap: 36px 44px; align-items: flex-start; }
+.p-board figure { display: grid; gap: 12px; margin: 0; }
+.p-board figcaption { max-width: 392px; color: var(--c-caption); font-size: 13px; line-height: 1.45; } .p-board figcaption b { display: block; color: var(--c-text); font-size: 14px; }
+.p-phone { width: 390px; height: 844px; margin: 11px; overflow: hidden; border-radius: 42px; box-shadow: 0 0 0 10px color-mix(in srgb, var(--c-text) 8%, var(--c-ui-bg)), 0 0 0 11px var(--c-ui-line), 0 40px 90px -30px var(--c-black); }
+.p-phone iframe { display: block; width: 390px; height: 844px; border: 0; }
+</style></head>
+<body><main class="p-page">
+  <h1>v2 · Как страница матча</h1>
+  <p>Каркас страницы матча один в один: шапка → 4 плитки на одних местах (Матчи · Сетка · Группы · Команды) → открытая плитка. Матчи — те же строки и полоса дней, в сетке клик по матчу показывает его настоящей раскрытой строкой. На телефоне вместо плиток сегмент, как на странице матча.</p>
+  <p class="p-cap">Десктоп · 1440 (уменьшено под ширину окна) — настоящий сайт: шапка, строки матча раскрываются, всё кликается</p>
+  <div class="p-wrap"><div class="p-desk"><iframe src="_page.html?v=v2" title="Десктоп"></iframe></div></div>
+  <p class="p-cap">Телефон · 390 — раскадровка, каждая рамка листается и кликается сама</p>
+  <div class="p-board">
+    <figure><figcaption><b>Первый экран</b>Шапка, сегмент, матчи сегодня.</figcaption><div class="p-phone"><iframe src="_page.html?v=v2" title="Первый экран"></iframe></div></figure>
+    <figure><figcaption><b>Сетка</b>Выбран Spirit — Tundra в эфире: строка раскрыта под сеткой.</figcaption><div class="p-phone"><iframe src="_page.html?v=v2&tab=b" title="Сетка"></iframe></div></figure>
+    <figure><figcaption><b>Группы</b>Таблицы групп A и B.</figcaption><div class="p-phone"><iframe src="_page.html?v=v2&tab=g" title="Группы"></iframe></div></figure>
+    <figure><figcaption><b>Команды</b>Кто в верхней, кто в нижней, кто выбыл, и призовые.</figcaption><div class="p-phone"><iframe src="_page.html?v=v2&tab=t" title="Команды"></iframe></div></figure>
+  </div>
+</main>
+<script>
+// Десктоп 1440 — уменьшаем под окно; высота — по странице внутри
+const desk = document.querySelector('.p-desk'), fr = desk.querySelector('iframe')
+const fit = () => { desk.style.zoom = Math.min(1, desk.parentElement.clientWidth / 1440) }
+fit(); addEventListener('resize', fit)
+const рост = () => { try { fr.style.height = fr.contentDocument.documentElement.scrollHeight + 'px' } catch (e) {} }
+addEventListener('message', e => { if (e.data && e.data.trn) { рост(); try { new ResizeObserver(рост).observe(fr.contentDocument.body) } catch (e) {} } })
+</script></body></html>

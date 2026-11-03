@@ -1,0 +1,86 @@
+/* news v4 «Тема как матч» (_rich.js) — поверх _news.css (шапка, путь, страница, нижний бар). */
+.r-cols{ display:flex; flex-direction:column; gap:12px; } .r-cols > main{ min-width:0; } .r-cols > aside{ display:flex; flex-direction:column; gap:12px; }
+.is-desk .r-cols{ display:grid; grid-template-columns:1fr 360px; gap:32px; align-items:start; } .is-desk .r-cols > aside{ position:sticky; top:64px; }
+.r-card{ display:block; background:var(--w-bg); border:1px solid var(--w-border); border-radius:var(--w-r); }
+.r-pad{ padding:14px 16px; }
+.r-h1{ margin:4px 0 12px; font-size:28px; line-height:34px; font-weight:700; }
+.r-sec{ display:flex; align-items:baseline; gap:8px; margin:28px 0 12px; font-size:18px; font-weight:700; } aside .r-sec{ margin:12px 0 0; font-size:14px; }
+.r-sec small{ font-size:12px; font-weight:500; color:var(--w-muted-fg); }
+.r-live{ display:inline-flex; align-items:center; height:18px; padding:0 6px; border-radius:4px; background:var(--w-down); color:#fff; font-size:10px; font-weight:700; }
+.r-dot{ width:8px; height:8px; border-radius:50%; background:var(--w-down); animation:n-pl 1.4s infinite; align-self:center; }
+.r-meta{ display:flex; align-items:center; gap:8px; font-size:12px; color:var(--w-muted-fg); }
+.r-ent{ color:#a5b4fc; font-weight:500; } .r-ent:hover{ text-decoration:underline; }
+.r-nol{ display:inline-grid; place-items:center; width:16px; height:16px; border-radius:50%; background:#3f3f46; font-style:normal; font-size:9px; font-weight:700; }
+
+/* подписки на темы (Ground News «Similar topics» +) */
+.r-follow{ display:flex; gap:8px; overflow-x:auto; margin-bottom:16px; scrollbar-width:none; }
+.r-follow button{ display:flex; align-items:center; gap:6px; height:34px; padding:0 10px 0 8px; border-radius:17px; background:var(--w-muted); white-space:nowrap; font-weight:500; }
+.r-follow button img{ width:18px; height:18px; object-fit:contain; } .r-follow button b{ display:grid; place-items:center; width:18px; height:18px; border-radius:50%; background:#3f3f46; font-size:11px; }
+.r-follow button.on{ background:#1e1b4b; box-shadow:inset 0 0 0 1px #4f46e5; } .r-follow button.on b{ background:#6366f1; }
+
+/* коллаж (Particle): плитки внахлёст с наклоном */
+.r-col{ position:relative; height:120px; } .r-col span{ position:absolute; width:58%; aspect-ratio:16/9; border-radius:10px; overflow:hidden; box-shadow:0 10px 24px #000b; border:2px solid #18181b;
+  left:calc(var(--i) * 20%); top:calc(var(--i) * 10px); transform:rotate(calc((var(--i) - 1) * 4deg)); }
+.r-col span img{ width:100%; height:100%; object-fit:cover; display:block; }
+.r-col.is-big{ height:210px; } .r-col.is-big span{ width:46%; left:calc(var(--i) * 13%); top:calc(mod(var(--i), 2) * 70px); transform:rotate(calc((var(--i) - 2) * 3deg)); }
+
+/* главная тема ленты */
+.r-hero{ display:flex; flex-direction:column; gap:16px; padding:16px; border-radius:16px; overflow:hidden; background:radial-gradient(120% 90% at 85% 0%, #312e81 0%, #111114 55%), #111114; border:1px solid #27272a; }
+.is-desk .r-hero{ flex-direction:row-reverse; align-items:center; padding:24px; } .is-desk .r-hero .r-col{ flex:0 0 46%; }
+.r-hero-in{ display:flex; flex-direction:column; gap:10px; min-width:0; flex:1; }
+.r-hero h2{ margin:0; font-size:24px; line-height:30px; font-weight:700; letter-spacing:-.01em; } .is-desk .r-hero h2{ font-size:32px; line-height:38px; }
+.r-hero p{ margin:0; color:#d4d4d8; font-size:15px; line-height:22px; }
+.r-hero-m{ display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; } .r-hero-m span{ display:flex; align-items:center; gap:6px; } .r-hero-m img{ width:18px; height:18px; object-fit:contain; }
+.r-hero-m b{ font-size:16px; } .r-hero-m small{ margin-left:auto; color:var(--w-muted-fg); font-weight:500; }
+
+/* трибуны (Ground News: полоса распределения) */
+.r-fans{ display:flex; flex-direction:column; gap:6px; } .r-fbar{ display:flex; height:6px; border-radius:3px; overflow:hidden; gap:2px; }
+.r-fbar i:first-child{ background:var(--w-a); } .r-fbar i:last-child{ background:var(--w-b); }
+.r-fl{ display:flex; justify-content:space-between; font-size:12px; color:var(--w-muted-fg); } .r-fl span{ display:flex; align-items:center; gap:6px; } .r-fl img{ width:14px; height:14px; object-fit:contain; }
+.r-vote{ display:flex; align-items:center; gap:8px; margin-top:6px; font-size:13px; } .r-vote span{ flex:1; }
+.r-vote button{ height:30px; padding:0 12px; border-radius:var(--w-r-sm); background:var(--w-muted); font-weight:600; } .r-vote button:hover{ background:var(--w-hover); }
+
+/* цитаты (Particle Quotes) — карусель */
+.r-quotes{ display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; margin:0 -16px; padding:0 16px; } .is-desk .r-quotes{ margin:0; padding:0; }
+.r-q{ flex:0 0 280px; margin:0; padding:16px; display:flex; flex-direction:column; gap:12px; scroll-snap-align:start; }
+.r-q blockquote{ margin:0; font-size:15px; line-height:22px; font-style:italic; }
+.r-q figcaption{ display:flex; align-items:center; gap:10px; margin-top:auto; } .r-q img{ width:32px; height:32px; border-radius:50%; object-fit:cover; }
+.r-q span{ display:flex; flex-direction:column; min-width:0; } .r-q small{ color:var(--w-muted-fg); font-size:11px; } .r-q em{ margin-left:auto; font-style:normal; font-size:11px; color:var(--w-muted-fg); }
+
+/* сетка тем */
+.r-grid{ display:grid; grid-template-columns:1fr; gap:12px; } .is-desk .r-grid{ grid-template-columns:1fr 1fr; }
+.r-topic{ overflow:hidden; transition:border-color .15s; } .r-topic:hover{ border-color:var(--w-ring); }
+.r-topic .r-col{ height:118px; margin:12px 12px 0; background:radial-gradient(80% 100% at 50% 0%, #1e1b4b, transparent); border-radius:10px; }
+.r-tb{ display:flex; flex-direction:column; gap:8px; padding:12px 16px 14px; } .r-tb h3{ margin:0; font-size:16px; line-height:22px; font-weight:600; }
+.r-tf{ display:flex; align-items:center; justify-content:space-between; font-size:12px; color:var(--w-muted-fg); }
+.r-srcs{ display:inline-flex; align-items:center; } .r-srcs i{ display:grid; place-items:center; width:20px; height:20px; margin-right:-6px; border-radius:50%; background:#27272a; border:2px solid var(--w-bg); font-style:normal; font-size:9px; font-weight:700; color:#e4e4e7; }
+.r-srcs small{ margin-left:12px; color:var(--w-muted-fg); font-size:12px; }
+
+/* матч со спарклайном */
+.r-match{ padding:12px 16px; } .r-mh{ display:flex; justify-content:space-between; font-size:12px; color:var(--w-muted-fg); }
+.r-mrow{ display:flex; align-items:center; justify-content:space-between; margin:10px 0 4px; font-weight:600; } .r-mrow span{ display:flex; align-items:center; gap:8px; } .r-mrow img{ width:22px; height:22px; object-fit:contain; } .r-mrow b{ font-size:22px; }
+.r-mg svg{ width:100%; display:block; } .r-msub{ display:flex; gap:6px; font-size:12px; color:var(--w-muted-fg); margin-top:4px; } .r-msub span{ margin-left:auto; color:var(--w-fg); font-weight:600; }
+.r-spark{ flex:none; }
+
+/* мнения в X */
+.r-x{ padding:4px 0; } .r-xp{ display:flex; gap:10px; padding:12px 16px; border-top:1px solid var(--w-border); } .r-xp:first-child{ border-top:0; }
+.r-xp > i{ display:grid; place-items:center; flex:none; width:32px; height:32px; border-radius:50%; background:#27272a; font-style:normal; font-weight:700; }
+.r-xp b small{ font-weight:400; color:var(--w-muted-fg); } .r-xp p{ margin:2px 0 4px; } .r-xp > div > small{ color:var(--w-muted-fg); font-size:12px; }
+
+/* тема */
+.r-back{ margin:4px 0 12px; color:var(--w-muted-fg); font-weight:500; }
+.r-th{ display:flex; flex-direction:column; gap:16px; } .is-desk .r-th{ flex-direction:row-reverse; align-items:center; } .is-desk .r-th .r-col{ flex:0 0 44%; }
+.r-th-in{ display:flex; flex-direction:column; gap:10px; flex:1; min-width:0; } .r-th h1{ margin:0; font-size:28px; line-height:34px; font-weight:700; letter-spacing:-.01em; } .is-desk .r-th h1{ font-size:36px; line-height:42px; }
+.r-th p{ margin:0; font-size:16px; line-height:24px; color:#d4d4d8; } .r-stats{ display:flex; align-items:center; gap:12px; font-size:12px; color:var(--w-muted-fg); }
+.s-topic .r-cols > main > .r-match{ margin-top:16px; }
+.r-main{ margin:0; padding:0 0 0 18px; display:flex; flex-direction:column; gap:10px; font-size:15px; line-height:22px; }
+.r-tl{ list-style:none; margin:0 0 0 4px; padding:0; border-left:2px solid var(--w-border); }
+.r-tl li{ position:relative; display:flex; gap:12px; padding:0 0 16px 16px; }
+.r-tl li::before{ content:''; position:absolute; left:-6px; top:5px; width:10px; height:10px; border-radius:50%; background:var(--w-bg); border:2px solid var(--w-ring); }
+.r-tl li.is-key::before{ background:var(--w-fg); border-color:var(--w-fg); } .r-tl li.is-key span{ font-weight:600; }
+.r-tl i{ font-style:normal; width:44px; flex:none; color:var(--w-muted-fg); font-size:12px; }
+.r-new{ display:block; margin:0 auto 12px; height:32px; padding:0 14px; border-radius:16px; background:var(--w-fg); color:var(--w-primary-fg); font-weight:600; }
+.r-qs{ display:flex; flex-direction:column; gap:8px; } .r-qs details{ padding:12px 16px; } .r-qs summary{ font-weight:600; cursor:pointer; } .r-qs p{ margin:8px 0 0; color:#d4d4d8; }
+.r-src a{ display:flex; gap:10px; padding:12px 16px; border-top:1px solid var(--w-border); } .r-src a:first-child{ border-top:0; }
+.r-src i{ display:grid; place-items:center; flex:none; width:28px; height:28px; border-radius:50%; background:#27272a; font-style:normal; font-weight:700; font-size:12px; }
+.r-src span{ display:flex; flex-direction:column; } .r-src small{ color:var(--w-muted-fg); font-size:12px; }

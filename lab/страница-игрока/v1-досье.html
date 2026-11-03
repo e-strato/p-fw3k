@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_игрок.css" />
+<style>
+/* v1 · Досье. Как NBA.com + Transfermarkt: шапка на цвете команды (фото, ник, команда, наша карточка справа), полоса цифр и полка трофеев,
+   путь игрока линией с логотипами, хайлайты, факты, статистика, соцсети. Переход: карточка из коллекции летит в правый угол шапки. */
+.d-hero { position: relative; overflow: hidden; margin-top: 8px; border-radius: 24px;
+  background: radial-gradient(120% 140% at 30% 0%, color-mix(in srgb, var(--team) 38%, var(--c-ui-panel)), var(--c-ui-panel) 62%); }
+.d-hero__in { position: relative; display: grid; grid-template-columns: 340px minmax(0, 1fr) auto; align-items: end; gap: 40px; min-height: 520px; padding: 40px 48px 0; }
+.d-hero__ph { align-self: end; width: 100%; max-height: 500px; object-fit: contain; object-position: bottom; filter: drop-shadow(0 30px 40px color-mix(in srgb, var(--c-black) 60%, transparent)); }
+.d-hero__txt { align-self: center; padding-bottom: 40px; }
+.d-hero__meta { display: flex; align-items: center; gap: 10px; color: var(--c-muted); font-size: var(--fs-small); }
+.d-flag { width: 22px; height: 15px; border-radius: 3px; background: linear-gradient(var(--c-flag-white) 0 33.4%, var(--c-flag-ru-blue) 0 66.7%, var(--c-flag-ru-red) 0); }
+.d-hero h1 { margin: 12px 0 4px; font-size: clamp(64px, 7vw, 120px); line-height: .9; font-weight: 900; letter-spacing: -.045em; }
+.d-hero__name { margin: 0; font-size: 22px; color: var(--c-muted); }
+.d-hero__team { display: flex; align-items: center; gap: 12px; margin-top: 28px; font-size: 18px; }
+.d-hero__team b { font-weight: 700; } .d-hero__team span { color: var(--c-muted); }
+.d-hero__acts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.d-now { display: inline-flex; align-items: center; gap: 10px; margin-top: 24px; padding: 10px 16px; border-radius: 999px; background: color-mix(in srgb, var(--c-black) 35%, transparent); font-size: var(--fs-small); }
+.d-now i { width: 8px; height: 8px; border-radius: 50%; background: var(--c-live); box-shadow: 0 0 0 4px color-mix(in srgb, var(--c-live) 25%, transparent); }
+.d-now span { color: var(--c-muted); }
+.d-hero__card { align-self: center; padding-bottom: 40px; }
+
+.d-strip { display: grid; grid-template-columns: repeat(4, 1fr) 1.4fr; gap: 12px; margin-top: 12px; }
+.d-num { padding: 22px 24px; border-radius: var(--radius); background: var(--c-ui-panel); }
+.d-num b { display: block; font-size: 40px; font-weight: 900; letter-spacing: -.03em; line-height: 1; }
+.d-num small { color: var(--c-caption); font-size: var(--fs-small); }
+.d-shelf { display: flex; align-items: center; gap: 18px; padding: 18px 24px; border-radius: var(--radius); background: var(--c-ui-panel); }
+.d-cups { display: flex; gap: 6px; }
+.d-cup { width: 26px; height: 34px; background: var(--c-coin); clip-path: polygon(8% 0, 92% 0, 88% 34%, 64% 58%, 60% 76%, 78% 84%, 78% 100%, 22% 100%, 22% 84%, 40% 76%, 36% 58%, 12% 34%); }
+.d-cup--s { background: var(--c-tier-silver); }
+.d-shelf p { margin: 0; font-size: var(--fs-small); color: var(--c-muted); } .d-shelf p b { display: block; color: var(--c-text); font-size: 16px; }
+
+/* Путь */
+.d-road { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; padding-top: 34px; }
+.d-road::before { content: ''; position: absolute; left: 20px; right: 20px; top: 53px; height: 3px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--c-ui-item), var(--c-muted) 55%, var(--team)); }
+.d-stop { position: relative; display: grid; align-content: start; gap: 10px; }
+.d-stop .pl-logo { position: relative; width: 42px; height: 42px; border-radius: 12px; background: var(--c-ui-panel); box-shadow: 0 0 0 6px var(--c-ui-bg); padding: 4px; }
+.d-stop .pl-logo--mono { background: var(--c-ui-item); }
+.d-stop__y { position: absolute; top: -30px; left: 0; font-size: var(--fs-app-sm); color: var(--c-caption); }
+.d-stop b { font-size: 18px; font-weight: 800; } .d-stop p { margin: 0; color: var(--c-muted); font-size: var(--fs-small); line-height: 1.45; }
+.d-stop--now b { color: var(--team); }
+.d-mmr { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+.d-mmr span { padding: 8px 14px; border-radius: 999px; background: var(--c-ui-panel); font-size: var(--fs-small); color: var(--c-muted); }
+.d-mmr b { color: var(--c-text); margin-right: 6px; }
+
+/* Места */
+.d-places { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.d-pl { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 16px 18px; border-radius: 14px; background: var(--c-ui-panel); }
+.d-pl__n { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; font-size: 24px; font-weight: 900; background: var(--c-ui-item); }
+.d-pl--1 .d-pl__n { background: color-mix(in srgb, var(--c-coin) 22%, var(--c-ui-item)); color: var(--c-coin); }
+.d-pl--2 .d-pl__n { color: var(--c-tier-silver); } .d-pl--3 .d-pl__n { color: var(--c-tier-bronze); }
+.d-pl span { display: grid; min-width: 0; } .d-pl span b { font-weight: 700; } .d-pl small { color: var(--c-caption); font-size: var(--fs-app-sm); }
+.d-pl__pr { text-align: right; font-weight: 700; } .d-pl__pr small { display: block; font-weight: 500; }
+
+/* Хайлайты */
+.d-vids { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: auto auto; gap: 20px; }
+.d-vids .pl-vid:first-child { grid-row: span 2; } .d-vids .pl-vid:first-child b { font-size: 20px; }
+
+/* Факты */
+.d-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.d-fact { padding: 24px; border-radius: var(--radius); background: var(--c-ui-panel); }
+.d-fact b { display: block; margin-bottom: 10px; font-size: 34px; font-weight: 900; letter-spacing: -.03em; color: var(--team); }
+.d-fact p { margin: 0; color: var(--c-muted); line-height: 1.5; }
+
+.d-two { display: grid; grid-template-columns: 1fr 1.25fr; gap: 20px; }
+.d-socs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.d-team { display: flex; flex-wrap: wrap; gap: 10px; }
+.d-mate { display: flex; align-items: center; gap: 10px; padding: 10px 16px 10px 10px; border-radius: 999px; background: var(--c-ui-panel); }
+.d-mate i { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--c-ui-item); font-style: normal; font-size: var(--fs-app-sm); font-weight: 800; color: var(--c-muted); }
+.d-mate.is-me { background: color-mix(in srgb, var(--team) 18%, var(--c-ui-panel)); } .d-mate.is-me i { background: var(--team); color: var(--c-black); }
+.d-foot { height: 80px; }
+
+@media (max-width: 1100px) {
+  .d-hero__in { grid-template-columns: 1fr; padding: 32px 24px 0; } .d-hero__ph { max-height: 320px; order: 3; } .d-hero__card { order: 2; padding: 0; }
+  .d-strip { grid-template-columns: repeat(2, 1fr); } .d-shelf { grid-column: 1 / -1; }
+  .d-road { grid-template-columns: 1fr; } .d-road::before { display: none; } .d-stop__y { position: static; }
+  .d-vids, .d-facts, .d-two, .d-socs { grid-template-columns: 1fr; } .d-vids .pl-vid:first-child { grid-row: auto; }
+}
+</style></head>
+<body>
+<div class="pl" data-pl></div>
+<button class="btn btn--quiet btn--sm pl-replay" type="button" data-replay>Повторить переход</button>
+<script src="_игрок.js"></script>
+<script>
+(() => {
+  const П = ИГРОК, maxM = Math.max(...ГЕРОИ.map((h) => h.м))
+  document.querySelector('[data-pl]').innerHTML = `${шапка()}
+  <main class="pl-in">
+    <section class="d-hero"><div class="d-hero__in">
+      <img class="d-hero__ph" src="${П.фото}" alt="${П.ник}" />
+      <div class="d-hero__txt">
+        <div class="d-hero__meta"><i class="d-flag"></i>${П.страна} · ${П.возраст} года · родился ${П.родился}</div>
+        <h1>${П.ник}</h1>
+        <p class="d-hero__name">${П.имя}</p>
+        <div class="d-hero__team">${лого(П.команда.лого)}<b>${П.команда.имя}</b><span>Позиция ${П.позиция} · ${П.роль}</span></div>
+        <div class="d-hero__acts"><button class="btn btn--sm" type="button">Следить</button><button class="btn btn--quiet btn--sm" type="button">Взять в пятёрку</button><button class="btn btn--quiet btn--sm" type="button">Все карточки игрока</button></div>
+        <div class="d-now"><i></i><b>${СЕЙЧАС.турнир}</b><span>${СЕЙЧАС.далее} — за ${СЕЙЧАС.за}</span></div>
+      </div>
+      <div class="d-hero__card" data-slot>${картаИгрока(340)}</div>
+    </div></section>
+
+    <section class="d-strip">
+      ${П.цифры.map((c) => `<div class="d-num"><b>${c.v}</b><small>${c.t}</small></div>`).join('')}
+      <div class="d-shelf"><div class="d-cups">${'<i class="d-cup"></i>'.repeat(5)}<i class="d-cup d-cup--s"></i></div><p><b>5 титулов Tier 1 и финал TI</b>EWC 2026, DreamLeague ×2, ESL One ×2</p></div>
+    </section>
+
+    <section class="pl-sec">
+      <h2 class="pl-h2">Путь <small>от пабликов до финала The International</small></h2>
+      <div class="d-road">${ПУТЬ.map((s, i) => `<div class="d-stop${i === ПУТЬ.length - 1 ? ' d-stop--now' : ''}"><span class="d-stop__y">${s.с}${s.по !== s.с ? ` — ${s.по}` : ''}</span>${лого(s.лого, s.мон)}<b>${s.команда}</b><p>${s.что}</p></div>`).join('')}</div>
+      <div class="d-mmr">${П.mmr.map((m) => `<span><b>${m.v}</b>${m.дата}</span>`).join('')}</div>
+    </section>
+
+    <section class="pl-sec">
+      <h2 class="pl-h2">Турниры <small>главные места, приз — на команду</small></h2>
+      <div class="d-places">${ТРОФЕИ.map((t) => `<div class="d-pl d-pl--${t.место}"><b class="d-pl__n">${t.место}</b><span><b>${t.турнир}</b><small>Финал ${t.финал}${t.заметка ? ` · ${t.заметка}` : ''}</small></span><span class="d-pl__pr">${t.приз}<small>${t.дата}</small></span></div>`).join('')}</div>
+    </section>
+
+    <section class="pl-sec">
+      <h2 class="pl-h2">Хайлайты <small>TI 2026 и влоги команды</small></h2>
+      <div class="d-vids">${ВИДЕО.slice(0, 5).map((v) => видеоПлитка(v)).join('')}</div>
+    </section>
+
+    <section class="pl-sec">
+      <h2 class="pl-h2">Факты</h2>
+      <div class="d-facts">${ФАКТЫ.map((f) => `<div class="d-fact"><b>${f.big}</b><p>${f.t}</p></div>`).join('')}</div>
+    </section>
+
+    <section class="pl-sec d-two">
+      <div class="pl-panel"><h2 class="pl-h2">Герои <small>профматчи с 2022</small></h2>${ГЕРОИ.map((h) => геройСтрока(h, maxM)).join('')}</div>
+      <div class="pl-panel"><h2 class="pl-h2">Последние матчи <small>K / D / A · GPM</small></h2>${МАТЧИ.map(матчСтрока).join('')}</div>
+    </section>
+
+    <section class="pl-sec">
+      <h2 class="pl-h2">Соцсети</h2>
+      <div class="d-socs">${П.соцсети.map(соцПлитка).join('')}</div>
+    </section>
+
+    <section class="pl-sec">
+      <h2 class="pl-h2">Состав ${П.команда.имя}</h2>
+      <div class="d-team">${СОСТАВ.map((m) => `<span class="d-mate${m.я ? ' is-me' : ''}"><i>${m.поз}</i>${m.ник}</span>`).join('')}</div>
+    </section>
+    <div class="d-foot"></div>
+  </main>`
+
+  подключитьНаклон()
+  const слот = document.querySelector('[data-slot]')
+  const run = () => { scrollTo(0, 0); переход(слот) }
+  document.querySelector('[data-replay]').addEventListener('click', run)
+  run()
+})()
+</script>
+</body></html>

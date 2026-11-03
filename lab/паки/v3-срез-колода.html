@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../бустеры/_бустер.css" />
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+</head>
+<body>
+<!-- v3 · Срез и колода внутри. Пак — бархатный мат. Режешь — половины не улетают сразу, а медленно сползают в стороны, и в разрезе
+     видна настоящая колода: три карты рубашкой, светятся краем цветом редкости. Колода поднимается из пака, карты веером
+     раскрываются в воздухе, обходят круг — и встают на место, переворачиваясь. Половины пака падают. -->
+<div class="bs"></div>
+<script type="module">
+import { start } from '../бустеры/_бустер.js'
+import { THREE, RAR, makePack, Trail, Cutter } from './_пак.js'
+const W = 1.6, H = 2.45
+const css = (t) => getComputedStyle(document.documentElement).getPropertyValue(t).trim()
+start({
+  name: 'Срез и колода внутри',
+  note: 'Бархатный матовый пак. В разрезе видна колода — три карты рубашкой; колода поднимается, карты веером обходят круг и встают на место.',
+  hint: 'Проведи через пак — разрежь',
+  build(K) {
+    const g = new THREE.Group(), P = makePack(K, { W, H, finish: 'matte', name: RAR[K.rar].ru, D: 0.15 }); g.add(P.g)
+    // Колода внутри пака: три рубашки, край светится
+    const col = '#' + K.glow().getHexString()
+    const backTex = (() => { const c = document.createElement('canvas'); c.width = 340; c.height = 468; const x = c.getContext('2d')
+      x.fillStyle = css('--c-ui-panel'); x.beginPath(); x.roundRect(0, 0, 340, 468, 22); x.fill()
+      x.strokeStyle = col; x.lineWidth = 8; x.beginPath(); x.roundRect(6, 6, 328, 456, 18); x.stroke()
+      for (let i = -468; i < 468; i += 16) { x.strokeStyle = 'rgba(255,255,255,.03)'; x.lineWidth = 6; x.beginPath(); x.moveTo(i, 0); x.lineTo(i + 468, 468); x.stroke() }
+      x.fillStyle = css('--c-ui-item'); x.beginPath(); x.arc(170, 234, 70, 0, 6.28); x.fill(); x.fillStyle = css('--c-caption'); x.font = '800 70px Inter, sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('F', 170, 238)
+      const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t })()
+    const deck = new THREE.Group(); g.add(deck)
+    const cards = [0, 1, 2].map((i) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 1.51), new THREE.MeshBasicMaterial({ map: backTex, transparent: true, side: THREE.DoubleSide })); m.position.z = (i - 1) * 0.012; deck.add(m); return m })
+    deck.position.y = -0.1
+    const deckGlow = new THREE.Sprite(new THREE.SpriteMaterial({ color: K.glow(), map: K.softTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0 })); deckGlow.scale.set(2.2, 2.6, 1); deckGlow.position.z = -0.2; deck.add(deckGlow)
+    deck.visible = false
+
+    const trail = new Trail(K), cutter = new Cutter(g, P.g, W, H)
+    let a = null, drawing = false, done = false
+    const cut = async (p1, p2) => {
+      done = true; K.hint('')
+      const [[A, B]] = cutter.cut(p1, p2)
+      deck.visible = true
+      const c = g.localToWorld(A.mid.clone()).setZ(0.3)
+      K.sparks(c, 0.5, 0.6)
+      // 1. Половины медленно сползают — в щели свет и колода
+      await K.tween(900, (k) => { [A, B].forEach((p, i) => { const s = i ? -1 : 1; p.h.position.copy(A.n).multiplyScalar(s * k * 0.95); p.h.rotation.z = s * k * 0.12 }); deckGlow.material.opacity = k * 0.8; K.lightAt(c, k * 0.4, 1) }, (k) => 1 - (1 - k) ** 2)
+      // 2. Половины падают, колода поднимается
+      K.tween(1000, (k) => [A, B].forEach((p, i) => { const s = i ? -1 : 1; p.h.position.copy(A.n).multiplyScalar(s * (0.95 + k * 0.4)); p.h.position.y -= k * k * 4.2; p.h.rotation.z = s * (0.12 + k * 0.5) }), (k) => k * k)
+      await K.tween(600, (k) => { deck.position.set(0, -0.1 + k * 0.55, k * 1.2) }, K.back)
+      // 3. Веер и круг: карты расходятся веером и обходят круг вокруг центра
+      K.flash(0.5); K.shock(deck.getWorldPosition(new THREE.Vector3()), 7); K.confetti(deck.getWorldPosition(new THREE.Vector3()), 0.9, 3)
+      await K.tween(700, (k) => cards.forEach((m, i) => { const s = i - 1; m.position.set(s * k * 1.15, -Math.abs(s) * k * 0.12, (i - 1) * 0.012 + k * 0.2); m.rotation.z = -s * k * 0.22 }), K.back)
+      await K.tween(700, (k) => { deck.rotation.y = k * Math.PI * 2; K.lightAt(deck.getWorldPosition(new THREE.Vector3()), 0.6 + k * 0.4, 1.2); K.rays(deck.getWorldPosition(new THREE.Vector3()), k) }, (k) => k * k * (3 - 2 * k))
+      // 4. Передаём карты сайту: 3D-колода гаснет, настоящие карты встают на это место и переворачиваются
+      K.reveal(44)
+      await K.tween(260, (k) => cards.forEach((m) => { m.material.opacity = 1 - k }))
+      deck.visible = false
+      await K.tween(1500, (k) => { K.lightAt(new THREE.Vector3(0, 0.45, 1.2), 1 - k * 0.7, 1.2); K.rays(new THREE.Vector3(0, 0.45, 1.2), 1 - k * 0.6) })
+    }
+    return {
+      g, open: async () => {},
+      down(e) { if (done) return; drawing = true; trail.push(trail.local(e)); a = K.onPlane(e) },
+      move(e) { if (drawing) trail.push(trail.local(e)) },
+      up(e) {
+        if (!drawing) return; drawing = false
+        const b = K.onPlane(e)
+        if (Cutter.crosses(P.g.worldToLocal(a.clone()), P.g.worldToLocal(b.clone()), W, H)) { K.open(); cut(a, b) } else K.hint('Режь через весь пак — от края до края')
+      },
+      auto() {
+        if (done) return
+        const a0 = P.g.localToWorld(new THREE.Vector3(-W * 0.2, H * 0.75, 0)), b0 = P.g.localToWorld(new THREE.Vector3(W * 0.2, -H * 0.75, 0))
+        K.tween(300, (k) => trail.push(trail.screen(a0.clone().lerp(b0, k))), (k) => k).then(() => { K.open(); cut(a0, b0) })
+      },
+      tick(dt, t) { trail.draw(); if (!done) P.g.position.y = Math.sin(t * 1.5) * 0.05; cutter.update() },
+    }
+  },
+})
+</script>
+</body></html>

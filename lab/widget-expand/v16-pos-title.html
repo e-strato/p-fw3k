@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>v16 · Стрелка за названием</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&family=Inter:wght@500;600&display=swap" />
+<link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="../widget-tournament-5/_t5.css" /><link rel="stylesheet" href="../widgets-unified/_type.css" /><link rel="stylesheet" href="../widgets-unified/_cons.css" /><link rel="stylesheet" href="../widget-tournament-6/_t6.css" /><link rel="stylesheet" href="../widgets-23/_uni.css" /><link rel="stylesheet" href="../widget-mvp-3/_m5.css" /><link rel="stylesheet" href="../widget-subs-2/_s2.css" /><link rel="stylesheet" href="../widget-subs-2/_s6v6.css" /><link rel="stylesheet" href="../widget-subs-2/_s8.css" /><link rel="stylesheet" href="../widget-transfers-2/_tr4.css" /><link rel="stylesheet" href="../widget-subs-3/_s3.css" /><link rel="stylesheet" href="../widget-transfers-3/_tr5.css" /><link rel="stylesheet" href="_wx.css" />
+</head>
+<!-- v16-pos-title — как v13, но кнопка раскрытия не в шапке справа (там «Архив» / «Смотреть все»): стрелка сразу за названием виджета, клик по названию или стрелке раскрывает и сворачивает (дирижёр 29.10).
+     v13-vs-normal — как v12, но рядом вторая колонка — те же виджеты обычные, как сейчас на странице (без сворачивания) (дирижёр 29.10).
+     v12-key-info — как v11, но свёрнутый виджет показывает самое важное, а не только шапку: замены — строкой «✓ Новых расхождений нет», трансферы — последний трансфер; раскрыт — всё, без пустого места; все три свёрнуты сразу; MVP убран (дирижёр 29.10).
+     v11-icon-subs-tr — как v9, но тот же значок — у замен (пустой виджет свёрнут до шапки) и трансферов (раскрыт); MVP не сворачивается (дирижёр 29.10).
+     v10-icon-all — как v9, но значок с рамкой — и у других виджетов правой колонки: MVP матча свёрнут полосой (ник, команда, KDA), раскрыт — как есть (дирижёр 29.10).
+     v9-icon-border — как v6, но у значка рамка вместо заливки (дирижёр 29.10).
+     v6-icon — как «Свернуть составы» у «Участников»: маленький значок справа в шапке с подсказкой (дирижёр 29.10). Пример — турнир матча Vision — Spirit со страницы матча (gs-match-2 v29), под ним — места соседних виджетов. Код — _wx.js -->
+<body class="uni"><div class="wx-page">
+  <div class="wx-col"><div class="wx-lbl">Сворачиваются · v16</div><div id="t"></div><div id="s"></div><div id="r"></div></div>
+  <div class="wx-col wx-col--n"><div class="wx-lbl">Обычные · как сейчас</div><div id="t0"></div><div id="s0"></div><div id="r0"></div></div>
+</div>
+<script>window.WX_POS = 'title'; window.MVP2_BASE = '../widget-mvp-2/'; window.TR5_BASE = '../widget-transfers-2/'; window.TR5_CFG = { gameDate: true }</script>
+<script src="../gs-match/data/_matches.js"></script><script src="../gs-match/data/_tournament.js"></script>
+<script src="../widget-tournament-4/_data.js"></script><script src="../widget-tournament-5/_logos.js"></script><script src="../widget-tournament-5/_demo.js"></script><script src="../widget-mvp/_data.js"></script><script src="../widget-mvp-2/_paths.js"></script><script src="../widget-subs-2/_data.js"></script><script src="../widget-subs-2/_games.js"></script><script src="../widget-subs-3/_s3data.js"></script><script src="../widget-transfers/_data.js"></script><script src="../widget-transfers-2/_paths.js"></script><script src="../widget-transfers-2/_mix.js"></script><script src="../widget-transfers-3/_free.js"></script>
+<script src="../gs-match/_wfit.js"></script><script src="../widgets-unified/_cons.js"></script><script src="../widget-tournament-6/_t6.js"></script><script src="../widget-mvp-3/_m5.js"></script><script src="../widget-subs-3/_s3.js"></script><script src="../widget-transfers-3/_tr5.js"></script><script src="_wx.js"></script>
+<script>Object.values(T4.data.teams).forEach(t => { if (t.logo && t.logo.startsWith('img/')) t.logo = '../gs-match/' + t.logo }) // лого из данных страницы матча — от её папки
+WXT4(document.getElementById('t'), { match: { a: 'Team Vision', b: 'Team Spirit' }, opt: { v3: true, tier: 'fill', tierEn: true, final: 'merge', dt: 'mono' } })
+const fix = x => (typeof x === 'string' && x.startsWith('img/') ? '../gs-match/' + x : x) // фото и лого из данных страницы матча — от её папки
+MVP_DATA.list.forEach(q => ['photo', 'hq', 'hero'].forEach(f => q[f] = fix(q[f]))); for (const n in MVP_DATA.teams) MVP_DATA.teams[n] = fix(MVP_DATA.teams[n])
+// обычные — те же виджеты как есть, как на странице матча (gs-match/_gs.js, WIDGETS)
+T4.render(document.getElementById('t0'), { match: { a: 'Team Vision', b: 'Team Spirit' }, opt: { v3: true, tier: 'fill', tierEn: true, final: 'merge', dt: 'mono' } })
+S3.render(document.getElementById('s0'), { empty: true, game: 'when', big: true, plainHd: true, tint: true })
+TR5.render(document.getElementById('r0'), { match: { a: 'Team Vision', b: 'Team Spirit' } })
+WXKey(document.getElementById('s'), el => S3.render(el, { empty: true, game: 'when', big: true, plainHd: true, tint: true }), '.s6-hd', false)
+WXKey(document.getElementById('r'), el => TR5.render(el, { match: { a: 'Team Vision', b: 'Team Spirit' } }), '.t2-hd', false)</script>
+</body></html>

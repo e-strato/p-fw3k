@@ -1,0 +1,32 @@
+/* Лаба w-subhead: вторая строка шапки портала — назад и турнир (код — _sbh.js, window.SBH) */
+.sbh-on .pt{ height:auto; flex-wrap:wrap; row-gap:0; padding-top:10px; }
+.sbh{ display:flex; align-items:center; gap:8px; flex-basis:100%; min-width:0; height:40px; margin-top:10px; font:var(--t-sub); color:var(--w-muted-fg); }
+.sbh-bk{ display:inline-grid; place-items:center; width:28px; height:28px; flex:none; margin-left:-6px; border-radius:8px; color:var(--w-fg); }
+.sbh-bk:hover{ background:var(--w-muted); }
+.sbh-bk svg{ display:block; }
+.sbh a{ color:inherit; }
+.sbh a:hover{ color:var(--w-fg); }
+.sbh-t, .sbh-tt b{ font:600 14px/20px var(--w-font); color:var(--w-fg); white-space:nowrap; }
+.sbh-st{ min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* crumbs — путь */
+.sbh-cr{ display:flex; align-items:center; gap:6px; min-width:0; white-space:nowrap; }
+.sbh-cr i{ font-style:normal; opacity:.5; }
+.sbh-cr b{ min-width:0; overflow:hidden; text-overflow:ellipsis; font-weight:600; color:var(--w-fg); }
+body:not(.is-desk) .sbh-cr > a:nth-of-type(3), body:not(.is-desk) .sbh-cr > i:nth-of-type(2){ display:none; } /* телефон: Матчи › турнир › матч */
+
+/* tour — турнир и его разделы */
+.sbh-tt{ display:flex; align-items:center; gap:6px; flex:none; }
+.sbh-cup{ display:inline-grid; place-items:center; width:22px; height:22px; border-radius:6px; background:var(--w-muted); color:var(--w-fg); }
+.sbh-cup svg{ display:block; }
+.sbh-tn{ display:none; gap:2px; margin-left:auto; }
+.sbh-tn a{ height:28px; padding:0 10px; border-radius:var(--w-r-sm); line-height:28px; }
+.sbh-tn a:hover{ background:var(--w-mid-bg); }
+.sbh-tn a[aria-current]{ color:var(--w-fg); background:var(--w-muted); }
+.is-desk .sbh-tn{ display:flex; }
+
+/* окно матча: «назад» и строка турнира переехали в шапку */
+.sbh-on .bj [data-a="back"], .sbh-on .bj-t small{ display:none; }
+.sbh-on .bj{ min-height:52px; }
+.sbh-noline .pt{ border-bottom:0; }
+.sbh-gap #feed{ padding-top:4px; }

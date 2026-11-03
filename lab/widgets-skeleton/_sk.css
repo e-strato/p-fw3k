@@ -1,0 +1,45 @@
+/* Общее для скелетонов страницы матча v2–v5: серые плашки, шапка, карточки. Виджет — итоговый v7 (решение 23). */
+body{ background:var(--w-page); }
+.pg{ font:400 14px/20px var(--w-font); color:var(--w-fg); }
+.pg .lab-full{ top:12px; }
+.sk{ background:var(--w-muted); border-radius:var(--w-r-sm); }
+.sk-l{ height:12px; border-radius:6px; background:var(--w-skel); }
+.pg-bar{ position:sticky; top:0; z-index:2; display:flex; align-items:center; gap:16px; height:56px; padding:0 32px; background:var(--w-bg); border-bottom:1px solid var(--w-border); }
+.pg-bar b{ font-weight:600; }
+.pg-card{ background:var(--w-bg); border:1px solid var(--w-border); border-radius:var(--w-r); padding:16px; }
+.pg-tag{ font-size:12px; line-height:16px; color:var(--w-muted-fg); margin-bottom:8px; }
+.pg-in{ max-width:1376px; margin:0 auto; padding:24px 32px; }
+.pg-hd{ display:flex; align-items:center; gap:24px; height:96px; padding:0 24px; background:var(--w-bg); border:1px solid var(--w-border); border-radius:var(--w-r); }
+.pg-hd__c{ flex:1; display:flex; flex-direction:column; align-items:center; gap:8px; }
+.pg-logo{ width:48px; height:48px; border-radius:12px; background:var(--w-muted); }
+.pg-row{ display:flex; align-items:center; gap:12px; height:40px; }
+.pg-row + .pg-row{ border-top:1px solid var(--w-border); }
+
+/* Стили скелетона (v6–v9) — модификатор на .pg */
+/* v6: мерцание */
+.pg--shimmer .sk, .pg--shimmer .sk-l, .pg--shimmer .pg-logo{ background:linear-gradient(90deg, var(--w-muted) 25%, var(--w-hover) 40%, var(--w-muted) 55%); background-size:300% 100%; animation:sk-shine 1.6s linear infinite; }
+@keyframes sk-shine{ from{ background-position:100% 0; } to{ background-position:-100% 0; } }
+/* v7: контурный */
+.pg--outline .pg-card, .pg--outline .pg-hd{ background:transparent; border-style:dashed; border-color:var(--w-ring); }
+.pg--outline .sk, .pg--outline .sk-l, .pg--outline .pg-logo{ background:transparent; border:1px dashed var(--w-ring); }
+.pg--outline .sk-l{ height:12px; }
+/* v8: призрак контента */
+.gh-row{ display:flex; align-items:center; gap:8px; height:40px; }
+.gh-row + .gh-row{ border-top:1px solid var(--w-border); }
+.gh-pill{ width:40px; height:20px; border-radius:6px; background:var(--w-muted); flex:none; }
+.gh-c{ width:20px; height:20px; border-radius:50%; background:var(--w-muted); flex:none; }
+.gh-c--xl{ width:48px; height:48px; border-radius:12px; }
+.gh-t{ height:10px; border-radius:5px; background:var(--w-skel); }
+.gh-t--xl{ height:24px; border-radius:6px; }
+.gh-graph{ height:260px; border-radius:var(--w-r-sm); background:var(--w-mid-bg); overflow:hidden; }
+.gh-graph svg{ width:100%; height:100%; display:block; }
+.gh-axis{ stroke:var(--w-border); stroke-width:1; fill:none; }
+.gh-wave{ stroke:var(--w-skel); stroke-width:3; fill:none; }
+.gh-ev{ position:relative; height:24px; margin-top:8px; border-top:1px solid var(--w-border); }
+.gh-ev i{ position:absolute; top:8px; width:10px; height:10px; background:var(--w-skel); transform:rotate(45deg); }
+.gh-stream{ position:relative; aspect-ratio:16/9; border-radius:var(--w-r-sm); background:var(--w-muted); }
+.gh-play{ position:absolute; left:50%; top:50%; margin:-14px 0 0 -10px; border-left:24px solid var(--w-skel); border-top:14px solid transparent; border-bottom:14px solid transparent; }
+.gh-btn{ flex:1; height:36px; border-radius:var(--w-r-sm); background:var(--w-muted); }
+/* v9: подписанные блоки */
+.pg--label .sk{ display:grid; place-items:center; background:var(--w-mid-bg); border:1px solid var(--w-border); }
+.pg--label .sk::after{ content:attr(data-l); padding:0 16px; text-align:center; font-size:14px; line-height:20px; color:var(--w-muted-fg); }

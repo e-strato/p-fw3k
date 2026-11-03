@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_бустер.css" />
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+</head>
+<body>
+<!-- v5 · Голо-пак: разрежь. Тонкий голографический пак (переливается всегда, цвет — по редкости). Проведи мышью через пак —
+     за курсором светящийся след клинка; разрез через весь пак — он распадается по линии разреза на две половины (под любым углом,
+     как провёл), половины разъезжаются и падают, по линии вспышка, карты вылетают из разреза. «Открыть» — режет сам по диагонали. -->
+<div class="bs"></div>
+<script type="module">
+import { start, THREE, RAR, packFace, foil, crimpMat, pillow } from './_бустер.js'
+const W = 1.6, H = 2.4, D = 0.09, CH = 0.08
+start({
+  name: 'Голо-пак: разрежь',
+  note: 'Тонкий голографический пак. Проведи мышью через него — за курсором светится след; разрез через весь пак — он распадается по твоей линии, карты вылетают из разреза.',
+  hint: 'Проведи через бустер — разрежь',
+  build(K) {
+    const g = new THREE.Group(); let pack = new THREE.Group(); g.add(pack)
+    const front = foil(K.rar, packFace(K.rar, { name: 'Голо · ' + RAR[K.rar].ru }), { irid: 1 })
+    const backM = foil(K.rar, packFace(K.rar, { back: true }), { irid: 1 })
+    front.iridescenceThicknessRange = backM.iridescenceThicknessRange = [100, 900]
+    pack.add(new THREE.Mesh(pillow(W, H, D, { flat: 0.94 }), front))
+    const b = new THREE.Mesh(pillow(W, H, D, { back: true, flat: 0.94 }), backM); b.rotation.y = Math.PI; pack.add(b)
+    const cm = crimpMat(K.rar); [-1, 1].forEach((s) => { const m = new THREE.Mesh(new THREE.BoxGeometry(W * 1.01, CH, 0.02), cm); m.position.y = s * (H / 2 - CH / 2); pack.add(m) })
+
+    // След клинка на 2D-холсте поверх сцены: точки живут 0,35 с
+    const cv = K.trail, cx = cv.getContext('2d'), pts = [], col = '#' + K.glow().getHexString()
+    let drawing = false, a = null, done = false, halves = []
+    const toScreen = (v) => { const p = v.clone().project(K.camera), r = cv.getBoundingClientRect(); return { x: (p.x + 1) / 2 * r.width, y: (1 - p.y) / 2 * r.height } }
+    const local = (e) => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top } }
+    const drawTrail = (now) => {
+      cx.clearRect(0, 0, cv.width, cv.height)
+      while (pts.length && now - pts[0].t > 350) pts.shift()
+      if (pts.length < 2) return
+      cx.lineCap = 'round'; cx.lineJoin = 'round'
+      for (const [wd, al, blur] of [[14, 0.35, 24], [4, 1, 8]]) {
+        cx.shadowColor = col; cx.shadowBlur = blur; cx.strokeStyle = wd > 4 ? col : '#fff'
+        for (let i = 1; i < pts.length; i++) { const k = 1 - (now - pts[i].t) / 350; cx.globalAlpha = al * k; cx.lineWidth = wd * k; cx.beginPath(); cx.moveTo(pts[i - 1].x, pts[i - 1].y); cx.lineTo(pts[i].x, pts[i].y); cx.stroke() }
+      }
+      cx.globalAlpha = 1; cx.shadowBlur = 0
+    }
+    // Разрез через весь пак: оба конца снаружи, линия проходит через пак
+    const inside = (p) => Math.abs(p.x) < W / 2 && Math.abs(p.y) < H / 2
+    const crosses = (p1, p2) => {
+      if (inside(p1) || inside(p2) || p1.distanceTo(p2) < 1) return false
+      const d = p2.clone().sub(p1), n = new THREE.Vector3(-d.y, d.x, 0).normalize()
+      return Math.abs(n.dot(p1)) < Math.min(W, H) / 2 * 0.9
+    }
+    const cut = async (p1w, p2w) => {
+      done = true; K.hint('')
+      const p1 = pack.worldToLocal(p1w.clone()), p2 = pack.worldToLocal(p2w.clone()); p1.z = p2.z = 0
+      const d = p2.clone().sub(p1).normalize(), n = new THREE.Vector3(-d.y, d.x, 0)
+      const mid = p1.clone().add(n.clone().multiplyScalar(-n.dot(p1)))
+      // Две копии пака, каждая обрезана своей стороной плоскости разреза; плоскость едет вместе с половиной
+      halves = [1, -1].map((s) => {
+        const h = pack.clone(true), lp = new THREE.Plane(n.clone().multiplyScalar(s), -s * n.dot(p1)), wp = new THREE.Plane()
+        h.traverse((m) => { if (m.isMesh) { m.material = m.material.clone(); m.material.side = THREE.DoubleSide; m.material.clippingPlanes = [wp] } })
+        g.add(h); return { h, s, lp, wp }
+      })
+      g.remove(pack)
+      // Светящийся шов по линии разреза
+      const seam = new THREE.Mesh(new THREE.PlaneGeometry(Math.hypot(W, H) * 1.1, 0.04), new THREE.MeshBasicMaterial({ color: K.glow(), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }))
+      seam.position.copy(mid).setZ(0.12); seam.rotation.z = Math.atan2(d.y, d.x); g.add(seam)
+      const c = g.localToWorld(mid.clone()).setZ(0.3)
+      K.flash(0.6); K.shock(c, 8); K.sparks(c, 1.1, 1.5); K.confetti(c, 1, 2.6)
+      // Половины разъезжаются по нормали разреза, потом падают
+      K.tween(1500, (k) => halves.forEach(({ h, s }) => { const e = Math.min(1, k * 2.2); h.position.copy(n).multiplyScalar(s * (0.15 + e * 0.75)); h.position.y -= k * k * 4.5; h.rotation.z = s * k * 0.5; h.rotation.y = s * k * 0.5 }))
+      await K.tween(450, (k) => { K.lightAt(c, 0.4 + k * 0.6, 1.2); K.rays(c, k); seam.material.opacity = 1 - k * 0.5 })
+      K.reveal(46)
+      await K.tween(1600, (k) => { K.lightAt(c, 1 - k * 0.7, 1.2); K.rays(c, 1 - k * 0.6); seam.material.opacity = 0.5 * (1 - k) })
+    }
+    return {
+      g,
+      open: async () => {},
+      down(e) { if (done) return; drawing = true; const l = local(e); pts.push({ ...l, t: performance.now() }); a = K.onPlane(e) },
+      move(e) { if (drawing) { const l = local(e); pts.push({ ...l, t: performance.now() }) } },
+      up(e) {
+        if (!drawing) return; drawing = false
+        const b = K.onPlane(e)
+        const pa = pack.worldToLocal(a.clone()), pb = pack.worldToLocal(b.clone())
+        if (crosses(pa, pb)) { K.open(); cut(a, b) } else K.hint('Режь через весь бустер — от края до края')
+      },
+      // «Открыть»: клинок сам проходит по диагонали
+      auto() {
+        if (done) return
+        const a0 = pack.localToWorld(new THREE.Vector3(-W * 0.85, H * 0.7, 0)), b0 = pack.localToWorld(new THREE.Vector3(W * 0.85, -H * 0.45, 0))
+        K.tween(320, (k) => { const s = toScreen(a0.clone().lerp(b0, k)); pts.push({ ...s, t: performance.now() }) }, (k) => k).then(() => { K.open(); cut(a0, b0) })
+      },
+      tick(dt, t) {
+        drawTrail(performance.now())
+        if (!done) { pack.position.y = Math.sin(t * 1.5) * 0.05; pack.rotation.z = Math.sin(t * 0.9) * 0.03 }
+        g.updateMatrixWorld(true)
+        halves.forEach(({ h, lp, wp }) => wp.copy(lp).applyMatrix4(h.matrixWorld))
+      },
+    }
+  },
+})
+</script>
+</body></html>

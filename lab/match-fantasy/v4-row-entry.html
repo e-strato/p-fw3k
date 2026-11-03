@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_mf.css" />
+<style>
+.re { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; align-items: start; }
+.re-main { display: grid; gap: 12px; min-width: 0; }
+.re-top { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; }
+.re-top h2 { font-size: 24px; font-weight: 800; letter-spacing: -.01em; } .re-top p { margin-top: 2px !important; color: var(--c-muted); font-size: 14px; }
+.re-days { display: flex; gap: 6px; } .re-days button { display: grid; gap: 1px; min-width: 76px; padding: 8px 12px; border: 0; border-radius: 9px; background: var(--c-ui-panel); text-align: left; font-size: 13px; font-weight: 600; }
+.re-days button small { color: var(--c-caption); font-size: 11.5px; font-weight: 500; } .re-days button[aria-pressed='true'] { background: var(--c-ui-item); box-shadow: inset 0 0 0 1px var(--c-accent); }
+.re-tour { display: flex; align-items: center; gap: 10px; margin-top: 8px; padding: 10px 14px; border-radius: 10px; background: var(--c-ui-band); color: var(--c-muted); font-size: 13px; }
+.re-tour b { color: var(--c-text); font-size: 14px; } .re-tour span:last-child { margin-left: auto; }
+/* Строка матча: время · команды с кружком прогноза · фэнтези-фишка · раскрыть */
+.re-row { border-radius: 12px; background: var(--c-ui-panel); transition: box-shadow .2s; }
+.re-row.is-open { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-accent) 45%, transparent), 0 20px 50px -30px var(--c-accent); }
+.re-row__m { display: grid; grid-template-columns: 96px minmax(0, 1fr) 250px 44px; align-items: center; gap: 16px; min-height: 92px; padding: 10px 14px 10px 18px; }
+.re-time { display: grid; gap: 2px; } .re-time b { font: 700 22px/1 var(--font-c); color: var(--c-text); } .re-time small { color: var(--c-caption); font-size: 12px; font-variant-numeric: tabular-nums; }
+.re-time.is-soon small { color: var(--c-stat-mid); }
+.re-teams { display: grid; gap: 4px; min-width: 0; }
+.re-t { position: relative; display: grid; grid-template-columns: 24px minmax(0, 1fr) 46px 22px; align-items: center; gap: 10px; height: 34px; padding: 0 10px; border: 0; border-radius: 8px; background: none; text-align: left; font-size: 15px; font-weight: 600; overflow: hidden; }
+.re-t:hover { background: var(--c-ui-item); }
+.re-t > em { position: absolute; inset: 0 auto 0 0; z-index: -1; width: var(--p); background: color-mix(in srgb, var(--tc) 14%, transparent); font-style: normal; opacity: 0; transition: opacity .3s, width .5s; }
+.re-row.has-pick .re-t > em { opacity: 1; }
+.re-t > small { color: var(--c-caption); font: 600 13px var(--font-c); text-align: right; opacity: 0; transition: opacity .2s; }
+.re-row.has-pick .re-t > small, .re-t:hover > small { opacity: 1; }
+.re-t > i { width: 20px; height: 20px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--c-ui-dim); }
+.re-t.is-on > i { background: var(--c-accent); box-shadow: inset 0 0 0 4px var(--c-accent), inset 0 0 0 7px var(--c-ui-panel); }
+.re-t.is-on { color: var(--c-text); } .re-row.has-pick .re-t:not(.is-on) { color: var(--c-muted); }
+.re-t:disabled { cursor: default; }
+.re-isolate { isolation: isolate; }
+/* Фэнтези-фишка: свои игроки этого матча аватарками */
+.re-fan { display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 12px; border: 0; border-radius: 10px; background: var(--c-ui-item); text-align: left; }
+.re-fan:hover { background: var(--c-ui-hover); }
+.re-fan.is-mine { background: color-mix(in srgb, var(--c-accent) 16%, var(--c-ui-item)); }
+.re-avs { display: flex; } .re-avs .mf-ava { width: 30px; height: 30px; margin-left: -8px; box-shadow: 0 0 0 2px var(--c-ui-item); } .re-avs .mf-ava:first-child { margin-left: 0; }
+.re-fan.is-mine .re-avs .mf-ava { box-shadow: 0 0 0 2px color-mix(in srgb, var(--c-accent) 30%, var(--c-ui-item)); }
+.re-fan span { display: grid; gap: 1px; min-width: 0; } .re-fan b { font-size: 13.5px; } .re-fan small { color: var(--c-caption); font-size: 12px; white-space: nowrap; }
+.re-fan .re-plus { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--c-ui-hover); color: var(--c-accent); font-size: 18px; font-weight: 700; }
+.re-fan:disabled { cursor: default; background: none; } .re-fan:disabled b { color: var(--c-ui-dim); }
+.re-chev { display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 9px; background: none; color: var(--c-caption); font-size: 16px; transition: rotate .25s; }
+.re-chev:hover { background: var(--c-ui-item); } .re-row.is-open .re-chev { rotate: 180deg; color: var(--c-accent); }
+/* Раскрытие: мини-состав на этот матч */
+.re-x { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 20px; padding: 6px 18px 18px; }
+.re-x h4 { margin-bottom: 10px !important; font-size: 14px; font-weight: 700; } .re-x h4 small { margin-left: 6px; color: var(--c-caption); font-weight: 500; }
+.re-cards { display: flex; flex-wrap: wrap; gap: 12px; }
+.re-c { display: grid; justify-items: center; gap: 6px; }
+.re-c > small { color: var(--c-caption); font-size: 12px; } .re-c > small b { color: var(--c-text); font-family: var(--font-c); font-size: 13px; }
+.re-sug { display: grid; justify-items: center; align-content: start; gap: 6px; padding: 6px; border-radius: 12px; box-shadow: inset 0 0 0 1px dashed var(--c-ui-hover); }
+.re-sug .hg { opacity: .55; transition: opacity .2s; } .re-sug:hover .hg { opacity: 1; }
+.re-sug button { border: 0; height: 28px; padding: 0 10px; border-radius: 6px; background: var(--c-accent); color: var(--c-on-accent); font-size: 12px; font-weight: 700; }
+.re-sug button.is-swap { background: var(--c-ui-hover); color: var(--c-text); }
+.re-side { display: grid; align-content: start; gap: 10px; padding: 14px; border-radius: 12px; background: var(--c-ui-item); }
+.re-side p { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; color: var(--c-muted); } .re-side p b { color: var(--c-text); font-family: var(--font-c); font-size: 15px; }
+.re-side .mf-btn { width: 100%; }
+/* Правая колонка: состав на вечер */
+.re-r { position: sticky; top: 16px; display: grid; gap: 16px; }
+.re-five { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.re-slot { display: grid; justify-items: center; gap: 4px; }
+.re-slot > i { display: grid; place-items: center; width: 56px; height: 70px; border-radius: 8px; box-shadow: inset 0 0 0 2px var(--c-ui-hover); color: var(--c-ui-dim); font: 700 18px var(--font-c); font-style: normal; }
+.re-slot small { color: var(--c-caption); font-size: 11px; white-space: nowrap; }
+.re-sum { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.re-sum p { display: grid; gap: 2px; padding: 10px 12px; border-radius: 10px; background: var(--c-ui-item); } .re-sum b { font: 700 24px/1 var(--font-c); } .re-sum small { color: var(--c-caption); font-size: 12px; }
+.re-dots { display: flex; gap: 4px; } .re-dots i { flex: 1; height: 6px; border-radius: 3px; background: var(--c-ui-hover); } .re-dots i.on { background: var(--c-accent); }
+@container mf (max-width: 700px) {
+  .re { grid-template-columns: minmax(0, 1fr); gap: 12px; } .re-r { position: static; order: -1; }
+  .re-top h2 { font-size: 19px; } .re-days { overflow-x: auto; scrollbar-width: none; } .re-days button { min-width: 70px; flex: none; }
+  .re-row__m { grid-template-columns: 64px minmax(0, 1fr) 34px; gap: 6px; min-height: 0; padding: 10px 8px 10px 12px; }
+  .re-fan { grid-column: 1 / -1; grid-row: 2; height: 44px; } .re-chev { grid-column: 3; grid-row: 1; width: 34px; height: 34px; }
+  .re-time b { font-size: 18px; } .re-time small { font-size: 11px; white-space: nowrap; } .re-t { grid-template-columns: 20px minmax(0, 1fr) 36px 20px; gap: 6px; height: 30px; padding: 0 6px; font-size: 14px; }
+  .re-x { grid-template-columns: minmax(0, 1fr); padding: 2px 12px 14px; gap: 12px; } .re-cards { gap: 6px; } .re-c .kc, .re-sug .kc { --w: 70px !important; }
+  .re-slot > i { width: 48px; height: 60px; } .re-slot .kc { --w: 50px !important; }
+}
+</style></head>
+<body><main class="mf-page">
+  <h1>v4 · Вход из строки</h1>
+  <p>Фэнтези без перехода на страницу матча: строка расписания сама несёт прогноз и состав. Кружок у команды — прогноз в один клик (после выбора видно, как проголосовали остальные). Фишка справа — твои игроки в этом матче аватарками; клик раскрывает строку: карты твоих игроков с прогнозом очков, подсказки на свободные позиции («В состав» или «Заменить»), твой прогноз и когда всё закроется. Справа — состав на вечер целиком, он меняется от действий в строках. Шесть матчей дня: четыре Dota 2, CS2 и LoL (для них карт пока нет).</p>
+  <div class="mf-tools" data-tools></div>
+  <p class="mf-cap">Десктоп · 1440 (рамка уменьшена под ширину окна)</p><div class="mf-wrap"><div class="mf-frame mf-frame--desk" data-mf></div></div>
+  <p class="mf-cap">Телефон · 390 — листается внутри рамки</p><div class="mf-frame mf-frame--phone" data-mf></div>
+</main>
+<script>
+window.MF = {
+  крошки: false,
+  нач: { open: 'm1', slots: ['yatoro', null, 'collapse', '9class', null], cap: 'yatoro', pick: { m2: 'pv' } },
+  инструменты: [['open', 'Раскрыта строка', [['m1', 'Spirit — Tundra'], ['m2', 'PARIVISION — BetBoom'], ['m3', 'Falcons — Liquid'], ['none', 'Все закрыты']]]],
+  действия: {
+    pick: (S, el) => { S.pick[el.dataset.m] = S.pick[el.dataset.m] === el.dataset.v ? undefined : el.dataset.v },
+    open: (S, el) => { S.open = S.open === el.dataset.m ? 'none' : el.dataset.m },
+    add: (S, el, x) => { const id = el.dataset.v, i = x.п(id).pos - 1, был = S.slots[i]; S.slots[i] = id; if (был === S.cap) S.cap = null; setTimeout(() => x.тост(был ? `${x.п(id).ник} вместо ${x.п(был).ник}` : `${x.п(id).ник} — в составе`), 30) },
+    del: (S, el) => { const i = S.slots.indexOf(el.dataset.v); if (i >= 0) S.slots[i] = null; if (S.cap === el.dataset.v) S.cap = null },
+  },
+}
+MF.вариант = (S, x) => {
+  const { лого, имя, кор, карта, п, ава, ЦВЕТ, РОЛЬ } = x
+  Object.assign(x.ИГРОКИ, {
+    '9class': ['9Class', 4, 'pv', 95, 'legend', '9class', 18.9, 1], satanic: ['Satanic', 1, 'pv', 91, 'holo', '', 19.6, 1], noone: ['No[o]ne', 2, 'pv', 84, 'holo', '', 17.5, 1],
+    gpk: ['gpk', 2, 'bb', 85, 'holo', '', 17.0, 1], save: ['Save-', 4, 'bb', 80, 'base', '', 10.8, 1],
+    skiter: ['skiter', 1, 'flc', 89, 'holo', '', 20.1, 1], malrine: ['Malr1ne', 2, 'flc', 86, 'base', '', 16.0, 1], micke: ['miCKe', 1, 'tl', 87, 'holo', '', 19.0, 1], boxi: ['Boxi', 3, 'tl', 82, 'base', '', 11.2, 1],
+    quinn: ['Quinn', 2, 'gg', 84, 'base', '', 16.4, 1], nightfall: ['Nightfall', 1, 'aur', 83, 'base', '', 18.1, 1],
+  })
+  // Матчи дня: id, команды, время, сколько секунд до старта от «сейчас» (первый — 2 ч 25 мин), игра, доли зрителей
+  const М = [['m1', 'ts', 'tun', '17:00', 0, 'Dota 2', 58], ['m2', 'pv', 'bb', '18:00', 3600, 'Dota 2', 47], ['m5', 'vit', 'mgz', '19:00', 7200, 'CS2', 64], ['m3', 'flc', 'tl', '20:00', 10800, 'Dota 2', 52], ['m6', 't1', 'gen', '21:00', 14400, 'LoL', 55], ['m4', 'gg', 'aur', '21:30', 16200, 'Dota 2', 61]]
+  const мои = (a, b) => S.slots.filter((id) => id && (п(id).к === a || п(id).к === b))
+  const игрокиМатча = (a, b) => Object.keys(x.ИГРОКИ).filter((id) => п(id).есть && (п(id).к === a || п(id).к === b)).sort((p, q) => п(q).очки - п(p).очки)
+  const строка = ([id, a, b, t, сдвиг, игра, доля]) => {
+    const dota = игра === 'Dota 2', мой = мои(a, b), pick = S.pick[id], open = S.open === id
+    const сек = `<small data-clock="start" data-fmt="words" data-shift="${сдвиг}">${x.словами(x.до('start') + сдвиг)}</small>`
+    const команда = (k, p) => `<button type="button" class="re-t re-isolate ${pick === k ? 'is-on' : ''}" style="--tc:${ЦВЕТ[k] || 'var(--c-accent)'};--p:${p}%" data-act="pick" data-m="${id}" data-v="${k}"><em></em>${лого(k)}<span>${имя(k)}</span><small>${p}%</small><i></i></button>`
+    const фишка = !dota ? `<button type="button" class="re-fan" disabled><span><b>Фэнтези ${игра}</b><small>карт пока нет</small></span></button>`
+      : мой.length ? `<button type="button" class="re-fan is-mine" data-act="open" data-m="${id}"><span class="re-avs">${мой.map((p) => ава(p)).join('')}</span><span><b>В составе ${мой.length}</b><small>прогноз ${мой.reduce((s, p) => s + п(p).очки * (p === S.cap ? 1.5 : 1), 0).toFixed(1)} очков</small></span></button>`
+        : `<button type="button" class="re-fan" data-act="open" data-m="${id}"><span class="re-plus">+</span><span><b>Добавить в состав</b><small>${игрокиМатча(a, b).length} карт из этого матча</small></span></button>`
+    let тело = ''
+    if (open && dota) {
+      const своб = [0, 1, 2, 3, 4].filter((i) => !S.slots[i] || !мой.includes(S.slots[i]))
+      const подск = игрокиМатча(a, b).filter((p) => !S.slots.includes(p)).filter((p, i, arr) => arr.findIndex((q) => п(q).pos === п(p).pos) === i).slice(0, 5 - мой.length).slice(0, 3)
+      тело = `<div class="re-x"><div><h4>Твои игроки в матче<small>${мой.length ? мой.length + ' из 5' : 'пока никого'}</small></h4><div class="re-cards">${мой.map((p) => `<span class="re-c"><span class="mf-card">${p === S.cap ? '<span class="mf-cap-mark">×1.5</span>' : ''}${карта(p, 96)}</span><small>прогноз <b>${(п(p).очки * (p === S.cap ? 1.5 : 1)).toFixed(1)}</b></small></span>`).join('')}
+        ${подск.map((p) => { const занят = S.slots[п(p).pos - 1]; return `<span class="re-sug"><span class="mf-card">${карта(p, 96)}</span><button type="button" class="${занят ? 'is-swap' : ''}" data-act="add" data-v="${p}">${занят ? 'Заменить ' + п(занят).ник : '+ В состав · P' + п(p).pos}</button></span>` }).join('')}</div></div>
+        <div class="re-side"><p><span>Прогноз</span><b>${pick ? кор(pick) : '—'}</b></p><p><span>Зрители за ${кор(a)}</span><b>${доля}%</b></p><p><span>Закроется через</span><b data-clock="lock" data-fmt="hms" data-shift="${сдвиг}">${x.чмс(x.до('lock') + сдвиг)}</b></p><a class="mf-btn" href="#">Страница матча ›</a></div></div>`
+    }
+    const скоро = x.до('start') + сдвиг < 3 * 3600
+    return `<article class="re-row ${open ? 'is-open' : ''} ${pick ? 'has-pick' : ''}"><div class="re-row__m"><div class="re-time ${скоро ? 'is-soon' : ''}"><b>${t}</b>${сек}</div>
+      <div class="re-teams">${команда(a, доля)}${команда(b, 100 - доля)}</div>${фишка}<button type="button" class="re-chev" data-act="open" data-m="${id}" aria-label="Раскрыть" ${dota ? '' : 'disabled'}>▾</button></div>${тело}</article>`
+  }
+  const тур = (n, s, h) => `<p class="re-tour">${n}<b>${s}</b><span>${h}</span></p>`
+  const список = `${тур(лого('ts', 'sm'), 'BLAST Slam VIII · Dota 2', 'плей-офф')}${М.filter((m) => m[5] === 'Dota 2').map(строка).join('')}${тур('', 'ESL Pro League S24 · CS2', 'группа C')}${строка(М[2])}${тур('', 'LCK Cup · LoL', 'неделя 2')}${строка(М[4])}`
+  const в = S.slots.filter(Boolean), очки = в.reduce((s, id) => s + п(id).очки * (id === S.cap ? 1.5 : 1), 0), прогнозов = Object.values(S.pick).filter(Boolean).length
+  const право = `<aside class="re-r"><section class="mf-panel"><h3 class="mf-h">Состав на вечер<small>${в.length} из 5</small></h3><div class="re-five">${[0, 1, 2, 3, 4].map((i) => { const id = S.slots[i]
+      return `<span class="re-slot">${id ? `<span class="mf-card">${карта(id, 56)}</span>` : `<i>${i + 1}</i>`}<small>${id ? кор(п(id).к) : РОЛЬ[i + 1].replace('Поддержка', 'Сапп.')}</small></span>` }).join('')}</div>
+      <div class="re-sum" style="margin-top:14px"><p><b>${очки.toFixed(1)}</b><small>прогноз очков</small></p><p><b data-clock="lock" data-fmt="hms">${x.чмс(x.до('lock'))}</b><small>до первой замены</small></p></div>
+      <a class="mf-btn" href="#" style="width:100%;margin-top:12px">Открыть состав</a></section>
+    <section class="mf-panel"><h3 class="mf-h">Прогнозы дня<small>${прогнозов} из 6</small></h3><div class="re-dots">${М.map((m) => `<i class="${S.pick[m[0]] ? 'on' : ''}"></i>`).join('')}</div><p class="mf-mut" style="margin-top:10px">Угадай 4 из 6 — бустер в подарок. Кружок у команды в строке — и прогноз готов.</p></section></aside>`
+  return `<div class="re"><div class="re-main"><div class="re-top"><div><h2>Матчи сегодня</h2><p>Вторник, 6 октября · 6 матчей · в составе ${в.length} из 5</p></div><div class="re-days">${[['Вчера', '5 окт'], ['Сегодня', '6 окт'], ['Завтра', '7 окт'], ['Чт', '8 окт']].map(([d, s], i) => `<button type="button" aria-pressed="${i === 1}">${d}<small>${s}</small></button>`).join('')}</div></div>${список}</div>${право}</div>`
+}
+</script>
+<script src="_mf.js"></script>
+</body></html>

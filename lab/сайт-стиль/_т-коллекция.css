@@ -1,0 +1,28 @@
+/* Набор 3 · Коллекция — как Sorare: глубокий синий, свет из-за карт, мягкое стекло панелей, крупные карты и заголовки.
+   Заголовки — Unbounded, текст — Inter */
+body.t-coll {
+  --s-page: #070a1c; --s-bg: #0a0e26; --s-panel: #121838e6; --s-panel-2: #1b2350; --s-line: #2c3670; --s-line-2: #222b5c;
+  --s-text: #eef1ff; --s-muted: #9aa3d6; --s-accent: #5b8cff; --s-accent-soft: #5b8cff26; --s-on-accent: #ffffff;
+  --s-live: #ff5c7a; --s-coin: #ffd166; --s-win: #3ee0a1; --s-lose: #ff8a8a; --s-track: #232c5e; --s-shadow: #02030c;
+  --s-team-a: #8fb3ff; --s-team-b: #7ee08a; --s-hd-bg: #0a0e26cc; --s-hd-h: 66px;
+  --s-medal: linear-gradient(145deg, #ffe7a3, #d9a441 55%, #6e4a0c); --s-medal-ink: #3a2600;
+  --s-gold: #ffd166; --s-silver: #cfd8ff; --s-bronze: #e3a07a;
+  --s-font: 'Inter', system-ui, sans-serif; --s-font-h: 'Unbounded', 'Inter', sans-serif; --s-font-num: 'Unbounded', 'Inter', sans-serif; --s-fs: 14px;
+  --s-r: 20px; --s-r-s: 14px; --s-r-btn: 999px; --s-r-pill: 999px; --s-pad: 22px; --s-gap: 18px; --s-row-pad: 12px;
+  --s-h3: 15px; --s-h3-w: 600; --s-h1: 40px; --s-h1-w: 700; --s-track-h1: -.03em; --s-nick-w: 800; --s-num-w: 700; --s-score-w: 700; --s-team-w: 600;
+  --s-panel-edge: inset 0 0 0 1px #ffffff14, inset 0 1px 0 #ffffff1f;
+  --s-btn-glow: 0 8px 24px -8px #5b8cffaa;
+}
+body.t-coll { background: radial-gradient(60% 40% at 50% 0%, #2a3a9a55, transparent 70%), var(--s-page); }
+.t-coll .ap { background: radial-gradient(70% 50% at 70% 0%, #3b4fd133, transparent 70%), radial-gradient(50% 40% at 0% 100%, #8a5cf022, transparent 70%), var(--s-bg); }
+.t-coll .a-panel { backdrop-filter: blur(10px); }
+.t-coll .a-feat { background: radial-gradient(60% 100% at 20% 0%, #5b8cff33, transparent 70%), radial-gradient(60% 100% at 80% 0%, #7ee08a22, transparent 70%), var(--s-panel); }
+.t-coll .a-brand__mark { border-radius: 50%; background: linear-gradient(135deg, #5b8cff, #a77bff); }
+.t-coll .a-mine__it { background: linear-gradient(180deg, #1f2a66, #141a40); }
+.t-coll .a-chest { background: radial-gradient(50% 60% at 50% 60%, #f1c24c33, transparent 70%), radial-gradient(70% 80% at 50% 100%, #5b8cff33, transparent 70%), var(--s-panel); padding: 36px; }
+.t-coll .a-chest__cards { gap: 44px; }
+.t-coll .a-plh { background: radial-gradient(40% 120% at 12% 50%, #5ee6f244, transparent 70%), radial-gradient(60% 120% at 100% 0%, #5b8cff33, transparent 70%), var(--s-panel); }
+.t-coll .a-plh__nick { background: linear-gradient(180deg, #ffffff, #b9c8ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.t-coll .a-chips button[aria-pressed='true'] { background: var(--s-accent); color: #fff; }
+.t-coll .a-badge__medal { box-shadow: 0 0 0 3px #ffffff22, 0 0 30px -4px #d9a441aa; }
+.t-coll .a-ob__main { padding: 32px 40px; }

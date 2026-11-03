@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Archivo:ital,wdth,wght@1,62..125,700..900&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_footer.css" />
+<style>
+/* v2 · По мотивам Esports World Cup: футер как постер — огромный знак FANTASY / DOTA 2 на тёмной диагональной фактуре, ссылки колонками слева,
+   «Честная игра» тремя значками; внизу одной полосой: копирайт, приложение, соцсети, язык. Без капса: знак — ник-шрифтом, курсивом */
+.f2 { position: relative; margin-top: 12px; overflow: hidden; isolation: isolate; color: var(--c-muted);
+  background: radial-gradient(60% 90% at 85% 30%, color-mix(in srgb, var(--c-accent) 22%, transparent), transparent 70%),
+    repeating-linear-gradient(118deg, transparent 0 46px, color-mix(in srgb, var(--c-white) 3%, transparent) 46px 47px),
+    linear-gradient(180deg, var(--c-ui-panel), var(--c-ui-bg)); }
+.f2::before { content: ''; position: absolute; inset: 0 0 auto; height: 3px; background: linear-gradient(90deg, var(--c-accent), var(--c-coin)); }
+.f2__main { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 40px; align-items: center; padding: 56px 48px 40px; }
+.f2__links { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+.f2__links h4 { margin: 0 0 12px; color: var(--c-coin); font-size: 13px; font-weight: 700; }
+.f2__links ul { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; font-size: 14px; }
+.f2__links a:hover { color: var(--c-text); }
+.f2__mark { justify-self: end; text-align: right; }
+.f2__mark b { display: block; color: var(--c-white); font: italic 900 132px/.82 'Archivo', var(--font); font-stretch: 125%; letter-spacing: -.035em; text-shadow: 0 20px 60px var(--c-black); }
+.f2__mark b + b { font-size: 92px; background: linear-gradient(90deg, var(--c-accent), var(--c-coin)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.f2__mark p { margin: 18px 0 0; color: var(--c-muted); font-size: 15px; }
+.f2__fair { display: flex; flex-wrap: wrap; gap: 10px; padding: 0 48px 32px; }
+.f2__fair span { display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 999px; background: color-mix(in srgb, var(--c-white) 5%, transparent); box-shadow: inset 0 0 0 1px var(--c-ui-line); color: var(--c-text); font-size: 13px; }
+.f2__fair .ft-ic { font-size: 18px; color: var(--c-coin); }
+.f2__fair .ft-age { height: 20px; font-size: 11px; }
+.f2__band { display: grid; grid-template-columns: 1.2fr auto auto auto; align-items: end; gap: 40px; padding: 22px 48px 26px; border-top: 1px solid var(--c-ui-line); background: color-mix(in srgb, var(--c-black) 35%, transparent); }
+.f2__band small { display: block; margin-bottom: 10px; color: var(--c-coin); font-size: 12px; font-weight: 600; }
+.f2__band .ft-fine { max-width: 420px; }
+.f2__apps { display: flex; gap: 10px; }
+.f2__app { display: inline-flex; align-items: center; gap: 10px; height: 46px; padding: 0 16px 0 12px; border-radius: 8px; background: var(--c-black); box-shadow: inset 0 0 0 1px var(--c-ui-line); color: var(--c-white); }
+.f2__app .ft-ic { font-size: 22px; }
+.f2__app span { display: grid; line-height: 1.1; font-size: 15px; font-weight: 700; }
+.f2__app span i { font-style: normal; font-size: 10px; font-weight: 500; color: var(--c-caption); }
+.f2__soc { display: flex; gap: 6px; }
+.f2__soc a { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 8px; color: var(--c-text); font-size: 19px; }
+.f2__soc a:hover { background: var(--c-ui-item); color: var(--c-coin); }
+.f2__band .ft-lang { background: transparent; box-shadow: inset 0 0 0 1px var(--c-ui-line); }
+@container ft (max-width: 480px) {
+  .f2__main { grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 36px 16px 24px; }
+  .f2__mark { order: -1; justify-self: start; text-align: left; }
+  .f2__mark b { font-size: 64px; } .f2__mark b + b { font-size: 46px; }
+  .f2__links { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 16px; }
+  .f2__fair { padding: 0 16px 24px; gap: 8px; }
+  .f2__band { grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 20px 16px 24px; }
+  .f2__band > div:first-child { order: 4; }
+  .f2__app { height: 42px; padding: 0 12px 0 10px; } .f2__app span { font-size: 13px; }
+}
+</style></head>
+<body><div class="ft-lab" id="lab"></div>
+<template id="ft">
+<footer class="ft f2">
+  <div class="f2__main">
+    <div class="f2__links">
+      <div><h4>Играть</h4><ul><li><a>Как это работает</a></li><li><a>Как считаются очки</a></li><li><a>Бустеры</a></li><li><a>Маркет карт</a></li><li><a>Лидеры</a></li></ul></div>
+      <div><h4>Помощь</h4><ul><li><a>Вопросы и ответы</a></li><li><a>Поддержка</a></li><li><a>Статус сервиса</a></li><li><a>Партнёрам и командам</a></li><li><a>Пресса</a></li></ul></div>
+      <div><h4>Правила</h4><ul><li><a>Соглашение</a></li><li><a>Бустеры и шансы</a></li><li><a>Честная игра</a></li><li><a>Конфиденциальность</a></li><li><a>Cookies</a></li></ul></div>
+    </div>
+    <div class="f2__mark"><b>Fantasy</b><b>Dota 2</b><p>Сезон 1 · DreamLeague, BLAST, The International</p></div>
+  </div>
+  <div class="f2__fair" aria-label="Честная игра">
+    <span><i data-ic="coin"></i>Монеты не покупаются и не выводятся</span>
+    <span><i data-ic="odds"></i>Шансы каждого бустера открыты</span>
+    <span><span class="ft-age">18+</span>Fantasy — не ставки, играй в удовольствие</span>
+  </div>
+  <div class="f2__band">
+    <div><small>Fantasy · Dota 2</small><p class="ft-fine">© 2026 Fantasy · Dota 2. Не связан с Valve и Riot Games. Данные матчей — Liquipedia и OpenDota.</p></div>
+    <div><small>Играй с телефона</small><div class="f2__apps"><a class="f2__app"><i data-ic="apple"></i><span><i>Скачать в</i>App Store</span></a><a class="f2__app"><i data-ic="play"></i><span><i>Доступно в</i>Google Play</span></a></div></div>
+    <div><small>Мы в соцсетях</small><div class="f2__soc"><a aria-label="Telegram"><i data-ic="tg"></i></a><a aria-label="Twitch"><i data-ic="twitch"></i></a><a aria-label="YouTube"><i data-ic="yt"></i></a><a aria-label="Discord"><i data-ic="discord"></i></a><a aria-label="X"><i data-ic="x"></i></a></div></div>
+    <div><small>Язык</small><span class="ft-lang"><i data-ic="globe"></i>Русский<i data-ic="down"></i></span></div>
+  </div>
+</footer>
+</template>
+<script src="_footer.js"></script>
+<script>FOOTER.страница({
+  имя: 'v2 · По мотивам Esports World Cup',
+  мотив: '<b>По мотивам Esports World Cup:</b> футер как постер — огромный знак на тёмной диагональной фактуре, ссылки колонками слева, а всё служебное (копирайт, приложение, соцсети, язык) — одной полосой внизу с подписями над каждым блоком.',
+  описание: 'Самый брендовый: последний экран страницы запоминается. Ссылок столько же, сколько в v1, но сгруппированы в три колонки; «Честная игра» — тремя значками над полосой.',
+})</script>
+</body></html>

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<base href="../../gs-match/" />
+<title>v19 · Статистика к матчу</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../widget-tournament/_w.css" />
+<link rel="stylesheet" href="../widget-tournament-5/_t5.css" />
+<link rel="stylesheet" href="../widget-subs-2/_s2.css" />
+<link rel="stylesheet" href="../widget-subs-2/_s6v6.css" />
+<link rel="stylesheet" href="../widget-subs-2/_s8.css" />
+<link rel="stylesheet" href="../widget-transfers-2/_tr4.css" />
+<link rel="stylesheet" href="../widgets-unified/_type.css" />
+<link rel="stylesheet" href="../widgets-unified/_cons.css" />
+<link rel="stylesheet" href="../widget-tournament-6/_t6.css" />
+<link rel="stylesheet" href="../widget-subs-3/_s3.css" />
+<link rel="stylesheet" href="../widget-transfers-3/_tr5.css" />
+<link rel="stylesheet" href="../widget-mvp-3/_m5.css" />
+<link rel="stylesheet" href="../widgets-23/_uni.css" />
+<link rel="stylesheet" href="_gs.css" />
+<link rel="stylesheet" href="../w-gold/_wgold.css" /><link rel="stylesheet" href="../w-players/_wplayers.css" /><link rel="stylesheet" href="../w-header/_wheader.css" /><link rel="stylesheet" href="../w-bar/_wbar.css" /><link rel="stylesheet" href="../w-maps/_wmseg.css" /><link rel="stylesheet" href="../w-preview/_wstat.css" />
+<link rel="stylesheet" href="../gs-solo/_solo.css" />
+</head>
+<!-- gs-solo v19 — как v18, но страница матча v28: «Статистика к матчу» вместо фактов и очных (дирижёр 26.10).
+     gs-solo v18 — как v17, но страница матча v27: от 1920 главная колонка делится пополам (дирижёр 27.10).
+     gs-solo v17 — как v16, но страница матча v26: карты матча — в главной колонке (дирижёр 27.10).
+     gs-solo v16 — как v15, но страница матча v25: карты матча под шапкой — виджет из лабы w-maps (дирижёр 26.10).
+     gs-solo v15 — как v14, но страница матча v24: шапка матча без вкладок (дирижёр 26.10).
+     gs-solo v14 — как v13, но страница матча v23: остров нижнего бара — виджет из лабы w-bar (на компьютере — «Вопрос матча» в правой колонке) (дирижёр 26.10).
+     
+     gs-solo v13 — как v12, но страница матча v22: шапка матча — виджет из лабы w-header (дирижёр 26.10).
+      gs-solo v12 — как v11, но страница матча v21: «Перевес по золоту» и «Игроки» — виджеты из лаб w-gold и w-players, на холсте рисуется заново под ширину (дирижёр 26.10).
+      gs-solo v11 — как v10, но у каждой колонки на холсте подписана её ширина («главная колонка · 372 px»), подписи можно скрыть (?cols=0 — переключатель в панели песочницы) (дирижёр 26.10).
+     v10 — как v9, но в разделе «Виджеты» песочницы ширина экрана — это само окно песочницы: «Десктоп» — 1440, «Мобилка» — 390, свою ширину — в поле справа;
+     холст на всё окно, без своей ручки (дирижёр 26.10). В лабе (без ?w=) ручка остаётся — там окно всегда 1440.
+     v9 — как v8, но в «Виджет» есть и шапка сайта (GoatScout, вход) — во всю ширину, как шапка матча (дирижёр 26.10).
+     v8 — как v7, но порог двух колонок один — 800 (переключателя нет), и без «ушей»: колонки на всю ширину экрана, главная тянется сколько угодно,
+     поля по бокам 32 на двух колонках, 12 — на одной; страница матча v20 (дирижёр 26.10).
+     v7 — как v6, но в «Виджет» — все виджеты страницы матча v19 (шапка во всю ширину, главная колонка, правая), список — тот же, что у «Подписей виджетов» (дирижёр 26.10).
+     Шапка встаёт во всю ширину над колонками, виджет главной — в главную, правой — в правую (на одной колонке — в неё).
+     v6-bp — как v5, но порог «одна колонка → две» выбирается в панели («Порог»: 720 · 768 · 800 · 900 · 1024, по умолчанию 800) (дирижёр 26.10).
+     v5 — ручка тянет ширину ЭКРАНА, а не виджета (дирижёр 26.10): на холсте видны колонки страницы, виджет стоит в своей.
+     Меньше порога — одна колонка (поля 12), виджет во всю ширину; от порога — две: главная + правая 320 (между ними 16, поля 24, всё не шире 1120).
+     «Перевес по золоту» — в главной колонке и перестраивается под её ширину (подписи того же размера), «Турнир» — в правой, 320.
+     Страница матча (gs-match v18) строится скрыто: график — копия карточки, турнир рисуется своим кодом. Пути — от gs-match (<base>). Обвязка — ../gs-solo/_solo.js.
+     v5-screen, v4-center, v3-two, v2-pick, v1-gold — в _old -->
+<body class="uni solo-page"><div class="solo"><div class="scr" id="solo-scr"><div class="scr-in"><div class="scr-col scr-top"><i>во всю ширину</i></div><div class="scr-cols"><div class="scr-col scr-main"><i>главная колонка</i></div><div class="scr-col scr-side"><i>правая колонка</i></div></div></div></div>
+<div class="solo-grip" id="solo-grip" title="Тяни — ширина экрана"><b id="solo-w"></b></div><div class="solo-box" id="solo-box"></div></div>
+<div class="app"><header class="pt" id="portal"></header><div id="feed"></div><div id="more"></div></div><nav class="tabbar" id="tabbar" aria-label="Разделы"></nav>
+<dialog class="sh" id="sheet" aria-label="Игрок"></dialog><div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>window.GS_GRAPH = 'w'; window.GS_PLAYERS = 'w'; window.GS_LAYOUT = 'v4'; window.GS_HD = 'w'; window.GS_BAR = 'w'; window.GS_TABS = false; window.GS_MSEG = 'w'; window.GS_MSEG_MAIN = true; document.addEventListener('DOMContentLoaded', () => document.body.classList.add('wide3')); window.GS_V20 = true; window.GS_STAT = 'w'; window.GS_STATE = 'live'</script><!-- наши виджеты (правая колонка компьютера) — код и данные из их лаб -->
+<script src="../widget-tournament-4/_data.js"></script><script src="../widget-tournament-5/_logos.js"></script><script src="../widget-tournament-5/_demo.js"></script>
+<script src="../widget-subs-2/_data.js"></script><script src="../widget-subs-2/_games.js"></script><script src="../widget-subs-3/_s3data.js"></script>
+<script>window.TR5_BASE = '../widget-transfers-2/'; window.MVP2_BASE = '../widget-mvp-2/'; window.TR5_CFG = { gameDate: true }</script>
+<script src="../widget-transfers/_data.js"></script><script src="../widget-transfers-2/_paths.js"></script><script src="../widget-transfers-2/_mix.js"></script><script src="../widget-transfers-3/_free.js"></script>
+<script src="../widget-mvp/_data.js"></script><script src="../widget-mvp-2/_paths.js"></script>
+<script src="data/_matches.js"></script><script src="data/_tournament.js"></script><script src="_wfit.js"></script>
+<script src="../widgets-unified/_cons.js"></script><script src="../widget-tournament-6/_t6.js"></script><script src="../widget-subs-3/_s3.js"></script><script src="../widget-transfers-3/_tr5.js"></script><script src="../widget-mvp-3/_m5.js"></script>
+<script src="../w-gold/_wgold.js"></script><script src="../w-players/_wplayers.js"></script><script src="../w-header/_wheader.js"></script><script src="../w-bar/_wbar.js"></script><script src="../w-maps/_wmseg.js"></script><script src="../w-preview/_wstat.js"></script><script src="_gs.js"></script><script src="../gs-solo/_solo.js"></script>
+</body></html>

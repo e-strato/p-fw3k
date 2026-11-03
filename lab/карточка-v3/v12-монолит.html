@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_v3.css" />
+<style>
+/* v12 · Монолит — фото на всю карту, блоки данных прижаты к краям, как в v1: номер карты — в левом верхнем углу, рейтинг — в правом,
+   под рейтингом герои строками; снизу сплошной блок: позиция полосой цвета силы, ник, статы, команда. Кант идёт поверх блоков и не рвётся.
+   Только скругления, внешний угол блока повторяет радиус карты. Шрифт один — Inter */
+.m12 { --r: 1em; --shape: inset(0 round 1em); --f-disp: 'Inter'; --f-ui: 'Inter'; --ink: color-mix(in srgb, var(--c-card-ink) 86%, transparent); }
+.m12__face, .m12 .bk { font-family: 'Inter', sans-serif; }
+.m12__face { position: absolute; inset: 0; }
+.m12__plate { position: absolute; inset: 0; border-radius: var(--r); overflow: hidden; background: var(--c-card-ink);
+  box-shadow: 0 1.4em 2.6em -1em color-mix(in srgb, var(--c-black) 85%, transparent); }
+
+/* 2 Фон: на всю карту — тёмный цвет силы, логотип команды крупно за игроком */
+.m12__bg { position: absolute; inset: 0;
+  background:
+    radial-gradient(70% 45% at 48% 26%, color-mix(in srgb, var(--tier) 32%, transparent), transparent 75%),
+    linear-gradient(180deg, color-mix(in srgb, var(--tier-2) 90%, var(--c-card-ink)), var(--c-card-ink) 75%); }
+.m12__logo { left: 1.5em; top: 2.4em; width: 17em; height: 14.5em; background: color-mix(in srgb, var(--tier) 22%, transparent); }
+.m12__scan { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0 .35em, color-mix(in srgb, var(--c-black) 18%, transparent) .35em .42em); }
+
+/* 3 Рамка: кант поверх всех блоков — граница карты не рвётся */
+.m12__edge { position: absolute; inset: 0; z-index: 12; border-radius: var(--r); pointer-events: none; box-shadow: inset 0 0 0 .16em var(--tier); }
+
+/* 4 Эффекты: блеск по фото; с Prism — перелив по полосе позиции; у Legend — фольга по блоку рейтинга */
+.m12__sheen { position: absolute; inset: 0; mix-blend-mode: soft-light;
+  background: repeating-linear-gradient(100deg, var(--c-rarity-holo-1) 0 8%, var(--c-rarity-holo-2) 16%, var(--c-rarity-holo-3) 24%, var(--c-rarity-holo-4) 32%, var(--c-rarity-holo-1) 40%);
+  background-size: 300% 100%; background-position: calc(var(--mx, 50%) + var(--drift)) 0; animation: drift 7s ease-in-out infinite alternate; }
+.m12__foil { position: absolute; inset: 0; mix-blend-mode: soft-light;
+  background: linear-gradient(118deg, transparent 25%, var(--c-white) 50%, transparent 75%); background-size: 300% 100%;
+  background-position: calc(100% - var(--drift) * 3) 0; animation: drift 3s ease-in-out infinite alternate; }
+
+/* 5 Фото: на всю карту, туловище уходит в нижний блок, свечение за головой */
+.m12__halo { position: absolute; left: 10.4em; top: 5.6em; width: 13em; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--tier-hi) 60%, transparent), color-mix(in srgb, var(--tier) 22%, transparent) 55%, transparent); }
+.m12 .ph { left: .4em; top: .8em; width: 19.6em;
+  -webkit-mask: linear-gradient(180deg, var(--c-black) 72%, transparent 86%); mask: linear-gradient(180deg, var(--c-black) 72%, transparent 86%); }
+
+/* 7 Раскладка: блоки у краёв. Слева сверху — номер карты, справа сверху — рейтинг, под ним герои строками */
+.m12__serial { position: absolute; left: 0; top: 0; z-index: 7; display: grid; padding: .8em 1.1em .7em 1em; line-height: 1.2;
+  border-radius: var(--r) 0 .8em 0; background: var(--ink); }
+.m12__serial b { font-size: .9em; font-weight: 800; color: var(--tier-hi); }
+.m12__serial small { font-size: .6em; font-weight: 500; color: var(--c-muted); }
+.m12__ovr { position: absolute; right: 0; top: 0; z-index: 7; width: 6.4em; height: 4.8em; display: grid; place-content: center; overflow: hidden;
+  border-radius: 0 var(--r) 0 0; background: linear-gradient(160deg, var(--tier-hi), var(--tier) 60%); color: var(--c-card-dark-text); }
+.m12__ovr b { position: relative; font-size: 3.2em; font-weight: 900; line-height: 1; letter-spacing: -.05em; }
+.m12__heroes { position: absolute; right: 0; top: 4.8em; z-index: 7; width: 6.4em; display: grid; padding: .3em .55em .4em; border-radius: 0 0 0 .8em; background: var(--ink); }
+.m12__heroes div { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: .5em; padding: .3em 0; }
+.m12__heroes div + div { box-shadow: inset 0 .05em 0 color-mix(in srgb, var(--c-white) 9%, transparent); }
+.m12__heroes .hero-ic { width: 2.1em; aspect-ratio: 1; border-radius: .4em; }
+.m12__heroes span { display: grid; line-height: 1.15; }
+.m12__heroes b { font-size: .74em; font-weight: 800; }
+.m12__heroes small { font-size: .62em; font-weight: 600; color: var(--tier-hi); }
+
+/* 8 Нижний блок (заход 2, 01.10: «меньше пустого места»): без полосы позиции. Ник слева, напротив него справа — позиция и имя;
+   ниже статы, внизу команда строкой той же высоты, что и ряды выше */
+.m12__block { position: absolute; left: 0; right: 0; bottom: 0; height: 10.6em; z-index: 4; background: var(--c-card-ink);
+  box-shadow: 0 -.06em 0 color-mix(in srgb, var(--tier) 45%, transparent); }
+
+/* 6 Игрок: ник слева */
+.m12__who { position: absolute; left: 1.3em; top: 21.2em; z-index: 6; }
+.m12__nick { font-weight: 800; line-height: 1; letter-spacing: -.03em; white-space: nowrap; }
+
+/* 8 Напротив ника справа: позиция цветом силы, под ней флаг и настоящее имя */
+.m12__side { position: absolute; right: 1.3em; top: 21.25em; z-index: 6; display: grid; justify-items: end; gap: .3em; text-align: right; }
+.m12__role { position: relative; overflow: hidden; font-size: 1em; font-weight: 700; white-space: nowrap; }
+.m12__role b { font-weight: 900; color: var(--tier-hi); }
+.m12__name { display: flex; align-items: center; gap: .45em; font-size: .74em; font-weight: 500; color: var(--c-muted); white-space: nowrap; }
+
+/* Статы строкой с разделителями, команда — строкой во всю ширину под чертой */
+.m12__stats { position: absolute; left: 1em; right: 1em; top: 24.6em; z-index: 6; display: grid; grid-template-columns: repeat(6, 1fr); text-align: center; }
+.m12__stats span + span { box-shadow: inset .05em 0 0 color-mix(in srgb, var(--c-white) 10%, transparent); }
+.m12__stats b { display: block; font-size: 1.35em; font-weight: 800; line-height: 1; }
+.m12__stats small { display: block; margin-top: .3em; font-size: .48em; font-weight: 600; color: var(--c-muted); }
+.m12__team { position: absolute; left: 0; right: 0; bottom: 0; height: 2.7em; z-index: 6; display: flex; justify-content: center; align-items: center; gap: .5em;
+  border-top: .06em solid color-mix(in srgb, var(--c-white) 10%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tier) 20%, var(--c-card-ink)), color-mix(in srgb, var(--tier) 6%, var(--c-card-ink)) 50%, color-mix(in srgb, var(--tier) 20%, var(--c-card-ink))); }
+.m12__team .logo { width: 1.7em; height: 1.7em; }
+.m12__team b { font-size: .9em; font-weight: 700; }
+
+/* 9 Оборот: те же блоки у краёв — шапка с рейтингом в углу, статы полосками, герои, форма, кнопка во всю ширину снизу */
+.m12 .bk { box-shadow: inset 0 0 0 .16em var(--tier); padding: 0 0 0; gap: 0; background: var(--c-card-ink); }
+.m12 .bk > :not(.bk__mask):not(.bk__top):not(.bk__btn) { margin: 0 1.3em; }
+.m12 .bk__top { padding: 1em 0 1em 1.3em; gap: .7em; margin-bottom: .6em;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tier-2) 80%, var(--c-card-ink)), var(--c-card-ink)); }
+.m12 .bk__top em { align-self: stretch; display: grid; place-content: center; width: 2.1em; margin: -.42em 0; border-radius: 0 .4em 0 .3em; font-weight: 900; font-size: 2.4em;
+  background: linear-gradient(160deg, var(--tier-hi), var(--tier) 60%); color: var(--c-card-dark-text); }
+.m12 .bk__stats { margin-bottom: .8em !important; }
+.m12 .bk__heroes { margin-bottom: .8em !important; }
+.m12 .bk__lbl { margin-bottom: .4em !important; }
+.m12 .bk__btn { height: 3.2em; border-radius: 0; margin-top: auto; }
+</style></head>
+<body><section class="section v3">
+  <div class="sec-head">
+    <h2 class="sec-title">v12 · Монолит</h2>
+    <p class="sec-lead">Фото на всю карту, блоки данных прижаты к краям, как язычки в v1, и кант идёт поверх них. Номер карты в левом верхнем углу, рейтинг в правом, под ним герои строками.
+      Снизу сплошной блок: ник, напротив него позиция и имя, ниже статы и команда. Только скругления. Шрифт один — Inter.</p>
+  </div>
+  <div id="v3"></div>
+</section>
+<script src="_v3.js"></script>
+<script>
+V3.страница({
+  класс: 'm12',
+  иерархия: [
+    'Скруглённый прямоугольник. Блоки прижаты к краям, их внешний угол повторяет радиус карты.',
+    'На всю карту: тёмный цвет силы, логотип команды крупно за игроком. С Holo по фото идут тонкие строки развёртки.',
+    'Кант цвета силы поверх всех блоков — граница карты не рвётся.',
+    'С Holo по фото идёт мягкий радужный перелив, у Legend блок рейтинга покрыт фольгой.',
+    'Игрок на всю карту, туловище уходит в нижний блок, за головой свечение.',
+    'Ник крупно слева; напротив, справа — флаг и настоящее имя под позицией.',
+    'Рейтинг — блоком в правом верхнем углу, залит цветом силы. Под ним блок трёх героев строками (матчи и винрейт). Номер карты и сезон — блоком в левом верхнем углу, в цвете силы.',
+    'Нижний блок: напротив ника справа — позиция цветом силы. Статы строкой с разделителями, команда строкой во всю ширину внизу — той же высоты, что ряды выше.',
+    'Свой оборот с теми же блоками: шапка с рейтингом в углу, статы полосками, герои, форма, кнопка «Страница игрока» во всю ширину снизу.',
+  ],
+  оборот: (п, r, h) => h.оборот(п),
+  лицо: (п, r, h) => `
+<div class="m12__face">
+  <div class="m12__plate" data-l="1">
+    <div class="m12__bg" data-l="2">${h.маска(п, 'm12__logo')}<i class="m12__scan" data-deco="1"></i></div>
+    <i class="m12__halo" data-l="5"></i>
+    ${h.фото(п)}
+    <i class="m12__sheen" data-l="4" data-deco="1"></i>
+    <div class="m12__block" data-l="8"></div>
+    ${h.блеск(r)}
+  </div>
+  <i class="m12__edge" data-l="3"></i>
+  <div class="m12__serial" data-l="7"><b>${h.серия(п)}</b><small>${h.СЕЗОН}</small></div>
+  <div class="m12__ovr" data-l="7"><i class="m12__foil" data-l="4" data-deco="3"></i><b>${п.рейтинг}</b></div>
+  <div class="m12__heroes" data-l="7">${п.герои.map((г) => `<div>${h.герой(г)}<span><b>${г[2]} М</b><small>${г[3]}%</small></span></div>`).join('')}</div>
+  <div class="m12__who" data-l="6"><div class="m12__nick" style="font-size: ${Math.min(2.5, 10.5 / (п.ник.length * .6)).toFixed(2)}em">${п.ник}</div></div>
+  <div class="m12__side"><span class="m12__role" data-l="8"><b>Pos ${п.pos}</b> · ${h.РОЛИ[п.pos]}</span>${п.имя ? `<span class="m12__name" data-l="6">${h.флаг(п)}${п.имя}</span>` : ''}</div>
+  <div class="m12__stats" data-l="8">${h.статы(п).map((с) => `<span><b data-v="${с.ур}">${с.v}</b><small>${с.к}</small></span>`).join('')}</div>
+  <div class="m12__team" data-l="8">${h.лого(п)}<b>${h.команда(п)}</b></div>
+</div>`,
+})
+</script>
+</body></html>

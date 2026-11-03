@@ -1,0 +1,35 @@
+/* v7: сверху — место «во всю ширину» (шапка матча), под ним колонки.
+   gs-solo — виджет один на странице (дирижёр 26.10). Страница матча строится скрыто, за краем экрана.
+   v5: холст — «экран» шириной от ручки, внутри пунктиром колонки страницы, виджет — в своей колонке */
+.solo-page .app, .solo-page .tabbar{ position:absolute; left:-20000px; top:0; visibility:hidden; }
+.solo{ display:flex; align-items:stretch; padding:24px; min-height:100vh; box-sizing:border-box; }
+.solo-empty{ margin:0; padding:24px; color:var(--w-muted-fg); }
+.solo-grip{ flex:none; position:relative; width:12px; margin-left:4px; cursor:ew-resize; touch-action:none; border-radius:6px; background:var(--w-border); }
+.solo-grip:hover, .solo-grip.is-on{ background:var(--w-ring); }
+.solo-grip b{ position:absolute; top:0; left:20px; white-space:nowrap; font:600 13px/1.5 var(--w-font); color:var(--w-fg); }
+.solo-grip b small{ display:block; font-weight:400; color:var(--w-muted-fg); }
+
+/* Экран: рамка; внутри — контейнер страницы на всю ширину (v8: без «ушей», поля 32; на одной колонке — 12) */
+.scr{ flex:none; box-sizing:border-box; border:1px solid var(--w-ring); border-radius:12px; background:var(--w-page); }
+.scr-in{ display:flex; flex-direction:column; gap:24px; padding:16px 32px; }
+.scr-cols{ display:flex; gap:16px; }
+.scr-col{ position:relative; min-height:48px; border:1px dashed var(--w-border); border-radius:8px; }
+.scr-col > i{ position:absolute; top:-12px; left:8px; padding:0 4px; font:500 11px/16px var(--w-font); font-style:normal; color:var(--w-muted-fg); background:var(--w-page); }
+.scr-main{ flex:1; min-width:0; }
+.scr-cols .scr-col{ min-height:calc(100vh - 160px); }
+#solo-box .gm-hd{ position:static; } /* шапка в рамке не липнет */
+.scr-side{ flex:none; width:320px; }
+.scr.is-one .scr-in{ padding:16px 12px; }
+.scr.is-one .scr-side{ display:none; }
+.solo-box > .cd{ margin:0; }
+/* Виджет правой колонки — во всю ширину своей колонки (на странице у него 320) */
+#solo-box .gm-wd .w, #solo-box .gm-wd .w.m6{ width:100%; }
+
+/* v10: в разделе «Виджеты» холст — всё окно (ширину задаёт окно песочницы), без ручки; подпись — в углу холста */
+.solo-win .solo{ padding:0; }
+.solo-win .scr{ flex:1; border:0; border-radius:0; }
+.solo-win .solo-grip{ position:absolute; top:4px; right:32px; width:auto; margin:0; background:none; cursor:default; }
+.solo-win .solo-grip b{ position:static; font:500 11px/16px var(--w-font); color:var(--w-muted-fg); }
+/* v11: подписи колонок — название · ширина; ?cols=0 — скрыты */
+.scr-col > i{ font-variant-numeric:tabular-nums; }
+.no-cols .scr-col > i{ display:none; }

@@ -1,0 +1,575 @@
+/* Лаба w-preview-2 — «Превью» (созвон 02.11 §1.7). Токены — widget-tournament/_w.css, widgets-unified/_type.css. */
+.ws2 { display: flex; flex-direction: column; font-family: var(--w-font); }
+.ws2-hd { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; padding: 12px var(--g-pad, 12px); }
+.ws2-hd small { font: var(--t-sub); color: var(--w-muted-fg); text-align: center; }
+.ws2-t { display: inline-flex; align-items: center; gap: 8px; min-width: 0; } .ws2-t--b { justify-content: flex-end; }
+.ws2-t b { font: var(--t-title); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws2-lg { width: 24px; height: 24px; object-fit: contain; flex: none; }
+.ws2-rs { padding: 0 var(--g-pad, 12px) 4px; }
+/* строка: значение слева у края · показатель по центру · значение справа у края */
+.ws2-r { display: grid; grid-template-columns: 1fr minmax(120px, auto) 1fr; align-items: center; column-gap: 12px; min-height: 40px; border-top: 1px solid var(--w-border); }
+.ws2-k { font: var(--t-sub); color: var(--w-muted-fg); text-align: center; white-space: nowrap; }
+.ws2-v { justify-self: start; min-width: 0; padding: 2px 8px; margin-left: -8px; border-radius: 6px; font: 600 14px/20px var(--w-font); color: var(--w-muted-fg); white-space: nowrap; }
+.ws2-v--b { justify-self: end; margin-left: 0; margin-right: -8px; }
+.ws2-v.is-best { color: var(--w-fg); background: var(--w-muted); }
+/* v3 · полоса: две половины от центра — левая растёт влево, правая вправо; тонкая, лучшая — белая */
+.ws2--bars .ws2-r { padding-bottom: 10px; }
+.ws2-bar { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; height: 3px; }
+.ws2-bar span { display: flex; height: 100%; border-radius: 2px; background: var(--w-muted); overflow: hidden; }
+.ws2-bar span.a { justify-content: flex-end; }
+.ws2-bar i { height: 100%; border-radius: 2px; background: var(--w-muted-fg); opacity: .5; }
+.ws2-bar i.is-best { background: var(--w-fg); opacity: 1; }
+/* последние 5 — зеркально: слева «В Соперник … 2:0 20 авг», справа «20 авг 2:1 … Соперник В» */
+.ws2-l5h { display: flex; justify-content: center; padding: 12px var(--g-pad, 12px) 4px; border-top: 1px solid var(--w-border); font: var(--t-sub); color: var(--w-muted-fg); }
+.ws2-l5 { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; padding: 0 var(--g-pad, 12px) 12px; }
+.ws2-f { display: grid; align-items: center; column-gap: 8px; height: 30px; }
+.ws2-f.a { grid-template-columns: 18px minmax(0, 1fr) 32px 48px; }
+.ws2-f.b { grid-template-columns: 48px 32px minmax(0, 1fr) 18px; }
+.ws2-f i { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 4px; font: 700 10px/1 var(--w-font); font-style: normal; }
+.ws2-f i.W { background: var(--w-up-bg); color: var(--w-up); } .ws2-f i.L { background: var(--w-down-bg); color: var(--w-down); }
+.ws2-f span { font: var(--t-cell); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws2-f.b span { text-align: right; }
+.ws2-f b { font: var(--t-num-s); color: var(--w-fg); text-align: center; }
+.ws2-f small { font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; }
+.ws2-f.a small { text-align: right; }
+.ws2-ini { display: inline-grid; place-items: center; border-radius: 6px; background: var(--w-muted); font: 600 9px/1 var(--w-font); color: var(--w-muted-fg); }
+.ws2-dots { display: inline-flex; gap: 3px; } .ws2-dots i { width: 8px; height: 8px; border-radius: 2px; }
+.ws2-dots i.W { background: var(--w-up); } .ws2-dots i.L { background: var(--w-down); }
+
+/* ——— v4 · табло сравнения ——— */
+.ws4-hd { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; padding: 20px var(--g-pad, 12px) 16px; }
+.ws4-tm { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; text-align: center; }
+.ws4-tm b { font: 600 15px/20px var(--w-font); color: var(--w-fg); max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws4-lg { width: 44px; height: 44px; object-fit: contain; } .ws4-lg.ws2-ini { font-size: 12px; }
+.ws4-mid { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
+.ws4-mid b { font: var(--t-title); color: var(--w-fg); } .ws4-mid small { font: var(--t-sub); color: var(--w-muted-fg); }
+.ws4-rs { padding: 0 var(--g-pad, 12px) 12px; }
+.ws4-r { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; column-gap: 12px; padding: 10px 0 12px; border-top: 1px solid var(--w-border); }
+.ws4-r > span { font: var(--t-sub); color: var(--w-muted-fg); text-align: center; white-space: nowrap; }
+.ws4-r > b { font: 600 16px/20px var(--w-font); color: var(--w-muted-fg); } .ws4-r > b:last-of-type { text-align: right; }
+.ws4-r > b.is-best { color: var(--w-fg); }
+.ws4-bar { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; height: 4px; margin-top: 8px; }
+.ws4-bar span { display: flex; border-radius: 2px; background: var(--w-muted); overflow: hidden; } .ws4-bar span.a { justify-content: flex-end; }
+.ws4-bar i { height: 100%; border-radius: 2px; background: #52525b; transition: width .5s ease; } .ws4-bar i.is-best { background: var(--w-fg); }
+
+/* ——— v5 · плитки-показатели ——— */
+.ws5-hd { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 14px var(--g-pad, 12px) 10px; }
+.ws5-hd b { font: var(--t-title); color: var(--w-fg); } .ws5-hd small { font: var(--t-sub); color: var(--w-muted-fg); }
+.ws5-g { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; padding: 0 var(--g-pad, 12px); }
+.ws5-t { display: flex; flex-direction: column; gap: 10px; padding: 12px; border-radius: 10px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.ws5-t > small { font: var(--t-sub); color: var(--w-muted-fg); }
+.ws5-v { display: flex; justify-content: space-between; align-items: center; }
+.ws5-v span { display: inline-flex; align-items: center; gap: 8px; color: var(--w-muted-fg); }
+.ws5-v b { font: 600 18px/22px var(--w-font); } .ws5-v span.is-best { color: var(--w-fg); }
+.ws5-lg { width: 20px; height: 20px; object-fit: contain; flex: none; }
+.ws5-bar { display: flex; gap: 3px; height: 4px; } .ws5-bar i { height: 100%; border-radius: 2px; background: #3f3f46; } .ws5-bar i:last-child { flex: 1; }
+.ws5-bar i.is-best { background: var(--w-fg); }
+.ws5-l5 { display: flex; flex-direction: column; gap: 8px; padding: 14px var(--g-pad, 12px) 14px; }
+.ws5-l5 > small { font: var(--t-sub); color: var(--w-muted-fg); }
+.ws5-lr { display: grid; grid-template-columns: 20px 120px 1fr; align-items: center; gap: 8px; }
+.ws5-lr > b { font: var(--t-cell); font-weight: 600; color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws5-cs { display: flex; gap: 6px; flex-wrap: wrap; }
+.ws5-c { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 8px 0 4px; border-radius: 8px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.ws5-c.W { box-shadow: inset 0 0 0 1px rgba(34,197,94,.45); } .ws5-c.L { box-shadow: inset 0 0 0 1px rgba(239,68,68,.4); }
+.ws5-c b { font: var(--t-num-s); } .ws5-c.W b { color: var(--w-up); } .ws5-c.L b { color: var(--w-down); }
+.ws5-cl { width: 20px; height: 20px; object-fit: contain; } .ws5-cl.ws2-ini { width: 20px; height: 20px; }
+
+/* ——— v6 · форма лицом к лицу ——— */
+.ws6-hd { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; padding: 14px var(--g-pad, 12px) 10px; }
+.ws6-hd small { font: var(--t-sub); color: var(--w-muted-fg); text-align: center; }
+.ws6-tm { display: inline-flex; align-items: center; gap: 8px; min-width: 0; } .ws6-tm.b { justify-content: flex-end; }
+.ws6-tm b { font: 600 15px/20px var(--w-font); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws6-lg { width: 28px; height: 28px; object-fit: contain; flex: none; }
+.ws6-body { display: grid; grid-template-columns: 140px 1fr 140px; gap: 16px; padding: 4px var(--g-pad, 12px) 16px; }
+.ws6-sum { display: flex; flex-direction: column; gap: 10px; } .ws6-sum.b { text-align: right; }
+.ws6-sum div { display: flex; flex-direction: column; } .ws6-sum b { font: 600 18px/22px var(--w-font); color: var(--w-muted-fg); }
+.ws6-sum small { font: var(--t-sub); color: var(--w-muted-fg); } .ws6-sum .is-best b { color: var(--w-fg); }
+.ws6-mid { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 12px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.ws6-mid > small { font: var(--t-sub); color: var(--w-muted-fg); }
+.ws6-ln { display: flex; gap: 6px; }
+.ws6-c { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 52px; padding: 8px 0 6px; border-radius: 8px; background: var(--w-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.ws6-c.W { box-shadow: inset 0 -2px 0 var(--w-up), inset 0 0 0 1px var(--w-border); } .ws6-c.L { box-shadow: inset 0 -2px 0 var(--w-down), inset 0 0 0 1px var(--w-border); }
+.ws6-c b { font: var(--t-num-s); color: var(--w-fg); } .ws6-c.L b { color: var(--w-muted-fg); }
+.ws6-cl { width: 24px; height: 24px; object-fit: contain; } .ws6-cl.ws2-ini { width: 24px; height: 24px; }
+.ws6-vs { font: 700 11px/1 var(--w-font); font-style: normal; color: var(--w-muted-fg); letter-spacing: .04em; }
+body:not(.is-desk) .ws6-body { grid-template-columns: 1fr 1fr; } body:not(.is-desk) .ws6-mid { grid-column: 1 / -1; order: -1; } body:not(.is-desk) .ws6-c { width: 46px; }
+
+/* ——— v7–v9 · две отдельные колонки: у каждой команды своя карточка, одинаковая раскладка (не зеркало) ——— */
+.ws7-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 14px var(--g-pad, 12px) 10px; }
+.ws7-top b { font: var(--t-title); color: var(--w-fg); } .ws7-top small { font: var(--t-sub); color: var(--w-muted-fg); }
+.ws7-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 var(--g-pad, 12px) 12px; }
+body:not(.is-desk) .ws7-cols { grid-template-columns: 1fr; }
+.ws7-col { display: flex; flex-direction: column; min-width: 0; border-radius: 12px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); overflow: hidden; }
+.ws7-hd { display: flex; align-items: center; gap: 10px; padding: 14px 14px 12px; }
+.ws7-lg { width: 36px; height: 36px; object-fit: contain; flex: none; } .ws7-lg.ws2-ini { font-size: 11px; }
+.ws7-nm { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.ws7-nm b { font: 600 15px/20px var(--w-font); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws7-nm small { font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws7-rs { padding: 0 14px; }
+.ws7-r { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 12px; min-height: 40px; border-top: 1px solid var(--w-border); }
+.ws7-r span { font: var(--t-sub); color: var(--w-muted-fg); }
+.ws7-r b { font: 600 15px/20px var(--w-font); color: var(--w-muted-fg); }
+.ws7-r.is-best b { color: var(--w-fg); }
+.ws7-l5h { padding: 12px 14px 4px; border-top: 1px solid var(--w-border); font: var(--t-sub); color: var(--w-muted-fg); }
+.ws7-l5 { padding: 0 14px 10px; }
+.ws7-f { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto 32px; align-items: center; column-gap: 8px; height: 32px; }
+.ws7-fl { width: 20px; height: 20px; object-fit: contain; } .ws7-fl.ws2-ini { width: 20px; height: 20px; }
+.ws7-f span { font: var(--t-cell); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws7-f small { font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; }
+.ws7-f b { font: var(--t-num-s); text-align: right; } .ws7-f b.W { color: var(--w-up); } .ws7-f b.L { color: var(--w-down); }
+/* v8 · крупные цифры 2×2 + чипы соперников */
+.ws8-g { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--w-border); border-top: 1px solid var(--w-border); }
+.ws8-t { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; background: var(--w-mid-bg); }
+.ws8-t b { font: 600 22px/28px var(--w-font); color: var(--w-muted-fg); } .ws8-t small { font: var(--t-sub); color: var(--w-muted-fg); }
+.ws8-t.is-best b { color: var(--w-fg); }
+.ws8-cs { display: flex; gap: 6px; padding: 4px 14px 14px; flex-wrap: wrap; } .ws8-cs > small { font: var(--t-sub); color: var(--w-muted-fg); }
+.ws8-c { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 8px 0 4px; border-radius: 8px; background: var(--w-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.ws8-c b { font: var(--t-num-s); } .ws8-c.W b { color: var(--w-up); } .ws8-c.L b { color: var(--w-down); }
+.ws8-cl { width: 20px; height: 20px; object-fit: contain; } .ws8-cl.ws2-ini { width: 20px; height: 20px; }
+/* v9 · у строки тонкая полоса — доля команды в паре */
+.ws7--cols-bar .ws7-r { grid-template-rows: auto auto; padding: 8px 0 10px; }
+.ws9-bar { grid-column: 1 / -1; display: block; height: 3px; margin-top: 6px; border-radius: 2px; background: var(--w-muted); overflow: hidden; }
+.ws9-bar i { display: block; height: 100%; border-radius: 2px; background: #52525b; transition: width .5s ease; }
+.ws7-r.is-best .ws9-bar i { background: var(--w-fg); }
+
+/* ——— v10–v13 · последние 5 серий в v8 по-другому ——— */
+.ws10-no { padding: 4px 14px 14px; font: var(--t-sub); color: var(--w-muted-fg); }
+/* v10 · список: дата · лого · соперник · счёт · В/П */
+.ws10 { padding: 0 14px 10px; }
+.ws10-r { display: grid; grid-template-columns: 44px 20px minmax(0, 1fr) auto 18px; align-items: center; column-gap: 8px; height: 32px; }
+.ws10-r small { font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; }
+.ws10-lg { width: 20px; height: 20px; object-fit: contain; } .ws10-lg.ws2-ini { width: 20px; height: 20px; }
+.ws10-r span { font: var(--t-cell); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws10-r b { font: var(--t-num-s); color: var(--w-fg); }
+.ws10-r i { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 4px; font: 700 10px/1 var(--w-font); font-style: normal; }
+.ws10-r i.W { background: var(--w-up-bg); color: var(--w-up); } .ws10-r i.L { background: var(--w-down-bg); color: var(--w-down); }
+/* v11 · лента из 5 равных ячеек на всю ширину: лого, счёт, дата, снизу цветная черта */
+.ws11 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 4px 14px 14px; }
+.ws11-c { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0 8px; border-radius: 8px; background: var(--w-bg); }
+.ws11-c.W { box-shadow: inset 0 -2px 0 var(--w-up), inset 0 0 0 1px var(--w-border); } .ws11-c.L { box-shadow: inset 0 -2px 0 var(--w-down), inset 0 0 0 1px var(--w-border); }
+.ws11-lg { width: 24px; height: 24px; object-fit: contain; } .ws11-lg.ws2-ini { width: 24px; height: 24px; }
+.ws11-c b { font: var(--t-num-s); color: var(--w-fg); } .ws11-c.L b { color: var(--w-muted-fg); }
+.ws11-c small { font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; }
+/* v12 · линия-путь: лого соперника, точка на линии (зелёная / красная), счёт */
+.ws12 { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); padding: 6px 14px 14px; }
+.ws12::before { content: ''; position: absolute; left: calc(14px + 10%); right: calc(14px + 10%); top: 45px; height: 2px; border-radius: 1px; background: var(--w-border); }
+.ws12-c { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.ws12-lg { width: 24px; height: 24px; object-fit: contain; } .ws12-lg.ws2-ini { width: 24px; height: 24px; }
+.ws12-c i { width: 10px; height: 10px; border-radius: 50%; box-shadow: 0 0 0 3px var(--w-mid-bg); }
+.ws12-c.W i { background: var(--w-up); } .ws12-c.L i { background: var(--w-down); }
+.ws12-c b { font: var(--t-num-s); color: var(--w-fg); } .ws12-c.L b { color: var(--w-muted-fg); }
+/* v13 · результат крупно: В / П на тонированной плитке, под ним счёт и соперник */
+.ws13 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 4px 14px 14px; }
+.ws13-c { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; padding: 8px 4px; border-radius: 8px; }
+.ws13-c.W { background: var(--w-up-bg); } .ws13-c.L { background: var(--w-down-bg); }
+.ws13-c b { font: 600 18px/22px var(--w-font); } .ws13-c.W b { color: var(--w-up); } .ws13-c.L b { color: var(--w-down); }
+.ws13-c small { font: var(--t-num-s); color: var(--w-fg); }
+.ws13-c span { max-width: 100%; font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ——— v14–v16 · от v13 ——— */
+/* v14 · вместо имени — лого соперника над буквой */
+.ws14 .ws13-c { gap: 4px; padding: 10px 4px 8px; }
+.ws14-lg { width: 22px; height: 22px; object-fit: contain; } .ws14-lg.ws2-ini { width: 22px; height: 22px; }
+/* v15 · спокойнее: фон карточки нейтральный, цвет — только буква и тонкая рамка */
+.ws15 .ws13-c.W, .ws15 .ws13-c.L { background: var(--w-bg); }
+.ws15 .ws13-c.W { box-shadow: inset 0 0 0 1px rgba(34,197,94,.35); } .ws15 .ws13-c.L { box-shadow: inset 0 0 0 1px rgba(239,68,68,.3); }
+/* v16 · слева итог «4–1 за 5», справа плитки без имён (соперник — в подсказке) */
+.ws16 { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 12px; padding: 4px 14px 14px; }
+.ws16-s { display: flex; flex-direction: column; min-width: 44px; }
+.ws16-s b { font: 600 22px/28px var(--w-font); color: var(--w-fg); } .ws16-s small { font: var(--t-sub); color: var(--w-muted-fg); }
+.ws16-g { padding: 0; }
+
+/* ——— v17–v18 · v16 с Win / Loss словами ——— */
+.ws17 .ws13-c b { font: 600 14px/20px var(--w-font); }
+.ws16-s small.W { color: var(--w-up); } .ws16-s small.L { color: var(--w-down); }
+.ws16-s small { white-space: nowrap; }
+/* v19 · v18 без заголовка «Последние 5 серий» и без «подряд»: черта сверху остаётся разделителем */
+.ws8-g + .ws16 { padding-top: 12px; border-top: 1px solid var(--w-border); }
+/* v22 · «Место на турнире»: «3 из 16» — «из 16» мельче */
+.ws22-of { font: var(--t-sub); color: var(--w-muted-fg); }
+
+/* ——— v23 · очные одной строкой ——— */
+.ws23 { margin: 0 var(--g-pad, 12px) 8px; padding: 8px 12px; border-radius: 8px; background: var(--w-mid-bg); font: var(--t-sub); color: var(--w-muted-fg); text-align: center; }
+.ws23 b { margin-left: 6px; font: var(--t-num-s); color: var(--w-fg); }
+/* ——— v24 · составы дуэлями по позициям: слева игрок одной команды, по центру позиция, справа — другой ——— */
+.ws24 { padding: 4px var(--g-pad, 12px) 12px; }
+.ws24-hd { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 10px 0 6px; }
+.ws24-hd b { font: var(--t-title); color: var(--w-fg); } .ws24-hd small { font: var(--t-sub); color: var(--w-muted-fg); }
+.ws24-r { display: grid; grid-template-columns: 1fr 28px 1fr; align-items: center; column-gap: 12px; min-height: 52px; border-top: 1px solid var(--w-border); }
+.ws24-n { display: grid; place-items: center; width: 22px; height: 22px; justify-self: center; border-radius: 6px; background: var(--w-muted); font: 600 11px/1 var(--w-font); font-style: normal; color: var(--w-muted-fg); }
+.ws24-p { display: flex; align-items: center; gap: 10px; min-width: 0; } .ws24-p.b { flex-direction: row-reverse; text-align: right; }
+.ws24-av { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex: none; background: var(--w-muted); }
+.ws24-nm { display: flex; flex-direction: column; gap: 4px; min-width: 0; } .ws24-p.b .ws24-nm { align-items: flex-end; }
+.ws24-nm b { font: 600 14px/18px var(--w-font); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.ws24-hs { display: flex; gap: 3px; }
+.ws24-h { width: 30px; height: 17px; border-radius: 3px; object-fit: cover; }
+/* ——— v25 · основные герои команды в колонке ——— */
+.ws25 { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px 14px; border-top: 1px solid var(--w-border); }
+.ws25 small { font: var(--t-sub); color: var(--w-muted-fg); } .ws25 span { display: flex; gap: 4px; }
+.ws25 .ws24-h { width: 44px; height: 25px; border-radius: 4px; }
+
+/* ——— v28–v30 · отдельный блок «Составы» ——— */
+.ws28-t { display: flex; align-items: center; gap: 8px; height: 40px; } .ws28-t b { font: 600 14px/18px var(--w-font); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws28-lg { width: 20px; height: 20px; object-fit: contain; flex: none; } .ws28-lg.ws2-ini { width: 20px; height: 20px; }
+/* v28 · две колонки: позиция · аватар · ник · герои */
+.ws28 { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; } body:not(.is-desk) .ws28 { grid-template-columns: 1fr; }
+.ws27-r { display: grid; grid-template-columns: 22px 32px minmax(0, 1fr) auto; align-items: center; column-gap: 10px; height: 48px; border-top: 1px solid var(--w-border); }
+.ws27-av { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: var(--w-muted); }
+.ws27-r b { font: 600 14px/18px var(--w-font); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* v29 · по строке на команду: слева команда, справа 5 портретов */
+.ws29 { display: grid; grid-template-columns: 200px 1fr; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--w-border); }
+body:not(.is-desk) .ws29 { grid-template-columns: 1fr; }
+.ws26 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.ws26-p { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
+.ws26-av { position: relative; width: 44px; height: 44px; }
+.ws26-av img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: var(--w-muted); }
+.ws26-av i { position: absolute; right: -2px; bottom: -2px; display: grid; place-items: center; width: 16px; height: 16px; border-radius: 4px; background: #000; font: 600 10px/1 var(--w-font); font-style: normal; color: var(--w-fg); }
+.ws26-p b { max-width: 100%; font: 600 12px/16px var(--w-font); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* v30 · карточки: крупный аватар, ник, позиция словом, герои */
+.ws30-t { margin-top: 4px; }
+.ws30 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding-bottom: 8px; }
+body:not(.is-desk) .ws30 { grid-template-columns: repeat(3, 1fr); }
+.ws30-c { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; padding: 14px 8px 12px; border-radius: 10px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.ws30-av { width: 56px; height: 56px; margin-bottom: 4px; border-radius: 50%; object-fit: cover; background: var(--w-muted); }
+.ws30-c b { max-width: 100%; font: 600 14px/18px var(--w-font); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws30-c small { font: var(--t-sub); color: var(--w-muted-fg); } .ws30-c .ws24-hs { margin-top: 4px; }
+/* v31 · v28 + статистика игрока за турнир: У/С/П, ГПМ, карт; лучшее в паре позиций — белым */
+.ws31-t, .ws31-r { display: grid; grid-template-columns: 22px 32px minmax(0, 1fr) 96px 44px 36px; align-items: center; column-gap: 10px; }
+.ws31-t > b { grid-column: 2 / 4; } .ws31-t .ws28-lg { display: none; }
+.ws31-t small { font: var(--t-sub); color: var(--w-muted-fg); text-align: right; }
+.ws31-r { min-height: 52px; border-top: 1px solid var(--w-border); }
+.ws31-nm { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.ws31-nm b { font: 600 14px/18px var(--w-font); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws31-nm .ws24-h { width: 24px; height: 14px; }
+.ws31-v { font: var(--t-num-s); color: var(--w-muted-fg); text-align: right; white-space: nowrap; }
+.ws31-v i { font-style: normal; } .ws31-v.is-best { color: var(--w-fg); }
+.ws31-v.is-best .k { color: var(--w-up); } .ws31-v.is-best .d { color: var(--w-down); }
+/* v32 · v31 в языке сделанных виджетов: строка-кнопка 52 (подсветка --w-muted, стрелка .w-chev), позиция — чёрный квадратик на аватаре (пики),
+   У/С/П цветом без слэшей (пики: зелёный / красный / серый), замена — серая подложка и «вместо … · на этот матч» (виджет замен) */
+.ws32-t, .ws32-r { display: grid; grid-template-columns: 36px minmax(0, 1fr) 104px 44px 16px; align-items: center; column-gap: 10px; }
+.ws32-t > b { grid-column: 1 / 3; } .ws32-t .ws28-lg { display: none; }
+.ws32-t small { font: var(--t-sub); color: var(--w-muted-fg); text-align: right; }
+.ws32-r { width: calc(100% + 16px); min-height: 52px; margin: 0 -8px; padding: 0 8px; border: 0; border-top: 1px solid var(--w-border); border-radius: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.ws32-r:hover { background: var(--w-muted); }
+.ws32-av { width: 36px; height: 36px; } .ws32-av i { width: 14px; height: 14px; font-size: 9px; background: rgba(0,0,0,.8); }
+.ws32-r .ws31-v { text-align: right; } .ws32-r .ws31-v .k { color: var(--w-up); } .ws32-r .ws31-v .d { color: var(--w-down); } .ws32-r .ws31-v .a { color: var(--w-muted-fg); }
+.ws32-r .ws31-v:not(.is-best) { opacity: .55; }
+.ws32-r .ws31-nm small { font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws32-r.is-sub { border-radius: 6px; background: var(--w-muted); } .ws32-r.is-sub:hover { background: var(--w-hover, var(--w-muted)); }
+
+/* ——— v33 · один факт про главного героя под ником ——— */
+.ws33-r { height: 56px; grid-template-columns: 22px 32px minmax(0, 1fr); }
+.ws33-f { display: flex; align-items: center; gap: 6px; min-width: 0; font: var(--t-sub); color: var(--w-muted-fg); }
+.ws33-f span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .ws33-f .ws24-h { width: 24px; height: 14px; }
+/* ——— v34–v35 · вид «Игроки по позициям» (2.4) внутри блока «Составы» страницы: рамку .w снимаем — она уже у .cd ——— */
+.ws24-cd > .w.ws34 { width: auto; max-width: none; border: 0; background: none; box-shadow: none; }
+.ws34 .w-hd { justify-content: space-between; } .ws34-sub { font: var(--t-sub); color: var(--w-muted-fg); }
+.ws34 .pp-r .r { display: none; } .ws34.pp--wide .pp-r { grid-template-columns: 20px 20px minmax(120px, 200px) minmax(0, 1fr); }
+.ws34 .ws34-lg { width: 20px; height: 20px; object-fit: contain; border-radius: 0; }
+.ws34 .pp-r:nth-child(2n+1):not(:first-child)::before { background: var(--w-ring); opacity: .5; }
+/* ——— v36 · v34 компактнее: строка 44, герои иконками, под ними винрейт и карты мелко ——— */
+.ws36.pp--wide .pp-r { height: 48px; grid-template-columns: 20px 20px minmax(120px, 200px) minmax(0, 1fr); }
+.ws36 .pp-r .hs { display: flex; gap: 12px; justify-content: flex-end; }
+.ws36-h { display: flex; align-items: center; gap: 6px; } .ws36-h img { width: 32px; height: 18px; border-radius: 3px; object-fit: cover; }
+.ws36-h small { font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; } .ws36-h b { font-weight: 600; color: var(--w-fg); }
+.ws36-h b.up { color: var(--w-up); } .ws36-h b.dn { color: var(--w-down); }
+/* ——— v37 · факт-плашка справа у игрока: иконка героя, имя, счёт на нём ——— */
+.ws37-r { grid-template-columns: 22px 32px minmax(0, 1fr) auto; }
+.ws37-c { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 8px 0 4px; border-radius: 6px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.ws37-c .ws24-h { width: 28px; height: 16px; } .ws37-c span { font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; }
+.ws37-c b { font: var(--t-num-s); color: var(--w-fg); } .ws37-c.is-top b { color: var(--w-up); }
+
+/* ——— v38–v40 · «О матче» вместо «Формы на турнире»: на кону + 3 факта из прошлого, текстом ——— */
+.ws38 .ws24-hd { padding-top: 0; }
+.ws38-st { display: flex; align-items: baseline; gap: 8px; margin: 0 0 8px; font: 500 14px/20px var(--w-font); color: var(--w-fg); }
+.ws38-st span { flex: none; font: var(--t-sub); color: var(--w-muted-fg); }
+.ws38-l { margin: 0; padding: 0; list-style: none; }
+.ws38-l li { display: flex; align-items: center; gap: 10px; min-height: 36px; border-top: 1px solid var(--w-border); font: var(--t-cell); color: var(--w-fg); }
+.ws38-lg { width: 16px; height: 16px; object-fit: contain; flex: none; } .ws38-lg.ws2-ini { width: 16px; height: 16px; font-size: 7px; }
+.ws38-dot { width: 16px; flex: none; }
+/* v39 · факты по командам в двух колонках */
+.ws39 { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; } body:not(.is-desk) .ws39 { grid-template-columns: 1fr; }
+.ws39 .ws38-l li { min-height: 32px; font: var(--t-sub); color: var(--w-fg); }
+.ws39-h { margin: 8px 0 0; font: var(--t-sub); color: var(--w-muted-fg); }
+/* v40 · три факта: крупная цифра и подпись */
+.ws40 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; } body:not(.is-desk) .ws40 { grid-template-columns: 1fr; }
+.ws40-c { display: flex; flex-direction: column; gap: 4px; padding: 12px; border-radius: 10px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.ws40-c b { font: 600 22px/28px var(--w-font); color: var(--w-fg); } .ws40-c small { font: var(--t-sub); color: var(--w-muted-fg); }
+
+/* ——— v41 · «О матче» таблицей: иконка · показатель · значение команды A · значение B; лучшее — белым на подложке (как в статистике) ——— */
+.ws41-r { display: grid; grid-template-columns: 28px minmax(0, 1fr) 120px 120px; align-items: center; column-gap: 10px; min-height: 44px; border-top: 1px solid var(--w-border); }
+.ws41-h { min-height: 32px; border-top: 0; } .ws41-t { display: flex; align-items: center; justify-content: flex-end; gap: 6px; font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; }
+.ws41-lg { width: 16px; height: 16px; object-fit: contain; flex: none; } .ws41-lg.ws2-ini { width: 16px; height: 16px; font-size: 7px; }
+.ws41-ic { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); color: var(--w-muted-fg); }
+.ws41-k { font: var(--t-cell); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws41-v { justify-self: end; padding: 2px 8px; margin-right: -8px; border-radius: 6px; font: 600 14px/20px var(--w-font); color: var(--w-muted-fg); white-space: nowrap; }
+.ws41-v.is-best { color: var(--w-fg); background: var(--w-muted); }
+.ws41-v i { font-style: normal; color: var(--w-muted-fg); } .ws41-v b { color: var(--w-fg); }
+.ws41-span { grid-column: 3 / -1; font: var(--t-sub); color: var(--w-muted-fg); }
+.ws41-s { display: inline-block; padding: 0 6px; border-radius: 4px; font: 600 12px/18px var(--w-font); }
+.ws41-s.W { background: var(--w-up-bg); color: var(--w-up); } .ws41-s.L { background: var(--w-down-bg); color: var(--w-down); }
+.ws41-stake .ws41-ic { color: var(--w-fg); }
+body:not(.is-desk) .ws41-r { grid-template-columns: 28px minmax(0, 1fr) 76px 76px; }
+/* ——— v42 · кусок турнирной таблицы (как в «Групповой стадии») слева, таблица фактов справа ——— */
+.ws42-wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 24px; } body:not(.is-desk) .ws42-wrap { grid-template-columns: 1fr; }
+.ws42-hd, .ws42-r { display: grid; grid-template-columns: 20px minmax(0, 1fr) 44px 64px; align-items: center; column-gap: 8px; }
+.ws42-hd { height: 32px; font: var(--t-sub); color: var(--w-muted-fg); } .ws42-hd span:nth-child(n+3) { text-align: right; }
+.ws42-r { height: 40px; margin: 0 -8px; padding: 0 8px; border-top: 1px solid var(--w-border); font: var(--t-cell); color: var(--w-muted-fg); }
+.ws42-r > span:nth-child(n+3) { text-align: right; }
+.ws42-n { display: flex; align-items: center; gap: 8px; min-width: 0; } .ws42-n b { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws42-r.is-me { border-radius: 6px; background: var(--w-muted); color: var(--w-fg); } .ws42-r.is-me + .ws42-r { border-top-color: transparent; }
+.ws42-up { font-style: normal; color: var(--w-up); font-weight: 600; }
+.ws42-side .ws41-r { grid-template-columns: 28px minmax(0, 1fr) 72px 72px; }
+/* ——— v43 · плитки с иконкой: показатель, два значения с лого, лучшее белым ——— */
+.ws43 { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; }
+.ws43-c { display: flex; flex-direction: column; gap: 12px; padding: 12px; border-radius: 10px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.ws43-t { display: flex; align-items: center; gap: 8px; } .ws43-t small { font: var(--t-sub); color: var(--w-muted-fg); } .ws43-t .ws41-ic { width: 24px; height: 24px; background: var(--w-bg); }
+.ws43-v { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.ws43-v span { display: inline-flex; align-items: center; gap: 6px; color: var(--w-muted-fg); } .ws43-v b { font: 600 16px/20px var(--w-font); }
+.ws43-v span.is-best { color: var(--w-fg); }
+.ws42-eq { font-style: normal; font: var(--t-sub); color: var(--w-muted-fg); }
+
+/* ——— v44 · путь к матчу: лента серий каждой команды → «этот матч» ——— */
+.ws44-r { display: grid; grid-template-columns: 180px minmax(0, 1fr); align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--w-border); }
+body:not(.is-desk) .ws44-r { grid-template-columns: 1fr; }
+.ws44-t { display: grid; grid-template-columns: 20px 1fr; column-gap: 8px; align-items: center; } .ws44-t b { font: 600 14px/18px var(--w-font); color: var(--w-fg); }
+.ws44-t small { grid-column: 2; font: var(--t-sub); color: var(--w-muted-fg); }
+.ws44-p { display: flex; align-items: center; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.ws44-s { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: none; width: 44px; padding: 6px 0 5px; border-radius: 8px; background: var(--w-mid-bg); }
+.ws44-s.W { box-shadow: inset 0 -2px 0 var(--w-up), inset 0 0 0 1px var(--w-border); } .ws44-s.L { box-shadow: inset 0 -2px 0 var(--w-down), inset 0 0 0 1px var(--w-border); }
+.ws44-s b { font: var(--t-num-s); color: var(--w-fg); } .ws44-s.L b { color: var(--w-muted-fg); }
+.ws44-lg { width: 20px; height: 20px; object-fit: contain; } .ws44-lg.ws2-ini { width: 20px; height: 20px; }
+.ws44-ln { flex: none; width: 8px; height: 1px; background: var(--w-border); }
+.ws44-now { flex: none; display: grid; place-items: center; height: 44px; padding: 0 10px; border-radius: 8px; border: 1px dashed var(--w-ring); font: var(--t-sub); color: var(--w-fg); white-space: nowrap; }
+.ws44-st { display: flex; align-items: center; gap: 10px; margin: 0; padding-top: 10px; border-top: 1px solid var(--w-border); font: var(--t-cell); color: var(--w-fg); } .ws44-st b { font-weight: 600; }
+/* ——— v45 · шансы по статистике: полоса и 3 причины ——— */
+.ws45-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.ws45-t { display: flex; align-items: center; gap: 8px; } .ws45-t b { font: 600 15px/20px var(--w-font); color: var(--w-fg); }
+.ws45-t em { font: 600 22px/28px var(--w-font); font-style: normal; color: var(--w-fg); }
+.ws45-bar { display: flex; gap: 3px; height: 6px; margin: 10px 0 6px; } .ws45-bar i { height: 100%; border-radius: 3px; background: #3f3f46; } .ws45-bar i:last-child { flex: 1; }
+.ws45-bar i.is-best { background: var(--w-fg); }
+.ws45-ws { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; } body:not(.is-desk) .ws45-ws { grid-template-columns: 1fr; }
+.ws45-w { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; grid-template-rows: auto auto; align-items: center; column-gap: 8px; row-gap: 2px; padding: 10px; border-radius: 10px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.ws45-w .ws41-ic { grid-row: 1 / 3; background: var(--w-bg); } .ws45-w > span:not(.ws41-ic) { grid-column: 2 / 4; font: var(--t-sub); color: var(--w-muted-fg); }
+.ws45-w .ws41-lg { grid-column: 2; justify-self: start; } .ws45-w b { grid-column: 2 / 4; justify-self: end; grid-row: 2; font: 600 15px/20px var(--w-font); color: var(--w-fg); }
+/* ——— v46 · мини-таблица турнира с формой ——— */
+.ws46-hd, .ws46-r { display: grid; grid-template-columns: 20px minmax(0, 1fr) 48px 48px 64px 84px; align-items: center; column-gap: 10px; }
+.ws46-hd { height: 32px; font: var(--t-sub); color: var(--w-muted-fg); } .ws46-hd span:nth-child(n+3), .ws46-r > span:nth-child(n+3) { text-align: right; justify-self: end; }
+.ws46-r { height: 44px; margin: 0 -8px; padding: 0 8px; border-top: 1px solid var(--w-border); font: var(--t-cell); color: var(--w-muted-fg); }
+.ws46-r.is-me { border-radius: 6px; background: var(--w-muted); color: var(--w-fg); } .ws46-r.is-me + .ws46-r { border-top-color: transparent; }
+.ws46-tag { margin-left: 6px; font: var(--t-sub); font-style: normal; color: var(--w-muted-fg); white-space: nowrap; }
+body:not(.is-desk) .ws46-hd, body:not(.is-desk) .ws46-r { grid-template-columns: 20px minmax(0, 1fr) 40px 56px 64px; } body:not(.is-desk) .ws46-hd span:nth-child(4), body:not(.is-desk) .ws46-r > span:nth-child(4) { display: none; }
+
+/* ——— v47–v49 · шансы по статистике ——— */
+.ws47-top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; } .ws47-top .ws45-t.b { justify-content: flex-end; }
+.ws47-big { display: flex; align-items: center; gap: 14px; } .ws47-big small { font: var(--t-sub); color: var(--w-muted-fg); text-align: center; width: 72px; line-height: 14px; }
+.ws47-big em { font: 600 26px/32px var(--w-font); font-style: normal; color: var(--w-muted-fg); } .ws47-big em.is-best { color: var(--w-fg); }
+/* v47 · факторы строками, как в статистике; полоса вклада от центра */
+.ws47-fs { margin-top: 10px; }
+.ws47-f { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; column-gap: 12px; padding: 10px 0 10px; border-top: 1px solid var(--w-border); }
+.ws47-f > b { font: 600 15px/20px var(--w-font); color: var(--w-muted-fg); } .ws47-f > b:last-of-type { text-align: right; } .ws47-f > b.is-best { color: var(--w-fg); }
+.ws47-k { display: flex; align-items: center; gap: 8px; font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; } .ws47-k .ws41-ic { width: 24px; height: 24px; }
+.ws47-bar { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; height: 14px; margin-top: 8px; }
+.ws47-bar span { display: flex; align-items: center; gap: 6px; height: 14px; } .ws47-bar span.a { justify-content: flex-end; }
+.ws47-bar i { height: 4px; border-radius: 2px; background: var(--w-fg); } .ws47-bar em { font: 600 11px/14px var(--w-font); font-style: normal; color: var(--w-fg); }
+.ws47-bar span.a::after, .ws47-bar span.b::before { content: ''; } .ws47-bar span { background: linear-gradient(var(--w-muted), var(--w-muted)) center / 100% 4px no-repeat; border-radius: 2px; }
+.ws47-n { margin: 6px 0 0; font: var(--t-sub); color: var(--w-muted-fg); }
+/* v48 · счёт серии столбиками + факторы */
+.ws48-g { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-top: 12px; } body:not(.is-desk) .ws48-g { grid-template-columns: 1fr; }
+.ws48-sc { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; align-items: end; height: 170px; padding: 12px; border-radius: 10px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.ws48-c { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; height: 100%; }
+.ws48-c i { width: 100%; max-width: 44px; min-height: 4px; border-radius: 6px 6px 2px 2px; background: #3f3f46; } .ws48-c.is-best i { background: var(--w-fg); }
+.ws48-c small { font: var(--t-sub); color: var(--w-muted-fg); } .ws48-c.is-best small { color: var(--w-fg); font-weight: 600; }
+.ws48-c b { font: 600 14px/18px var(--w-font); color: var(--w-fg); }
+.ws48-r { display: flex; flex-direction: column; gap: 8px; }
+.ws48-m { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 10px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.ws48-m small { font: var(--t-sub); color: var(--w-muted-fg); } .ws48-m span { font: var(--t-cell); color: var(--w-muted-fg); } .ws48-m b { color: var(--w-fg); font-weight: 600; }
+/* v49 · плитки-факторы 2×3 */
+.ws49-g { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; } body:not(.is-desk) .ws49-g { grid-template-columns: 1fr 1fr; }
+.ws49-c { display: flex; flex-direction: column; gap: 10px; padding: 12px; border-radius: 10px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.ws49-c .ws43-t .ws41-ic { width: 24px; height: 24px; background: var(--w-bg); }
+.ws49-d { font: 600 11px/14px var(--w-font); font-style: normal; color: var(--w-muted-fg); white-space: nowrap; } .ws49-d.a, .ws49-d.b { color: var(--w-fg); }
+.ws49-sum { justify-content: center; gap: 4px; background: var(--w-muted); } .ws49-sum small { font: var(--t-sub); color: var(--w-muted-fg); }
+.ws49-sum b { font: 600 16px/22px var(--w-font); color: var(--w-fg); } .ws49-sum span { font: var(--t-sub); color: var(--w-muted-fg); }
+
+/* палитра виджета: по умолчанию — цвета команд графика золота; скины v56–v59 меняют только эти переменные */
+.ws5x { --w-b-fg: #fcd34d; --w-b-bg: rgba(245,158,11,.18); }
+/* ——— v50–v52 · перевес цветами команд, как в графике золота (gs-match/_gs.css: --w-a синий, --w-b янтарный; плашка лидера .g2-lead--a/b, полоса .fans__bar) ——— */
+/* общая полоса шансов и полосы долей в плитках — два цвета команд вместо белого; у той, что в перевесе, — полный цвет, у другой — приглушённый */
+.ws5x .ws45-bar { height: 8px; gap: 2px; } .ws5x .ws45-bar i { background: color-mix(in srgb, var(--w-a) 35%, transparent); } .ws5x .ws45-bar i:last-child { background: color-mix(in srgb, var(--w-b) 35%, transparent); }
+.ws5x .ws45-bar i.is-best { background: var(--w-a); } .ws5x .ws45-bar i:last-child.is-best { background: var(--w-b); }
+.ws5x .ws47-big em.is-best:first-child { color: var(--w-a); } .ws5x .ws47-big em.is-best:last-child { color: var(--w-b); }
+.ws5x .ws49-c .ws5-bar { gap: 2px; height: 6px; } .ws5x .ws49-c .ws5-bar i { border-radius: 3px; background: color-mix(in srgb, var(--w-a) 30%, transparent); }
+.ws5x .ws49-c .ws5-bar i:last-child { background: color-mix(in srgb, var(--w-b) 30%, transparent); }
+.ws5x .ws49-c .ws5-bar i.is-best { background: var(--w-a); } .ws5x .ws49-c .ws5-bar i:last-child.is-best { background: var(--w-b); }
+.ws5x .ws43-v span:first-child.is-best { color: var(--w-a-fg); } .ws5x .ws43-v span:last-child.is-best { color: var(--w-b-fg); }
+.ws5x .ws49-sum { background: var(--w-mid-bg); }
+/* v50 · плашка лидера: лого и «сильнее» на подложке цвета команды */
+.ws50 { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px 0 4px; border-radius: 999px; font: 600 11px/14px var(--w-font); font-style: normal; white-space: nowrap; }
+.ws50.a { background: var(--w-a-bg); color: var(--w-a-fg); } .ws50.b { background: var(--w-b-bg); color: var(--w-b-fg); }
+/* v51 · перевес в своих единицах — та же плашка, текстом */
+.ws51 { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 999px; font: 600 11px/14px var(--w-font); font-style: normal; white-space: nowrap; }
+.ws51.a { background: var(--w-a-bg); color: var(--w-a-fg); } .ws51.b { background: var(--w-b-bg); color: var(--w-b-fg); }
+/* v52 · без текста: только полоса цветами команд, толще, с меткой середины */
+.ws52 .ws49-c .ws5-bar { position: relative; height: 8px; }
+.ws52 .ws49-c .ws5-bar::after { content: ''; position: absolute; left: 50%; top: -3px; width: 1px; height: 14px; background: var(--w-ring); }
+.ws52 .ws43-v b { font-size: 18px; line-height: 22px; }
+
+/* ——— v53 · перетягивание: дорожка A→B, ползунок на доле ——— */
+.ws53 { margin-top: 8px; }
+.ws53-r { display: grid; grid-template-columns: minmax(0, 1fr) 64px minmax(160px, 1.3fr) 64px; align-items: center; column-gap: 12px; min-height: 44px; border-top: 1px solid var(--w-border); }
+body:not(.is-desk) .ws53-r { grid-template-columns: 56px 1fr 56px; } body:not(.is-desk) .ws53-k { grid-column: 1 / -1; padding-top: 8px; }
+.ws53-k { display: flex; align-items: center; gap: 8px; min-width: 0; font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; } .ws53-k .ws41-ic { width: 24px; height: 24px; flex: none; }
+.ws53-r > b { font: 600 14px/20px var(--w-font); color: var(--w-muted-fg); text-align: right; } .ws53-r > b:last-child { text-align: left; }
+.ws53-r > b.is-a { color: var(--w-a-fg); } .ws53-r > b.is-b { color: var(--w-b-fg); }
+.ws53-t { position: relative; display: flex; gap: 2px; height: 6px; }
+.ws53-t i { display: block; height: 100%; border-radius: 3px; } .ws53-fa { background: var(--w-a); } .ws53-fb { flex: 1; background: var(--w-b); }
+.ws53-m { position: absolute; left: 50%; top: -4px; width: 1px; height: 14px; border-radius: 0 !important; background: var(--w-ring); }
+.ws53-k2 { position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50% !important; background: var(--w-fg); box-shadow: 0 0 0 3px var(--w-mid-bg, #111); }
+.ws53-sum { display: flex; align-items: center; gap: 10px; margin: 0; padding-top: 10px; border-top: 1px solid var(--w-border); font: var(--t-cell); color: var(--w-muted-fg); } .ws53-sum b { color: var(--w-fg); font-weight: 600; }
+/* ——— v54 · мини-диаграммы: два столбика в плитке ——— */
+.ws54 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 12px 0; } body:not(.is-desk) .ws54 { grid-template-columns: 1fr 1fr; }
+.ws54-c { display: flex; flex-direction: column; gap: 10px; padding: 12px; border-radius: 10px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.ws54-c .ws43-t { align-items: flex-start; min-height: 32px; } .ws54-c .ws43-t .ws41-ic { width: 24px; height: 24px; flex: none; background: var(--w-bg); }
+.ws54-g { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; height: 110px; }
+.ws54-g span { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; }
+.ws54-g i { width: 100%; max-width: 32px; min-height: 4px; border-radius: 6px 6px 2px 2px; }
+.ws54-g .a i { background: color-mix(in srgb, var(--w-a) 35%, transparent); } .ws54-g .b i { background: color-mix(in srgb, var(--w-b) 35%, transparent); }
+.ws54-g .a.on i { background: var(--w-a); } .ws54-g .b.on i { background: var(--w-b); }
+.ws54-g b { font: 600 13px/16px var(--w-font); color: var(--w-muted-fg); white-space: nowrap; } .ws54-g .a.on b { color: var(--w-a-fg); } .ws54-g .b.on b { color: var(--w-b-fg); }
+/* ——— v55 · кольца ——— */
+.ws55 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 12px 0; } body:not(.is-desk) .ws55 { grid-template-columns: repeat(2, 1fr); }
+.ws55-c { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px 12px; border-radius: 10px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); text-align: center; }
+.ws55-c circle { fill: none; stroke-width: 6; } .ws55-c circle.b { stroke: var(--w-b); } .ws55-c circle.a { stroke: var(--w-a); stroke-linecap: butt; }
+.ws55-in { position: absolute; top: 14px; left: 50%; display: grid; place-items: center; width: 64px; height: 64px; margin-left: -32px; font: 600 14px/1 var(--w-font); color: var(--w-muted-fg); }
+.ws55-lg { width: 24px; height: 24px; object-fit: contain; } .ws55-lg.ws2-ini { width: 24px; height: 24px; }
+.ws55-c small { font: var(--t-sub); color: var(--w-muted-fg); min-height: 32px; }
+.ws55-v { display: flex; align-items: baseline; gap: 6px; } .ws55-v b { font: 600 14px/18px var(--w-font); color: var(--w-muted-fg); } .ws55-v i { font-style: normal; color: var(--w-ring); }
+.ws55-v b.is-a { color: var(--w-a-fg); } .ws55-v b.is-b { color: var(--w-b-fg); }
+
+/* ——— v56–v59 · v50 той же раскладки, другой визуальный стиль (дирижёр 03.11: «цвета, скругления, размеры; перевес явнее, перекос») ——— */
+/* v56 · Заливка лидера: плитка, где команда сильнее, тонирована её цветом; значение лидера крупнее; у отстающего полоса серая */
+.ws5s--tint .ws49-c.is-a { background: color-mix(in srgb, var(--w-a) 12%, var(--w-mid-bg)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--w-a) 40%, transparent); }
+.ws5s--tint .ws49-c.is-b { background: color-mix(in srgb, var(--w-b) 10%, var(--w-mid-bg)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--w-b) 38%, transparent); }
+.ws5s--tint .ws43-v span.is-best b { font-size: 20px; line-height: 24px; }
+.ws5s--tint .ws49-c .ws5-bar i:not(.is-best) { background: #3f3f46 !important; }
+.ws5s--tint .ws45-bar i:not(.is-best) { background: #3f3f46 !important; }
+/* v57 · Перекос: полоса толстая (10), доля лидера утрирована — отстающий сжат до тонкого серого хвоста; плашка лидера крупнее */
+.ws5s--skew .ws49-c .ws5-bar, .ws5s--skew .ws45-bar { height: 10px; gap: 3px; }
+.ws5s--skew .ws49-c .ws5-bar i, .ws5s--skew .ws45-bar i { border-radius: 5px; }
+.ws5s--skew .ws49-c .ws5-bar i:not(.is-best), .ws5s--skew .ws45-bar i:not(.is-best) { background: #3f3f46 !important; }
+.ws5s--skew .ws49-c.is-a .ws5-bar i:first-child, .ws5s--skew .ws45-bar i.is-best:first-child { min-width: 72%; }
+.ws5s--skew .ws49-c.is-b .ws5-bar i:first-child { max-width: 28%; }
+.ws5s--skew .ws50 { height: 26px; padding: 0 10px 0 5px; font-size: 12px; } .ws5s--skew .ws50 .ws41-lg { width: 18px; height: 18px; }
+.ws5s--skew .ws43-v span:not(.is-best) b { opacity: .6; }
+/* v58 · Мягкий: крупные скругления 16, больше воздуха, цифры 22, полосы 8 с круглыми концами, приглушённые пастельные цвета */
+.ws5s--soft .ws49-g { gap: 12px; } .ws5s--soft .ws49-c { gap: 14px; padding: 16px; border-radius: 16px; box-shadow: none; background: var(--w-mid-bg); }
+.ws5s--soft .ws43-v b { font-size: 22px; line-height: 28px; }
+.ws5s--soft .ws49-c .ws5-bar { height: 8px; gap: 4px; } .ws5s--soft .ws49-c .ws5-bar i { border-radius: 999px; }
+.ws5s--soft .ws45-bar { height: 10px; gap: 4px; } .ws5s--soft .ws45-bar i { border-radius: 999px; }
+.ws5s--soft .ws50 { height: 26px; padding: 0 12px 0 6px; }
+.ws5s--soft .ws49-c.is-a .ws5-bar i.is-best, .ws5s--soft .ws45-bar i.is-best:first-child { background: var(--w-a-fg); }
+.ws5s--soft .ws49-c.is-b .ws5-bar i.is-best, .ws5s--soft .ws45-bar i.is-best:last-child { background: var(--w-b-fg); }
+/* v59 · Строгий: без плиток — сетка с линиями, как таблица; скругления 4; полоса 3; плашка лидера квадратная; значение лидера — цветом и жирнее */
+.ws5s--grid .ws49-g { gap: 0; border-top: 1px solid var(--w-border); border-left: 1px solid var(--w-border); }
+.ws5s--grid .ws49-c { border-radius: 0; background: none; box-shadow: none; border-right: 1px solid var(--w-border); border-bottom: 1px solid var(--w-border); }
+.ws5s--grid .ws49-c .ws5-bar { height: 3px; } .ws5s--grid .ws49-c .ws5-bar i { border-radius: 2px; }
+.ws5s--grid .ws49-c .ws43-t .ws41-ic { border-radius: 4px; }
+.ws5s--grid .ws50 { border-radius: 4px; }
+.ws5s--grid .ws43-v span.is-best b { font-weight: 700; }
+.ws5s--grid .ws49-sum { background: none; }
+.ws5s--skew .ws45-bar i:first-child:not(.is-best) { max-width: 28%; }
+
+/* ——— v56–v59 · свои палитры (дирижёр 03.11: «цвета везде одинаковые») — меняем только переменные цветов ——— */
+/* v56 · монохром: без цветов команд, лидер — белым, отстающий — серым */
+.ws5s--tint { --w-a: #f4f4f5; --w-b: #f4f4f5; --w-a-fg: #fafafa; --w-b-fg: #fafafa; --w-a-bg: rgba(255,255,255,.1); --w-b-bg: rgba(255,255,255,.1); }
+/* v57 · зелёный перевес: у лидера — зелёный (как «победа» в виджетах), отстающий — серый */
+.ws5s--skew { --w-a: #22c55e; --w-b: #22c55e; --w-a-fg: #4ade80; --w-b-fg: #4ade80; --w-a-bg: rgba(34,197,94,.16); --w-b-bg: rgba(34,197,94,.16); }
+/* v58 · пастельные цвета команд: голубой и песочный, мягче графика */
+.ws5s--soft { --w-a: #93c5fd; --w-b: #fcd9a0; --w-a-fg: #bfdbfe; --w-b-fg: #fde7c2; --w-a-bg: rgba(147,197,253,.16); --w-b-bg: rgba(252,217,160,.16); }
+/* v59 · бирюзовый и розовый: контрастная пара, не путается с золотом графика */
+.ws5s--grid { --w-a: #22d3ee; --w-b: #f472b6; --w-a-fg: #67e8f9; --w-b-fg: #f9a8d4; --w-a-bg: rgba(34,211,238,.14); --w-b-bg: rgba(244,114,182,.14); }
+
+/* ——— v60–v62 · язык страницы турнира: монохром, цвет только по смыслу — ячейки-«тепло» как винрейт в «Статистике героев» (widget-heroes/_hs.css .wrh w2/w1/l1/l2) ——— */
+.ws60 .wrh, .ws61 .wrh, .ws62 .wrh { display: inline-block; min-width: 52px; padding: 2px 6px; border-radius: 6px; text-align: center; font: var(--t-num-s); font-style: normal; background: var(--tc, transparent); color: var(--tf, var(--w-fg)); }
+.ws60 .w2, .ws61 .w2, .ws62 .w2 { --tc: color-mix(in srgb, var(--w-up) 55%, transparent); --tf: #fff; } .ws60 .w1, .ws61 .w1, .ws62 .w1 { --tc: color-mix(in srgb, var(--w-up) 22%, transparent); --tf: var(--w-up-fg, var(--w-up)); }
+.ws60 .l2, .ws61 .l2, .ws62 .l2 { --tc: color-mix(in srgb, var(--w-down, #e5484d) 55%, transparent); --tf: #fff; } .ws60 .l1, .ws61 .l1, .ws62 .l1 { --tc: color-mix(in srgb, var(--w-down, #e5484d) 22%, transparent); --tf: var(--w-down-fg, #e5484d); }
+.ws60 .ws41-ic, .ws61 .ws41-ic, .ws62 .ws41-ic { width: auto; height: auto; background: none; box-shadow: none; color: var(--w-muted-fg); }
+/* v60 · плитки */
+.ws60-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 0 12px; }
+.ws60-o { display: flex; align-items: center; gap: 8px; } .ws60-o:last-child { flex-direction: row-reverse; } .ws60-o b { font: 600 14px/18px var(--w-font); color: var(--w-fg); }
+.ws60-o .wrh { font-size: 15px; line-height: 22px; min-width: 56px; } .ws60-vs { font: var(--t-sub); font-style: normal; color: var(--w-muted-fg); }
+.ws60-g { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; } body:not(.is-desk) .ws60-g { grid-template-columns: 1fr 1fr; }
+.ws60-c { display: flex; flex-direction: column; gap: 10px; padding: 10px 12px; border-radius: 10px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.ws60-t { display: flex; align-items: center; gap: 6px; } .ws60-t b { font: 500 12px/16px var(--w-font); color: var(--w-muted-fg); }
+.ws60-v { display: flex; justify-content: space-between; gap: 6px; } .ws60-v .wrh { min-width: 0; flex: 1; }
+/* v61 · таблица как «Статистика героев»: строки — команды, столбцы — факторы */
+.ws61-r { display: grid; grid-template-columns: minmax(120px, 1.4fr) repeat(6, minmax(0, 1fr)); align-items: center; column-gap: 8px; height: 44px; border-top: 1px solid var(--w-border); }
+.ws61-h { height: 32px; border-top: 0; }
+.ws61-c { display: flex; align-items: center; justify-content: center; gap: 4px; font: var(--t-label, var(--t-sub)); color: var(--w-muted-fg); white-space: nowrap; }
+.ws61-n { display: flex; align-items: center; gap: 8px; min-width: 0; } .ws61-n b { font: 600 14px/18px var(--w-font); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body:not(.is-desk) .ws61 { overflow-x: auto; } body:not(.is-desk) .ws61-r { min-width: 620px; }
+/* v62 · вертикально: строки — факторы, два столбца команд */
+.ws62-r { display: grid; grid-template-columns: minmax(0, 1fr) 96px 96px; align-items: center; column-gap: 8px; height: 40px; border-top: 1px solid var(--w-border); }
+.ws62-r > em { justify-self: center; } .ws62-r .ws61-c { justify-content: flex-start; gap: 8px; font: var(--t-cell); color: var(--w-fg); }
+.ws62-h { height: 32px; border-top: 0; } .ws62-tm { display: flex; align-items: center; justify-content: center; gap: 6px; font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; }
+.ws62-odd { height: 48px; } .ws62-odd .wrh { font-size: 15px; line-height: 22px; min-width: 64px; }
+
+/* ——— v63–v65 · раскладка v50 без изменений; цвет — по логике страницы турнира (монохром, цвет только по смыслу) ——— */
+/* общее: полосы и плашка лидера — без цветов команд */
+.ws5s--trn1, .ws5s--trn2, .ws5s--trn3 { --w-a: #d4d4d8; --w-b: #d4d4d8; --w-a-fg: var(--w-fg); --w-b-fg: var(--w-fg); --w-a-bg: var(--w-muted); --w-b-bg: var(--w-muted); }
+/* v63 · ячейки-«тепло» как винрейт в «Статистике героев»: лидер — зелёная, отстающий — красная */
+.ws5s--trn1 .ws43-v b, .ws5s--trn1 .ws47-big em { display: inline-block; min-width: 48px; padding: 2px 8px; border-radius: 6px; text-align: center; }
+.ws5s--trn1 .ws49-c.is-a .ws43-v span:first-child b, .ws5s--trn1 .ws49-c.is-b .ws43-v span:last-child b, .ws5s--trn1 .ws47-big em.is-best { background: color-mix(in srgb, var(--w-up) 22%, transparent); color: var(--w-up); }
+.ws5s--trn1 .ws49-c.is-a .ws43-v span:last-child b, .ws5s--trn1 .ws49-c.is-b .ws43-v span:first-child b, .ws5s--trn1 .ws47-big em:not(.is-best) { background: color-mix(in srgb, var(--w-down, #e5484d) 22%, transparent); color: var(--w-down, #e5484d); }
+.ws5s--trn1 .ws49-c .ws5-bar i, .ws5s--trn1 .ws45-bar i { background: #3f3f46 !important; } .ws5s--trn1 .ws49-c .ws5-bar i.is-best, .ws5s--trn1 .ws45-bar i.is-best { background: #a1a1aa !important; }
+/* v64 · тише: зелёная ячейка только у лидера, иконки в квадратике 20, полосы 3, скругление 12 */
+.ws5s--trn2 .ws49-c { border-radius: 12px; }
+.ws5s--trn2 .ws49-c .ws43-t .ws41-ic { width: 20px; height: 20px; border-radius: 5px; background: var(--w-muted); box-shadow: none; } .ws5s--trn2 .ws41-ic svg { width: 12px; height: 12px; }
+.ws5s--trn2 .ws43-v b { display: inline-block; padding: 1px 6px; border-radius: 6px; }
+.ws5s--trn2 .ws49-c.is-a .ws43-v span:first-child b, .ws5s--trn2 .ws49-c.is-b .ws43-v span:last-child b { background: color-mix(in srgb, var(--w-up) 22%, transparent); color: var(--w-up); }
+.ws5s--trn2 .ws47-big em.is-best { color: var(--w-up); }
+.ws5s--trn2 .ws49-c .ws5-bar, .ws5s--trn2 .ws45-bar { height: 3px; } .ws5s--trn2 .ws49-c .ws5-bar i, .ws5s--trn2 .ws45-bar i { background: #3f3f46 !important; } .ws5s--trn2 .ws49-c .ws5-bar i.is-best, .ws5s--trn2 .ws45-bar i.is-best { background: var(--w-fg) !important; }
+/* v65 · единственный цвет — жёлтый акцент (--w-star) на итоге «фаворит» и у плашки лидера */
+.ws5s--trn3 .ws43-v span.is-best b { font-weight: 700; color: var(--w-fg); } .ws5s--trn3 .ws43-v span:not(.is-best) b { color: var(--w-muted-fg); }
+.ws5s--trn3 .ws49-c .ws5-bar i, .ws5s--trn3 .ws45-bar i { background: #3f3f46 !important; } .ws5s--trn3 .ws49-c .ws5-bar i.is-best, .ws5s--trn3 .ws45-bar i.is-best { background: var(--w-fg) !important; }
+.ws5s--trn3 .ws50::before { content: '★'; font-size: 10px; color: var(--w-star); }
+.ws5s--trn3 .ws49-sum { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--w-star) 45%, transparent); } .ws5s--trn3 .ws49-sum b::before { content: '★ '; color: var(--w-star); }
+
+/* ——— v66 · v64, но ячейка лидера — цветом его логотипа (--ta / --tb из картинки), плашка лидера — такой же ячейкой с крупным лого ——— */
+.ws5s--trn4 { --w-a: #d4d4d8; --w-b: #d4d4d8; --w-a-fg: var(--w-fg); --w-b-fg: var(--w-fg); --w-a-bg: var(--w-muted); --w-b-bg: var(--w-muted); --ta: #a1a1aa; --tb: #a1a1aa; }
+.ws5s--trn4 .ws49-c { border-radius: 12px; }
+.ws5s--trn4 .ws49-c .ws43-t .ws41-ic { width: 20px; height: 20px; border-radius: 5px; background: var(--w-muted); box-shadow: none; } .ws5s--trn4 .ws41-ic svg { width: 12px; height: 12px; }
+.ws5s--trn4 .ws43-v b { display: inline-block; padding: 1px 6px; border-radius: 6px; }
+.ws5s--trn4 .ws49-c.is-a .ws43-v span:first-child b { background: color-mix(in srgb, var(--ta) 24%, transparent); color: color-mix(in srgb, var(--ta) 70%, #fff); }
+.ws5s--trn4 .ws49-c.is-b .ws43-v span:last-child b { background: color-mix(in srgb, var(--tb) 24%, transparent); color: color-mix(in srgb, var(--tb) 70%, #fff); }
+.ws5s--trn4 .ws47-big em { display: inline-block; padding: 2px 8px; border-radius: 6px; }
+.ws5s--trn4 .ws47-big em.is-best:first-child { background: color-mix(in srgb, var(--ta) 24%, transparent); color: color-mix(in srgb, var(--ta) 70%, #fff); }
+.ws5s--trn4 .ws47-big em.is-best:last-child { background: color-mix(in srgb, var(--tb) 24%, transparent); color: color-mix(in srgb, var(--tb) 70%, #fff); }
+.ws5s--trn4 .ws49-c .ws5-bar, .ws5s--trn4 .ws45-bar { height: 3px; } .ws5s--trn4 .ws49-c .ws5-bar i, .ws5s--trn4 .ws45-bar i { background: #3f3f46 !important; }
+.ws5s--trn4 .ws49-c.is-a .ws5-bar i.is-best, .ws5s--trn4 .ws45-bar i.is-best:first-child { background: var(--ta) !important; }
+.ws5s--trn4 .ws49-c.is-b .ws5-bar i.is-best, .ws5s--trn4 .ws45-bar i.is-best:last-child { background: var(--tb) !important; }
+/* плашка лидера: квадрат со скруглением 6, как ячейки процентов; лого крупнее */
+.ws5s--trn4 .ws50 { height: 28px; padding: 0 8px 0 4px; gap: 6px; border-radius: 6px; font: 600 12px/16px var(--w-font); }
+.ws5s--trn4 .ws50 .ws41-lg { width: 20px; height: 20px; }
+.ws5s--trn4 .ws50.a { background: color-mix(in srgb, var(--ta) 24%, transparent); color: color-mix(in srgb, var(--ta) 70%, #fff); }
+.ws5s--trn4 .ws50.b { background: color-mix(in srgb, var(--tb) 24%, transparent); color: color-mix(in srgb, var(--tb) 70%, #fff); }
+.ws50 b { font-weight: 700; }
+/* v70 · поровну — такая же плашка, нейтральная: «=» в квадрате размером с лого, «Draw 50%» */
+.ws5s--trn4 .ws50.ws70 { background: var(--w-muted); color: var(--w-muted-fg); padding-left: 4px; }
+.ws70-ic { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 4px; background: var(--w-mid-bg); font: 700 13px/1 var(--w-font); color: var(--w-fg); }
+.ws50.ws70 b { color: var(--w-fg); }
+.ws72-av { display: inline-grid; place-items: center; font: 600 11px/1 var(--w-font); color: var(--w-muted-fg); }
+/* «=» — svg по центру квадрата 20 (как лого), а не символом: символ стоял криво */
+.ws70-ic { flex: none; line-height: 0; } .ws70-ic svg { display: block; }
+/* ничья — без подложки ни у плашки, ни у значка: «=» и 50% просто по центру плитки */
+.ws5s--trn4 .ws50.ws70 { background: none; padding: 0; gap: 6px; }
+.ws5s--trn4 .ws50.ws70 .ws70-ic { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; background: none; color: var(--w-muted-fg); }
+.ws5s--trn4 .ws50.ws70 .ws70-ic svg { width: 14px; height: 14px; }
+.ws5s--trn4 .ws50.ws70 b { color: var(--w-muted-fg); }
+/* v73 · в итоге — крупное лого фаворита выглядывает из правого нижнего угла, чуть наклонено */
+.ws49-sum { position: relative; overflow: hidden; } .ws49-sum > :not(.ws73-lg) { position: relative; z-index: 1; }
+.ws73-lg { position: absolute; right: -22px; bottom: -30px; width: 112px; height: 112px; object-fit: contain; transform: rotate(-14deg); opacity: .9; pointer-events: none; }
+/* «=» ближе к 50%: значок по своей ширине, зазор 4 */
+.ws5s--trn4 .ws50.ws70 { gap: 4px; } .ws5s--trn4 .ws50.ws70 .ws70-ic { width: 14px; }
+.ws5s--trn4 .ws50:not(.ws70) { padding-left: 6px; padding-right: 4px; } /* дирижёр 03.11: слева 6, справа 4 */

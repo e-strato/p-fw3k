@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<base href="../widget-tournament-4/" />
+<title>v7 · Панель переключателей</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="_t4.css" /><link rel="stylesheet" href="../widget-states/_s.css" /></head>
+<body><div class="lab-board">
+  <h1>Состояния виджета · v7 · Панель переключателей</h1>
+  <p class="lab-board__lead">Виджет крупно, справа — переключатель «Экран» и список «что можно сделать»: наведи — подсветится в виджете, нажми — виджет сделает сам.</p>
+  <div class="s-pl"><div class="s-z2" style="zoom:1.5"><div><div id="w"></div></div></div><div class="s-ctl" id="ctl"></div></div>
+</div>
+<script src="_data.js"></script><script src="_t4.js"></script><script src="../widget-states/_states.js"></script>
+<script>
+  const show = id => { const k = S.by(id)
+    document.getElementById('ctl').innerHTML = `<div class="s-ctl__f"><b>Экран</b><div class="w-seg">${S.key.map(x => `<button class="${x === k ? 'is-on' : ''}" data-k="${x.id}">${x.name}</button>`).join('')}</div></div><div class="s-ctl__res">${k.why}</div><div class="s-ctl__f"><b>Что можно сделать</b><div class="s-chips">${k.hints.map(([sel, a, r]) => `<button data-sel="${sel}">${a}<span>${r}</span></button>`).join('')}</div></div>`
+    document.querySelectorAll('#ctl [data-k]').forEach(b => b.onclick = () => show(b.dataset.k))
+    const w = document.getElementById('w'); S.mount(w, k, { hint: 'none' })
+    // Наведи на действие — подсветится в виджете, нажми — виджет сделает его сам
+    document.querySelectorAll('#ctl [data-sel]').forEach(b => { const t = () => w.querySelector(b.dataset.sel)
+      b.onmouseenter = () => t() && t().classList.add('s-glow'); b.onmouseleave = () => t() && t().classList.remove('s-glow'); b.onclick = () => t() && t().click() }) }
+  show('match')
+</script>
+</body></html>

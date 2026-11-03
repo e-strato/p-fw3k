@@ -1,0 +1,26 @@
+/* Виджет MVP v5 «Карточка Хайперглитч»: раскладка вокруг карты. Сама карта — _hg-card.css (копия v1 · Хайперглитч) + ../карточка-v3/_v3.css */
+.m5{ padding-bottom:12px; }
+.m5-sub{ display:flex; align-items:center; gap:8px; min-width:0; padding:0 12px; }
+.m5-stage{ display:grid; place-items:center; padding:16px 0 8px; }
+.m5 .kc{ --w:208px; }
+/* Карта живёт в шрифтах карты (Inter / Archivo), виджет — в Google Sans */
+.m5 .kc{ font-family:'Inter', sans-serif; }
+.m5-row{ display:flex; align-items:baseline; gap:8px; padding:4px 12px 0; }
+.m5-big{ display:flex; align-items:baseline; gap:6px; }
+.m5-big b{ font-size:22px; line-height:28px; font-weight:700; font-variant-numeric:tabular-nums; }
+.m5-big span{ font-size:12px; color:var(--w-muted-fg); }
+.m5-turn{ display:inline-flex; align-items:center; gap:4px; margin-left:auto; font-size:11px; color:var(--w-muted-fg); }
+
+/* v6 — «красивее» (дирижёр 22.10) */
+.m6-stage{ position:relative; padding:8px 0 4px; }
+.m6-glow{ position:absolute; left:50%; top:50%; width:260px; height:300px; translate:-50% -50%; border-radius:50%; pointer-events:none;
+  background:radial-gradient(closest-side, rgba(241,194,76,.22), rgba(241,194,76,.06) 60%, transparent); filter:blur(8px); }
+.m6 .kc{ --w:224px; }
+.m6 .g1__logo{ opacity:.55; }
+/* Значок оборота — в нижнем правом срезе карты */
+.m6-turn{ position:absolute; right:.9em; bottom:.9em; z-index:13; width:1.6em; height:1.6em; border-radius:50%; opacity:.7;
+  background:color-mix(in srgb, var(--tier) 30%, var(--c-card-ink)) center / 60% no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23fff0b8' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M2.5 8a5.5 5.5 0 0 1 9.6-3.7M13.5 8a5.5 5.5 0 0 1-9.6 3.7M12.5 2v2.5H10M3.5 14v-2.5H6'/%3E%3C/svg%3E"); }
+.m6-row{ display:flex; align-items:baseline; justify-content:center; gap:8px; padding:8px 12px 0; }
+.m6-act{ padding-top:12px; }
+.w .m6 .m2-hl{ width:32px; padding:0; justify-content:center; flex:none; }
+.w .m6 .m2-fan{ white-space:nowrap; justify-content:space-between; }

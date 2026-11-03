@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_home.css" />
+<style>
+/* v4 «Портал» — Destiny 2 Portal + EA FC «For You»: одно «главное сейчас» во всю ширину, справа награда с прогрессом, снизу входы по 5 играм. */
+.p { display: grid; gap: 16px; }
+.p-hero { position: relative; isolation: isolate; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 28px; min-height: 520px; padding: 30px 30px 28px 40px; overflow: hidden; border-radius: 18px;
+  background:
+    radial-gradient(55% 80% at 22% 55%, color-mix(in srgb, var(--ca) 34%, transparent), transparent 70%),
+    radial-gradient(45% 70% at 70% 30%, color-mix(in srgb, var(--cb) 24%, transparent), transparent 70%),
+    linear-gradient(100deg, var(--c-ui-bg) 0%, color-mix(in srgb, var(--c-white) 3%, var(--c-ui-panel)) 60%, var(--c-ui-bg)); }
+.p-hero::before { content: ''; position: absolute; inset: 0; z-index: -1; opacity: .18; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+/* Арт: фото игрока (если есть) или крупные логотипы, растворяются к тексту */
+.p-art { position: absolute; z-index: -1; inset: 0 auto 0 34%; width: 520px; pointer-events: none;
+  -webkit-mask: radial-gradient(48% 62% at 50% 62%, var(--c-black) 55%, transparent); mask: radial-gradient(48% 62% at 50% 62%, var(--c-black) 55%, transparent); }
+.p-art img.p-ph { position: absolute; bottom: 0; left: 50%; height: 108%; transform: translateX(-50%); object-fit: contain; filter: drop-shadow(0 0 60px color-mix(in srgb, var(--ca) 40%, transparent)); }
+.p-art .p-lgs { position: absolute; inset: 0; display: grid; place-items: center; opacity: .22; filter: blur(1px); }
+.p-art .p-lgs .h-lg:first-child { transform: translate(-90px, -30px); } .p-art .p-lgs .h-lg:last-child { transform: translate(90px, 40px); position: absolute; }
+.p-l { position: relative; display: grid; align-content: space-between; gap: 20px; max-width: 560px; }
+.p-kick { display: flex; align-items: center; gap: 10px; color: var(--c-muted); font-size: 14px; }
+.p-kick b { color: var(--c-text); font-weight: 600; }
+.p-l h1 { margin-top: 18px; font: 700 64px/.95 var(--font-c); letter-spacing: -.02em; }
+.p-l h1 span { display: block; color: color-mix(in srgb, var(--c-white) 55%, transparent); font-size: 30px; margin: 8px 0; }
+.p-sc { display: flex; align-items: center; gap: 22px; }
+.p-sc b { font: 700 96px/.9 var(--font-c); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.p-sc div { display: grid; gap: 6px; font-size: 14px; color: var(--c-muted); }
+.p-sc .h-live { font-size: 16px; }
+.p-gold { display: grid; gap: 6px; max-width: 420px; }
+.p-gold p { display: flex; justify-content: space-between; color: var(--c-caption); font-size: 12.5px; } .p-gold p b { color: var(--c-text); }
+.p-gold__bar { position: relative; height: 6px; border-radius: 3px; background: color-mix(in srgb, var(--cb) 50%, var(--c-ui-hover)); overflow: hidden; }
+.p-gold__bar i { position: absolute; inset: 0 auto 0 0; width: var(--p); background: var(--ca); }
+.p-btns { display: flex; gap: 10px; }
+.p-btns .h-btn { height: 48px; padding: 0 24px; font-size: 15px; }
+.p-note { color: var(--c-stat-mid); font-size: 13.5px; }
+
+/* Награда справа — как карточка Reward у EA FC */
+.p-rw { position: relative; align-self: center; display: grid; justify-items: center; gap: 14px; padding: 22px 20px 20px; border-radius: 16px; text-align: center;
+  background: color-mix(in srgb, var(--c-ui-bg) 72%, transparent); backdrop-filter: blur(14px); box-shadow: inset 0 0 0 1px var(--c-ui-line), 0 30px 60px -30px var(--c-black); }
+.p-rw h3 { font-size: 20px; font-weight: 700; } .p-rw > p { color: var(--c-muted); font-size: 13px; }
+.p-pack { position: relative; width: 112px; height: 150px; border-radius: 10px; transform: rotate(-4deg);
+  background: linear-gradient(160deg, var(--c-card-from), var(--c-card-to) 70%); box-shadow: 0 0 0 1.5px var(--c-card-stroke), 0 0 40px -6px var(--c-card-stroke), 0 20px 30px -10px var(--c-black); }
+.p-pack::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(115deg, transparent 30%, color-mix(in srgb, var(--c-white) 45%, transparent) 45%, transparent 60%); background-size: 250% 100%; animation: p-glint 3.4s ease-in-out infinite; }
+@keyframes p-glint { 0%, 30% { background-position: 120% 0; } 70%, 100% { background-position: -40% 0; } }
+.p-pack span { position: absolute; inset: auto 0 12px; font: 700 13px var(--font-c); color: var(--c-white); }
+.p-steps { display: flex; gap: 10px; }
+.p-steps button { display: grid; justify-items: center; gap: 4px; width: 92px; padding: 10px 6px; border: 0; border-radius: 10px; background: var(--c-ui-item); font-size: 11.5px; color: var(--c-muted) !important; }
+.p-steps button b { font-size: 13px; color: var(--c-text); }
+.p-steps button i { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--c-ui-hover); font-style: normal; font-size: 13px; }
+.p-steps button.is-done i { background: var(--c-stat-high); box-shadow: none; color: var(--c-card-dark-text); }
+.p-steps button.is-done { background: color-mix(in srgb, var(--c-stat-high) 10%, var(--c-ui-item)); }
+.p-rw__t { font-size: 13px; color: var(--c-caption); } .p-rw__t b { color: var(--c-text); font-variant-numeric: tabular-nums; }
+.p-rw .h-btn { width: 100%; }
+
+/* Входы по играм */
+.p-games { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.p-g { position: relative; isolation: isolate; display: grid; gap: 8px; min-height: 168px; padding: 16px 16px 14px; overflow: hidden; border: 0; border-radius: 14px; text-align: left;
+  background: radial-gradient(90% 90% at 100% 0%, color-mix(in srgb, var(--gc) 30%, transparent), transparent 70%), var(--c-ui-panel); transition: transform .2s, box-shadow .2s; }
+.p-g:hover { transform: translateY(-3px); }
+.p-g[aria-pressed='true'] { box-shadow: inset 0 0 0 2px var(--gc), 0 20px 40px -24px var(--gc); }
+.p-g__n { font: 700 30px/1 var(--font-c); letter-spacing: -.01em; }
+.p-g__mk { position: absolute; z-index: -1; right: -6px; bottom: -22px; font: 700 96px/1 var(--font-c); color: color-mix(in srgb, var(--gc) 18%, transparent); }
+.p-g p { display: flex; align-items: center; gap: 6px; color: var(--c-muted); font-size: 13px; }
+.p-g p b { color: var(--c-text); font-weight: 600; }
+.p-g__next { margin-top: auto; display: flex; align-items: center; gap: 6px; padding-top: 10px; border-top: 1px solid var(--c-ui-line); color: var(--c-caption); font-size: 12.5px; }
+.p-g__next b { color: var(--c-text); font: 700 14px var(--font-c); }
+.p-g__next span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+</style></head>
+<body><main class="h-page">
+  <h1>v4 · Портал</h1>
+  <p>Как Portal в Destiny 2 и «For You» в EA FC: первым экраном — одно «главное сейчас» во всю ширину, с атмосферой (фото игрока, свет цветов команд), крупным счётом или таймером и одной главной кнопкой. Справа — награда дня с прогрессом, как карточка Reward у EA FC. Снизу — входы по 5 играм: сколько матчей сегодня, сколько идёт, что ближайшее. Клик по игре меняет «главное сейчас».</p>
+  <p class="h-cap">Десктоп · 1440 × 900 — первый экран (рамка уменьшена под ширину окна)</p>
+  <div class="h-wrap"><div class="h-frame" id="f"></div></div>
+</main>
+<script src="_home.js"></script>
+<script>
+const { ВСЕ, ЭФИР, ИГРЫ, время, доСтарта, имя, цвет, лого, тег, статус, шапка } = H
+const ЗНАК = { dota: 'D2', cs: 'CS', lol: 'LoL', val: 'VAL', mlbb: 'ML' }
+const СЧЁТ = { dota: 9, cs: 12, lol: 6, val: 5, mlbb: 6 }
+// Главное в каждой игре: матч в эфире, иначе ближайший, иначе последний сыгранный
+const главное = g => {
+  const мм = ВСЕ.filter(m => m.g === g)
+  return мм.find(m => m.главный) || мм.find(m => m.st === 'live') || мм.find(m => ЭФИР.includes(m.st)) || мм.filter(m => m.st === 'soon').sort((a, b) => a.t - b.t)[0] || мм.find(m => m.st === 'done')
+}
+const ФОТО = { ts: '/p-fw3k/site/img/players/yatoro.webp' }
+let игра = 'dota', сделано = new Set(['aur-bb'])
+
+const герой = m => {
+  const эф = ЭФИР.includes(m.st), итог = m.st === 'done'
+  const центр = эф || итог
+    ? `<div class="p-sc"><b>${m.sa} : ${m.sb}</b><div>${эф ? `<span>${статус(m)}</span><span>${m.bo} · счёт серии</span>` : `<span>Итог · ${m.bo}</span><span>${имя(m.sa > m.sb ? m.a : m.b)} проходят дальше</span>`}</div></div>`
+    : `<div class="p-sc"><b data-tick="${m.t}" data-mode="short">${доСтарта(m.t).short}</b><div><span>до начала</span><span>старт в ${время(m.t)} · ${m.bo}</span></div></div>`
+  const pa = m.g === 'dota' ? 64 : 57
+  return `<section class="p-hero" style="--ca:${цвет(m.a)}; --cb:${цвет(m.b)}">
+    <div class="p-art">${ФОТО[m.a] ? `<img class="p-ph" src="${ФОТО[m.a]}" alt="" />` : `<div class="p-lgs">${лого(m.a, 300)}${лого(m.b, 300)}</div>`}</div>
+    <div class="p-l">
+      <div><p class="p-kick">${тег(m.g)}<b>${m.тур}</b><span>· ${m.стадия}</span></p>
+        <h1>${имя(m.a)}<span>против</span>${имя(m.b)}</h1></div>
+      ${центр}
+      ${эф && m.st !== 'draft' ? `<div class="p-gold"><p><span>${m.g === 'cs' ? 'Раунды на карте' : 'Перевес по золоту'}</span><b>${m.g === 'cs' ? '7 : 5' : '+4.2 тыс. у ' + имя(m.a)}</b></p><div class="p-gold__bar"><i style="--p:${pa}%"></i></div></div>` : m.st === 'draft' ? `<p class="p-note">Идёт драфт: пикнуто 4 чемпиона из 10</p>` : ''}
+      <div class="p-btns">${эф ? `<a class="h-btn h-btn--main" href="#">Смотреть · Twitch RU</a><a class="h-btn" href="#">Страница матча</a>`
+        : итог ? `<a class="h-btn h-btn--main" href="#">Разбор матча</a><a class="h-btn" href="#">Запись трансляции</a>`
+        : `<a class="h-btn h-btn--main" href="#">Страница матча</a><button class="h-btn" type="button" data-remind aria-pressed="false">★ Напомнить</button>`}</div>
+    </div>
+    <aside class="p-rw">
+      <h3>Прогноз дня</h3><p>Угадай 3 матча дня — забери бустер</p>
+      <div class="p-pack"><span>Хайперглитч</span></div>
+      <div class="p-steps">${[['aur-bb', 'Aurora — BB', 'угадал'], ['flc-tl', 'FLC — TL', 'до 17:00'], ['fnc-blg', 'FNC — BLG', 'до 19:00']].map(([id, n, s], i) =>
+        `<button type="button" data-step="${id}" class="${сделано.has(id) ? 'is-done' : ''}"><i>${сделано.has(id) ? '✓' : i + 1}</i><b>${n}</b>${сделано.has(id) && id !== 'aur-bb' ? 'выбран' : s}</button>`).join('')}</div>
+      <p class="p-rw__t">Готово <b>${сделано.size} из 3</b> · прогнозы закрываются <b data-tick="${17 * 60}">${доСтарта(17 * 60).txt}</b></p>
+      <a class="h-btn h-btn--main" href="#">Сделать прогноз</a>
+    </aside>
+  </section>`
+}
+
+const входы = () => `<div class="p-games">${Object.keys(ИГРЫ).map(g => {
+  const мм = ВСЕ.filter(m => m.g === g), эф = мм.filter(m => ЭФИР.includes(m.st)).length
+  const след = мм.filter(m => m.st === 'soon' || m.st === 'delay').sort((a, b) => a.t - b.t)[0]
+  return `<button class="p-g" type="button" data-g="${g}" aria-pressed="${g === игра}" style="--gc:var(--h-game-${g})"><span class="p-g__mk">${ЗНАК[g]}</span>
+    <span class="p-g__n">${ИГРЫ[g]}</span>
+    <p><b>${СЧЁТ[g]}</b> матчей сегодня</p>
+    <p>${эф ? `<span class="h-live"><i class="h-dot"></i>${эф} идёт</span>` : '<span>сейчас не играют</span>'}</p>
+    <span class="p-g__next">${след ? `<b>${время(след.t)}</b><span>${H.К[след.a][2]} — ${H.К[след.b][2]}</span>` : '<span>на сегодня всё</span>'}</span></button>`
+}).join('')}</div>`
+
+const f = document.getElementById('f')
+const рисовать = () => { f.innerHTML = `${шапка('Матчи')}<div class="h-body"><div class="p">${герой(главное(игра))}${входы()}</div></div>`; H.тик() }
+f.addEventListener('click', e => {
+  const g = e.target.closest('[data-g]'); if (g) { игра = g.dataset.g; рисовать(); return }
+  const s = e.target.closest('[data-step]'); if (s && s.dataset.step !== 'aur-bb') { const id = s.dataset.step; сделано.has(id) ? сделано.delete(id) : сделано.add(id); рисовать(); return }
+  const r = e.target.closest('[data-remind]'); if (r) { const on = r.getAttribute('aria-pressed') !== 'true'; r.setAttribute('aria-pressed', on); r.textContent = on ? '★ Напомню за 10 минут' : '★ Напомнить' }
+})
+рисовать(); H.вписать()
+</script>
+</body></html>

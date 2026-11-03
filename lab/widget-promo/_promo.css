@@ -1,0 +1,93 @@
+/* Лаба widget-promo: квадратный виджет правой колонки (код — _promo.js). Квадрат 1:1, внутри — v1 наша графика или v2–v6 разные концепции «лучшее из обсуждения» */
+.pr{ position:relative; aspect-ratio:1 / 1; border-radius:var(--w-r, 12px); overflow:hidden; border:1px solid var(--w-border); background:var(--w-card, var(--w-page)); color:var(--w-fg); font:400 13px/18px var(--w-font); }
+.pr > div{ position:absolute; inset:0; display:flex; flex-direction:column; padding:12px; gap:8px; }
+.pr button{ font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer; }
+.pr-cap{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex:none; }
+.pr-cap b{ display:inline-flex; align-items:center; gap:6px; font:600 14px/20px var(--w-font); } .pr-cap small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.pr-av{ display:inline-grid; place-items:center; width:22px; height:22px; flex:none; border-radius:50%; background:hsl(var(--h) 45% 35%); color:#fff; font:600 11px/1 var(--w-font); font-style:normal; }
+.pr-like{ display:inline-flex; align-items:center; gap:4px; margin-left:auto; padding:3px 8px !important; border-radius:999px; background:var(--w-muted) !important; color:var(--w-muted-fg) !important; font:var(--t-num-s) !important; }
+.pr-like.on{ color:var(--w-down) !important; } .pr-like.on svg{ fill:currentColor; }
+.pr-all{ margin-left:auto; font:500 12px/16px var(--w-font) !important; color:var(--w-muted-fg) !important; } .pr-all:hover{ color:var(--w-fg) !important; }
+.pr-ft{ display:flex; align-items:center; gap:8px; flex:none; } .pr-nk{ font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* v1 — наша графика */
+.pr-ours{ justify-content:flex-end; gap:6px !important; padding:20px !important;
+  background:radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--w-up) 45%, transparent), transparent 60%), radial-gradient(90% 70% at 0% 100%, color-mix(in srgb, var(--w-down) 35%, transparent), transparent 60%), var(--w-muted); }
+.pr-ours small, .pr-ours span{ font:var(--t-sub); color:var(--w-muted-fg); } .pr-ours b{ font:700 22px/28px var(--w-font); }
+.pr-btn{ align-self:flex-start; margin-top:8px; padding:8px 16px !important; border-radius:8px; background:var(--w-fg) !important; color:var(--w-primary-fg) !important; font:600 13px/16px var(--w-font) !important; }
+
+/* v2 — топ обсуждения: мем крупно или текст крупно */
+.pr-mm{ position:relative; flex:1; min-height:0; border-radius:8px; overflow:hidden; background:#000; }
+.pr-mm img{ width:100%; height:100%; object-fit:cover; opacity:.8; }
+.pr-mm b{ position:absolute; left:10px; right:10px; bottom:8px; text-align:center; font:800 16px/20px var(--w-font); color:#fff; text-shadow:0 0 4px #000, 0 2px 0 #000; }
+.pr-txt{ flex:1; margin:0; display:flex; align-items:center; font:500 16px/23px var(--w-font); }
+.pr-dots{ display:flex; align-items:center; gap:6px; flex:none; }
+.pr-dots button[data-pr]{ width:8px; height:8px; border-radius:50%; background:var(--w-border) !important; } .pr-dots button.on{ background:var(--w-fg) !important; }
+
+/* v3 — чат матча */
+.pr-live{ width:8px; height:8px; border-radius:50%; background:var(--w-down); animation:prPulse 1.4s infinite; }
+@keyframes prPulse{ 50%{ opacity:.35; } }
+.pr-feed{ flex:1; min-height:0; display:flex; flex-direction:column; justify-content:flex-end; gap:6px; overflow:hidden; mask-image:linear-gradient(to bottom, transparent, #000 30%); }
+.pr-msg{ display:flex; align-items:flex-start; gap:8px; animation:prIn .3s; } .pr-msg p{ margin:0; flex:1; min-width:0; } .pr-msg p b{ margin-right:6px; font-weight:600; color:var(--w-muted-fg); }
+.pr-ml{ display:inline-flex; align-items:center; gap:3px; font:var(--t-num-s); color:var(--w-down); } .pr-ml svg{ fill:currentColor; width:12px; height:12px; }
+@keyframes prIn{ from{ opacity:0; transform:translateY(8px); } }
+.pr-inp{ flex:none; padding:8px 10px !important; border:1px solid var(--w-border) !important; border-radius:8px; text-align:left; color:var(--w-muted-fg) !important; }
+
+/* v4 — реакции на событие */
+.pr-ev{ display:flex; align-items:center; gap:10px; padding:8px; border-radius:8px; background:var(--w-muted); }
+.pr-ev img{ width:40px; height:40px; border-radius:6px; object-fit:cover; } .pr-ev p{ margin:0; } .pr-ev b{ display:block; font-weight:600; } .pr-ev small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.pr-rbs{ display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; }
+.pr-rbs button{ position:relative; display:flex; flex-direction:column; align-items:center; gap:2px; padding:8px 0 !important; border:1px solid var(--w-border) !important; border-radius:8px; }
+.pr-rbs button:hover{ background:var(--w-muted) !important; } .pr-rbs span{ font-size:22px; line-height:26px; } .pr-rbs b{ font:var(--t-num-s); color:var(--w-muted-fg); }
+.pr-fly{ position:absolute; left:50%; top:0; font-style:normal; font-size:22px; pointer-events:none; animation:prFly .9s ease-out forwards; }
+@keyframes prFly{ to{ transform:translate(-50%, -60px); opacity:0; } }
+.pr-best{ margin-top:auto; } .pr-best small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.pr-best p{ display:flex; align-items:center; gap:8px; margin:4px 0 0; } .pr-best p span{ flex:1; min-width:0; }
+
+/* v5 — «Горячее» */
+.pr-seg{ display:inline-flex; padding:2px; border-radius:8px; background:var(--w-muted); }
+.pr-seg button{ padding:4px 10px !important; border-radius:6px; font:500 12px/16px var(--w-font) !important; color:var(--w-muted-fg) !important; } .pr-seg button.on{ background:var(--w-page) !important; color:var(--w-fg) !important; }
+.pr-hp{ display:flex; align-items:flex-start; gap:8px; min-height:0; } .pr-hp + .pr-hp{ padding-top:8px; border-top:1px solid var(--w-border); }
+.pr-up{ display:flex; flex-direction:column; align-items:center; width:34px; flex:none; } .pr-up button{ color:var(--w-muted-fg) !important; font-size:12px !important; } .pr-up button.on{ color:var(--w-up) !important; } .pr-up b{ font:var(--t-num-s); }
+.pr-hp img{ width:44px; height:44px; flex:none; border-radius:6px; object-fit:cover; }
+.pr-hp p{ margin:0; flex:1; min-width:0; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; } .pr-hp small{ display:block; font:var(--t-sub); color:var(--w-muted-fg); }
+.pr-hot .pr-all{ margin-top:auto; }
+
+/* v6 — мемы сеткой */
+.pr-grid{ flex:1; min-height:0; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:6px; }
+.pr-grid button{ position:relative; border-radius:8px; overflow:hidden; background:#000 !important; } .pr-grid img{ width:100%; height:100%; object-fit:cover; opacity:.85; }
+.pr-grid span{ position:absolute; left:6px; bottom:6px; display:inline-flex; align-items:center; gap:3px; padding:2px 6px; border-radius:999px; background:rgba(0,0,0,.6); color:#fff; font:var(--t-num-s); } .pr-grid svg{ width:12px; height:12px; fill:currentColor; }
+.pr-wbig{ padding:0 !important; background:#000; } .pr-wbig img{ width:100%; height:100%; object-fit:cover; opacity:.8; }
+.pr-wbig > b{ position:absolute; left:12px; right:12px; top:12px; text-align:center; font:800 18px/22px var(--w-font); color:#fff; text-shadow:0 0 4px #000, 0 2px 0 #000; }
+.pr-wbig .pr-ft{ position:absolute; left:12px; right:12px; bottom:12px; } .pr-wbig .pr-nk{ color:#fff; }
+.pr-x{ position:absolute !important; top:8px; right:8px; width:28px; height:28px; border-radius:50% !important; background:rgba(0,0,0,.6) !important; color:#fff !important; font-size:18px !important; }
+
+/* v7 — полоса закрепов (Super Chat) и v9 — выделенное сообщение */
+.pr-tks{ display:flex; gap:6px; flex:none; }
+.pr-tks button{ position:relative; display:inline-flex; align-items:center; gap:4px; padding:3px 8px 5px 3px !important; border-radius:999px; overflow:hidden; background:color-mix(in srgb, var(--c) 25%, transparent) !important; opacity:.6; }
+.pr-tks button.on{ opacity:1; background:var(--c) !important; color:#fff !important; } .pr-tks b{ font:var(--t-num-s); }
+.pr-tks i{ position:absolute; left:0; bottom:0; height:2px; background:#fff; opacity:.7; }
+.pr-tkm{ flex:1; min-height:0; display:flex; flex-direction:column; gap:8px; padding:10px; border-radius:10px; background:var(--c); color:#fff; }
+.pr-tkm .pr-nk{ color:#fff; } .pr-tkm p{ margin:0; font:600 16px/22px var(--w-font); }
+.pr-amt{ margin-left:auto; padding:2px 8px; border-radius:999px; background:rgba(0,0,0,.25); font:var(--t-num-s); }
+.pr-bo .pr-tkm{ flex:none; } .pr-bo .pr-btn{ align-self:stretch; margin-top:0; text-align:center; }
+.pr-bts{ display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; }
+.pr-bts button{ display:flex; flex-direction:column; align-items:center; padding:6px 0 !important; border:1px solid var(--w-border) !important; border-radius:8px; }
+.pr-bts button.on{ border-color:var(--c) !important; background:color-mix(in srgb, var(--c) 18%, transparent) !important; } .pr-bts b{ font:var(--t-num-s); color:var(--c); } .pr-bts small{ font:var(--t-sub); color:var(--w-muted-fg); }
+/* v8 — закреп редакции */
+.pr-ed{ display:flex; align-items:flex-start; gap:8px; padding:8px; border-radius:8px; background:var(--w-muted); font:var(--t-sub); } .pr-ed b{ font-weight:600; }
+/* v10 — шкала хайпа */
+.pr-lv{ display:grid; grid-template-columns:repeat(5, 1fr); gap:4px; }
+.pr-lv i{ position:relative; height:10px; border-radius:3px; background:var(--w-muted); overflow:hidden; } .pr-lv i.full{ background:linear-gradient(90deg, #f59e0b, #e11d48); }
+.pr-lv u{ position:absolute; inset:0 auto 0 0; background:linear-gradient(90deg, #f59e0b, #e11d48); transition:width .2s; }
+.pr-hyt{ margin:0; font:500 14px/20px var(--w-font); }
+.pr-hy.is-max{ background:radial-gradient(90% 70% at 50% 0%, rgba(225,29,72,.35), transparent 70%); }
+.pr-fire{ position:absolute !important; right:12px; top:44px; width:40px; height:40px; border-radius:50% !important; background:var(--w-muted) !important; font-size:20px !important; } .pr-fire:active{ transform:scale(.9); }
+.pr-hy .pr-hyt{ padding-right:48px; }
+/* v11 — прогноз */
+.pr-q{ margin:0; font:600 16px/22px var(--w-font); }
+.pr-opt{ position:relative; display:grid !important; grid-template-columns:1fr auto; align-items:center; padding:10px 12px !important; border:1px solid var(--w-border) !important; border-radius:10px; overflow:hidden; text-align:left; }
+.pr-opt i{ position:absolute; inset:0 auto 0 0; opacity:.18; } .pr-opt.a i{ background:var(--w-up); } .pr-opt.b i{ background:var(--w-down); }
+.pr-opt span{ position:relative; font-weight:600; } .pr-opt b{ position:relative; font:var(--t-num); } .pr-opt small{ position:relative; grid-column:1 / -1; font:var(--t-sub); color:var(--w-muted-fg); }
+.pr-opt.on.a{ border-color:var(--w-up) !important; } .pr-opt.on.b{ border-color:var(--w-down) !important; }
+.pr-pd > .pr-nk{ margin-top:auto; }

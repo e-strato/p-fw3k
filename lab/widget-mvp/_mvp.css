@@ -1,0 +1,236 @@
+/* Виджет MVP (созвон 21.10): строки и шапка — как у трансферов v12 (../widget-transfers/_tr.css), здесь — своё */
+.m-gi{ display:block; flex:none; height:12px; width:auto; }
+.m-gi[src*="cs2"]{ height:9px; }
+.m-hero{ flex:none; width:22px; height:12px; object-fit:cover; border-radius:2px; opacity:.9; }
+.m-pts b{ font-variant-numeric:tabular-nums; }
+.m-mv{ font-size:11px; line-height:14px; font-weight:600; color:var(--w-muted-fg); white-space:nowrap; }
+.m-mv--up{ color:var(--w-up-fg); } .m-mv--down{ color:var(--w-down-fg); } .m-mv--new{ color:#c4b5fd; font-weight:500; }
+.m-tour{ margin-left:auto; align-self:center; font-size:11px; color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t3-seg{ align-items:center; }
+
+/* Плашка снизу: «Хайлайты» и «В фэнтези» (Т4.5) — как плашка у трансферов, две ссылки */
+.m-dock{ position:relative; z-index:0; display:flex; align-items:center; gap:8px; margin:-12px 0 0; padding:20px 8px 8px; background:#131316; border:1px solid var(--w-border); border-top:0; border-radius:0 0 var(--w-r) var(--w-r); }
+.w .m-dock a{ display:flex; align-items:center; gap:6px; height:28px; padding:0 8px; border-radius:var(--w-r-sm); font-size:13px; font-weight:500; color:var(--w-fg); text-decoration:none; }
+.w .m-dock a:hover{ background:#1c1c20; }
+.m-dock svg{ flex:none; color:var(--w-muted-fg); }
+.w .m-dock a.m-dock__f{ margin-left:auto; color:#fcd34d; }
+.m-dock__f svg{ color:#fcd34d; }
+
+/* v2 — лидер мини-карточкой фэнтези: рамка «золото» (токены карточки сайта --c-tier-gold) */
+.w a.m-card{ display:flex; gap:12px; margin:0 12px 8px; padding:8px; border-radius:10px; text-decoration:none; color:var(--w-fg);
+  background:linear-gradient(135deg, rgba(241,194,76,.22), rgba(110,74,12,.25) 60%, rgba(9,9,11,.4)); box-shadow:inset 0 0 0 1px rgba(241,194,76,.55); }
+.w a.m-card:hover{ box-shadow:inset 0 0 0 1px #f1c24c; }
+.m-card__ph{ position:relative; flex:none; width:80px; height:96px; border-radius:7px; overflow:hidden; box-shadow:0 0 0 2px #f1c24c; }
+.m-card__img{ display:block; width:100%; height:100%; object-fit:cover; }
+.m-card__img.tr-ini{ display:grid; font-size:18px; border-radius:0; }
+.m-card__n{ position:absolute; left:4px; top:4px; display:grid; place-items:center; width:20px; height:20px; border-radius:50%; background:#f1c24c; color:#18181b; font-size:12px; font-weight:800; }
+.m-card__m{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+.m-card__tag{ align-self:flex-start; height:16px; padding:0 6px; border-radius:4px; background:rgba(241,194,76,.18); color:#fcd34d; font-size:10px; line-height:16px; font-weight:700; letter-spacing:.02em; }
+.m-card__nk{ display:flex; align-items:center; gap:6px; font-size:17px; line-height:22px; font-weight:700; }
+.m-card__pts{ margin-top:auto; font-size:12px; color:var(--w-muted-fg); }
+.m-card__pts b{ font-size:20px; line-height:24px; font-weight:800; color:#fff0b8; font-variant-numeric:tabular-nums; }
+.m-card__st{ display:flex; align-items:center; gap:6px; font-size:11px; color:var(--w-muted-fg); }
+
+/* v3 — пьедестал 2 · 1 · 3 */
+.m-pod{ display:grid; grid-template-columns:1fr 1.15fr 1fr; align-items:end; gap:6px; margin:0 12px 8px; }
+.w a.m-pod__c{ position:relative; display:flex; flex-direction:column; align-items:center; gap:2px; padding:8px 4px 6px; border-radius:8px; background:var(--w-mid-bg); text-decoration:none; color:var(--w-fg); min-width:0; }
+.w a.m-pod__c:hover{ background:var(--w-muted); }
+.m-pod__c--1{ padding-top:12px !important; background:linear-gradient(180deg, rgba(241,194,76,.2), var(--w-mid-bg)) !important; box-shadow:inset 0 0 0 1px rgba(241,194,76,.5); }
+.m-pod__img{ display:block; width:40px; height:40px; border-radius:8px; object-fit:cover; }
+.m-pod__c--1 .m-pod__img{ width:52px; height:52px; box-shadow:0 0 0 2px #f1c24c; }
+.m-pod__img.tr-ini{ display:grid; font-size:12px; }
+.m-pod__p{ position:absolute; top:4px; left:6px; font-size:12px; font-weight:800; color:var(--w-muted-fg); }
+.m-pod__c--1 .m-pod__p{ color:#fcd34d; } .m-pod__c--2 .m-pod__p{ color:#e4e4e7; } .m-pod__c--3 .m-pod__p{ color:#fdba74; }
+.m-pod__c b{ max-width:100%; font-size:12px; line-height:16px; font-weight:600; }
+.m-pod__t .tr-lg{ width:14px; height:14px; }
+.m-pod__pts{ font-size:14px; font-weight:800; font-variant-numeric:tabular-nums; }
+.m-pod__c--1 .m-pod__pts{ color:#fff0b8; font-size:16px; }
+
+/* v4 — как HLTV (тёмная тема hltv.org): синевато-серые плашки, шапка колонок, строки через одну, «#1» и +2 / −1 */
+.m--hltv .t3-main{ background:#20262d; }
+.h-t{ width:100%; border-collapse:collapse; table-layout:fixed; font-size:12px; line-height:16px; color:#c9d1d9; margin:0 0 8px; }
+.h-t th{ height:24px; padding:0 6px; background:#3b4a5a; color:#e6edf3; font-size:11px; font-weight:600; text-align:right; }
+.h-t th:nth-child(1){ width:52px; text-align:left; } .h-t th:nth-child(2){ text-align:left; } .h-t th:nth-child(3){ width:44px; } .h-t th:nth-child(4){ width:40px; } .h-t th:nth-child(5){ width:44px; }
+.h-t td{ height:32px; padding:0 6px; text-align:right; font-variant-numeric:tabular-nums; }
+.h-t tbody tr{ background:#2d3844; cursor:pointer; } .h-t tbody tr:nth-child(even){ background:#27313b; }
+.h-t tbody tr:hover{ background:#36434f; }
+.h-t td:nth-child(1){ text-align:left; } .h-t td:nth-child(1) b{ color:#fff; font-weight:700; margin-right:4px; }
+.h-t td:nth-child(5) b{ color:#fff; font-weight:700; }
+.h-p{ display:flex; align-items:center; gap:6px; min-width:0; color:#fff; font-weight:600; }
+.h-lg{ width:16px; height:16px; flex:none; object-fit:contain; }
+.h-mv{ font-size:10px; font-weight:700; color:#8b98a5; } .h-mv--up{ color:#66bb6a; } .h-mv--down{ color:#e57373; } .h-mv--new{ color:#5794f1; }
+
+/* v5 — пьедестал с ростом мест; в строках сдвиг отдельной колонкой крупно */
+.m-pod .m-mv{ font-size:10px; line-height:12px; }
+.m-g{ flex:none; width:44px; text-align:right; } .m-g .m-mv{ font-size:13px; }
+
+/* v6 — таблица как у HLTV, но в нашей стилистике (zinc): шапка колонок, строки через одну; сверху аккуратный пьедестал */
+.m--htable .h-t, .m--htable .h-t td{ color:var(--w-fg); }
+.m--htable .h-t th{ background:var(--w-muted); color:var(--w-muted-fg); font-weight:500; }
+.m--htable .h-t tbody tr{ background:var(--w-bg); } .m--htable .h-t tbody tr:nth-child(even){ background:var(--w-mid-bg); }
+.m--htable .h-t tbody tr:hover{ background:var(--w-muted); }
+.m--htable .h-mv--up{ color:var(--w-up-fg); } .m--htable .h-mv--down{ color:var(--w-down-fg); } .m--htable .h-mv--new{ color:#c4b5fd; } .m--htable .h-mv{ color:var(--w-muted-fg); }
+.m--htable .h-mv--up, .m--htable .h-mv--down, .m--htable .h-mv--new{ font-weight:700; }
+.m-pod--sm{ margin:0 12px 8px; gap:6px; }
+.m-pod--sm .m-pod__img{ width:32px; height:32px; } .m-pod--sm .m-pod__c--1 .m-pod__img{ width:40px; height:40px; }
+.w .m-pod--sm a.m-pod__c{ padding:6px 4px 4px; }
+.m-pod--sm .m-pod__c--1{ padding-top:8px !important; }
+.m-pod--sm .m-pod__pts{ font-size:13px; } .m-pod--sm .m-pod__c--1 .m-pod__pts{ font-size:14px; }
+
+/* v7 — акцент цветом игры: Dota 2 — красный / бордовый, CS2 — жёлто-оранжевый (переключается вместе с игрой) */
+.m--g-dota2{ --acc:#e5484d; --acc-2:#7a1f24; --acc-fg:#ff9592; }
+.m--g-cs2{ --acc:#f0a830; --acc-2:#6b4a12; --acc-fg:#ffd27a; }
+.m--tint .h-t th{ background:linear-gradient(90deg, var(--acc-2), color-mix(in srgb, var(--acc-2) 40%, var(--w-muted))); color:#fff; }
+.m--tint .m-pod__c--1{ background:linear-gradient(180deg, color-mix(in srgb, var(--acc) 30%, transparent), var(--w-mid-bg)) !important; box-shadow:inset 0 0 0 1px var(--acc); }
+.m--tint .m-pod__c--1 .m-pod__img{ box-shadow:0 0 0 2px var(--acc); }
+.m--tint .m-pod__c--1 .m-pod__p, .m--tint .m-pod__c--1 .m-pod__pts{ color:var(--acc-fg); }
+.m--tint .h-t td:nth-child(1) b{ color:var(--acc-fg); }
+.m--tint .t3-seg button.is-on{ background:color-mix(in srgb, var(--acc) 22%, var(--w-muted)); }
+.m--tint .t3-g button.is-on{ background:color-mix(in srgb, var(--acc) 30%, var(--w-muted)); }
+.w .m--tint a.m-dock__f, .m--tint .m-dock__f svg{ color:var(--acc-fg); }
+.m--tint .m-dock{ background:linear-gradient(90deg, #131316 40%, color-mix(in srgb, var(--acc-2) 45%, #131316)); }
+
+/* v8 — строки как в v7, без пьедестала и шапки колонок; стили таблицы — как v6 */
+.m--hrows .h-t, .m--hrows .h-t td{ color:var(--w-fg); }
+.m--hrows .h-t tbody tr{ background:var(--w-bg); } .m--hrows .h-t tbody tr:nth-child(even){ background:var(--w-mid-bg); }
+.m--hrows .h-t tbody tr:hover{ background:var(--w-muted); }
+.m--hrows .h-t td{ height:36px; }
+.m--hrows .h-mv--up{ color:var(--w-up-fg); } .m--hrows .h-mv--down{ color:var(--w-down-fg); } .m--hrows .h-mv--new{ color:#c4b5fd; } .m--hrows .h-mv{ color:var(--w-muted-fg); }
+.m--hrows .h-t td:nth-child(1){ width:52px; } .m--hrows .h-t td:nth-child(3){ width:36px; color:var(--w-muted-fg); } .m--hrows .h-t td:nth-child(4){ width:40px; color:var(--w-muted-fg); } .m--hrows .h-t td:nth-child(5){ width:44px; }
+.m--hrows .h-t tbody tr:first-child{ background:linear-gradient(90deg, color-mix(in srgb, var(--acc, #f1c24c) 22%, transparent), transparent 80%); }
+
+/* Сдвиг мест — всегда цветной (дирижёр 21.10): серым только «без изменений». Правило ниже перекрывает серый у v6 / v8 */
+.w .m .h-mv--up{ color:#4ade80; } .w .m .h-mv--down{ color:#f87171; } .w .m .h-mv--new{ color:#a78bfa; }
+
+/* v9 — лента мини-карточек 5:7, листается вбок */
+.c9{ display:flex; gap:8px; padding:4px 12px 12px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; }
+.w a.c9-c{ position:relative; flex:none; width:112px; aspect-ratio:5/7; border-radius:10px; overflow:hidden; scroll-snap-align:start; color:var(--w-fg); text-decoration:none; background:var(--w-mid-bg); box-shadow:inset 0 0 0 1px var(--w-border); }
+.w a.c9-c.is-1{ box-shadow:0 0 0 2px #f1c24c; }
+.c9-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.c9-img.tr-ini{ display:grid; font-size:20px; border-radius:0; }
+.c9-c::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.45), transparent 30%, transparent 45%, rgba(9,9,11,.95) 78%); }
+.c9-n, .c9-tm, .c9-b{ position:absolute; z-index:1; }
+.c9-n{ left:6px; top:6px; display:grid; place-items:center; width:20px; height:20px; border-radius:50%; background:rgba(0,0,0,.55); font-size:12px; font-weight:800; }
+.c9-c.is-1 .c9-n{ background:#f1c24c; color:#18181b; }
+.c9-tm{ right:6px; top:6px; } .c9-tm .tr-lg{ width:18px; height:18px; }
+.c9-b{ left:8px; right:8px; bottom:8px; display:flex; flex-direction:column; }
+.c9-b > b{ font-size:13px; line-height:18px; font-weight:700; }
+.c9-p{ display:flex; align-items:baseline; gap:6px; } .c9-p b{ font-size:18px; font-weight:800; font-variant-numeric:tabular-nums; }
+.c9-c.is-1 .c9-p b{ color:#fff0b8; }
+
+/* v10 — гонка за неделю: линии мест топ-5 по дням, у конца — игрок */
+.r10{ position:relative; display:flex; margin:0 12px 4px; }
+.r10 svg{ flex:none; }
+.r10-t{ font:500 10px var(--w-font); fill:var(--w-muted-fg); }
+.r10-l{ position:relative; flex:1; min-width:0; }
+.w .r10-l a{ position:absolute; left:4px; right:0; display:flex; align-items:center; gap:6px; height:24px; color:var(--w-fg); text-decoration:none; }
+.r10-av{ width:20px; height:20px; flex:none; border-radius:5px; object-fit:cover; }
+.r10-av.tr-ini{ display:grid; font-size:8px; }
+.r10-l span{ display:flex; flex-direction:column; min-width:0; }
+.r10-l b{ font-size:11px; line-height:12px; font-weight:600; }
+.r10-l .m-mv{ font-size:10px; line-height:11px; }
+
+/* v11 — форма: последние 5 матчей квадратами, цвет — насколько выше / ниже своего среднего */
+.f11{ display:flex; flex-direction:column; gap:4px; padding:0 12px 8px; }
+.w a.f11-r{ display:flex; align-items:center; gap:8px; height:44px; padding:0 6px; border-radius:var(--w-r-sm); color:var(--w-fg); text-decoration:none; }
+.w a.f11-r:hover{ background:var(--w-mid-bg); }
+.w a.f11-r.is-1{ background:linear-gradient(90deg, rgba(252,211,77,.10), rgba(252,211,77,0) 70%); }
+.f11-n{ width:14px; flex:none; text-align:center; font-size:12px; font-weight:700; color:var(--w-muted-fg); }
+.f11-r.is-1 .f11-n{ color:#fcd34d; }
+.f11-sq{ display:flex; gap:3px; flex:none; }
+.f11-sq i{ display:grid; place-items:center; width:24px; height:24px; border-radius:5px; font-size:10px; font-style:normal; font-weight:700; font-variant-numeric:tabular-nums; }
+.f11-hi{ background:rgba(34,197,94,.28); color:#bbf7d0; } .f11-mid{ background:var(--w-muted); color:var(--w-fg); } .f11-lo{ background:rgba(239,68,68,.25); color:#fecaca; }
+
+/* v12–v14 — ближе к трансферам v12, разный баланс строки */
+.b-rk{ display:flex; flex-direction:column; align-items:center; width:24px; flex:none; }
+.b-rk b{ font-size:13px; line-height:16px; font-weight:700; color:var(--w-muted-fg); }
+.t3-top--1 .b-rk b{ color:#fcd34d; } .t3-top--2 .b-rk b{ color:#e4e4e7; } .t3-top--3 .b-rk b{ color:#fdba74; }
+.b-rk .m-mv{ font-size:10px; line-height:12px; }
+.b-chip{ flex:none; height:16px; padding:0 4px; border-radius:4px; font-size:10px; line-height:16px; }
+.b-chip.m-mv--up{ background:rgba(34,197,94,.16); } .b-chip.m-mv--down{ background:rgba(239,68,68,.16); } .b-chip.m-mv--new{ background:rgba(167,139,250,.16); }
+.b-pl{ flex:none; display:grid; place-items:center; min-width:36px; height:22px; padding:0 6px; border-radius:999px; font-size:11px; background:var(--w-muted); }
+.b-pl.m-mv--up{ background:rgba(34,197,94,.18); } .b-pl.m-mv--down{ background:rgba(239,68,68,.18); } .b-pl.m-mv--new{ background:rgba(167,139,250,.18); }
+.w.t3--tableflat .b-pill .t3-av{ width:36px; height:36px; }
+.b-pill .t3-pr{ width:48px !important; }
+/* Плашки-предложения */
+.b-dock--f span:not(.tr-cap){ color:#fcd34d; } .b-dock--f svg:first-child{ color:#fcd34d; }
+.b-mine{ margin-left:auto; display:flex; align-items:center; gap:4px; }
+.b-mine b{ font-size:12px; font-weight:700; margin-right:4px; }
+.b-mav{ width:18px; height:18px; border-radius:4px; object-fit:cover; }
+.b-mav.tr-ini{ display:grid; font-size:7px; }
+
+/* v15 — пьедестал лесенкой: 1 слева и выше, 2 и 3 ступенями вниз; ступень — высота блока */
+.m-st{ grid-template-columns:1fr 1fr 1fr; align-items:end; margin:0 12px 8px; }
+.w .m-st a.m-pod__c{ justify-content:flex-end; }
+.w .m-st .m-pod__c--1{ height:128px; } .w .m-st .m-pod__c--2{ height:112px; } .w .m-st .m-pod__c--3{ height:96px; }
+.m-st .m-pod__img{ width:36px; height:36px; } .m-st .m-pod__c--1 .m-pod__img{ width:44px; height:44px; }
+.m-st__pts{ display:flex; align-items:baseline; gap:4px; } .m-st__pts b{ font-size:14px; font-weight:800; font-variant-numeric:tabular-nums; }
+.m-st .m-pod__c--1 .m-st__pts b{ color:#fff0b8; font-size:16px; }
+.m-st .m-mv{ font-size:10px; }
+.w.m--stairs .t3-r .t3-av{ width:36px; height:36px; }
+.m--stairs .t3-r .t3-pr{ width:48px !important; }
+/* v15: тег в пьедестале — та же таблетка, что в строках */
+.m-st .b-pl{ min-width:32px; height:18px; font-size:10px; }
+.m-st__pts{ align-items:center; }
+
+/* Выше на 60 (дирижёр 21.10: «чуть повыше») */
+.m.t3--dock > .t3-main{ height:380px; }
+
+/* Плашка «не в фэнтези» — зовёт попробовать */
+.w a.n-dock{ gap:8px; padding:20px 8px 8px 12px; background:linear-gradient(90deg, #131316 30%, rgba(241,194,76,.12)); }
+.n-tx{ flex:1; min-width:0; font-size:12px; line-height:16px; font-weight:500; color:var(--w-fg); }
+.n-tx b{ font-weight:700; } .n-up{ color:#4ade80; }
+.n-btn{ flex:none; display:grid; place-items:center; height:28px; padding:0 10px; border-radius:var(--w-r-sm); background:#f1c24c; color:#18181b; font-size:12px; font-weight:700; white-space:nowrap; }
+.n-stack{ display:flex; } .n-stack .b-mav{ width:22px; height:22px; border-radius:50%; box-shadow:0 0 0 2px #131316; } .n-stack .b-mav + .b-mav{ margin-left:-6px; }
+.n-slots{ display:flex; gap:3px; } .n-slots i{ display:grid; place-items:center; width:22px; height:22px; border-radius:5px; border:1px dashed var(--w-ring); color:var(--w-muted-fg); font-style:normal; font-size:12px; overflow:hidden; }
+.n-sl{ width:100%; height:100%; object-fit:cover; opacity:.85; } .n-sl.tr-ini{ display:grid; font-size:7px; }
+.n-slots i:has(.n-sl){ border-style:solid; border-color:#f1c24c; }
+
+/* Концепты строки: «+» в состав; «в N% составов» полосой */
+.w .k-add{ flex:none; display:grid; place-items:center; width:24px; height:24px; margin-left:4px; border-radius:6px; background:var(--w-muted); color:var(--w-fg); font-size:15px; font-weight:600; line-height:1; }
+.w .k-add:hover{ background:#f1c24c; color:#18181b; }
+.w .k-add.is-on{ background:#f1c24c; color:#18181b; }
+.w .k-add.is-on::before{ content:'✓'; font-size:12px; } .w .k-add.is-on{ font-size:0; }
+.k-pop{ position:relative; display:block; height:14px; margin-top:2px; border-radius:3px; background:var(--w-mid-bg); overflow:hidden; }
+.k-pop i{ position:absolute; inset:0 auto 0 0; background:rgba(241,194,76,.22); }
+.k-pop em{ position:relative; display:block; padding-left:4px; font-size:10px; line-height:14px; font-style:normal; color:#fcd34d; }
+
+/* Нижняя часть: слоты крупно + кнопка во всю ширину; золотой баннер */
+.n-dock--col{ flex-direction:column; align-items:stretch; gap:8px; padding:20px 12px 12px; }
+.n-row{ display:flex; align-items:center; gap:8px; }
+.n-slots--lg i{ width:28px; height:28px; border-radius:6px; }
+.n-tx--sm{ font-size:11px; color:var(--w-muted-fg); }
+.w a.n-btn--w{ height:32px; text-decoration:none; font-size:13px; }
+.w a.n-dock--banner{ padding:20px 10px 10px; background:linear-gradient(100deg, rgba(241,194,76,.32), rgba(110,74,12,.35) 55%, #131316); border-color:rgba(241,194,76,.4); }
+.n-dock--banner .n-tx{ display:flex; flex-direction:column; } .n-dock--banner .n-tx b{ font-size:13px; color:#fff0b8; } .n-dock--banner .n-tx span{ font-size:11px; color:var(--w-muted-fg); }
+.n-go{ display:grid; place-items:center; width:30px; height:30px; flex:none; border-radius:50%; background:#f1c24c; color:#18181b; }
+.n-go svg{ color:#18181b; }
+
+/* На основе v18 «уже взяли»: три вида нижней части */
+.s2-av .b-mav{ width:32px; height:32px; border-radius:8px; box-shadow:0 0 0 2px #f1c24c; }
+.n-sub{ font-weight:400; color:var(--w-muted-fg); }
+.s3 i{ display:grid; place-items:center; height:22px; margin-left:-6px; padding:0 6px; border-radius:999px; background:var(--w-muted); box-shadow:0 0 0 2px #131316; font-size:10px; font-style:normal; font-weight:700; color:var(--w-fg); }
+.s4{ display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; }
+.w .s4 a{ display:flex; align-items:center; gap:6px; min-width:0; padding:6px; border-radius:var(--w-r-sm); background:var(--w-mid-bg); color:var(--w-fg); text-decoration:none; }
+.w .s4 a:hover{ background:var(--w-muted); }
+.s4 span{ display:flex; flex-direction:column; min-width:0; } .s4 b{ font-size:11px; line-height:14px; } .s4 em{ font-size:10px; line-height:12px; font-style:normal; color:var(--w-muted-fg); }
+.s4 i{ margin-left:auto; flex:none; display:grid; place-items:center; width:18px; height:18px; border-radius:5px; background:#f1c24c; color:#18181b; font-style:normal; font-size:13px; font-weight:700; }
+
+/* v24 — баннер v20 с обычной рамкой (дирижёр 21.10), как у остальных плашек */
+.m--v24 a.n-dock--banner{ border-color:var(--w-border) !important; }
+/* Баннер: 5 аватаров — плотнее нахлёст */
+.n-dock--banner .n-stack .b-mav + .b-mav{ margin-left:-9px; }
+
+/* Команда на ступени пьедестала — три вида */
+.pt-avw{ position:relative; display:block; }
+.pt-bd{ position:absolute; right:-6px; bottom:-6px; width:20px; height:20px; padding:2px; border-radius:50%; background:var(--w-bg); box-shadow:0 0 0 1px var(--w-border); object-fit:contain; }
+.pt-bd.tr-ini{ display:grid; font-size:7px; }
+.pt-ln{ display:flex; align-items:center; justify-content:center; gap:4px; max-width:100%; font-size:10px; line-height:14px; color:var(--w-muted-fg); }
+.pt-ln .tr-lg{ width:12px; height:12px; }
+.w .m-st a.pt-mark{ overflow:hidden; }
+.pt-mk{ position:absolute; right:-14px; bottom:-10px; width:72px; height:72px; object-fit:contain; opacity:.13; pointer-events:none; }
+.pt-mk.tr-ini{ display:none; }
+.pt-mark > :not(.pt-mk){ position:relative; }
+/* v28: лого команды у аватара и в строках */
+.t3-r .pt-avw{ flex:none; } .t3-r .pt-bd{ width:18px; height:18px; right:-5px; bottom:-5px; }
+.pt-tn{ color:var(--w-muted-fg); font-weight:400; }

@@ -1,0 +1,272 @@
+<!doctype html>
+<!--
+  FantasyWeb — каркас страницы.
+  ⚠️ *.html в корне website/ СГЕНЕРИРОВАНЫ: этот каркас + pages/<имя>.html + blocks/**/*.html → `node build.mjs`.
+  Правьте блоки, страницы и layout.html, не собранные файлы (гейт `node build.mjs --check` поймает ручную правку).
+  Витрина компонентов — ../storybook.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Бустер — FantasyWeb</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..900;1,400..900&family=Archivo:ital,wdth,wght@0,62..125,700..900;1,62..125,700..900&family=Cinzel:wght@700;900&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..700&display=swap" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<main>
+<!-- Бустер (дирижёр 05.10: «Свечение» v6 — на сайт вместо сундука, на странице «Сундук» — первой формой). Фольгированный пак в манере
+     карты «Хайперглитч»: проведи через него — разрез, обе части обёртки падают вниз, колода из трёх карт рубашкой раскладывается по местам
+     этих карт сайта, делает круг, и каждая встаёт ребром и доворачивается настоящей, по одной, лучшая (центр, выбранной редкости) — последней.
+     Свет — мягкий CSS-ореол позади (как «Свечение» v1). Сцена и логика — booster.js (Three.js с CDN), стили — styles.css [=== Бустер ===].
+     Режимы адреса — как у сундука: ?mini (превью для виджета главной), ?embed (онбординг; сообщает родителю 'chest-opened').
+     Карты — компонент Хайперглитч (blocks/shared/card-hg.html): Yatoro, 9Class, Pure. -->
+<section class="section" id="booster-scene">
+  <div class="cs bs swap">
+    <div class="cs__top">
+      <div class="btn-row" role="group" aria-label="Форма">
+        <a class="btn btn--quiet btn--sm" aria-pressed="true" href="chest.html?form=booster">Бустер</a>
+        <a class="btn btn--quiet btn--sm" aria-pressed="false" href="chest.html?form=box">Коробка</a>
+        <a class="btn btn--quiet btn--sm" aria-pressed="false" href="chest.html?form=chest">Сундук</a>
+      </div>
+    </div>
+    <div class="cs__cap"><h1 class="cs__name">Бустер</h1><p class="cs__note">Фольга в манере карты «Хайперглитч». Проведи через бустер — обёртка падает, колода раскладывается, и карты по одной переворачиваются.</p></div>
+    <i class="bs__halo" aria-hidden="true"></i>
+    <canvas class="bs__trail" aria-hidden="true"></canvas>
+    <div class="cs__cards">
+      <div class="cs__card" style="--i: 0; --cc: var(--c-rarity-holo-4)"><div class="cs__flip"><div class="cs__front">
+        <div class="hg"><div class="kc kc--gold kc--holo g1"><div class="kc__in"><div class="kc__flip">
+          <div class="kc__face"><div class="g1__face">
+            <div class="g1__plate"><div class="g1__bg"><i class="logo-mask g1__logo" style="--logo: url('img/teams/ts.png')"></i><i data-deco="2" class="logo-mask g1__logo g1__logo--a" style="--logo: url('img/teams/ts.png')"></i><i data-deco="2" class="logo-mask g1__logo g1__logo--b" style="--logo: url('img/teams/ts.png')"></i><i class="g1__pix" data-deco="1"></i></div>
+              <i class="g1__halo"></i><img class="ph" src="img/players/yatoro.webp" alt="Yatoro"><i class="g1__slices" data-deco="2"></i><i class="g1__scan" data-deco="3"></i><div class="g1__panel"></div>
+              <i class="fx fx-shine"></i><i class="fx fx-spark"><b></b><b></b><b></b><b></b><b></b><b></b></i></div>
+            <svg class="g1__frame" viewBox="0 0 220 308" preserveAspectRatio="none" aria-hidden="true"><polygon class="out" points="18,1 219,1 219,284 196,307 1,307 1,18"></polygon></svg>
+            <div class="g1__tab"><span><img class="logo" src="img/teams/ts.png" alt="Team Spirit"></span><hr><span class="g1__serial"><b>#044 / 400</b><small>Сезон 1</small></span></div>
+            <div class="g1__ovr"><b>88</b></div>
+            <div class="g1__heroes"><div><img class="hero-ic" src="img/heroes/faceless_void.webp" alt="Faceless Void" loading="lazy"><small><b>120 М</b><br>71%</small></div><div><img class="hero-ic" src="img/heroes/terrorblade.webp" alt="Terrorblade" loading="lazy"><small><b>88 М</b><br>66%</small></div><div><img class="hero-ic" src="img/heroes/morphling.webp" alt="Morphling" loading="lazy"><small><b>64 М</b><br>62%</small></div></div>
+            <span class="g1__role"><b>Pos 1</b> · Carry</span>
+            <div class="g1__who"><div class="g1__nick">Yatoro</div><div class="g1__name"><i class="flag flag--ua" aria-label="UA"></i>Илья Мулярчук</div></div>
+            <div class="g1__stats"><span><b data-v="hi">91</b><small>FRM</small></span><span><b data-v="mid">74</b><small>FGT</small></span><span><b data-v="mid">66</b><small>POOL</small></span><span><b data-v="mid">58</b><small>SUR</small></span><span><b data-v="lo">41</b><small>VIS</small></span><span><b data-v="hi">84</b><small>FORM</small></span></div>
+            <div class="g1__team"><img class="logo" src="img/teams/ts.png" alt="">Team Spirit</div>
+          </div><i class="fx fx-glare"></i></div>
+          <div class="kc__back"><div class="bk">
+            <i class="logo-mask bk__mask" style="--logo: url('img/teams/ts.png')"></i>
+            <div class="bk__top"><img class="logo" src="img/teams/ts.png" alt="Team Spirit"><span><b>Yatoro</b><small>#044 / 400 · Сезон 1</small></span><em>88</em></div>
+            <ul class="bk__stats"><li><span>Форма</span><b data-v="hi">91</b><i style="--v: 91%"></i></li><li><span>Драки</span><b data-v="mid">74</b><i style="--v: 74%"></i></li><li><span>Пул героев</span><b data-v="mid">66</b><i style="--v: 66%"></i></li><li><span>Выживание</span><b data-v="mid">58</b><i style="--v: 58%"></i></li><li><span>Обзор</span><b data-v="lo">41</b><i style="--v: 41%"></i></li><li><span>Игра сейчас</span><b data-v="hi">84</b><i style="--v: 84%"></i></li></ul>
+            <ul class="bk__heroes"><li><img class="hero-ic" src="img/heroes/faceless_void.webp" alt="Faceless Void" loading="lazy"><span><b>Faceless Void</b><small>120 матчей</small></span><em>71%</em></li><li><img class="hero-ic" src="img/heroes/terrorblade.webp" alt="Terrorblade" loading="lazy"><span><b>Terrorblade</b><small>88 матчей</small></span><em>66%</em></li><li><img class="hero-ic" src="img/heroes/morphling.webp" alt="Morphling" loading="lazy"><span><b>Morphling</b><small>64 матчей</small></span><em>62%</em></li></ul>
+            <p class="bk__lbl">Последние 10 матчей</p>
+            <ol class="bk__form"><li data-w="true">В</li><li data-w="true">В</li><li data-w="false">П</li><li data-w="true">В</li><li data-w="true">В</li><li data-w="true">В</li><li data-w="false">П</li><li data-w="true">В</li><li data-w="true">В</li><li data-w="false">П</li></ol>
+            <span class="bk__btn">Страница игрока</span>
+          </div><svg class="g1__frame" viewBox="0 0 220 308" preserveAspectRatio="none" aria-hidden="true"><polygon class="out" points="18,1 219,1 219,284 196,307 1,307 1,18"></polygon></svg></div>
+        </div></div></div></div>
+      </div></div></div>
+      <div class="cs__card cs__card--best" style="--i: 1"><div class="cs__flip"><div class="cs__front">
+        <div class="hg"><div class="kc kc--elite kc--legend g1"><div class="kc__in"><div class="kc__flip">
+          <div class="kc__face"><div class="g1__face">
+            <div class="g1__plate"><div class="g1__bg"><i class="logo-mask g1__logo" style="--logo: url('img/teams/pv.png')"></i><i data-deco="2" class="logo-mask g1__logo g1__logo--a" style="--logo: url('img/teams/pv.png')"></i><i data-deco="2" class="logo-mask g1__logo g1__logo--b" style="--logo: url('img/teams/pv.png')"></i><i class="g1__pix" data-deco="1"></i></div>
+              <i class="g1__halo"></i><img class="ph" src="img/players/9class.webp" alt="9Class"><i class="g1__slices" data-deco="2"></i><i class="g1__scan" data-deco="3"></i><div class="g1__panel"></div>
+              <i class="fx fx-shine"></i><i class="fx fx-spark"><b></b><b></b><b></b><b></b><b></b><b></b></i></div>
+            <svg class="g1__frame" viewBox="0 0 220 308" preserveAspectRatio="none" aria-hidden="true"><polygon class="out" points="18,1 219,1 219,284 196,307 1,307 1,18"></polygon></svg>
+            <div class="g1__tab"><span><img class="logo" src="img/teams/pv.png" alt="PARIVISION"></span><hr><span class="g1__serial"><b>#012 / 400</b><small>Сезон 1</small></span></div>
+            <div class="g1__ovr"><b>95</b></div>
+            <div class="g1__heroes"><div><img class="hero-ic" src="img/heroes/rubick.webp" alt="Rubick" loading="lazy"><small><b>95 М</b><br>67%</small></div><div><img class="hero-ic" src="img/heroes/hoodwink.webp" alt="Hoodwink" loading="lazy"><small><b>73 М</b><br>67%</small></div><div><img class="hero-ic" src="img/heroes/tusk.webp" alt="Tusk" loading="lazy"><small><b>72 М</b><br>65%</small></div></div>
+            <span class="g1__role"><b>Pos 4</b> · Support</span>
+            <div class="g1__who"><div class="g1__nick">9Class</div><div class="g1__name"><i class="flag flag--ru" aria-label="RU"></i>Эдгар Налтакян</div></div>
+            <div class="g1__stats"><span><b data-v="hi">82</b><small>FRM</small></span><span><b data-v="mid">60</b><small>FGT</small></span><span><b data-v="lo">47</b><small>POOL</small></span><span><b data-v="hi">91</b><small>SUR</small></span><span><b data-v="lo">36</b><small>VIS</small></span><span><b data-v="mid">67</b><small>FORM</small></span></div>
+            <div class="g1__team"><img class="logo" src="img/teams/pv.png" alt="">PARIVISION</div>
+          </div><i class="fx fx-glare"></i></div>
+          <div class="kc__back"><div class="bk">
+            <i class="logo-mask bk__mask" style="--logo: url('img/teams/pv.png')"></i>
+            <div class="bk__top"><img class="logo" src="img/teams/pv.png" alt="PARIVISION"><span><b>9Class</b><small>#012 / 400 · Сезон 1</small></span><em>95</em></div>
+            <ul class="bk__stats"><li><span>Форма</span><b data-v="hi">82</b><i style="--v: 82%"></i></li><li><span>Драки</span><b data-v="mid">60</b><i style="--v: 60%"></i></li><li><span>Пул героев</span><b data-v="lo">47</b><i style="--v: 47%"></i></li><li><span>Выживание</span><b data-v="hi">91</b><i style="--v: 91%"></i></li><li><span>Обзор</span><b data-v="lo">36</b><i style="--v: 36%"></i></li><li><span>Игра сейчас</span><b data-v="mid">67</b><i style="--v: 67%"></i></li></ul>
+            <ul class="bk__heroes"><li><img class="hero-ic" src="img/heroes/rubick.webp" alt="Rubick" loading="lazy"><span><b>Rubick</b><small>95 матчей</small></span><em>67%</em></li><li><img class="hero-ic" src="img/heroes/hoodwink.webp" alt="Hoodwink" loading="lazy"><span><b>Hoodwink</b><small>73 матчей</small></span><em>67%</em></li><li><img class="hero-ic" src="img/heroes/tusk.webp" alt="Tusk" loading="lazy"><span><b>Tusk</b><small>72 матчей</small></span><em>65%</em></li></ul>
+            <p class="bk__lbl">Последние 10 матчей</p>
+            <ol class="bk__form"><li data-w="true">В</li><li data-w="true">В</li><li data-w="false">П</li><li data-w="true">В</li><li data-w="false">П</li><li data-w="true">В</li><li data-w="false">П</li><li data-w="true">В</li><li data-w="false">П</li><li data-w="true">В</li></ol>
+            <span class="bk__btn">Страница игрока</span>
+          </div><svg class="g1__frame" viewBox="0 0 220 308" preserveAspectRatio="none" aria-hidden="true"><polygon class="out" points="18,1 219,1 219,284 196,307 1,307 1,18"></polygon></svg></div>
+        </div></div></div></div>
+      </div></div></div>
+      <div class="cs__card" style="--i: 2; --cc: var(--c-rarity-holo-5)"><div class="cs__flip"><div class="cs__front">
+        <div class="hg"><div class="kc kc--elite kc--prism g1"><div class="kc__in"><div class="kc__flip">
+          <div class="kc__face"><div class="g1__face">
+            <div class="g1__plate"><div class="g1__bg"><i class="logo-mask g1__logo" style="--logo: url('img/teams/tun.png')"></i><i data-deco="2" class="logo-mask g1__logo g1__logo--a" style="--logo: url('img/teams/tun.png')"></i><i data-deco="2" class="logo-mask g1__logo g1__logo--b" style="--logo: url('img/teams/tun.png')"></i><i class="g1__pix" data-deco="1"></i></div>
+              <i class="g1__halo"></i><img class="ph" src="img/players/pure.webp" alt="Pure"><i class="g1__slices" data-deco="2"></i><i class="g1__scan" data-deco="3"></i><div class="g1__panel"></div>
+              <i class="fx fx-shine"></i><i class="fx fx-spark"><b></b><b></b><b></b><b></b><b></b><b></b></i></div>
+            <svg class="g1__frame" viewBox="0 0 220 308" preserveAspectRatio="none" aria-hidden="true"><polygon class="out" points="18,1 219,1 219,284 196,307 1,307 1,18"></polygon></svg>
+            <div class="g1__tab"><span><img class="logo" src="img/teams/tun.png" alt="Tundra Esports"></span><hr><span class="g1__serial"><b>#027 / 400</b><small>Сезон 1</small></span></div>
+            <div class="g1__ovr"><b>93</b></div>
+            <div class="g1__heroes"><div><img class="hero-ic" src="img/heroes/terrorblade.webp" alt="Terrorblade" loading="lazy"><small><b>104 М</b><br>69%</small></div><div><img class="hero-ic" src="img/heroes/morphling.webp" alt="Morphling" loading="lazy"><small><b>77 М</b><br>64%</small></div><div><img class="hero-ic" src="img/heroes/faceless_void.webp" alt="Faceless Void" loading="lazy"><small><b>70 М</b><br>61%</small></div></div>
+            <span class="g1__role"><b>Pos 1</b> · Carry</span>
+            <div class="g1__who"><div class="g1__nick">Pure</div><div class="g1__name"><i class="flag flag--ru" aria-label="RU"></i>Иван Москаленко</div></div>
+            <div class="g1__stats"><span><b data-v="hi">88</b><small>FRM</small></span><span><b data-v="mid">79</b><small>FGT</small></span><span><b data-v="lo">52</b><small>POOL</small></span><span><b data-v="mid">63</b><small>SUR</small></span><span><b data-v="lo">44</b><small>VIS</small></span><span><b data-v="hi">90</b><small>FORM</small></span></div>
+            <div class="g1__team"><img class="logo" src="img/teams/tun.png" alt="">Tundra Esports</div>
+          </div><i class="fx fx-glare"></i></div>
+          <div class="kc__back"><div class="bk">
+            <i class="logo-mask bk__mask" style="--logo: url('img/teams/tun.png')"></i>
+            <div class="bk__top"><img class="logo" src="img/teams/tun.png" alt="Tundra Esports"><span><b>Pure</b><small>#027 / 400 · Сезон 1</small></span><em>93</em></div>
+            <ul class="bk__stats"><li><span>Форма</span><b data-v="hi">88</b><i style="--v: 88%"></i></li><li><span>Драки</span><b data-v="mid">79</b><i style="--v: 79%"></i></li><li><span>Пул героев</span><b data-v="lo">52</b><i style="--v: 52%"></i></li><li><span>Выживание</span><b data-v="mid">63</b><i style="--v: 63%"></i></li><li><span>Обзор</span><b data-v="lo">44</b><i style="--v: 44%"></i></li><li><span>Игра сейчас</span><b data-v="hi">90</b><i style="--v: 90%"></i></li></ul>
+            <ul class="bk__heroes"><li><img class="hero-ic" src="img/heroes/terrorblade.webp" alt="Terrorblade" loading="lazy"><span><b>Terrorblade</b><small>104 матчей</small></span><em>69%</em></li><li><img class="hero-ic" src="img/heroes/morphling.webp" alt="Morphling" loading="lazy"><span><b>Morphling</b><small>77 матчей</small></span><em>64%</em></li><li><img class="hero-ic" src="img/heroes/faceless_void.webp" alt="Faceless Void" loading="lazy"><span><b>Faceless Void</b><small>70 матчей</small></span><em>61%</em></li></ul>
+            <p class="bk__lbl">Последние 10 матчей</p>
+            <ol class="bk__form"><li data-w="true">В</li><li data-w="false">П</li><li data-w="true">В</li><li data-w="true">В</li><li data-w="true">В</li><li data-w="false">П</li><li data-w="true">В</li><li data-w="true">В</li><li data-w="false">П</li><li data-w="true">В</li></ol>
+            <span class="bk__btn">Страница игрока</span>
+          </div><svg class="g1__frame" viewBox="0 0 220 308" preserveAspectRatio="none" aria-hidden="true"><polygon class="out" points="18,1 219,1 219,284 196,307 1,307 1,18"></polygon></svg></div>
+        </div></div></div></div>
+      </div></div></div>
+    </div>
+    <p class="cs__hint">Проведи через бустер — разрежь</p>
+    <div class="cs__bar">
+      <div class="btn-row" role="group" aria-label="Редкость">
+        <button class="btn btn--quiet btn--sm" type="button" aria-pressed="false" data-rar="base">Base</button>
+        <button class="btn btn--quiet btn--sm" type="button" aria-pressed="false" data-rar="holo">Holo</button>
+        <button class="btn btn--quiet btn--sm" type="button" aria-pressed="false" data-rar="prism">Prism</button>
+        <button class="btn btn--quiet btn--sm" type="button" aria-pressed="true" data-rar="legend">Legend</button>
+      </div>
+      <i class="cs__sep"></i>
+      <button class="btn btn--sm" type="button" data-act="open">Открыть</button>
+      <button class="btn btn--quiet btn--sm" type="button" data-act="reset">Ещё раз</button>
+    </div>
+  </div>
+</section>
+<!-- Страница «Сундук»: 3D-сцена открытия. Сверху — форма (бустер — отдельная сцена blocks/chest/booster.html / коробка / сундук) и материал (обсидиан, сталь, камень, дерево, картон),
+     снизу — свечение редкости, «Открыть», «Ещё раз». Клик по предмету — тоже открыть. Сцена и логика — chest.js (Three.js с CDN),
+     стили — styles.css [=== Сундук 3D ===]. Перенесено из лаборатории «сундук-вид» (v15, v16). -->
+<section class="section" id="chest-scene">
+  <div class="cs">
+    <div class="cs__top">
+      <div class="btn-row" role="group" aria-label="Форма">
+        <a class="btn btn--quiet btn--sm" aria-pressed="false" href="chest.html?form=booster">Бустер</a>
+        <button class="btn btn--quiet btn--sm" type="button" aria-pressed="true" data-form="box">Коробка</button>
+        <button class="btn btn--quiet btn--sm" type="button" aria-pressed="false" data-form="chest">Сундук</button>
+      </div>
+      <div class="btn-row" role="group" aria-label="Материал">
+        <button class="btn btn--quiet btn--sm" type="button" aria-pressed="true" data-type="legend">Обсидиан и золото</button>
+        <button class="btn btn--quiet btn--sm" type="button" aria-pressed="false" data-type="epic">Сталь</button>
+        <button class="btn btn--quiet btn--sm" type="button" aria-pressed="false" data-type="stone">Камень</button>
+        <button class="btn btn--quiet btn--sm" type="button" aria-pressed="false" data-type="wood">Дерево</button>
+        <button class="btn btn--quiet btn--sm" type="button" aria-pressed="false" data-type="card">Картон</button>
+      </div>
+    </div>
+    <div class="cs__cap"><h1 class="cs__name">Обсидиан и золото</h1><p class="cs__note"></p></div>
+    <!-- Карты из сундука: выходят рубашкой вверх и переворачиваются по очереди, лучшая (в центре, редкость — как у свечения) — последней.
+         Карты — компонент сайта .player-card (форма F): 9Class — blocks/shared/card-f.html, Yatoro и Pure — та же разметка с другими данными. -->
+    <div class="cs__cards">
+      <div class="cs__card" style="--i: 0; --cc: var(--c-rarity-holo-4)">
+        <div class="cs__flip"><i class="cs__back" aria-hidden="true"><b>F</b></i>
+        <div class="cs__front">
+          <div data-tilt class="player-card player-card--f player-card--gold player-card--holo">
+            <div class="player-card__in">
+              <div class="player-card__body"></div>
+              <div class="player-card__f-art">
+                <i class="player-card__shine"></i>
+                <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+                <img class="player-card__ph" src="img/players/yatoro.webp" alt="Yatoro" />
+              </div>
+              <img class="player-card__ph player-card__ph--pop" src="img/players/yatoro.webp" alt="" aria-hidden="true" />
+              <div class="player-card__f-info">
+                <b class="player-card__rarity">Holo</b>
+                <div class="player-card__f-ic">
+                  <span><img src="img/heroes/faceless_void.webp" alt="Faceless Void" /></span>
+                  <span><img src="img/heroes/terrorblade.webp" alt="Terrorblade" /></span>
+                  <span class="player-card__hero--best"><img src="img/heroes/morphling.webp" alt="Morphling" /></span>
+                </div>
+                <div class="player-card__f-team"><i class="player-card__flag player-card__flag--ua" aria-label="UA"></i><span>TS · <b>POS 1</b></span></div>
+              </div>
+              <div class="player-card__f-strip"><b class="player-card__f-nick">Yatoro</b><span class="player-card__ovr"><b>88</b><small>OVR</small></span></div>
+              <i class="player-card__glare"></i>
+            </div>
+          </div>
+        </div></div>
+      </div>
+      <div class="cs__card cs__card--best" style="--i: 1">
+        <div class="cs__flip"><i class="cs__back" aria-hidden="true"><b>F</b></i>
+        <div class="cs__front">
+<!-- Карточка игрока, форма F — мини 170×234 (решение 6). Для Team of the week, сетки коллекции и сундука.
+     Стили — styles.css [=== Карточка ===], наклон — app.js [Карточка]. Другой игрок / вид — данные и модификаторы силы и редкости,
+     как у полной (blocks/shared/card-full.html). Размер — style="--w: …". Нет фото — <span class="player-card__ph player-card__ph--none">, без копии --pop. -->
+<div class="player-card player-card--f player-card--elite player-card--legend" data-tilt>
+  <div class="player-card__in">
+    <div class="player-card__body"></div>
+    <div class="player-card__f-art">
+      <i class="player-card__shine"></i>
+      <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+      <span class="player-card__big">95</span>
+      <img class="player-card__ph" src="img/players/9class.webp" alt="9Class" />
+    </div>
+    <img class="player-card__ph player-card__ph--pop" src="img/players/9class.webp" alt="" aria-hidden="true" />
+    <div class="player-card__f-info">
+      <b class="player-card__rarity">Legend</b>
+      <div class="player-card__f-ic">
+        <span><img src="img/heroes/tusk.webp" alt="Tusk +5%" /></span>
+        <span><img src="img/heroes/rubick.webp" alt="Rubick +12%" /></span>
+        <span class="player-card__hero--best"><img src="img/heroes/hoodwink.webp" alt="Hoodwink +25%" /></span>
+      </div>
+      <div class="player-card__f-team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>VSN · <b>POS 4</b></span></div>
+    </div>
+    <div class="player-card__f-strip">
+      <b class="player-card__f-nick">9Class</b>
+      <span class="player-card__ovr"><b>95</b><small>OVR</small></span>
+    </div>
+    <i class="player-card__glare"></i>
+  </div>
+</div>
+        </div></div>
+      </div>
+      <div class="cs__card" style="--i: 2; --cc: var(--c-rarity-holo-5)">
+        <div class="cs__flip"><i class="cs__back" aria-hidden="true"><b>F</b></i>
+        <div class="cs__front">
+          <div data-tilt class="player-card player-card--f player-card--elite player-card--prism">
+            <div class="player-card__in">
+              <div class="player-card__body"></div>
+              <div class="player-card__f-art">
+                <i class="player-card__shine"></i>
+                <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+                <img class="player-card__ph" src="img/players/pure.webp" alt="Pure" />
+              </div>
+              <img class="player-card__ph player-card__ph--pop" src="img/players/pure.webp" alt="" aria-hidden="true" />
+              <div class="player-card__f-info">
+                <b class="player-card__rarity">Prism</b>
+                <div class="player-card__f-ic">
+                  <span><img src="img/heroes/terrorblade.webp" alt="Terrorblade" /></span>
+                  <span><img src="img/heroes/morphling.webp" alt="Morphling" /></span>
+                  <span class="player-card__hero--best"><img src="img/heroes/faceless_void.webp" alt="Faceless Void" /></span>
+                </div>
+                <div class="player-card__f-team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>TUN · <b>POS 1</b></span></div>
+              </div>
+              <div class="player-card__f-strip"><b class="player-card__f-nick">Pure</b><span class="player-card__ovr"><b>93</b><small>OVR</small></span></div>
+              <i class="player-card__glare"></i>
+            </div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+    <p class="cs__hint">Нажми на коробку</p>
+    <div class="cs__bar">
+      <div class="btn-row" role="group" aria-label="Свечение редкости">
+        <button class="btn btn--quiet btn--sm" type="button" aria-pressed="false" data-rar="base">Base</button>
+        <button class="btn btn--quiet btn--sm" type="button" aria-pressed="false" data-rar="holo">Holo</button>
+        <button class="btn btn--quiet btn--sm" type="button" aria-pressed="false" data-rar="prism">Prism</button>
+        <button class="btn btn--quiet btn--sm" type="button" aria-pressed="true" data-rar="legend">Legend</button>
+      </div>
+      <i class="cs__sep"></i>
+      <button class="btn btn--sm" type="button" data-act="open">Открыть</button>
+      <button class="btn btn--quiet btn--sm" type="button" data-act="reset">Ещё раз</button>
+    </div>
+  </div>
+  <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+  <!-- Какую сцену запускать: ?form=box|chest — сундук (chest.js), иначе — бустер (booster.js, blocks/chest/booster.html; решение дирижёра 05.10) -->
+  <script type="module">
+    const f = new URLSearchParams(location.search).get('form')
+    const сундук = f === 'box' || f === 'chest' || !document.getElementById('booster-scene') // блок сундука сам по себе (песочница) — сундук
+    document.documentElement.dataset.scene = сундук ? 'chest' : 'booster'
+    import((сундук ? './chest.js' : './booster.js') + '?t=' + Date.now()) // без кэша: правки сцены видны сразу после обновления вкладки
+  </script>
+</section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

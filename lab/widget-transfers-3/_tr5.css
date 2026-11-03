@@ -1,0 +1,30 @@
+/* Трансферы, заход 5 (созвон 23.10, решение 34): поверх ../widget-transfers-2/_tr4.css (v12) и _type.css; меняется только строка и шапка таблицы.
+   Строка 320: отступ 12 · дата 44 · игра 16 · фото 28 · ник · откуда » куда 120; зазор 6. */
+.w.tr5 .t2-r, .w.tr5 .t2-th{ grid-template-columns:44px 16px 28px minmax(0,1fr) 120px; column-gap:6px; }
+.w.tr5 .t2-th span:nth-child(2){ grid-column:3 / 5; text-align:left; } /* «Игрок» — по левому краю аватара (дирижёр 23.10) */
+.w.tr5 .t2-th span:nth-child(3){ grid-column:5; text-align:left; }               /* «Трансфер» — по левому краю лого «откуда» */
+.tr5 .u-when span:empty{ display:none; } /* низ даты у трансферов пустой — дата по центру строки */
+.tr5 .t2-nm{ font:var(--t-title); }
+
+/* Значок игры 16 — своей колонкой, без обводки и подложки; CS2 — картинкой (дирижёр 23.10) */
+.tr5-g--cs{ display:grid; }
+.tr5-g--cs i{ background:var(--m) center / contain no-repeat; }
+
+/* Откуда » куда: лого 16 вплотную к тегу; половины равные — » стоит ровно во всех строках */
+.w.tr5 .t2-r__w{ display:grid; grid-template-columns:minmax(0,1fr) 14px minmax(0,1fr); gap:0; justify-content:stretch; }
+.tr5-tm{ display:flex; align-items:center; gap:4px; min-width:0; font:var(--t-link); }
+.tr5-tm .u-tag{ min-width:0; overflow:hidden; text-overflow:ellipsis; }
+.w.tr5 .tr5-tm .t2-lg{ width:16px; height:16px; border-radius:0; }
+.tr5-from{ color:var(--w-muted-fg); }
+.w.tr5 .tr5-from .t2-lg{ filter:grayscale(1); opacity:.5; }
+.tr5-to{ color:var(--w-fg); }
+.tr5-go{ text-align:center; font:var(--t-link); color:var(--w-muted-fg); }
+/* v3: без команды — пустой кружок пунктиром вместо лого */
+.tr5-nl{ flex:none; width:16px; height:16px; box-sizing:border-box; border:1px dashed var(--w-ring); border-radius:50%; }
+.tr5-none{ color:var(--w-muted-fg); }
+/* v4: игра под датой — значок 12 и название; колонки игры нет */
+.w.tr5.tr5--gd .t2-r, .w.tr5.tr5--gd .t2-th{ grid-template-columns:52px 28px minmax(0,1fr) 120px; }
+.w.tr5.tr5--gd .t2-th span:nth-child(2){ grid-column:2 / 4; } .w.tr5.tr5--gd .t2-th span:nth-child(3){ grid-column:4; }
+.tr5-wg{ display:flex; align-items:center; gap:4px; }
+.tr5-gi{ flex:none; width:12px; height:12px; border-radius:3px; object-fit:contain; }
+.tr5--gd .u-when{ width:auto; }

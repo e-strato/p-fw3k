@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_промо.css" />
+<style>
+/* v3 · Сетка-прогноз. Откуда: Pick'Em CS2 Major и VCT Champions — клик по команде проводит её дальше по сетке,
+   награды ступенями (участие → топ-50% → топ-20% → идеально). Место — центр главной на 2 колонки, вместо сетки DreamLeague. */
+.w-pick .card__b { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 24px; }
+.br { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) 120px; gap: 0; align-items: stretch; }
+.br__col { display: flex; flex-direction: column; justify-content: space-around; gap: 10px; padding-right: 22px; position: relative; }
+.br__col h3 { position: absolute; top: -26px; left: 0; margin: 0; font-size: var(--fs-app-xs); font-weight: 500; color: var(--c-caption); }
+.m { position: relative; display: grid; gap: 2px; }
+/* Соединители: от пары вправо к следующему раунду */
+.br__col:not(:last-child) .m::after { content: ''; position: absolute; right: -22px; top: 50%; width: 22px; height: 1px; background: var(--c-ui-line); }
+.t { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; gap: 8px; height: 34px; padding: 0 10px; border: 0; border-radius: 8px;
+  background: var(--c-ui-item); color: var(--c-text); font: inherit; font-size: var(--fs-app-sm); text-align: left; cursor: pointer; transition: background .2s, opacity .2s; }
+.t:hover:not(:disabled) { background: var(--c-ui-hover); }
+.t:disabled { cursor: default; }
+.t .team-logo { width: 22px; height: 22px; border-radius: 6px; }
+.t span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.t small { font-size: var(--fs-app-xs); color: var(--c-caption); }
+.t.is-win { background: color-mix(in srgb, var(--tc) 22%, var(--c-ui-item)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tc) 60%, transparent); font-weight: 600; }
+.t.is-out { opacity: .35; }
+.t.is-empty { color: var(--c-caption); background: transparent; border: 1px dashed var(--c-ui-line); }
+@media (prefers-reduced-motion: no-preference) { .t.is-new { animation: pop .35s cubic-bezier(.2, .9, .3, 1.4); } }
+@keyframes pop { from { scale: .9; opacity: 0; } }
+
+/* Чемпион: Аегис справа */
+.champ { display: grid; justify-items: center; align-content: center; gap: 8px; text-align: center; }
+.aegis { --tc: var(--c-tier-elite); width: 86px; height: 104px; display: grid; place-items: center; transition: filter .4s;
+  filter: drop-shadow(0 0 0 transparent); }
+.aegis svg { width: 100%; height: 100%; }
+.aegis.is-set { filter: drop-shadow(0 0 22px color-mix(in srgb, var(--tc) 70%, transparent)); }
+.champ b { font-size: var(--fs-app-md); }
+.champ small { font-size: var(--fs-app-xs); color: var(--c-caption); }
+
+/* Справа: прогресс и ступени наград */
+.side { display: grid; align-content: start; gap: 14px; padding-left: 24px; border-left: 1px solid var(--c-ui-line); }
+.side__n { display: flex; align-items: baseline; gap: 8px; }
+.side__n b { font-size: 32px; }
+.side__n small { font-size: var(--fs-app-sm); color: var(--c-caption); }
+.prog { height: 6px; border-radius: 3px; background: var(--c-ui-item); overflow: hidden; }
+.prog i { display: block; height: 100%; width: 0; background: var(--c-tier-elite); transition: width .4s; }
+.tiers { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.tiers li { display: grid; grid-template-columns: 30px minmax(0, 1fr); align-items: center; gap: 10px; font-size: var(--fs-app-sm); }
+.tiers li i { width: 30px; height: 30px; border-radius: 50%; background: var(--c); box-shadow: inset 0 -3px 0 color-mix(in srgb, var(--c-black) 25%, transparent); }
+.tiers li span { display: grid; }
+.tiers li small { color: var(--c-caption); font-size: var(--fs-app-xs); }
+.side .btn { justify-content: center; }
+.side .btn:disabled { opacity: .35; pointer-events: none; }
+@media (max-width: 1100px) { .w-pick .card__b { grid-template-columns: 1fr; } .side { padding: 16px 0 0; border: 0; border-top: 1px solid var(--c-ui-line); } }
+@media (max-width: 700px) { .br { grid-template-columns: repeat(3, 150px) 110px; overflow-x: auto; padding-top: 26px; } }
+</style></head>
+<body>
+<div class="lab-wrap">
+  <div class="lab-bar">
+    <div class="lab-bar__t"><b>v3 · Сетка-прогноз</b><small>Pick'Em CS2 Major, VCT Champions · центр главной на 2 колонки</small></div>
+    <div class="lab-st"><button data-go="до">Пустая</button><button data-go="полная">Заполнена</button></div>
+  </div>
+  <p class="home-cap">Настоящая главная: сетка-прогноз — наверху, вместо витрины; остальное приглушено</p>
+  <div class="home" data-slot="into:.app-home__showcase">
+    <div class="ghost ghost--tall span-2"></div><div class="ghost ghost--tall"></div>
+    <section class="card card--ui w-pick span-2" aria-label="Pick'Em TI">
+      <div class="card__h"><h2>Проведи команду до Аегиса</h2><small>Плей-офф TI · прогнозы до 18 августа, 12:00</small></div>
+      <div class="card__b">
+        <div class="br" id="br" style="padding-top: 26px">
+          <div class="br__col" data-r="0"><h3>Четвертьфинал</h3></div>
+          <div class="br__col" data-r="1"><h3>Полуфинал</h3></div>
+          <div class="br__col" data-r="2"><h3>Гранд-финал</h3></div>
+          <div class="champ">
+            <div class="aegis" id="ag"><svg viewBox="0 0 86 104" aria-hidden="true"><defs><linearGradient id="ag-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--c-tier-elite-hi)"/><stop offset="1" stop-color="var(--tc)"/></linearGradient></defs><path d="M43 2 6 14v30c0 28 16 48 37 58 21-10 37-30 37-58V14L43 2Z" fill="url(#ag-g)" opacity=".18" stroke="var(--tc)" stroke-width="2"/><path d="M43 22 24 29v17c0 15 8 26 19 32 11-6 19-17 19-32V29l-19-7Z" fill="var(--tc)" opacity=".5"/></svg></div>
+            <b id="cn">Кто возьмёт?</b><small id="cs">Выбери победителей пар</small>
+          </div>
+        </div>
+        <div class="side">
+          <div class="side__n"><b class="disp num" id="nn">0/7</b><small>прогнозов</small></div>
+          <div class="prog"><i id="pg"></i></div>
+          <ul class="tiers">
+            <li><i style="--c: var(--c-tier-bronze)"></i><span>Участие<small>значок TI в профиль</small></span></li>
+            <li><i style="--c: var(--c-tier-silver)"></i><span>Топ-50%<small>сундук TI</small></span></li>
+            <li><i style="--c: var(--c-tier-gold)"></i><span>Топ-20%<small>карта TI · Holo</small></span></li>
+            <li><i style="--c: var(--c-tier-elite)"></i><span>Без ошибок<small>карта Аегиса · Legend</small></span></li>
+          </ul>
+          <button class="btn btn--ti" id="save" type="button" disabled>Сохранить сетку</button>
+          <button class="btn btn--quiet btn--sm" id="auto" type="button">Заполнить по рейтингу</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<script src="_промо.js"></script>
+<script>
+// Сетка: 8 команд → 4 → 2 → 1. Клик по команде в паре — она выходит в следующий раунд; смена выбора чистит её путь дальше.
+const T = [['ts', 'Team Spirit', '1'], ['aur', 'Aurora', '8'], ['tun', 'Tundra', '4'], ['tl', 'Liquid', '5'], ['pv', 'PARIVISION', '2'], ['bb', 'BetBoom', '7'], ['flc', 'Falcons', '3'], ['gg', 'Gaimin Gladiators', '6']]
+const R = [T.map((_, i) => i), [null, null, null, null], [null, null], [null]]
+const cols = [...document.querySelectorAll('#br .br__col')]
+const btn = (i, r, slot) => {
+  if (i == null) return `<button class="t is-empty" disabled><i></i><span>—</span></button>`
+  const [k, n, seed] = T[i], next = R[r + 1]?.[Math.floor(slot / 2)]
+  const st = next == null ? '' : next === i ? ' is-win' : ' is-out'
+  return `<button class="t t-${k}${st}" data-r="${r}" data-s="${slot}" data-i="${i}"><i class="team-logo t-${k} is-logo"></i><span>${n}</span><small>${r === 0 ? '#' + seed : ''}</small></button>`
+}
+let fresh = -1
+const draw = () => {
+  cols.forEach((c, r) => {
+    c.querySelectorAll('.m').forEach((m) => m.remove())
+    for (let p = 0; p < R[r].length; p += 2) c.insertAdjacentHTML('beforeend', `<div class="m">${btn(R[r][p], r, p)}${btn(R[r][p + 1], r, p + 1)}</div>`)
+  })
+  if (fresh >= 0) [...document.querySelectorAll(`.t[data-i="${fresh}"]`)].pop()?.classList.add('is-new')
+  const ch = R[3][0], ag = document.getElementById('ag')
+  ag.classList.toggle('is-set', ch != null)
+  ag.style.setProperty('--tc', ch != null ? getComputedStyle(document.querySelector(`.t-${T[ch][0]}`)).getPropertyValue('--tc') : 'var(--c-tier-elite)')
+  document.getElementById('cn').textContent = ch != null ? T[ch][1] : 'Кто возьмёт?'
+  document.getElementById('cs').textContent = ch != null ? 'твой чемпион TI 2026' : 'Выбери победителей пар'
+  const n = R.slice(1).flat().filter((x) => x != null).length
+  document.getElementById('nn').textContent = n + '/7'
+  document.getElementById('pg').style.width = n / 7 * 100 + '%'
+  document.getElementById('save').disabled = n < 7
+}
+const advance = (r, slot, i) => {
+  const ns = Math.floor(slot / 2), old = R[r + 1][ns]
+  R[r + 1][ns] = i
+  // Сменили победителя — старый уходит из всех дальнейших раундов
+  if (old != null && old !== i) for (let q = r + 2; q < R.length; q++) R[q] = R[q].map((x) => (x === old ? null : x))
+}
+document.getElementById('br').addEventListener('click', (e) => {
+  const b = e.target.closest('.t[data-i]'); if (!b || +b.dataset.r >= 3) return
+  fresh = +b.dataset.i; advance(+b.dataset.r, +b.dataset.s, fresh); draw()
+})
+const auto = () => { for (let r = 0; r < 3; r++) R[r].forEach((_, s) => { if (s % 2) return; const a = R[r][s], b = R[r][s + 1]; advance(r, s, +T[a][2] < +T[b][2] ? a : b) }); fresh = -1; draw() }
+document.getElementById('auto').addEventListener('click', auto)
+document.getElementById('save').addEventListener('click', (e) => { e.target.textContent = 'Сетка сохранена ✓' })
+document.addEventListener('промо:состояние', (e) => {
+  if (e.detail === 'полная') auto()
+  else { R[1] = [null, null, null, null]; R[2] = [null, null]; R[3] = [null]; draw() }
+})
+draw()
+</script>
+</body></html>

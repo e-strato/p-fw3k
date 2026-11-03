@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../бустеры/_бустер.css" />
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+</head>
+<body>
+<!-- v4 · Сминается и улетает. Половины мнутся складками в комки (вершины тянутся к центру куска, фольга морщится) и
+     комками отлетают в стороны, крутясь. -->
+<div class="bs"></div>
+<script type="module">
+import { play, THREE } from './_обёртка.js'
+play({
+  name: 'Обёртка сминается и улетает',
+  note: 'Половины мнутся в комки — фольга морщится и стягивается — и комками отлетают в стороны, крутясь.',
+  async remove({ K, A, B }) {
+    const parts = [A, B].map((p, i) => {
+      const ctr = p.poly.reduce((s, q) => s.add(new THREE.Vector3(q.x, q.y, 0)), new THREE.Vector3()).divideScalar(p.poly.length)
+      p.U.uCtr.value.copy(ctr)
+      return { p, s: i ? -1 : 1 }
+    })
+    // Смятие с дрожью
+    await K.tween(650, (k) => parts.forEach(({ p, s }) => { p.U.uCrush.value = k; p.h.position.copy(A.n).multiplyScalar(s * k * 0.25); p.h.rotation.z = s * Math.sin(k * 30) * 0.04 * k }), (k) => 1 - (1 - k) ** 2)
+    K.sparks(new THREE.Vector3(0, 0, 0.3), 0.4, 0.4)
+    // Комки улетают в стороны по нормали разреза, крутятся
+    K.tween(1100, (k) => parts.forEach(({ p, s }) => { p.h.position.copy(A.n).multiplyScalar(s * (0.25 + k * 3.2)); p.h.position.y += -k * k * 1.5; p.h.position.z = -k * 0.8; p.h.rotation.set(k * 6 * s, k * 4, k * 8 * s) }), (k) => k * k)
+    await K.wait(250)
+  },
+})
+</script>
+</body></html>

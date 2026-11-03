@@ -1,0 +1,31 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>v2 · Линия этапов</title><link rel="stylesheet" href="_p.css">
+<style>
+.tl{ position:relative; display:flex; justify-content:space-between; padding:0 6px; }
+.tl::before{ content:''; position:absolute; left:12px; right:12px; top:6px; height:2px; background:#444; }
+.tl button{ position:relative; display:flex; flex-direction:column; align-items:center; gap:6px; font-size:12px; color:#a3a3a3; }
+.tl i{ width:14px; height:14px; border-radius:50%; background:#262626; border:2px solid #555; }
+.tl button.on{ color:#fff; } .tl button.on i{ border-color:#a78bfa; background:#a78bfa; } .tl button.past i{ border-color:#a78bfa; }
+.ch{ display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; min-height:26px; }
+.ch button{ height:26px; padding:0 10px; border-radius:13px; background:#333; font-size:12px; color:#d4d4d4; }
+.ch button.on{ background:#f59e0b; color:#1a1a1a; }
+.fd{ display:flex; align-items:center; justify-content:space-between; margin-top:14px; padding-top:12px; border-top:1px solid #333; }
+.sw{ width:30px; height:18px; border-radius:9px; background:#444; position:relative; } .sw::after{ content:''; position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%; background:#ddd; transition:.15s; }
+.sw.on{ background:#a78bfa; } .sw.on::after{ left:14px; }
+</style></head><body><script src="_p.js"></script><script>
+const ST = [['announce', 'Анонс'], ['pre', 'До'], ['live', 'Live'], ['post', 'После']];
+const EX = { announce: [], pre: ['delayed'], live: ['nodata', 'offline'], post: ['cancel'] };
+const BASE = { delayed: 'pre', nodata: 'live', offline: 'live', cancel: 'post' };
+let stage = 'live';
+P.mount(`<div class="lbl">Этап матча</div><div id="w"></div>`, () => {
+  const k = P.cur, feed = k === 'feed';
+  if (!feed) stage = BASE[k] || k;
+  const si = ST.findIndex(([s]) => s === stage);
+  document.querySelector('#w').innerHTML = `<div class="tl" style="${feed ? 'opacity:.35' : ''}">${ST.map(([s, n], i) => `<button data-s="${s}" class="${!feed && i === si ? 'on' : !feed && i < si ? 'past' : ''}"><i></i>${n}</button>`).join('')}</div>
+    <div class="ch" style="${feed ? 'opacity:.35' : ''}">${EX[stage].map((x) => `<button data-x="${x}" class="${x === k ? 'on' : ''}">${P.S[x][0]}</button>`).join('') || '<span style="font-size:12px;color:#666;line-height:26px">особых случаев нет</span>'}</div>
+    <div class="fd"><span>Лента матчей</span><button class="sw ${feed ? 'on' : ''}" id="fd"></button></div>`;
+  document.querySelectorAll('[data-s]').forEach((b) => b.onclick = () => P.set(b.dataset.s));
+  document.querySelectorAll('[data-x]').forEach((b) => b.onclick = () => P.set(b.dataset.x === k ? stage : b.dataset.x));
+  document.querySelector('#fd').onclick = () => P.set(feed ? stage : 'feed');
+}, `<p>Состояние читается как <b>время матча</b>: линия Анонс → До → Live → После, жмёшь точку. Под линией — особые случаи только этого этапа (на Live: «Нет данных», «Нет данных и трансляции»).</p>
+<ul><li>Сразу видно, где матч во времени, и что бывает на этом этапе.</li><li>Особый случай — повторный клик снимает его, возвращает обычный этап.</li><li>«Лента» — не этап, отдельный переключатель снизу.</li><li>Место: ~110 px высоты.</li></ul>`);
+</script></body></html>

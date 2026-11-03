@@ -1,0 +1,46 @@
+/* Лаба «промо-турнира» (дирижёр 05.10): общее для вариантов — кадр главной, переключатель состояний, шрифт, мелочи.
+   Пример турнира — The International 2026 (Шанхай, 13–23 августа, 16 команд, база $1,6 млн + 30% с наборов болельщика).
+   Данные условные: виджет показан так, будто турнир ещё впереди. */
+body { background: var(--c-ui-bg); color: var(--c-text); font-family: var(--font); }
+.lab-wrap { max-width: 1480px; margin: 0 auto; padding: 24px; }
+
+/* Над кадром: имя варианта, откуда идея, состояния виджета (только в лабе) */
+.lab-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.lab-bar__t { display: grid; gap: 2px; }
+.lab-bar__t b { font-size: var(--fs-app-md); font-weight: 600; }
+.lab-bar__t small { font-size: var(--fs-app-sm); color: var(--c-caption); }
+.lab-st { display: flex; gap: 6px; padding: 4px; border-radius: 999px; background: var(--c-ui-panel); }
+.lab-st button { height: 30px; padding: 0 14px; border: 0; border-radius: 999px; background: none; color: var(--c-caption); font: inherit; font-size: var(--fs-app-sm); cursor: pointer; }
+.lab-st button[aria-pressed='true'] { background: var(--c-ui-item); color: var(--c-text); }
+
+/* Кадр главной: сетка как на сайте (2 колонки + правая 330), соседи — пустые плашки */
+.home { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 330px; gap: 20px; align-items: start; }
+.home > .ghost { min-height: 180px; border-radius: 12px; background: var(--c-ui-panel); opacity: .45; }
+.home > .ghost--tall { min-height: 360px; }
+.home > .ghost--short { min-height: 120px; }
+.home .span-2 { grid-column: span 2; }
+.home .span-3 { grid-column: 1 / -1; }
+.home-cap { margin: 0 0 10px; font-size: var(--fs-app-sm); color: var(--c-caption); }
+@media (max-width: 1100px) { .home { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .home > .ghost:nth-child(n+3) { display: none; } }
+@media (max-width: 700px) { .home { grid-template-columns: minmax(0, 1fr); } .home .span-2 { grid-column: auto; } .home > .ghost { display: none; } }
+
+/* Общие мелочи промо */
+.disp { font-family: 'Archivo', var(--font); font-stretch: 112%; font-weight: 800; letter-spacing: -.02em; line-height: 1; }
+.num { font-variant-numeric: tabular-nums; }
+.ti-mark { display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-app-sm); color: var(--c-muted); white-space: nowrap; }
+.ti-mark svg { width: 18px; height: 18px; color: var(--c-tier-elite); }
+.pill { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; background: var(--c-ui-item); font-size: var(--fs-app-xs); color: var(--c-muted); white-space: nowrap; }
+.pill b { color: var(--c-text); font-weight: 600; }
+.pill--live::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--c-live); }
+.btn--ti { background: var(--c-tier-elite); color: var(--c-card-dark-text); }
+.btn--ti:hover { background: var(--c-tier-elite-hi); }
+.card--ui .btn { border: 0; cursor: pointer; font-family: inherit; }
+[data-st]:not(.is-st) { display: none !important; }
+
+/* Настоящая главная внутри варианта: шапка и виджеты сайта как есть, промо-виджет — на своём месте, строкой — с отступом */
+.home-real { border-radius: 14px; overflow: hidden; background: var(--c-ui-bg); }
+.home-real #app-home > .promo-w { margin-bottom: 20px; }
+.home-real .promo-w.span-2, .home-real .promo-w.span-3 { grid-column: auto; }
+/* Остальные виджеты главной — на 50%, чтобы промо-виджет читался как главный (дирижёр 05.10) */
+.home-real #app-home .card:not(.promo-w, .promo-w .card) { opacity: .5; }
+.home-real .promo-w { position: relative; z-index: 1; }

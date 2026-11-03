@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Прототип М · Страница матча (телефон, плотно) · GoatScout</title>
+<!-- Прототип ЛОГИКИ (окно Г, 16.10). Блоки, состояния, тексты — UX-SCENARIOS-2026-10-13.md «Экран М» (решения founder'а 13–16.10);
+     вопросы — GUESS-CATALOG-2026-10-16.md; метки данных — DATA-GAPS-2026-10-13.md. Визуал нейтральный, цвета — значения токенов Егора --c-*.
+     Данные условные: DreamLeague S27 · Team Spirit — Tundra Esports · Bo3. Рядом — текущая страница Егора в том же состоянии. -->
+<style>
+:root{--c-bg:#0e0e10;--c-surface:#151419;--c-line:#2a2930;--c-text:#f5f5f7;--c-muted:#a5a5a7;--c-accent:#8c67eb;--c-live:#fe445f;--c-gold:#f1c24c;--ok:#3fbf7f;--ta:#9aa4b1;--tb:#2fd0a8}
+*{box-sizing:border-box}body{margin:0;background:#050506;color:var(--c-text);font:13px/1.35 Inter,system-ui,sans-serif;display:flex;gap:22px;padding:20px;align-items:flex-start}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+.col h3{margin:0 0 8px;font-size:13px;color:var(--c-muted);font-weight:600}
+.phone{width:390px;height:844px;background:var(--c-bg);border:1px solid var(--c-line);border-radius:34px;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.scr{flex:1;overflow-y:auto;position:relative}
+.egor{width:390px;height:844px;border:1px solid var(--c-line);border-radius:34px;background:#000}
+.blk{position:relative}.nums .blk::before{content:attr(data-n);position:absolute;right:4px;top:2px;z-index:9;background:var(--c-gold);color:#000;font:700 10px/1 Inter;padding:2px 4px;border-radius:5px}
+.gap{display:inline-block;font-size:10px;font-weight:700;color:#ff8a9b;border:1px solid #6a2a35;border-radius:5px;padding:0 4px;margin-left:4px;white-space:nowrap}
+.mut{color:var(--c-muted)}
+/* 1 шапка */
+.hd{position:sticky;top:0;z-index:8;background:#121116ee;backdrop-filter:blur(6px);border-bottom:1px solid var(--c-line);padding:8px 12px 6px}
+.hd .r1{display:flex;align-items:center;gap:6px}.lg{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:8px;font-weight:800;color:#000}
+.hd .code{font-weight:800;font-size:15px}.hd .sc{margin:0 auto;font-weight:800;font-size:18px;letter-spacing:.02em;text-align:center}
+.hd .sc small{display:block;font-size:11px;font-weight:600;color:var(--c-muted);letter-spacing:0}
+.hd .r2{display:flex;gap:6px;align-items:center;margin-top:3px;font-size:11px;color:var(--c-muted)}.hd .r2 a{color:var(--c-muted);text-decoration:underline dotted}
+.stage{color:var(--c-live);font-weight:700}.stage.calm{color:var(--c-text)}
+.pips{display:inline-flex;gap:3px}.pips i{width:12px;height:4px;border-radius:2px;background:#3a3842}.pips i.a{background:var(--ta)}.pips i.b{background:var(--tb)}.pips i.n{background:var(--c-live)}
+.spoil{border:1px solid var(--c-line);border-radius:7px;padding:3px 8px;font-size:12px;font-weight:600}
+.warnl{font-size:11px;color:var(--c-gold);margin-top:2px}
+/* 2 верх */
+.top{position:relative;height:150px;background:#0b0a0e;border-bottom:1px solid var(--c-line)}
+.top svg{width:100%;height:100%;display:block}.top .lbl{position:absolute;left:10px;top:6px;font-size:11px;color:var(--c-muted)}
+.play{position:absolute;right:10px;top:8px;border:1px solid var(--c-line);background:#1d1b23;border-radius:8px;padding:4px 9px;font-size:12px;font-weight:600}
+.maps{position:absolute;left:10px;bottom:6px;display:flex;gap:4px}.maps button{font-size:11px;border:1px solid var(--c-line);border-radius:6px;padding:1px 6px;color:var(--c-muted)}.maps button.on{color:var(--c-text);border-color:var(--c-text)}
+.ev{position:absolute;transform:translate(-50%,-50%);font-size:11px;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:#1d1b23;border:1px solid var(--c-line)}
+.tip{position:absolute;left:10px;right:10px;bottom:28px;background:#26242e;border-radius:8px;padding:5px 8px;font-size:12px}
+.stream{position:absolute;inset:0;background:linear-gradient(135deg,#1c2430,#141016);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.stream .src{display:flex;gap:4px}.stream .src button{border:1px solid var(--c-line);border-radius:6px;padding:2px 7px;font-size:11px}.stream .src button.on{border-color:var(--c-text)}
+.pre{padding:12px;height:100%;display:flex;flex-direction:column;justify-content:center;gap:6px}.pre .cd{font-size:26px;font-weight:800;letter-spacing:.02em}.pre p{margin:0;color:#d8d6e0}
+.draft{padding:8px 10px;font-size:12px;display:grid;gap:4px;height:100%;align-content:center}.draft .row{display:flex;gap:4px;align-items:center}.draft b{width:34px}.draft i{font-style:normal;border-radius:5px;padding:1px 5px;background:#22202a}.draft i.ban{text-decoration:line-through;color:var(--c-muted)}.draft i.now{outline:1px dashed var(--c-live)}
+.rounds{display:flex;gap:2px;padding:28px 10px 0;height:110px;align-items:center}.rounds i{width:13px;height:34px;border-radius:3px;background:#2a2930;font:normal 9px/34px Inter;text-align:center;color:#000;cursor:pointer}.rounds i.a{background:var(--ta)}.rounds i.b{background:var(--tb)}
+/* 3 полоса */
+.you{display:flex;gap:6px;align-items:center;white-space:nowrap;overflow:hidden;padding:6px 10px;background:#1b1529;border-bottom:1px solid #3a2d5c;font-size:12px}.you b{color:#d9ccff}.you .sep{color:#5d4c8c}
+/* 4 угадай */
+.gs{margin:8px 10px;background:var(--c-surface);border:1px solid #3a2d5c;border-radius:12px;padding:8px 10px}
+.gs .q{display:flex;gap:6px;align-items:baseline}.gs .q b{flex:1}.gs .q small{color:var(--c-muted);white-space:nowrap}
+.ans{display:grid;grid-template-columns:repeat(var(--n),1fr);gap:5px;margin-top:7px}.ans button{background:#22202a;border:1px solid var(--c-line);border-radius:8px;padding:6px 4px;font-weight:600;font-size:12px}
+.tbar{height:3px;background:#2a2930;border-radius:2px;margin-top:7px;overflow:hidden}.tbar i{display:block;height:100%;background:var(--c-accent);animation:tb var(--d) linear forwards}@keyframes tb{from{width:100%}to{width:0}}
+.gs.closed{border-color:var(--c-line);color:var(--c-muted);text-align:center;padding:9px}
+/* 5 лента */
+.ftabs{display:flex;gap:4px;padding:6px 10px 0;border-top:1px solid var(--c-line);margin-top:2px}.ftabs button{padding:6px 10px;border-radius:8px 8px 0 0;color:var(--c-muted);font-weight:600}.ftabs button.on{color:var(--c-text);background:var(--c-surface)}
+.ftabs em{font-style:normal;background:var(--c-live);color:#fff;border-radius:8px;font-size:10px;padding:0 5px;margin-left:4px}
+.feed{background:var(--c-surface);margin:0 10px;border-radius:0 10px 10px 10px;padding:4px 0}
+.fr{display:flex;gap:7px;padding:5px 10px;border-bottom:1px solid #1f1e25;font-size:12px}.fr:last-child{border:0}.fr time{color:var(--c-muted);width:34px;flex:0 0 34px}.fr .ic{width:16px;flex:0 0 16px;text-align:center}
+.fr.mine{background:#1b1529}.ok{color:var(--ok);font-weight:700}.no{color:var(--c-live);font-weight:700}
+.chatin{display:flex;gap:6px;padding:6px 10px}.chatin input{flex:1;background:#0e0e10;border:1px solid var(--c-line);border-radius:8px;color:var(--c-text);padding:6px 8px;font:inherit}.chatin button{border:1px solid var(--c-accent);border-radius:8px;padding:6px 10px;color:#d9ccff}
+.hidden{margin:10px;padding:14px;text-align:center;border:1px dashed var(--c-line);border-radius:10px;color:var(--c-muted)}
+/* 6 составы */
+.h{padding:10px 12px 4px;font-size:11px;color:var(--c-muted);text-transform:uppercase;letter-spacing:.05em;display:flex;justify-content:space-between}
+.lu{margin:0 10px;background:var(--c-surface);border-radius:10px;overflow:hidden}.lu .tr{display:grid;grid-template-columns:14px 1fr 84px 62px 34px;gap:4px;padding:4px 8px;border-bottom:1px solid #1f1e25;font-size:12px;align-items:center}
+.lu .tr.hd2{color:var(--c-muted);font-size:10px}.lu .tr .st{color:var(--c-gold)}.lu .tr .fp{text-align:right;color:#d9ccff}
+.lu .tm{padding:4px 8px;font-size:11px;font-weight:700;background:#1b1a20}
+/* 7 подстраницы */
+.subs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px}.subs button{background:var(--c-surface);border-radius:9px;padding:9px 10px;text-align:left;font-weight:600}.subs small{display:block;color:var(--c-muted);font-weight:400;font-size:11px}
+.next{margin:0 10px 10px;background:var(--c-surface);border-radius:10px;padding:8px 10px}.next .r{display:flex;align-items:center;gap:6px;padding:4px 0}.next .r span{flex:1}.next .r button{border:1px solid var(--c-line);border-radius:7px;padding:3px 8px;font-size:12px}.next .r button.pk{border-color:var(--c-accent);background:#2a2142}
+.sum{margin:8px 10px;padding:10px;border-radius:12px;background:#1b1529;border:1px solid #3a2d5c}.sum b{font-size:15px}
+.banner{position:sticky;top:0;z-index:9;background:#3a2a10;color:var(--c-gold);font-size:12px;padding:5px 12px}
+.empty{margin:10px;padding:12px;border-radius:10px;background:var(--c-surface);text-align:center}.empty button{margin-top:6px;border:1px solid var(--c-line);border-radius:8px;padding:5px 10px}
+.bar{display:flex;border-top:1px solid var(--c-line);background:var(--c-bg);padding:7px 4px 16px}.bar button{flex:1;font-size:10px;color:var(--c-muted);display:flex;flex-direction:column;align-items:center;gap:2px}.bar .ic{font-size:16px}.bar .on{color:var(--c-text)}.bar .fz .ic{color:var(--c-gold)}
+.toast{position:absolute;left:12px;right:12px;bottom:74px;background:#26242e;border:1px solid var(--c-accent);border-radius:10px;padding:8px 10px;font-size:12px;display:none;z-index:20}.toast.on{display:block}
+/* компьютер (founder 16.10): шапка во всю ширину → слева широкая колонка, справа узкая на всю высоту */
+.phone.desk{width:1360px;height:860px;border-radius:14px}.desk .scr{display:flex;flex-direction:column;overflow:hidden}.desk .bar{display:none}
+.dnav{display:flex;gap:18px;align-items:center;padding:8px 16px;border-bottom:1px solid var(--c-line);font-size:13px;color:var(--c-muted)}.dnav b{color:var(--c-text);margin-right:12px}.dnav .on{color:var(--c-text)}.dnav .fz{color:var(--c-gold)}
+.desk .hd{position:static;padding:10px 20px 8px}.desk .hd .sc{font-size:24px}.desk .hd .code{font-size:18px}.desk .lg{width:30px;height:30px;font-size:10px}
+.dk-grid{flex:1;display:grid;grid-template-columns:1fr 380px;min-height:0}
+.dk-l{overflow-y:auto;padding-bottom:12px}.dk-r{border-left:1px solid var(--c-line);display:flex;flex-direction:column;min-height:0}
+.dk-feed{flex:1;overflow-y:auto;padding-bottom:10px}.desk .you{padding:9px 12px}
+.desk .top{height:440px;width:100%}.desk .toast{left:auto;right:16px;width:360px;bottom:16px}.desk .rounds{height:100%;padding-top:34px}.desk .rounds i{width:28px;height:70px;line-height:70px;font-size:13px}
+.desk .gs,.desk .subs,.desk .next,.desk .sum{margin-left:16px;margin-right:16px}.desk .lu{margin:0 16px}.desk .h{padding-left:18px;padding-right:18px}.desk .subs{grid-template-columns:repeat(4,1fr)}
+.desk .ans button{padding:9px 4px;font-size:14px}.desk .gs .q b{font-size:15px}
+/* панель */
+.side{width:340px;flex:0 0 340px}.side h1{font-size:18px;margin:0 0 4px}.side p{color:var(--c-muted);margin:4px 0 10px}
+.grp{background:#111015;border:1px solid var(--c-line);border-radius:12px;padding:10px;margin-bottom:10px}.grp h2{font-size:11px;margin:6px 0 5px;color:var(--c-muted);text-transform:uppercase;letter-spacing:.04em}
+.opt{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px}.opt button{border:1px solid var(--c-line);border-radius:7px;padding:4px 7px;font-size:12px}.opt button.on{border-color:var(--c-accent);background:#2a2142}
+.act button{border:1px solid var(--c-gold);color:var(--c-gold);border-radius:7px;padding:4px 7px;font-size:12px;margin:2px 2px 0 0}
+.grp ol{margin:0;padding-left:18px}.grp li{margin:2px 0}
+</style></head><body>
+
+<aside class="side">
+  <h1>Прототип М · Страница матча</h1>
+  <p>Телефон, плотно. Сценарий «Драфт-прогноз → эфир → итог»: листай состояния сверху вниз, отвечай на «Угадай сейчас», смотри, как ответы попадают в «События» и в полосу «Ты в матче».</p>
+  <div class="grp">
+    <h2>Экран</h2><div class="opt" data-k="view"><button data-v="phone">Телефон</button><button data-v="desk">Компьютер (1360 px)</button></div>
+    <h2>Состояние матча</h2><div class="opt" data-k="st"></div>
+    <h2>Кто смотрит</h2><div class="opt" data-k="lvl"><button data-v="a">а · смотрит</button><button data-v="b">б · угадывает (без входа)</button><button data-v="c">в · фэнтези (вошёл TG)</button></div>
+    <h2>Игра</h2><div class="opt" data-k="game"><button data-v="dota">Dota 2</button><button data-v="cs">CS2</button></div>
+    <h2>Условия</h2>
+    <div class="opt" data-k="spoil"><button data-v="0">Анти-спойлер выкл</button><button data-v="1">Анти-спойлер вкл</button></div>
+    <div class="opt" data-k="stream"><button data-v="1">Трансляции есть</button><button data-v="0">Трансляций нет</button></div>
+    <div class="opt" data-k="data"><button data-v="1">Live-данные есть</button><button data-v="0">Данные с задержкой / нет</button></div>
+    <div class="opt" data-k="net"><button data-v="1">Сеть есть</button><button data-v="0">Нет сети</button></div>
+    <div class="opt" data-k="delay"><button data-v="0">По времени</button><button data-v="1">Задержка 50 мин</button></div>
+    <div class="opt" data-k="standin"><button data-v="0">Без замен</button><button data-v="1">Стендин у 2-й команды</button></div>
+    <div class="opt" data-k="fz"><button data-v="1">Фэнтези показывать</button><button data-v="0">Фэнтези скрыть</button></div>
+    <div class="opt" data-k="nums"><button data-v="0">Без номеров</button><button data-v="1">Номера блоков</button></div>
+    <h2>Действия эфира (имитация)</h2><div class="act"><button id="resolve">Вопрос закрылся → итог</button><button id="skip">Не ответил — время вышло</button><button id="msg">Новое сообщение в чате</button></div>
+  </div>
+  <div class="grp"><h2>Блоки (UX «Экран М»)</h2><ol>
+    <li>Шапка матча, липнет: команды, счёт / время, стадия словами, точки карт, турнир · стадия · тип</li>
+    <li>Верх: график первым, трансляция по ▶</li><li>Полоса «Ты в матче»: с начала матча — «Собери пятёрку» (а/б); играешь — угадано, пятёрка, место, «замена»</li><li>«Угадай сейчас»: одна карточка, 10–15 на карту</li>
+    <li>Лента: «События» / «Чат»</li><li>Составы компактно, 2 × 5 · стендин: очки идут ему, у игрока в пятёрке — пометка «замена»</li><li>Подстраницы: Статистика · Турнир · Очные встречи · Что дальше</li></ol>
+    <h2>Где данных нет</h2><ol><li><span class="gap">G-11</span> трансляции · <span class="gap">G-12</span> ИИ-реакции · <span class="gap">G-13</span> чат</li><li>CS2 нарисован полностью (решение 16.10: CS2 в фэнтези обязателен); источник событий раундов — <span class="gap">G-03</span></li><li><span class="gap">G-01</span> расписание без рынков · фэнтези/полоса — сервер 🔴</li></ol>
+    <h2>Не решено (не рисую)</h2><ol><li>Числа монет за серию угаданных — после баланса рынка.</li><li>Сколько очков «трудный/весёлый» — из каталога, на сверку.</li></ol></div>
+</aside>
+
+<div class="col"><h3>Наш прототип</h3>
+<div class="phone" id="ph"><div class="scr" id="scr"></div><div class="toast" id="toast"></div>
+  <nav class="bar"><button class="on"><span class="ic">◉</span>Live</button><button><span class="ic">▤</span>Новости</button><button class="fz"><span class="ic">⚡</span>Фэнтези</button><button><span class="ic">▥</span>Рейтинги</button><button><span class="ic">◯</span>Я</button></nav>
+</div></div>
+<div class="col"><h3 id="egh">Сейчас у Егора</h3><iframe class="egor" id="eg"></iframe></div>
+
+<script>
+const EG='/p-fw3k/site/match-page.html' /* в лабе — наша страница матча с сайта (в оригинале копия egor/match-page.html) */
+const TEAMS={dota:{a:['Team Spirit','TS','#9aa4b1'],b:['Tundra Esports','TUN','#2fd0a8'],tour:'DreamLeague S27 · Плей-офф · верхняя сетка · Bo3',next:[['Пт 17.10 · 14:00','TS','Team Falcons'],['Пт 17.10 · 17:30','TUN','Gaimin Gladiators']]},
+ cs:{a:['G2 Esports','G2','#d0d0d0'],b:['FaZe Clan','FZ','#e5484d'],tour:'ESL Pro League S24 · Группа C · Bo3',next:[['Пт 17.10 · 16:00','G2','Team Vitality'],['Пт 17.10 · 19:00','FZ','MOUZ']]}}
+const ROST={dota:{a:[['Yatoro','Faceless Void'],['Larl','Puck'],['Collapse','Mars'],['rue','Rubick'],['Miposhka','Crystal Maiden']],b:[['Crystallis','Terrorblade'],['bzm','Storm Spirit'],['33','Tusk'],['Saksa','Hoodwink'],['Whitemon','Lich']]},
+ cs:{a:[['huNter-','—'],['malbsMd','—'],['m0NESY','—'],['Snax','—'],['HeavyGod','—']],b:[['karrigan','—'],['rain','—'],['frozen','—'],['broky','—'],['EliGE','—']]}}
+const MINE=['Yatoro','Collapse','Crystallis','m0NESY','frozen']
+// 10 состояний: шапка · верх · вопросы · лента · счёт · Егор
+const ST=[
+ {k:'ann',n:'Анонс',head:'Время уточняется',calm:1,top:'hist',eg:'pre',ser:[0,0]},
+ {k:'day',n:'За день',head:'Завтра · 17 окт · 17:00',calm:1,top:'cd',cd:'23:12:40',eg:'pre',ser:[0,0]},
+ {k:'hour',n:'За час',head:'через 47 мин',calm:1,top:'cd',cd:'00:47:10',soon:1,eg:'pre',ser:[0,0]},
+ {k:'draft',n:'Драфт',head:'Драфт · карта 1',top:'draft',eg:'live',ser:[0,0],map:1},
+ {k:'lanes',n:'Эфир: линии',head:'Линии 06:12',top:'graph',min:6,eg:'live',ser:[0,0],map:1},
+ {k:'mid',n:'Эфир: мид/лейт',head:'Мид 24:15',top:'graph',min:24,eg:'live',ser:[0,0],map:1},
+ {k:'mapend',n:'Конец карты',head:'Карта 1: Spirit',calm:1,top:'graph',min:38,full:1,eg:'live',ser:[1,0],map:1},
+ {k:'break',n:'Между картами',head:'Перерыв · карта 2 через ~10 мин',calm:1,top:'replay',eg:'live',ser:[1,0],map:2},
+ {k:'end',n:'Конец серии',head:'Итог серии',calm:1,top:'graph',min:38,full:1,eg:'done',ser:[2,1],map:3},
+ {k:'cancel',n:'Перенос/отмена',head:'Матч отменён',calm:1,top:'none',eg:'pre',ser:[0,0]}]
+// вопросы — из GUESS-CATALOG (Dota / CS2 ✱ только по счёту, пока G-03)
+const Q={dota:{ann:[['Кто выиграет серию?','AB','обычный',0,'старт карты 1']],
+ day:[['Кто выиграет серию?','AB','обычный',0,'старт карты 1'],['Счёт серии','2:0|2:1|1:2|0:2','трудный',1,'старт карты 1']],
+ hour:[['Кто выиграет серию? Последний шанс сменить','AB','обычный',0,'через 47 мин']],
+ draft:[['Кого первым заберёт Tundra?','Terrorblade|Tusk|Storm Spirit|Hoodwink','трудный',0,'выбор пика'],['Забанят ли Faceless Void?','да|нет','обычный',1,'конец банов 1']],
+ lanes:[['Кто первым снесёт вышку?','AB','обычный',0,'8:00 игровых'],['Убьют ли курьера до 20:00?','да|нет','весёлый',0,'12:00 игровых']],
+ mid:[['Rampage на карте?','да|нет','весёлый',1,'25:00 игровых'],['Карта длиннее 40 минут?','да|нет','обычный',1,'30:00 игровых']],
+ mapend:[['Кто возьмёт карту 2?','AB','обычный',1,'старт карты 2'],['Игрок карты','Yatoro|Collapse|Crystallis|33','трудный',0,'конец карты']],
+ break:[['Кого первым заберёт Spirit на карте 2?','Faceless Void|Mars|Puck|Rubick','трудный',2,'выбор пика']],end:[],cancel:[]},
+ cs:{ann:[['Кто выиграет серию?','AB','обычный',0,'старт карты 1']],day:[['Кто выиграет серию?','AB','обычный',0,'старт карты 1'],['Счёт серии','2:0|2:1|1:2|0:2','трудный',1,'старт карты 1']],
+ hour:[['Кто выиграет серию? Последний шанс сменить','AB','обычный',0,'через 47 мин']],draft:[['Какую карту выберет G2?','Mirage|Inferno|Nuke|Ancient','трудный',0,'выбор карты'],['Какую карту уберёт FaZe?','Nuke|Inferno|Ancient|Train','обычный',2,'следующий бан']],
+ lanes:[['Кто возьмёт пистолетный раунд?','AB','обычный',0,'старт раунда 1'],['Будет ли эйс на карте?','да|нет','весёлый',1,'старт раунда 4'],['Кто выиграет раунд 4 (первый с полной закупкой)?','AB','обычный',0,'старт раунда 4']],
+ mid:[['Кто впереди после первой половины?','A|B|6:6','обычный',0,'старт раунда 13'],['Будет ли клатч 1 на 3 до конца карты?','да|нет','весёлый',1,'старт раунда 18'],['Дойдёт ли карта до овертайма?','да|нет','трудный',1,'старт раунда 22']],
+ mapend:[['Кто возьмёт карту 2?','AB','обычный',1,'старт карты 2'],['Игрок карты','m0NESY|huNter-|broky|frozen','трудный',0,'конец карты']],break:[['Кто возьмёт пистолетный раунд карты 2?','AB','обычный',1,'старт раунда 1'],['Карта 2 закончится до 20 раундов?','да|нет','обычный',0,'старт раунда 1']],end:[],cancel:[]}}
+const PTS={'обычный':10,'трудный':25,'весёлый':15}
+const GOLD=[0,.3,.5,.2,-.4,-.6,-.3,.2,.8,1.4,1.9,1.5,1.1,1.6,2.3,2.9,3.4,3.1,3.8,4.2,4.6,4.1,5.2,6.0,5.4,6.3,7.1,6.4,7.8,8.9,9.6,8.7,10.2,11.5,12.8,14.1,15.0,16.2,17.0]
+const EVS=[[2,'⚔','2:10 · Первая кровь — Yatoro'],[7,'▲','7:40 · Первая вышка — Tundra'],[14,'◆','14:02 · Рошан — Spirit'],[23,'▲','23:30 · Барак — Spirit'],[33,'◆','33:15 · Второй Рошан — Spirit']]
+const CSR='AABABBAAABABBABAAABAABAB'.split('').concat(['A','B','A','B']).slice(0,22)
+const CSE=[[1,'◐','Р1 · Пистолетный — G2'],[4,'✸','Р4 · Эйс — m0NESY (AWP)'],[7,'💣','Р7 · Бомба взорвана — FaZe'],[11,'◑','Р11 · Клатч 1 на 3 — broky'],[13,'⇄','Р13 · Смена сторон · 7 : 5'],[16,'✸','Р16 · Четыре убийства — huNter-'],[20,'✂','Р20 · Разминирование в последнюю секунду — G2']]
+const CSH={draft:'Вето карт',lanes:'Mirage · раунд 4',mid:'Mirage · 10 : 7 · раунд 18',mapend:'Карта 1 (Mirage): G2'}
+const STAND={dota:[0,'kiyotaka'],cs:[2,'Jimpphat']}
+const S={view:'phone',standin:'0',rep:2,repShow:false,st:'mid',lvl:'b',game:'dota',spoil:'0',stream:'1',data:'1',net:'1',delay:'0',fz:'1',nums:'0',top:'graph',ftab:'ev',mapSel:1,src:'Twitch',qi:0,ans:[],chatN:3,tip:null,nextPick:{},shown:false}
+const st=()=>ST.find(x=>x.k===S.st),tm=()=>TEAMS[S.game]
+const lg=t=>`<span class="lg" style="background:${t[2]}">${t[1]}</span>`
+const gap=g=>`<span class="gap">🔴 ДАННЫЕ:${g}</span>`
+const SHORT={dota:['Spirit','Tundra'],cs:['G2','FaZe']}
+function answers(q){return q[1]==='AB'?SHORT[S.game]:q[1].split('|').map(x=>x==='A'?tm().a[1]:x==='B'?tm().b[1]:x)}
+// ——— 1 шапка
+function head(){const s=st(),T=tm(),hid=S.spoil==='1'&&!S.shown&&s.ser[0]+s.ser[1]>0
+ const mid=['ann','day','hour','cancel'].includes(s.k)?`<span style="font-size:14px">${s.k==='hour'&&S.delay==='1'?'<s class="mut">17:00</s> 17:50':s.k==='day'?'17:00':s.k==='hour'?'17:00':'—'}</span>`:hid?`<button class="spoil" data-act="show">Показать счёт</button>`:`${s.ser[0]} : ${s.ser[1]}`
+ let stage=S.game==='cs'&&CSH[s.k]||s.head;if(s.k==='hour'&&S.delay==='1')stage='через 1 ч 37 мин · задержан';if(S.data==='0'&&!s.calm)stage='Идёт · данные с задержкой';if(hid&&['mapend','end'].includes(s.k))stage='Сыграно · счёт скрыт'
+ const pips=`<span class="pips">${[0,1,2].map(i=>`<i class="${i<s.ser[0]+s.ser[1]?(hid?'':i<s.ser[0]?'a':'b'):i===(s.map||0)-1&&!s.calm?'n':''}"></i>`).join('')}</span>`
+ return `<div class="hd blk" data-n="1"><div class="r1">${lg(T.a)}<span class="code">${T.a[1]}</span><div class="sc">${mid}<small class="stage ${s.calm?'calm':''}">${s.calm?'':'● '}${stage}</small></div><span class="code">${T.b[1]}</span>${lg(T.b)}</div>
+ <div class="r2">${pips}<a href="#" data-act="sub" data-v="Турнир">${T.tour}</a>${s.k==='ann'?gap('G-01'):''}</div>
+ ${s.k==='hour'&&S.delay==='1'?'<div class="warnl">Задержан на 50 минут: прошлый матч затянулся</div>':''}${S.standin==='1'&&s.k!=='cancel'?`<div class="warnl">Замена: вместо ${ROST[S.game].b[STAND[S.game][0]][0]} играет ${STAND[S.game][1]}${S.lvl==='c'?' — он уже в твоей пятёрке':''}</div>`:''}${s.k==='cancel'?'<div class="warnl">Матч отменён: Tundra не успели на площадку (виза). Прогнозы и ответы не считаются</div>':''}</div>`}
+// ——— 2 верх
+function graph(full,min){const n=full?GOLD.length-1:min,W=388,H=150,mx=18,y=v=>H/2-v/mx*(H/2-14),x=i=>8+i*(W-16)/(GOLD.length-1)
+ const pts=GOLD.slice(0,n+1).map((v,i)=>`${x(i)},${y(v)}`).join(' ')
+ const ev=EVS.filter(e=>e[0]<=n).map((e,i)=>`<button class="ev" style="left:${x(e[0])/W*100}%;top:${y(GOLD[e[0]])/H*100}%" data-act="tip" data-v="${i}">${e[1]}</button>`).join('')
+ return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><line x1="0" x2="${W}" y1="${H/2}" y2="${H/2}" stroke="#2a2930"/><polyline points="${pts}" fill="none" stroke="var(--ta)" stroke-width="2"/></svg>${ev}
+ <span class="lbl">Перевес по золоту · ${full?'вся карта':n+'-я минута'} · вверх — ${tm().a[1]}</span>${S.tip!=null?`<div class="tip">${EVS[S.tip][2]}</div>`:''}`}
+function topBlk(){const s=st();if(s.top==='none')return ''
+ if(S.spoil==='1'&&!S.shown&&!s.calm||S.spoil==='1'&&!S.shown&&['mapend','end'].includes(s.k))return `<div class="top blk" data-n="2"><div class="pre"><p class="mut">Анти-спойлер: график скрыт до «Показать счёт»</p></div></div>`
+ const pl=S.stream==='1'&&!s.calm||S.stream==='1'&&s.k==='hour'?`<button class="play" data-act="top">${S.top==='stream'?'График':'▶ Смотреть'}</button>`:''
+ let b=''
+ if(S.top==='stream'&&pl)b=`<div class="stream">${s.k==='hour'?'<b>Трансляция начнётся в 17:00</b>':'<b style="font-size:28px">▶</b>'}<div class="src">${['Twitch','Kick','Издатель'].map(x=>`<button class="${S.src===x?'on':''}" data-act="src" data-v="${x}">${x}</button>`).join('')}<button>RU ▾</button></div>${gap('G-11')}</div>`
+ else if(s.top==='hist')b=`<div class="pre"><p class="mut">История пары</p><p>Spirit не проигрывали Tundra 5 матчей подряд</p><p>Встречались в финале TI 2023 — 3 : 0</p></div>`
+ else if(s.top==='cd')b=`<div class="pre"><p class="mut">До начала</p><div class="cd">${S.delay==='1'&&s.k==='hour'?'01:37:10':s.cd}</div><p>Spirit не проигрывали Tundra 5 матчей подряд</p></div>`
+ else if(s.top==='draft')b=S.game==='cs'?`<div class="draft"><div class="row"><b>G2</b><i class="ban">Anubis</i><i>Mirage</i><i class="now">?</i></div><div class="row"><b>FZ</b><i class="ban">Dust2</i><i>Inferno</i></div><div class="row"><b>Bo3</b><i>1 · Mirage (G2)</i><i>2 · Inferno (FZ)</i><i>3 · решающая</i></div><p class="mut">Баны и выбор карт по мере вето</p></div>`
+  :`<div class="draft"><div class="row"><b>TS</b><i class="ban">Invoker</i><i class="ban">Tiny</i><i>Faceless Void</i><i>Mars</i><i class="now">?</i></div><div class="row"><b>TUN</b><i class="ban">Puck</i><i class="ban">Lina</i><i>Tusk</i><i class="now">?</i></div><p class="mut">Пики и баны строками · обновляются по мере выбора</p></div>`
+ else if(s.top==='replay')b=`<div class="stream"><b>Повтор лучшего момента карты 1</b><span class="mut">Rampage Yatoro · 31:40</span>${gap('G-11')}</div>`
+ else if(S.data==='0')b=`<div class="pre"><p class="mut">Идёт · данные с задержкой — график не рисуем</p></div>`
+ else if(S.game==='cs'){const n=s.full?22:s.k==='lanes'?4:17,a=CSR.slice(0,n).filter(c=>c==='A').length
+  b=`<span class="lbl">Раунды · Mirage · ${tm().a[1]} ${a} : ${n-a} ${tm().b[1]} · сверху — ${tm().a[1]}</span><div class="rounds">${CSR.slice(0,n).map((c,i)=>`<i class="${c.toLowerCase()}" style="${c==='A'?'align-self:flex-start':'align-self:flex-end'};${i===12?'margin-left:8px':''}" ${CSE.find(e=>e[0]===i+1)?`data-act="tip" data-v="cs${i+1}"`:''}>${(CSE.find(e=>e[0]===i+1)||['','',''])[1]}</i>`).join('')}</div>${S.tip!=null&&String(S.tip).startsWith('cs')?`<div class="tip">${CSE.find(e=>'cs'+e[0]===S.tip)[2]}</div>`:''}`+(s.full?`<div class="maps">${[1,2,3].filter(i=>s.k==='end'||i===1).map(i=>`<button class="${S.mapSel===i?'on':''}" data-act="map" data-v="${i}">${['Mirage','Inferno','Nuke'][i-1]}</button>`).join('')}</div>`:'')}
+ else b=graph(s.full,s.min)+(s.full?`<div class="maps">${[1,2,3].filter(i=>s.k==='end'||i===1).map(i=>`<button class="${S.mapSel===i?'on':''}" data-act="map" data-v="${i}">Карта ${i}</button>`).join('')}</div>`:'')
+ return `<div class="top blk" data-n="2">${b}${pl}</div>`}
+// ——— 3 полоса
+const HID=()=>S.spoil==='1'&&!S.shown
+function tally(){const done=S.ans.filter(a=>a.res!=null),ok=done.filter(a=>a.res).length,pts=done.filter(a=>a.res).reduce((s,a)=>s+PTS[a.t],0),base=S.lvl==='a'?[0,0,0]:[3,5,30];return [base[0]+ok,base[1]+done.length,base[2]+pts]}
+function you(){if(S.fz==='0'||st().k==='cancel')return ''
+ const five=S.lvl!=='c'&&st().k!=='end'?`<button class="sep" data-act="five" style="margin-left:auto;color:var(--c-gold);font-weight:700">⚡ Собери пятёрку ›</button>`:''
+ if(S.lvl==='a'&&!S.ans.length)return `<div class="you blk" data-n="3"><span>Угадывай по ходу матча</span>${five}</div>`
+ if(HID()&&!st().calm||HID()&&['mapend','end'].includes(st().k))return `<div class="you blk" data-n="3"><span>⚡ Ты в матче:</span><b>скрыто до счёта</b></div>`
+ const [k,n,p]=tally()
+ return `<div class="you blk" data-n="3"><span>⚡</span><b>${k} из ${n} · +${p}</b>${S.lvl==='c'?`<span class="sep">·</span><b>пятёрка ${st().k==='end'?'109':'34'} · место ${st().k==='end'?'187':'412'}</b>${S.standin==='1'?`<span class="sep">·</span><b style="color:var(--c-gold)">⇄ замена</b>`:''}`:five}</div>`}
+// ——— 4 угадай
+function guess(){const s=st(),L=Q[S.game][s.k]
+ if(s.k==='cancel')return `<div class="gs closed blk" data-n="4">Прогнозы возвращаются — матч отменён</div>`
+ if(S.spoil==='1'&&!S.shown&&['mapend','end'].includes(s.k))return ''
+ if(S.data==='0'&&!s.calm)return `<div class="gs closed blk" data-n="4">Вопросы появятся, когда вернутся данные эфира</div>`
+ if(!L.length||S.qi>=L.length)return `<div class="gs closed blk" data-n="4">${s.k==='end'?'Серия сыграна — итоги вопросов в «Событиях»':'Ответы закрыты — итог в «Событиях» · следующий вопрос — по ходу матча'}</div>`
+ const q=L[S.qi],A=answers(q)
+ return `<div class="gs blk" data-n="4"><div class="q"><b>${q[0]}</b><small>${q[2]} · +${PTS[q[2]]}</small></div><div class="ans" style="--n:${A.length}">${A.map((a,i)=>`<button data-act="ans" data-v="${i}">${a}</button>`).join('')}</div>
+ <div class="tbar" style="--d:20s"><i></i></div><small class="mut">Закроется: ${q[4]} · вопрос ${S.qi+1} из ${L.length} в этой стадии</small></div>`}
+// ——— 5 лента
+function evRows(){const s=st(),n=s.full?99:s.min||0,R=[]
+ if(s.k==='cancel')return [['—','📰','Матч отменён: Tundra не успели на площадку из-за визы. Перенос не назначен']]
+ if(['ann','day','hour'].includes(s.k)){R.push(['вчера','📰','Анонс: Spirit и Tundra сыграют в верхней сетке DreamLeague']);if(s.k!=='ann')R.unshift(['12:40','🎬','Наше превью: «5 побед подряд — серия Spirit против Tundra»']);if(s.k==='hour')R.unshift(['16:05','📰','Составы подтверждены: без замен']);R.push(['','𝕏','@dota2ru: «Tundra наконец-то готовы?» '+gap('G-12')])}
+ if(s.k==='draft'){R.push(['пик','⚔','Spirit забрали Mars'],['пик','⚔','Tundra забрали Tusk'],['пик','⚔','Spirit забрали Faceless Void'],['бан','✕','Tundra забанили Puck'])}
+ if(['lanes','mid','mapend','end'].includes(s.k)){EVS.filter(e=>e[0]<=n).forEach(e=>R.unshift([e[2].split(' · ')[0],e[1],e[2].split(' · ')[1]]));R.splice(1,0,['','𝕏','@yatoro_fan: «Войд опять в форме» '+gap('G-12')]);R.splice(3,0,['','🎬','Наш клип: первая кровь за 12 секунд'])}
+ if(s.k==='mapend'||s.k==='end')R.unshift(['','★','Игрок карты 1: Yatoro (Faceless Void) · 14/2/9'])
+ if(s.k==='end')R.unshift(['','🏁','Spirit выиграли серию 2 : 1 и выходят в финал верхней сетки'])
+ if(s.k==='break')R.push(['','𝕏','@tundra_esports: «Перестроимся» '+gap('G-12')],['','★','Игрок карты 1: Yatoro · 14/2/9'])
+ if(S.game==='cs'&&!['ann','day','hour','cancel'].includes(s.k)){const C=[],n=s.full?22:s.k==='lanes'?4:s.k==='draft'?0:17
+  if(s.k==='draft')C.push(['вето','✕','G2 убрали Anubis'],['вето','✕','FaZe убрали Dust2'],['выбор','◎','G2 выбрали Mirage'],['выбор','◎','FaZe выбрали Inferno'])
+  CSE.filter(e=>e[0]<=n).forEach(e=>C.unshift([e[2].split(' · ')[0],e[1],e[2].split(' · ')[1]]))
+  if(n)C.splice(1,0,['','𝕏','@hltvorg: «m0NESY снова решает» '+gap('G-12')],['','🎬','Наш клип: эйс m0NESY за 9 секунд'])
+  if(s.k==='mapend'||s.k==='end')C.unshift(['','★','Игрок карты 1: m0NESY · 27/14 · ADR 102'])
+  if(s.k==='end')C.unshift(['','🏁','G2 выиграли серию 2 : 1 и выходят в плей-офф'])
+  if(s.k==='break')C.push(['','★','Игрок карты 1: m0NESY · 27/14 · ADR 102'])
+  if(S.standin==='1')C.push(['','⇄',`Замена: вместо frozen играет ${STAND.cs[1]}${S.lvl==='c'?' — он уже в твоей пятёрке':''}`])
+  return [...S.ans.slice().reverse().map(qrow),...C]}
+ if(S.standin==='1'&&s.k!=='cancel')R.push(['','⇄',`Замена: вместо Crystallis играет ${STAND.dota[1]}${S.lvl==='c'?' — он уже в твоей пятёрке':''}`])
+ return [...S.ans.slice().reverse().map(qrow),...R]}
+function qrow(a){return [a.res==null?'сейчас':'итог',a.res==null?'⏳':a.res?'✓':'✗',`${a.q} — ты: <b>${a.a}</b> ${a.res==null?'· ждём итог':a.res?'<span class="ok">угадал · +'+PTS[a.t]+'</span>':'<span class="no">мимо · ответ '+a.right+'</span>'}`,1]}
+function chat(){const T=tm(),L=(S.game==='cs'?[['Kirill_D',T.a[1],'m0NESY с AWP — это нечестно'],['nastya_gg',T.b[1],'broky вытащит, верю'],['spam_bot_77','','ЛУЧШИЕ ПРОГНОЗЫ ТУТ >>> t.me/…'],['Pablo.mx',T.a[1],'vamos G2 🔥'],['oracle_312',T.a[1],'4 из 4 угадал, не мешайте']]:[['Kirill_D','TS','Войд с 20-й минуты не остановить'],['nastya_gg','TUN','Crystallis вытащит, верю'],['spam_bot_77','','ЛУЧШИЕ ПРОГНОЗЫ ТУТ >>> t.me/…'],['Pablo.mx','TS','vamos Spirit 🔥'],['oracle_312','TS','4 из 4 угадал, не мешайте']]).slice(0,S.chatN)
+ const inp=S.lvl==='c'?`<div class="chatin"><input placeholder="Написать в чат"><button>➤</button></div>`:`<div class="chatin"><button style="flex:1" data-act="login">Войти через Telegram, чтобы писать</button></div>`
+ return (L.length?L.map((r,i)=>i===2&&S.rep>=3?`<div class="fr mut"><span class="ic">⚑</span><span>Скрыто по жалобам · на проверке</span></div>`:`<div class="fr"><span class="ic">${r[1]?'◉':''}</span><span style="flex:1"><b>${r[0]}</b> ${r[1]?`<small class="mut">прогноз ${r[1]}</small>`:''}<br>${r[2]}</span><button data-act="rep" data-v="${i}" class="mut" title="Пожаловаться">⚑${i===2?' '+S.rep:''}</button></div>`).join(''):`<div class="fr mut">Пока тихо. Напиши первым</div>`)+inp+`<div style="padding:0 10px 6px">${gap('G-13')} <small class="mut">модерация, антиспам · 3 жалобы = скрыто, модератор вернёт или удалит</small></div>`}
+function feed(){const s=st();if(S.spoil==='1'&&!S.shown&&['mapend','end','lanes','mid','break'].includes(s.k))return `<div class="blk" data-n="5"><div class="hidden">Анти-спойлер: «События» и «Чат» скрыты · <button data-act="show" style="text-decoration:underline">Показать</button></div></div>`
+ const tabs=`<div class="ftabs"><button class="${S.ftab==='ev'?'on':''}" data-act="ftab" data-v="ev">События</button><button class="${S.ftab==='chat'?'on':''}" data-act="ftab" data-v="chat">Чат${S.ftab!=='chat'&&S.chatN>2?`<em>${S.chatN-2}</em>`:''}</button></div>`
+ const body=S.ftab==='ev'?evRows().map(r=>`<div class="fr ${r[3]?'mine':''}"><time>${r[0]}</time><span class="ic">${r[1]}</span><span>${r[2]}</span></div>`).join(''):chat()
+ return `<div class="blk" data-n="5">${tabs}<div class="feed">${body}</div></div>`}
+// ——— 6 составы
+function lineup(){const s=st(),R=ROST[S.game],T=tm(),drafted=!['ann','day','hour'].includes(s.k)&&!(s.k==='draft'),live=['lanes','mid','mapend','break','end'].includes(s.k),c=S.lvl==='c'&&S.fz==='1'
+ if(s.k==='cancel')return ''
+ const hidK=HID()&&!['ann','day','hour','draft'].includes(s.k)
+ const kda=(i,j)=>hidK?'':s.full?`${[14,6,4,2,1][i]+j}/${[2,4,5,6,7][i]}/${[9,12,14,18,20][i]}`:s.min>10?`${[6,3,2,1,0][i]+j}/${[1,2,2,3,4][i]}/${[4,6,7,9,10][i]}`:`${j?0:i===0?1:0}/0/${i%2}`
+ const kdr=(i,j)=>hidK?'':s.full?`${[27,19,16,13,9][i]-j*2}/${[14,15,16,17,18][i]}/${[102,84,77,70,61][i]}`:s.k==='lanes'?`${[4,2,2,1,1][i]}/${[2,2,3,3,3][i]}/${[96,71,64,58,40][i]}`:`${[19,13,11,9,6][i]-j}/${[10,11,12,13,14][i]}/${[98,82,75,68,59][i]}`
+ const sb=STAND[S.game]
+ const row=(p,i,j)=>{const sub=S.standin==='1'&&j===1&&i===sb[0],m=c&&MINE.includes(p[0]);return `<div class="tr" ${sub?'style="background:#2a2110"':''}><span class="st">${m?'★':''}</span><span>${sub?`${sb[1]} <small style="color:var(--c-gold)">стендин</small>${m?`<br><small class="mut">замена: <s>${p[0]}</s></small>`:''}`:p[0]}</span><span class="mut">${S.game==='cs'?'':drafted?p[1]:'—'}</span><span>${live?(S.game==='cs'?kdr(i,j):kda(i,j)):''}</span><span class="fp">${c&&live&&!hidK?(s.full?[44,27,18,12,7][i]:[20,12,8,5,3][i]):''}</span></div>`}
+ return `<div class="blk" data-n="6"><div class="h"><span>Составы</span><span>${S.game==='cs'?(live?'У/С/ADR':''):s.k==='draft'?'герои — после драфта':''}</span></div><div class="lu">
+ <div class="tr hd2"><span></span><span>Игрок</span><span>${S.game==='dota'?'Герой':''}</span><span>${live?(S.game==='cs'?'У/С/ADR':'У/С/П'):''}</span><span>${c?'очки':''}</span></div>
+ <div class="tm">${T.a[0]}</div>${R.a.map((p,i)=>row(p,i,0)).join('')}<div class="tm">${T.b[0]}</div>${R.b.map((p,i)=>row(p,i,1)).join('')}</div></div>`}
+// ——— 7 подстраницы + итог серии
+function subs(){const s=st(),T=tm()
+ let h=`<div class="blk" data-n="7"><div class="subs">${[['Статистика','полная таблица игроков'],['Турнир','сетка · стадия'],['Очные встречи','5 последних'],['Что дальше','следующие матчи команд']].map(x=>`<button data-act="sub" data-v="${x[0]}">${x[0]} ›<small>${x[1]}</small></button>`).join('')}</div>`
+ if(s.k==='end'&&!(S.spoil==='1'&&!S.shown))h+=`<div class="next"><div class="h" style="padding:0 0 4px">Что дальше · прогноз в 1 тап</div>${T.next.map((n,i)=>`<div class="r"><small class="mut">${n[0]}</small><span>${n[1]} — ${n[2]}</span>${[n[1],n[2].split(' ').pop()].map(x=>`<button class="${S.nextPick[i]===x?'pk':''}" data-act="np" data-v="${i}|${x}">${x}</button>`).join('')}</div>`).join('')}</div>`
+ return h+'</div>'}
+function summary(){const s=st();if(s.k!=='end'||S.lvl==='a'||S.spoil==='1'&&!S.shown)return ''
+ return `<div class="sum blk" data-n="5"><b>Ты угадал ${tally()[0]} из ${tally()[1]} · +${tally()[2]} очков · место 312</b><br><small class="mut">Очки — в рейтинг «оракулов» матча; монеты — за серию угаданных подряд (числа после баланса)</small></div>`}
+function render(){const s=st();let h=''
+ if(S.net==='0')h+=`<div class="banner">Нет связи · обновлено в 18:42 — показываем последнее состояние</div>`
+ const ann=s.k==='ann'?`<div class="empty">Время уточняется — напомним, как только появится<br><button data-act="remind">Напомнить</button></div>`:''
+ if(S.view==='desk')h+=`<div class="dnav"><b>GoatScout</b><span class="on">◉ Live</span><span>Новости</span><span class="fz">⚡ Фэнтези</span><span>Рейтинги</span><span style="margin-left:auto">Я</span></div>`+head()
+  +`<div class="dk-grid"><div class="dk-l">${topBlk()}${summary()}${guess()}${ann}${lineup()}${subs()}</div><div class="dk-r">${you()}<div class="dk-feed">${feed()}</div></div></div>`
+ else h+=head()+topBlk()+you()+summary()+guess()+ann+feed()+lineup()+subs()
+ if(S.game==='cs')h=h.replace(/Team Spirit|Spirit/g,'G2').replace(/Tundra/g,'FaZe').replace(/DreamLeague/g,'ESL Pro League').replace(/TI 2023/g,'IEM Cologne 2025').replace(/Rampage Yatoro · 31:40/,'Эйс m0NESY · раунд 4').replace(/@dota2ru/,'@hltvorg')
+ const sc=document.getElementById('scr');sc.innerHTML=h;document.getElementById('ph').classList.toggle('nums',S.nums==='1');document.getElementById('ph').classList.toggle('desk',S.view==='desk');document.querySelectorAll('.col')[1].style.display=S.view==='desk'?'none':''
+ document.querySelectorAll('.opt').forEach(o=>o.querySelectorAll('button').forEach(b=>b.classList.toggle('on',S[o.dataset.k]===b.dataset.v)))
+ const u=`${EG}?game=${S.game}&state=${s.eg}`;const f=document.getElementById('eg');if(f.dataset.u!==u){f.src=u;f.dataset.u=u}
+ document.getElementById('egh').textContent=`Сейчас у Егора · ${{pre:'до',live:'в эфире',done:'после'}[s.eg]} (у него 3 состояния)`}
+function toast(t){const e=document.getElementById('toast');e.innerHTML=t;e.classList.add('on');clearTimeout(toast.k);toast.k=setTimeout(()=>e.classList.remove('on'),2400)}
+document.querySelector('[data-k=st]').innerHTML=ST.map(x=>`<button data-v="${x.k}">${x.n}</button>`).join('')
+let timer;function arm(){clearTimeout(timer);const L=Q[S.game][S.st];if(S.qi<L.length)timer=setTimeout(()=>{S.qi++;toast('Вопрос ушёл — время вышло, без штрафа');render();arm()},20000)}
+document.addEventListener('click',e=>{const b=e.target.closest('button,a[data-act]');if(!b)return;const a=b.dataset.act,v=b.dataset.v
+ if(a)e.preventDefault()
+ if(a==='ans'){const q=Q[S.game][S.st][S.qi],A=answers(q);S.ans.push({q:q[0],a:A[+v],right:A[q[3]],ok:+v===q[3],t:q[2],res:null});S.qi++;if(S.lvl==='a')S.lvl='b'
+  toast(`Ответ принят: <b>${A[+v]}</b> · свернулся в «События», итог — когда вопрос закроется${S.ans.length===1?' · хранится на устройстве, вход не нужен':''}`);S.ftab='ev';render();arm();return}
+ if(a==='top'){S.top=S.top==='stream'?'graph':'stream';return render()}
+ if(a==='src'){S.src=v;return render()}
+ if(a==='tip'){const t=String(v).startsWith('cs')?v:+v;S.tip=S.tip===t?null:t;return render()}
+ if(a==='map'){S.mapSel=+v;return render()}
+ if(a==='ftab'){S.ftab=v;if(v==='chat')S.chatN=Math.max(S.chatN,2);return render()}
+ if(a==='five')return toast('Сбор пятёрки на этот матч — отдельный прототип (фэнтези P3)')
+ if(a==='rep'){if(+v===2){S.rep++;toast(S.rep>=3?'3-я жалоба — сообщение скрыто и ушло на проверку':'Жалоба принята')}else toast('Жалоба принята');return render()}
+ if(a==='repshow'){S.repShow=true;return render()}
+ if(a==='show'){S.shown=true;return render()}
+ if(a==='sub')return toast(`Подстраница «${v}» — отдельный прототип`)
+ if(a==='login')return toast('Вход через Telegram — на шаге «пишет сам» (сценарий п.5)')
+ if(a==='remind')return toast('Напомним, когда появится время ✓')
+ if(a==='np'){const [i,x]=v.split('|');S.nextPick[i]=x;toast(`Прогноз на следующий матч: ${x}`);return render()}
+ if(b.id==='resolve'){const p=S.ans.find(x=>x.res==null);if(!p)return toast('Нет открытых ответов — сначала ответь на вопрос');p.res=p.ok;const streak=S.ans.slice().reverse().filter(x=>x.res!=null).findIndex(x=>!x.res);toast(p.res?`✓ Угадал: +${PTS[p.t]} очков`+(streak===-1&&S.ans.filter(x=>x.res).length>=3?' · 3 подряд → монеты':''):'✗ Мимо — без штрафа');return render()}
+ if(b.id==='skip'){const L=Q[S.game][S.st];if(S.qi<L.length){S.qi++;toast('Вопрос ушёл молча, без штрафа')}return render()}
+ if(b.id==='msg'){S.chatN=Math.min(5,S.chatN+1);return render()}
+ const o=b.closest('.opt');if(o){S[o.dataset.k]=v;if(o.dataset.k==='st'||o.dataset.k==='game'){S.qi=0;S.tip=null;S.shown=false;S.top=S.st==='draft'&&S.stream==='1'?'graph':'graph';S.mapSel=1};render();arm()}})
+render();arm()
+</script></body></html>

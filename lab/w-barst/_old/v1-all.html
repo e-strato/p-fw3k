@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<base href="../../gs-match/" />
+<title>v1 · Все состояния бара</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../widget-tournament/_w.css" />
+<link rel="stylesheet" href="../widgets-unified/_type.css" />
+<link rel="stylesheet" href="_gs.css" />
+<link rel="stylesheet" href="../w-bar/_wbar.css" />
+<!-- w-barst v1 — нижний бар страницы матча (остров v3 «Логотипы», кнопки со значками и подписями) во всех состояниях сразу, без переключателей
+     (дирижёр 27.10: «только нижний бар во всех возможных его состояниях, чтобы я не переключался — сразу всё увидел»).
+     Бар — тот же код, что на странице: WBAR.tabs + WBAR.still (_wbar.js). ‼️ Пример: события-вопроса и процентов в данных нет -->
+<style>
+  body{ padding:20px 16px 40px; }
+  .bs-sec{ margin:0 0 28px; } .bs-sec h2{ margin:0 0 12px; font:600 15px/20px var(--w-font); color:var(--w-fg); }
+  .bs-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(min(390px, 100%), 390px)); gap:20px 24px; }
+  .bs-t p{ margin:0 0 8px; font:400 13px/18px var(--w-font); color:var(--w-muted-fg); } .bs-t p b{ color:var(--w-fg); font-weight:600; }
+  /* рамка — низ экрана телефона: за баром кусок страницы, чтобы видно, что бар прозрачный при прокрутке */
+  .bs-ph{ position:relative; height:132px; overflow:hidden; border:1px solid var(--w-border); border-radius:16px; background:var(--w-page); }
+  .bs-ph .bs-bg{ position:absolute; inset:12px 12px auto; display:grid; gap:8px; } .bs-bg i{ display:block; height:44px; border-radius:12px; background:#18181b; border:1px solid var(--w-border); }
+  .bs-ph .tabbar{ position:absolute; left:0; right:0; bottom:0; max-width:none; }
+</style>
+</head>
+<body>
+<div id="bs"></div>
+<script src="../w-bar/_wbar.js"></script>
+<script>
+(() => {
+  const BB = { name: 'BetBoom', logo: 'img/teams/8255888.png' }, IW = { name: 'Iron Wing', logo: 'img/teams/10150413.png' };
+  const ev = { id: 'ev', match: 'BetBoom — Iron Wing', what: 'Рошан убит', who: 'BetBoom', at: '41:25', q: 'Кто возьмёт следующую башню?', a: BB, b: IW, pa: 62, votes: 1240, talk: 84, T: 45 };
+  const pill = p => ({ a: BB, b: IW, ...p });
+  // [что, пояснение, данные острова, { ans, left, auth, off — бар спрятан при прокрутке }]
+  const S = [
+    ['Матч идёт', [
+      ['Live · команда впереди', 'время карты, логотип того, кто впереди по золоту, перевес', pill({ kind: 'live', time: '41:43', leadTeam: BB, leadBy: '9,9k' })],
+      ['Live · золото поровну', 'перевеса нет — только время', pill({ kind: 'live', time: '12:05' })],
+      ['Live · счёт скрыт', 'анти-спойлер: перевес не показываем — только время', pill({ kind: 'live', time: '41:43' })],
+      ['Live · пауза', 'игра остановлена: время стоит, о паузе остров не говорит', pill({ kind: 'live', time: '33:30', leadTeam: IW, leadBy: '1,2k' })],
+      ['Live · нет данных', 'карта идёт, но данных с неё нет', pill({ kind: 'live', time: 'Карта 3' })],
+    ]],
+    ['Вопрос по событию', [
+      ['Прилетело событие', 'остров светится золотом, таймер на ответ; нажал — карточка с вопросом', pill({ kind: 'live', time: '41:43' }), { event: ev, left: 45 }],
+      ['Таймер на исходе', 'то же, осталось 5 секунд', pill({ kind: 'live', time: '41:43' }), { event: ev, left: 5 }],
+      ['Ответил', 'галочка, логотип выбранной команды, сколько ответили так же', pill({ kind: 'live', time: '41:43' }), { event: ev, ans: 'a' }],
+    ]],
+    ['До и после матча', [
+      ['До матча', 'логотипы и время начала', pill({ kind: 'pre', start: '18:00' })],
+      ['Перенос · отмена · время уточняется', 'начала нет — прочерк', pill({ kind: 'pre', start: '—' })],
+      ['После матча', 'логотипы и счёт серии', pill({ kind: 'post', score: '2:1' })],
+      ['После · счёт скрыт', 'анти-спойлер', pill({ kind: 'post', score: 'скрыт' })],
+    ]],
+    ['Прокрутка и зритель', [
+      ['Листаешь вниз', 'кнопки прячутся, остров остаётся', pill({ kind: 'live', time: '41:43', leadTeam: BB, leadBy: '9,9k' }), { off: true }],
+      ['Листаешь вниз · событие', 'остров со светом поверх страницы', pill({ kind: 'live', time: '41:43' }), { event: ev, left: 45, off: true }],
+      ['Вошёл', 'справа «Я» вместо «Войти»', pill({ kind: 'live', time: '41:43', leadTeam: BB, leadBy: '9,9k' }), { auth: true }],
+    ]],
+  ];
+  const bar = (p, x = {}) => { const tb = WBAR.tabs({ auth: x.auth, look: 'svg' });
+    tb.splice(2, 0, WBAR.still({ pill: p, event: x.event || null, look: 'logos', base: '' }, { ans: x.ans, left: x.left }));
+    return `<div class="bs-ph${x.off ? ' bh-island bar-off' : ''}"><div class="bs-bg"><i></i><i></i></div><nav class="tabbar wb-on tb-svg">${tb.join('')}</nav></div>`; };
+  document.getElementById('bs').innerHTML = S.map(([h, rows]) => `<section class="bs-sec"><h2>${h}</h2><div class="bs-grid">${rows.map(([t, d, p, x]) =>
+    `<div class="bs-t"><p><b>${t}</b> — ${d}</p>${bar(p, x)}</div>`).join('')}</div></section>`).join('');
+  // в лабе нажатия не ведут никуда
+  document.addEventListener('click', e => { if (e.target.closest('a, [data-wb]')) { e.preventDefault(); e.stopImmediatePropagation(); } }, true);
+})();
+</script>
+</body>
+</html>

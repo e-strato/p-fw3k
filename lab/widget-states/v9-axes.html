@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<base href="../widget-tournament-4/" />
+<title>v9 · Оси состояний</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="_t4.css" /><link rel="stylesheet" href="../widget-states/_s.css" /></head>
+<body><div class="lab-board">
+  <h1>Состояния виджета · v9 · Оси состояний</h1>
+  <p class="lab-board__lead">Одна ось — где пользователь. Три значения, Подсказки не видно, пока не наведёшь мышь на то, что можно нажать.</p>
+  <div class="s-ax"><h2 class="s-ax__h">Где пользователь<span class="s-cap">наведи на виджет — подскажет, что можно нажать</span></h2><div class="s-ax__vals" id="vals"></div><div class="s-strip" id="row"></div></div>
+</div>
+<script src="_data.js"></script><script src="_t4.js"></script><script src="../widget-states/_states.js"></script>
+<script>
+  document.getElementById('vals').innerHTML = S.key.map(k => `<span class="s-tag">${k.name}</span>`).join('')
+  document.getElementById('row').innerHTML = S.key.map(k => `<div class="s-fr"><div class="s-why">${k.why}</div><div><div data-k="${k.id}"></div></div></div>`).join('')
+  document.querySelectorAll('[data-k]').forEach(el => S.mount(el, S.by(el.dataset.k), { hint: 'hover' }))
+</script>
+</body></html>

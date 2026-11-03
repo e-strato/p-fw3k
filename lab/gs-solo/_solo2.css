@@ -1,0 +1,14 @@
+/* gs-solo v34 — один виджет страницы матча v53 на своём месте (_solo2.js) */
+/* внутри страницы: у цепочки до виджета (so-k) прочие дети убраны; колонки без виджета (so-v) — невидимы, но держат место */
+html.so2 :is(.app.so-k, .app .so-k):not(.so-t) > :not(.so-k):not(.so-t):not(.so-v),
+html.so2 #tabbar, html.so2 #pills, html.so2 .pip-fab, html.so2 .pip { display:none !important; }
+html.so2 .so-v { visibility:hidden; }
+/* подписи колонок, как в v33: пунктирная рамка, над ней — «название · ширина» */
+html.so2:not(.so2-nocol) .app { padding-top:28px; }
+html.so2:not(.so2-nocol) :is(.so-k, .so-v)[data-so] { position:relative; top:0; }
+html.so2:not(.so2-nocol) :is(.so-k, .so-v)[data-so]::after { content:''; visibility:visible; position:absolute; inset:-6px; pointer-events:none; border:1px dashed rgba(255,255,255,.18); border-radius:8px; }
+html.so2:not(.so2-nocol) :is(.so-k, .so-v)[data-so]::before { content:attr(data-so); visibility:visible; position:absolute; left:2px; top:-22px; pointer-events:none; white-space:nowrap;
+  font:500 10px/12px 'Google Sans Flex', system-ui, sans-serif; color:rgba(255,255,255,.45); }
+/* нет виджета в этом состоянии */
+html.so2.so2-none .app { display:none !important; }
+html.so2.so2-none body::before { content:'В этом состоянии этого виджета нет'; position:fixed; inset:0; display:grid; place-items:center; color:rgba(255,255,255,.5); font:500 14px 'Google Sans Flex', system-ui, sans-serif; }

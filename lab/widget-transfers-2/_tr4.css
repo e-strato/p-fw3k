@@ -1,0 +1,125 @@
+/* Виджет трансферов, заход 4 (созвон 22.10, решение 29). 320×320, отступы кратны 4. Токены, .w, .w-scroll — ../widget-tournament/_w.css. */
+.t2{ position:relative; height:320px; display:flex; flex-direction:column; }
+.t2 a{ color:inherit; text-decoration:none; }
+.t2-cap{ font-size:12px; line-height:16px; color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t2-nm{ min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t2-ini{ display:inline-grid; place-items:center; background:var(--w-muted); font-size:9px; font-weight:600; color:var(--w-muted-fg); }
+
+/* Шапка и низ */
+.t2-hd{ display:flex; align-items:baseline; gap:8px; flex:none; height:48px; padding:16px 12px 0; }
+.t2-hd b{ font-size:15px; line-height:20px; font-weight:600; }
+.t2-bd{ padding:0 12px 8px; }
+.t2-ft{ flex:none; padding:8px 12px 12px; }
+.t2-all{ display:grid; place-items:center; height:32px; border-radius:var(--w-r-sm); border:1px solid var(--w-border); font-size:13px; font-weight:500; color:var(--w-fg); }
+.t2-all:hover{ background:var(--w-muted); }
+
+/* Аватар и логотипы */
+.t2-av{ width:32px; height:32px; flex:none; border-radius:8px; object-fit:cover; background:var(--w-muted); }
+.t2-av--40{ width:40px; height:40px; border-radius:10px; }
+.t2-lg{ width:20px; height:20px; flex:none; object-fit:contain; border-radius:4px; }
+.t2-lg--14{ width:14px; height:14px; } .t2-lg--28{ width:28px; height:28px; }
+.t2-lg.is-from{ opacity:.55; filter:grayscale(1); }
+.t2-tag{ flex:none; height:16px; padding:0 4px; border-radius:4px; background:var(--w-muted); font-size:10px; line-height:16px; font-weight:500; color:var(--w-muted-fg); }
+
+/* hltv: шапка колонок, строка «аватар · ник/позиция · лого » лого · дата», строки через линию */
+.t2-th{ display:grid; grid-template-columns:1fr 76px 40px; gap:8px; height:20px; font-size:11px; line-height:20px; font-weight:500; color:var(--w-muted-fg); }
+.t2-th span:nth-child(2){ text-align:center; } .t2-th span:nth-child(3){ text-align:right; }
+.t2-r{ display:grid; grid-template-columns:32px 1fr 76px 40px; align-items:center; gap:8px; height:52px; }
+.t2--hltv .t2-r + .t2-r{ border-top:1px solid var(--w-border); }
+.t2-r__p{ display:flex; flex-direction:column; min-width:0; }
+.t2-r__p b{ font-size:13px; line-height:18px; font-weight:600; }
+.t2-r__w{ display:flex; align-items:center; justify-content:center; gap:6px; }
+.t2-go{ font-size:14px; line-height:20px; font-weight:600; color:var(--w-b); }
+.t2-r__d{ text-align:right; font-size:12px; font-weight:500; font-variant-numeric:tabular-nums; color:var(--w-muted-fg); }
+.t2-r__d.is-new, .t2-c__d.is-new{ color:var(--w-b); }
+
+/* days: подзаголовок даты, под ником «из [лого] → [лого] Команда» */
+.t2-day{ height:20px; margin-top:8px; font-size:11px; line-height:20px; font-weight:500; color:var(--w-muted-fg); }
+.t2-bd > .t2-day:first-child{ margin-top:0; }
+.t2-day.is-new{ color:var(--w-b); }
+.t2-r--days{ grid-template-columns:32px 1fr; height:48px; }
+.t2-r__n{ display:flex; align-items:center; gap:6px; min-width:0; }
+.t2-way{ display:flex; align-items:center; gap:4px; min-width:0; color:var(--w-muted-fg); }
+.t2-way svg{ flex:none; }
+.t2-to{ font-size:12px; line-height:16px; font-weight:500; color:var(--w-fg); }
+
+/* big: карточки — аватар 40, ник крупно, дата в углу, переход строкой с обоими названиями */
+.t2-c{ display:flex; gap:12px; padding:10px 0; }
+.t2-c + .t2-c{ border-top:1px solid var(--w-border); }
+.t2-c__m{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.t2-c__m b{ font-size:14px; line-height:20px; font-weight:600; }
+.t2-c__d{ margin-left:auto; font-size:12px; font-weight:500; font-variant-numeric:tabular-nums; color:var(--w-muted-fg); }
+.t2-way--big{ margin-top:6px; gap:6px; }
+.t2-from{ font-size:12px; line-height:16px; flex:0 1 auto; }
+.t2-way--big .t2-to{ flex:0 1 auto; }
+
+/* Пусто: в матче у команд нет переходов */
+.t2-empty{ display:flex; flex-direction:column; align-items:center; gap:4px; padding:40px 0 0; text-align:center; }
+.t2-empty__lg{ display:flex; gap:8px; margin-bottom:8px; opacity:.7; }
+.t2-empty b{ font-size:13px; font-weight:600; }
+.t2-empty .t2-cap{ white-space:normal; }
+
+/* v5 (дирижёр 22.10): как HLTV, но выше; фото игрока вместо аватара; под ником — игра */
+.t2.t2--v5{ height:440px; }
+.t2--v5 .t2-av{ width:40px; height:40px; border-radius:10px; }
+.t2-ph{ display:block; background:var(--w-mid-bg) center 8% / 170% no-repeat; }
+.t2-game{ display:inline-flex; align-items:center; gap:4px; }
+.t2-lg--12{ width:12px; height:12px; }
+.t2--v5 .t2-r{ grid-template-columns:40px 1fr 76px 40px; gap:10px; height:56px; }
+/* v6: игра значком в углу фото */
+.t2-avw{ position:relative; display:block; width:40px; height:40px; }
+.t2-avg{ position:absolute; right:-4px; bottom:-4px; width:16px; height:16px; border-radius:4px; box-shadow:0 0 0 2px var(--w-bg); background:var(--w-bg); }
+/* v7 — вид v1 (стили ../widget-transfers/_tr.css), выше: 440 */
+.t2-orig.t3--dock > .t3-main{ height:440px; }
+.t2-orig .t3-av--sm.t2-ph{ display:block; }
+
+/* v7 — раскладка v6, остальное как v1 (v12 · Таблица во всю ширину, ../widget-transfers/_tr.css): заголовок 13/600, строки во всю ширину 42,
+   без линий, зазор 8; фото 28 со скруглением 6, ник 13/600, дата 11 серым, лого 16 (старое 14 серым), стрелка → серая; внизу — плашка как «Все трансферы» */
+.t2--sk .t2-hd{ height:48px; padding:0 12px; align-items:center; }
+.t2--sk .t2-hd b{ font-size:13px; line-height:18px; }
+.t2--sk .t2-bd{ padding:0; }
+.t2--sk .t2-th{ padding:0 12px; height:20px; font-size:11px; }
+.t2--sk .t2-r{ grid-template-columns:28px 1fr 76px 40px; gap:10px; height:auto; min-height:42px; padding:0 12px; margin-top:8px; }
+.t2--sk .t2-r + .t2-r{ border-top:0; }
+.w.t2--sk .t2-r:hover{ background:var(--w-mid-bg); }
+.t2--sk .t2-avw{ width:28px; height:28px; }
+.t2--sk .t2-av{ width:28px; height:28px; border-radius:6px; }
+.t2--sk .t2-avg{ width:12px; height:12px; right:-3px; bottom:-3px; border-radius:3px; }
+.t2--sk .t2-nm, .t2--sk .t2-r__p b{ font-size:13px; line-height:18px; font-weight:600; }
+.t2--sk .t2-r__d, .t2--sk .t2-r__d.is-new{ font-size:11px; font-weight:400; color:var(--w-muted-fg); }
+.t2--sk .t2-lg{ width:16px; height:16px; } .t2--sk .t2-lg.is-from{ width:14px; height:14px; filter:grayscale(1); opacity:.5; }
+.t2-ar{ display:inline-flex; color:var(--w-muted-fg); }
+.t2--sk .t2-ft{ padding:0; }
+.w.t2--sk .t2-all{ height:auto; padding:12px; border:0; border-top:1px solid var(--w-border); border-radius:0; background:#131316; font-size:13px; font-weight:500; justify-content:start; place-items:start; }
+.w.t2--sk .t2-all:hover{ background:#1c1c20; }
+.t2--sk .t2-lg.t2-avg{ width:12px; height:12px; right:-3px; bottom:-3px; border-radius:3px; box-shadow:0 0 0 1.5px var(--w-bg); }
+/* v7, дирижёр 22.10: дата — размером как цена у v1 (14/18, жирная, белая); логотипы крупнее */
+.t2--sk .t2-r__d, .t2--sk .t2-r__d.is-new{ font-size:14px; line-height:18px; font-weight:700; color:var(--w-fg); font-variant-numeric:tabular-nums; }
+.t2--sk .t2-lg{ width:22px; height:22px; } .t2--sk .t2-lg.is-from{ width:20px; height:20px; }
+.t2--sk .t2-r{ grid-template-columns:28px 1fr 88px 48px; }
+/* Значок CS2 — картинкой (дирижёр 23.10) */
+.t2-avg--cs{ display:grid; place-items:center; }
+.t2-avg--cs i{ width:100%; height:100%; background:var(--m) center / contain no-repeat; }
+/* v8: «Смотреть все» в шапке справа; виджет ниже — 400 */
+.t2.t2--v5.t2--top{ height:380px; } /* общая высота виджетов — 380 (дирижёр 22.10) */
+.w .t2-top{ display:inline-flex; align-items:center; gap:2px; margin-left:auto; font-size:12px; line-height:16px; font-weight:500; color:var(--w-muted-fg); text-decoration:none; }
+.w .t2-top:hover{ color:var(--w-fg); }
+
+/* v9–v12 (дирижёр 22.10: «как строки выделять и наведение») — четыре подачи на основе v8 */
+.w.t2--sk .t2-r{ cursor:pointer; transition:background .15s; }
+/* v9 зебра: через строку лёгкая заливка; наведение — заливка ярче и ник подчёркнут */
+.t2-rows--zebra .t2-r:nth-child(even of .t2-r){ background:rgba(255,255,255,.03); }
+.w.t2-rows--zebra .t2-r:hover{ background:rgba(255,255,255,.08); }
+/* v10 линии: строки без зазора, тонкая линия между ними; наведение — заливка, стрелка → и новое лого ярче */
+.t2-rows--lines .t2-r{ margin-top:0; min-height:48px; }
+.t2-rows--lines .t2-r + .t2-r{ border-top:1px solid rgba(255,255,255,.06) !important; }
+.w.t2-rows--lines .t2-r:hover{ background:rgba(255,255,255,.05); }
+.t2-rows--lines .t2-r:hover .t2-ar{ color:var(--w-fg); }
+/* v11 карточки: каждая строка — мягкая плашка с отступами по краям; наведение — плашка светлее, фото чуть крупнее */
+.t2-rows--cards .t2-r{ margin:6px 8px 0; padding:0 8px; border-radius:var(--w-r-sm); background:rgba(255,255,255,.03); }
+.w.t2-rows--cards .t2-r:hover{ background:rgba(255,255,255,.07); }
+.t2-rows--cards .t2-avw{ transition:transform .15s; } .t2-rows--cards .t2-r:hover .t2-avw{ transform:scale(1.08); }
+/* v12 цвет команды: строки без заливки; наведение — строка заливается цветом новой команды */
+.w.t2-rows--tint .t2-r:hover{ background:var(--tint, rgba(255,255,255,.06)); }
+/* v12, дирижёр 22.10: без зазоров между строками — заливка при наведении идёт сплошняком; строки выше (отступы сверху и снизу больше); без подчёркивания */
+.t2-rows--tint .t2-r{ margin-top:0; min-height:52px; padding-top:6px; padding-bottom:6px; }

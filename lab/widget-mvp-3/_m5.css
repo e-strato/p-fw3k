@@ -1,0 +1,85 @@
+/* Виджет MVP v6 — одна карточка (созвон 23.10, п. 4.1–4.3). Всего 380: блок 344 + видно 36 у кнопки из-под края (как .t3-dock трансферов) */
+.w.m6{ width:320px; height:auto; background:none; border:0; overflow:visible;
+  transform:perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition:transform .5s cubic-bezier(.2,.8,.2,1); will-change:transform; }
+.w.m6.is-tilt{ transition:transform .12s ease-out; }
+.m6-main{ position:relative; z-index:1; display:flex; flex-direction:column; height:344px; overflow:hidden; background:linear-gradient(160deg, #1b1b20, var(--w-bg));
+  border:1px solid var(--w-border); border-radius:var(--w-r); }
+.m6-hd, .m6-seg, .m6-card{ position:relative; z-index:1; }
+.m6-hd{ flex:none; display:flex; align-items:center; gap:8px; height:var(--g-hd); padding:0 var(--g-pad); }
+.m6-hd b{ font:var(--t-title); color:var(--w-fg); }
+.m6-hd span{ margin-left:auto; font:var(--t-hsub); color:var(--w-muted-fg); white-space:nowrap; }
+.m6-ev{ display:flex; align-items:center; gap:6px; } .m6-ev img{ flex:none; width:14px; height:14px; border-radius:3px; object-fit:contain; } /* лого игры у турнира */
+
+/* Фон: бледно лого команды + редкий глитч — три полосы с цветным сдвигом пробегают раз в несколько секунд */
+.m6-bg{ position:absolute; left:-40px; top:20px; width:280px; height:280px; background:var(--lg) center / contain no-repeat; opacity:.07; filter:grayscale(1); }
+.m6-gl{ position:absolute; inset:0; pointer-events:none; }
+.m6-gl i{ position:absolute; left:0; right:0; height:6px; opacity:0; background:linear-gradient(90deg, transparent, rgba(96,165,250,.35) 20%, rgba(250,204,21,.25) 55%, transparent);
+  mix-blend-mode:screen; animation:m6-glitch 5.5s steps(1) infinite; }
+.m6-gl i:nth-child(1){ top:28%; } .m6-gl i:nth-child(2){ top:47%; height:3px; animation-delay:.08s; } .m6-gl i:nth-child(3){ top:61%; height:10px; animation-delay:.16s; }
+@keyframes m6-glitch{ 0%, 86%, 100%{ opacity:0; transform:none; } 87%{ opacity:1; transform:translateX(-14px); } 89%{ opacity:.6; transform:translateX(18px); } 91%{ opacity:1; transform:translateX(-6px); } 93%{ opacity:0; } }
+
+/* Игрок целиком — не режем, подстраиваемся под фото; парит над полом: мягкая тень и лёгкое покачивание */
+.m6-card{ flex:1; min-height:0; }
+.m6-ph{ position:absolute; left:0; right:0; top:0; bottom:14px; width:100%; height:calc(100% - 14px); object-fit:contain; object-position:50% 100%;
+  filter:drop-shadow(0 14px 18px rgba(0,0,0,.6)); animation:m6-float 4s ease-in-out infinite; }
+.m6-floor{ position:absolute; left:50%; bottom:6px; width:150px; height:18px; transform:translateX(-50%); border-radius:50%; background:radial-gradient(rgba(0,0,0,.6), transparent 70%); animation:m6-shadow 4s ease-in-out infinite; }
+@keyframes m6-float{ 50%{ transform:translateY(-5px); } }
+@keyframes m6-shadow{ 50%{ transform:translateX(-50%) scale(.88); opacity:.7; } }
+/* Низ игрока уходит в фон — затемнение наезжает на него снизу, по нему читаются ник и KDA */
+.m6-fade{ position:absolute; left:0; right:0; bottom:0; height:55%; background:linear-gradient(transparent, rgba(9,9,11,.85) 60%, var(--w-bg)); pointer-events:none; }
+@media (prefers-reduced-motion: reduce){ .m6-ph, .m6-floor, .m6-gl i{ animation:none; } }
+
+/* По нижним углам — ник с командой и KDA */
+.m6-c{ position:absolute; z-index:1; bottom:4px; display:flex; flex-direction:column; text-shadow:0 1px 8px rgba(0,0,0,.8); }
+.m6-c--bl{ left:var(--g-pad); } .m6-c--br{ right:var(--g-pad); align-items:flex-end; text-align:right; }
+.m6-c--bl b{ font:var(--t-big); color:var(--w-fg); }
+.m6-c--br b{ font:700 24px/28px var(--w-font); color:var(--w-fg); font-variant-numeric:tabular-nums; }
+.m6-c--br span{ font:var(--t-sub); color:var(--w-muted-fg); }
+.m6-tm{ display:flex; align-items:center; gap:4px; margin-top:2px; font:var(--t-sub); color:var(--w-muted-fg); }
+.m6-tm img{ width:14px; height:14px; object-fit:contain; }
+
+/* Сегмент «MVP чего» — под игроком; низ 24 — под ним заходит кнопка */
+.m6-seg{ flex:none; display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:2px; margin:12px var(--g-pad) 24px; padding:2px; border-radius:var(--w-r-sm); background:var(--w-mid-bg); }
+.w .m6-seg button{ height:28px; padding:0 8px; border:0; border-radius:6px; background:none; font:var(--t-seg); text-align:center; color:var(--w-muted-fg); cursor:pointer; transition:background .15s, color .15s; }
+.w .m6-seg button:hover{ color:var(--w-fg); }
+.w .m6-seg button.is-on{ background:var(--w-muted); color:var(--w-fg); }
+
+/* Кнопка из-под края */
+.w a.m6-dock{ position:relative; z-index:0; display:flex; align-items:center; gap:8px; margin-top:-12px; padding:20px var(--g-pad) 10px; background:#131316; border:1px solid var(--w-border); border-top:0;
+  border-radius:0 0 var(--w-r) var(--w-r); font:var(--t-btn); color:var(--w-fg); text-decoration:none; transition:background .15s; }
+.w a.m6-dock:hover{ background:#1c1c20; }
+.m6-dock svg{ flex:none; color:var(--w-muted-fg); } .m6-dock > svg:last-child{ margin-left:auto; }
+/* Цена — справа, вплотную к стрелке, с монеткой, как в v1 (дирижёр 23.10: «криво — цена висела посередине») */
+.m6-dock__c{ display:flex; align-items:center; gap:6px; margin-left:auto; font:var(--t-num-s); color:var(--w-fg); font-variant-numeric:tabular-nums; }
+.m6-dock__c::before{ content:''; width:12px; height:12px; border-radius:50%; background:radial-gradient(circle at 35% 35%, #fde68a, #f59e0b 60%, #b45309); box-shadow:inset 0 0 0 1px rgba(0,0,0,.25); }
+.m6-dock > .m6-dock__c + svg{ margin-left:2px; }
+
+/* v7: глубина — ник и KDA выше карточки, игрок посередине, лого фона ниже всех. При наклоне слои расходятся (параллакс), у текста — тень, как у парящего */
+.m6--depth .m6-c, .m6--depth .m6-ph, .m6--depth .m6-bg{ transition:transform .5s cubic-bezier(.2,.8,.2,1); }
+.m6--depth.is-tilt .m6-c, .m6--depth.is-tilt .m6-ph, .m6--depth.is-tilt .m6-bg{ transition:transform .12s ease-out; }
+.m6--depth .m6-c{ transform:translate(calc(var(--px, 0) * 18px), calc(var(--py, 0) * 14px)); text-shadow:0 6px 14px rgba(0,0,0,.9), 0 1px 2px rgba(0,0,0,.8); }
+.m6--depth .m6-bg{ transform:translate(calc(var(--px, 0) * -10px), calc(var(--py, 0) * -8px)); }
+.m6--depth .m6-ph{ translate:calc(var(--px, 0) * 6px) calc(var(--py, 0) * 4px); }
+
+/* v8: на верхнем слое (как ник и KDA) — заголовок, турнир в углу (крупнее, без пилюли) и сегмент; при наклоне сдвигаются сильнее карточки */
+.m6--up .m6-ev{ font:500 13px/18px var(--w-font); color:var(--w-fg); }
+.m6--up .m6-ev img{ width:16px; height:16px; }
+.m6--depth .m6-up{ transition:transform .5s cubic-bezier(.2,.8,.2,1); transform:translate(calc(var(--px, 0) * 18px), calc(var(--py, 0) * 14px)); }
+.m6--depth.is-tilt .m6-up{ transition:transform .12s ease-out; }
+.m6--depth .m6-hd .m6-up{ display:inline-flex; text-shadow:0 6px 14px rgba(0,0,0,.9); }
+.m6--depth .m6-seg.m6-up{ box-shadow:0 10px 20px rgba(0,0,0,.55); }
+
+/* v10–v13: вид кнопки снизу. В составе — во всех один текст, зелёным */
+.w a.m6-dock.is-mine{ justify-content:center; color:var(--w-up); }
+/* v10 plain — текст слева, цена с монеткой справа, без плюса и стрелки */
+.w a.m6-dock--plain{ justify-content:space-between; }
+/* v11 center — одной строкой по центру: «Взять в фэнтези за 🪙 890» */
+.w a.m6-dock--center{ justify-content:center; gap:6px; } .m6-dock--center .m6-dock__c{ margin-left:0; }
+/* v12 fill — кнопка залита золотом, текст тёмный; выезжает из-под края так же */
+.w a.m6-dock--fill{ justify-content:space-between; background:linear-gradient(90deg, #f5c84b, #e8a923); border-color:#e8a923; color:#1a1206; }
+.w a.m6-dock--fill:hover{ background:linear-gradient(90deg, #ffd65c, #f0b52c); }
+.m6-dock--fill .m6-dock__c{ color:#1a1206; } .m6-dock--fill .m6-dock__c::before{ box-shadow:inset 0 0 0 1px rgba(0,0,0,.35); }
+/* v13 split — цена в отдельной пилюле справа */
+.w a.m6-dock--split{ justify-content:flex-start; }
+.m6-dock--split .m6-dock__c{ height:24px; padding:0 10px 0 6px; border-radius:999px; background:var(--w-muted); }
+.m6-dock--split .m6-dock__c{ margin-left:auto; } .w a.m6-dock--split > svg:last-child{ margin-left:2px; } /* v13: пилюля с ценой — вплотную к шеврону */

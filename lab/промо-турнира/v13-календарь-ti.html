@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_промо.css" />
+<style>
+/* v13 · Календарь TI (новый, дирижёр 05.10). 11 дверец — 11 дней турнира, как адвент-календарь и ежедневный вход в мобильных играх:
+   каждый день открываешь одну, внутри награда; серия без пропусков ведёт к большой двери гранд-финала (карта Аегиса).
+   Пропустил день — можно вернуть за монеты. Повод заходить каждый день турнира. Место — полоса во всю ширину под витриной. */
+.w-cal .card__b { display: grid; gap: 16px; }
+.cal { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)) minmax(0, 2fr); gap: 8px; }
+.d { position: relative; aspect-ratio: 3 / 4; perspective: 600px; border-radius: 12px; border: 0; padding: 0; background: none; color: var(--c-text); font: inherit; cursor: default; }
+.d:last-child { aspect-ratio: auto; }
+/* Внутри: награда; поверх — створка, которая откидывается */
+.d__in { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; gap: 6px; padding: 6px; border-radius: 12px; text-align: center;
+  background: radial-gradient(70% 60% at 50% 40%, color-mix(in srgb, var(--rc, var(--c-coin)) 30%, transparent), transparent 75%), var(--c-ui-bg); }
+.d:not(.is-open) .d__in { opacity: 0; }
+.d__in { transition: opacity .3s .25s; }
+.d__in img { width: min(70%, 64px); aspect-ratio: 1; border-radius: 10px; object-fit: cover; box-shadow: 0 0 18px color-mix(in srgb, var(--rc, var(--c-coin)) 40%, transparent); }
+.d__in b { font-size: var(--fs-app-xs); line-height: 1.2; }
+.d__in .ico { width: min(70%, 64px); aspect-ratio: 1; border-radius: 10px; display: grid; place-items: center; background: color-mix(in srgb, var(--rc, var(--c-coin)) 25%, var(--c-ui-item)); color: var(--rc, var(--c-coin)); font: 800 20px/1 'Archivo', var(--font); }
+.d__door { position: absolute; inset: 0; display: grid; align-content: space-between; padding: 10px; border-radius: 12px; transform-origin: 0 50%; backface-visibility: hidden;
+  transition: transform .7s cubic-bezier(.3, .9, .3, 1), opacity .7s;
+  background: linear-gradient(160deg, var(--c-ui-hover), var(--c-ui-item)); box-shadow: inset 0 0 0 1px var(--c-ui-line); }
+.d__door b { font-size: 22px; }
+.d__door small { font-size: var(--fs-app-xs); color: var(--c-caption); }
+.d.is-open .d__door { transform: rotateY(-100deg); opacity: 0; }
+/* Сегодня: светится, кликается */
+.d.is-today { cursor: pointer; }
+.d.is-today .d__door { background: linear-gradient(160deg, color-mix(in srgb, var(--c-tier-elite) 40%, var(--c-ui-hover)), var(--c-ui-item)); box-shadow: inset 0 0 0 2px var(--c-tier-elite), 0 0 26px color-mix(in srgb, var(--c-tier-elite) 35%, transparent); }
+@media (prefers-reduced-motion: no-preference) { .d.is-today:not(.is-open) .d__door { animation: knock 2.4s ease-in-out infinite; } }
+@keyframes knock { 0%, 80%, 100% { transform: rotateY(0); } 85% { transform: rotateY(-14deg); } 90% { transform: rotateY(-4deg); } }
+.d.is-miss .d__door { background: var(--c-ui-panel); border: 1px dashed var(--c-ui-line); }
+.d.is-miss { cursor: pointer; }
+.d.is-later .d__door { background: var(--c-ui-panel); color: var(--c-caption); }
+.d.is-later .d__door b { color: var(--c-muted); }
+/* Финал — большая дверь: знак Аегиса сверху, под ним название, дата и полоска серии; тёплый металл, без прозрачности.
+   .d.d--final — чтобы перебить приглушение «закрыто» у обычных дверей */
+.cal { grid-template-columns: repeat(10, minmax(0, 1fr)) minmax(0, 2.4fr); }
+.d.d--final .d__door { justify-items: center; align-content: center; gap: 8px; padding: 14px 16px; text-align: center;
+  background:
+    radial-gradient(60% 55% at 50% 30%, color-mix(in srgb, var(--c-coin) 24%, transparent), transparent 70%),
+    linear-gradient(160deg, color-mix(in srgb, var(--c-coin) 14%, var(--c-ui-hover)), var(--c-ui-panel));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-coin) 45%, transparent); color: var(--c-text); }
+.d.d--final .d__door svg { width: 46px; height: 46px; color: var(--c-coin); filter: drop-shadow(0 0 14px color-mix(in srgb, var(--c-coin) 55%, transparent)); }
+.d.d--final .d__door b { font-size: 20px; line-height: 1.05; color: var(--c-text); }
+.d.d--final .d__door small { font-size: var(--fs-app-xs); color: var(--c-caption); }
+.d.d--final .d__door i { display: block; width: 100%; max-width: 160px; height: 4px; margin-top: 2px; border-radius: 2px; background: var(--c-ui-item); overflow: hidden; }
+.d.d--final .d__door i em { display: block; height: 100%; width: var(--p); border-radius: inherit; background: var(--c-coin); }
+.d.d--final .d__in { grid-auto-flow: column; justify-content: center; gap: 12px; }
+.foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; font-size: var(--fs-app-sm); color: var(--c-caption); }
+.streak { display: flex; align-items: center; gap: 10px; }
+.streak b { font-size: 26px; color: var(--c-text); }
+.streak i { display: flex; gap: 3px; }
+.streak i span { width: 18px; height: 6px; border-radius: 3px; background: var(--c-ui-item); }
+.streak i span.is-on { background: var(--c-tier-elite); }
+.streak i span.is-gap { background: var(--c-stat-low); }
+.toast { min-height: 20px; color: var(--c-text); }
+@media (max-width: 1000px) { .cal { grid-template-columns: repeat(4, minmax(0, 1fr)); } .d:last-child { grid-column: span 4; aspect-ratio: 4 / 1; } }
+</style></head>
+<body>
+<div class="lab-wrap">
+  <div class="lab-bar">
+    <div class="lab-bar__t"><b>v13 · Календарь TI на 11 дней</b><small>Новый: дверца в день, серия ведёт к финалу · полоса во всю ширину</small></div>
+    <div class="lab-st"><button data-go="1">День 1</button><button data-go="6">День 6, один пропуск</button></div>
+  </div>
+  <p class="home-cap">Настоящая главная: календарь — полосой над всеми виджетами; остальное приглушено</p>
+  <div class="home" data-slot="before:.app-home__top">
+    <div class="ghost span-2"></div><div class="ghost"></div>
+    <section class="card card--ui w-cal span-3" aria-label="Календарь TI">
+      <div class="card__h"><h2>Календарь TI · 11 дней — 11 наград</h2><small>13–23 августа · новая дверца в 00:00</small></div>
+      <div class="card__b">
+        <div class="cal" id="cal"></div>
+        <div class="foot">
+          <div class="streak"><span>Серия</span><b class="disp num" id="sn">0</b><i id="sbar"></i></div>
+          <span class="toast" id="toast">Открой все 10 дверей без пропусков — в финал откроешь карту Аегиса</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<script src="_промо.js"></script>
+<script>
+// 11 дней: дата, награда (картинка героя / игрока или значок), цвет. Последний — гранд-финал.
+const DAYS = [
+  [13, '+100 монет', '◈', 'var(--c-coin)'], [14, 'Сундук TI', '▣', 'var(--c-tier-bronze)'], [15, 'Карта Rue', 'players/rue', 'var(--c-tier-silver)'],
+  [16, 'Рамка «Шанхай»', '▢', 'var(--c-live)'], [17, '+200 монет', '◈', 'var(--c-coin)'], [18, 'Карта Pure · Holo', 'players/pure', 'var(--c-rarity-holo-4)'],
+  [19, 'Буст капитана ×3', '×3', 'var(--c-accent)'], [20, 'Сундук TI', '▣', 'var(--c-tier-gold)'], [21, 'Эмоция «Аегис»', 'heroes/hoodwink', 'var(--c-tier-elite)'],
+  [22, 'Карта 9Class · Prism', 'players/9class', 'var(--c-rarity-holo-1)'], [23, 'Карта Аегиса · Legend', '', 'var(--c-coin)'],
+]
+const cal = document.getElementById('cal')
+let today = 1, opened = new Set(), missed = new Set()
+const inner = ([, name, ic, c]) => `<span class="d__in" style="--rc: ${c}">${ic.includes('/') ? `<img src="/p-fw3k/site/img/${ic}.webp" alt="" />` : `<span class="ico">${ic || '★'}</span>`}<b>${name}</b></span>`
+const streak = () => { let s = 0; for (let n = Math.min(today, 10); n >= 1 && opened.has(n); n--) s++; return s }
+const draw = () => {
+  cal.innerHTML = DAYS.map((d, i) => {
+    const n = i + 1, last = n === 11
+    const cls = opened.has(n) ? 'is-open' : missed.has(n) ? 'is-miss' : n === today ? 'is-today' : n > today ? 'is-later' : ''
+    const label = missed.has(n) ? 'пропущен · вернуть за 50 ◈' : n === today ? 'сегодня' : n > today ? 'закрыто' : ''
+    const door = last
+      ? `<span class="d__door"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.3 8 11 4.6-1.7 8-6 8-11V5l-8-3Zm0 4.2 4 1.5V11c0 2.9-1.6 5.6-4 7-2.4-1.4-4-4.1-4-7V7.7l4-1.5Z"/></svg><b class="disp">Финал</b><small>23 августа · серия ${streak()} из 10</small><i><em style="--p: ${streak() * 10}%"></em></i></span>`
+      : `<span class="d__door"><b class="disp num">${d[0]}</b><small>${label}</small></span>`
+    return `<button class="d ${last ? 'd--final ' : ''}${cls}" data-n="${n}" type="button" aria-label="${d[0]} августа">${inner(d)}${door}</button>`
+  }).join('')
+  // Серия: подряд открытые с конца до сегодня
+  document.getElementById('sn').textContent = streak()
+  document.getElementById('sbar').innerHTML = Array.from({ length: 10 }, (_, i) => `<span class="${opened.has(i + 1) ? 'is-on' : missed.has(i + 1) ? 'is-gap' : ''}"></span>`).join('')
+}
+const say = (t) => (document.getElementById('toast').textContent = t)
+cal.addEventListener('click', (e) => {
+  const b = e.target.closest('.d'); if (!b) return
+  const n = +b.dataset.n
+  if (n === today && !opened.has(n)) { opened.add(n); draw(); say(`Сегодня: ${DAYS[n - 1][1]}. Следующая дверца — завтра в 00:00`) }
+  else if (missed.has(n)) { missed.delete(n); opened.add(n); draw(); say(`День ${DAYS[n - 1][0]} вернул за 50 ◈ — серия снова целая`) }
+})
+document.addEventListener('промо:состояние', (e) => {
+  today = +e.detail; opened = new Set(); missed = new Set()
+  for (let n = 1; n < today; n++) (n === 3 ? missed : opened).add(n)
+  draw(); say(today === 1 ? 'Открой все 10 дверей без пропусков — в финал откроешь карту Аегиса' : 'Пропуск 15 августа рвёт серию — верни его, иначе финал даст только сундук')
+})
+</script>
+</body></html>

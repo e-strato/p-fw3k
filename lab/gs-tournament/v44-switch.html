@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>v44 · Турнир: переключатель TI 2026 / Universe Ep. 7 (данные из базы)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../widget-tournament/_w.css" />
+<link rel="stylesheet" href="../widgets-unified/_type.css" />
+<link rel="stylesheet" href="../widget-tournament-5/_t5.css" /><link rel="stylesheet" href="../widgets-unified/_cons.css" /><link rel="stylesheet" href="../widget-tournament-6/_t6.css" />
+<link rel="stylesheet" href="_ours.css" />
+<link rel="stylesheet" href="../widget-participants/_wp.css" /><link rel="stylesheet" href="../widget-news/_feed.css" /><link rel="stylesheet" href="../widget-news/_nw2.css" /><link rel="stylesheet" href="../widget-positions/_pp.css" /><link rel="stylesheet" href="../widget-heroes/_hs.css" /><link rel="stylesheet" href="../widget-participants/_wp-fit.css" />
+</head>
+<!-- v42-heroes — как v40, но «Статистика героев» — widget-heroes v6 (созвон 02.11 §2.5): все 98 героев турнира (Liquipedia, 02.11), группы колонок через линии, сортировка по клику без прыжков ширины, колонка сортировки подсвечена, наведение — остальные строки тише, «↺ Сбросить» в правом верхнем углу; на телефоне — группа сегментом (дирижёр 02.11: «V6 переноси»). Старая карточка из _ours.js заменяется виджетом на месте. (v41 — в _отклонено.)
+     v40-positions — как v39, но в главной колонке под «Участниками» — новый виджет «Игроки по позициям» (widget-positions v7, созвон 02.11 §2.4): позиции значками как на Cyberscore (цветной квадрат, чёрный знак), строка — место, флаг, ник и команда, 3 главных героя (имя, винрейт, матчи), рейтинг; наведение на строку — остальные тише (дирижёр 02.11: «v7 можно переносить»). ‼️ Рейтинги, герои — пример.
+     v39-participants56 — как v38, но «Участники» — widget-participants v56 (созвон 02.11 §2.3): рейтинг четырьмя цифрами, второй — мелко серым рядом, позиция первой, пары по наведению (значок связи у ника, скобка слева), тренер — значок «человек в кепке», у рейтинга команды стрелка с маленьким числом, драфты — заметкой (значок мечей), у заметок вместо подписи «Авто / Редакция» — значок (дирижёр 02.11: «V56 переноси в продукт»). ‼️ Рейтинги, пары, драфты — пример.
+     v38-news73 — как v37, но «Новости» — widget-news v73 (созвон 02.11 §2.1): время первым и живое, «Tier 1» вместо ранга, команды и игроки плашками (у игрока — аватар-квадрат), «Подробнее» с листом — «Кратко» печатается абзацем, новая новость не сдвигает ленту — сверху пилюля с лого команд (дирижёр 02.11: «v73 норм, можно переносить»). ‼️ Минуты «назад», новая новость, герои у ников, цвета — пример.
+     v37-news — как v36, но в правой колонке под «Форматом» — виджет «Новости» (лаба widget-news v36: общая лента, ранг светящейся буквой в строке значков, точки между значками, тонкие линии между новостями;
+     на телефоне — в конце главной колонки). Дирижёр 30.10: «36 — наш вариант, вставить, например, на страницу турнира». Новости — настоящие (../news/_real.js), ‼️ ранг и «читают» — пример.
+     v36-participants-flt — как v35, но «Участники» — как widget-participants v34 (WP.mount flt): форма команды только в виде «Список» — колонками, клетки серий цветом как тепловая карта групповой;
+     в шапке сначала вид, потом порядок (уезжает плавно у «по позиции»); на телефоне одна кнопка «Фильтры» → шторка снизу: Вид → Порядок / Колонки «Состав / Форма» / Позиция (дирижёр 30.10: «переноси»).
+     v35-participants-main — как v34, но «Участники» — в главной колонке под групповой стадией, по ширине колонки: на 1440 — 4 в ряд, от колонки 1200 — 5;
+     кнопка «свернуть составы» в шапке виджета перед порядком, у свёрнутой команды состав — при наведении (widget-participants-fit v6, дирижёр 28.10: «V6 норм, переноси»).
+     v34-participants-wide — как v33, но «Участники» — во всю ширину страницы под блоком «группы + Формат»: на компьютере 1440 — 5 команд в ряд (дирижёр 28.10: «не туда, чуть ниже; на 1400 — 5 команд, а не 3»);
+     «Кто смотрит: Зритель / Редактор» — в панели песочницы справа (?who=), а не в панели под кадром.
+     v33-participants — как v32, но первым блоком главной колонки — виджет «Участники» (лаба widget-participants, v30: ../widget-participants/_wp.js), как Participants на Liquipedia — перед групповой стадией;
+     в панели — «Кто смотрит: Зритель / Редактор» (дирижёр 28.10: «переносим на страницу»). Страница — файлы Claude-A, здесь только вставка (Claude-B).
+     v32-hsm-seg — как v27 (компьютер такой же), но на телефоне — переключатель «Пики / Radiant / Dire / Баны», таблица из 3–4 колонок, без прокрутки (дирижёр 28.10).
+     v27-hs-heat — как v23, но статистика героев: полная таблица, но WR — тепловым цветом, как клетки групп; проценты целыми (дирижёр 28.10: «покажи визуально»).
+     v23-segw — как v22, но на телефоне переключатель «Таблица / Каждый с каждым» — на всю ширину карточки, кнопки поровну (дирижёр 28.10).
+     v22-heat-px — как v21, но строки и шапка «Таблицы» и «Каждый с каждым» одной высоты до пикселя: у всех ячеек одна рамка 1px, зазор цветных клеток — тенью внутрь, лого в одной обёртке (дирижёр 28.10: «на один пиксель вниз двигается»).
+     v21-heat-logo — как v20, но лого команд в строках стоят в одной точке в «Таблице» и «Каждый с каждым» (дирижёр 28.10: «логотипы всё равно прыгают»).
+     v20-heat-fix — как v19, но на телефоне «Таблица» и «Каждый с каждым» одной ширины — на всю карточку, колонки фиксированы, строки одной высоты: при переключении ничего не прыгает (дирижёр 28.10).
+     v19-heat-c — как v15, но компактнее: клетки 40×32, лого над столбцами 16, строки ниже; на телефоне без прокрутки — переключатель «Таблица / Каждый с каждым» (дирижёр 28.10).
+     v15-gs-heat — как v14, но клетки — тепловая карта: цвет по разнице (2:0 ярче, 2:1 бледнее), крупный счёт без даты (дата — подсказкой), на пересечении с собой — лого команды; у карт — разница +/− (дирижёр 28.10: «на основе V14 — визуал дотянуть, концептуальные решения»).
+     v14-gs-merged — как v9, но справа только «Формат»; на группу одна таблица: место, команда, результаты против каждого соперника, серии, карты (дирижёр 28.10: «две таблицы одного и того же — из боковой убрать, несколько версий»).
+     v9-fmt-steps — как v6, но «Формат» — в правой колонке над виджетом турнира шагами: групповая стадия (пройдена) → плей-офф, даты и правила одной строкой (дирижёр 28.10: «перенеси в правую колонку, несколько версий»).
+     v6-hdinfo — как v5, но тир, даты, команд, призовые, организатор, тип и патч — не отдельным блоком, а в шапке турнира справа от названия (на телефоне — под ним) (дирижёр 28.10).
+     v5-tourw — как v4, но «О турнире» — полосой сверху (тир и даты первыми), а справа только наш виджет турнира (widget-tournament-6 v11) с таблицей групп PARI Universe (дирижёр 28.10).
+     v4-heromain — как v3, но статистика героев — в главной колонке под групповой стадией, справа только «О турнире» (дирижёр 28.10).
+     v3-notabs — как v2, но без вкладок «Обзор · Квалификация · Статистика» (дирижёр 28.10: «табы не нужны»).
+     v2-ours — что осталось в v1, перерисовано в нашей стилистике (токены виджетов, шапка портала как на странице матча): «О турнире», формат, групповая стадия, статистика героев.
+     «Участников» нет — их добавит Claude-B (Т2) (дирижёр 28.10). Вид — «Телефон 390 / Компьютер 1440» в панели песочницы. -->
+<body>
+<div class="app">
+  <header class="portal"><a class="pt-brand" href="#"><span class="pt-logo">◆</span>GoatScout</a>
+    <nav class="pt-nav"><a href="#">Матчи</a><a href="#" class="is-on">Турниры</a><a href="#">Фэнтези</a><a href="#">Новости</a></nav>
+    <a class="pt-in" href="#">Войти</a></header>
+  <section class="th">
+    <div class="th-row th-row--info"><a class="ib" href="#" aria-label="Назад">‹</a><img class="th-logo" src="../gs-match/img/items/aegis.png" alt="" />
+      <div class="th-t"><b>The International 2026</b><small>Dota 2 · TI15 · Шанхай</small></div><div class="th-info" id="hdinfo"></div></div>
+  </section>
+  <main id="main"></main>
+</div>
+<!-- v44: как v43 + переключатель турниров в шапке: TI 2026 (идёт) / FISSURE Universe Episode 7 (5–12.10.2025, прошёл, формат как у PARI Universe); ?tour=ep7 -->
+<!-- v43: все данные — из общей базы ../_db (настоящее на 21.08.2026 16:08, середина TI; выдуманное — _fake.js); старые файлы данных собирает _db/compat.js -->
+<script>window.DB_TOUR = new URLSearchParams(location.search).get('tour') === 'ep7' ? 'universe-ep7' : undefined</script>
+<script src="../_db/_db.js"></script><script src="../_db/_fake.js"></script><script src="../_db/db.js"></script><script src="../_db/compat.js"></script>
+<script src="../widgets-unified/_cons.js"></script><script src="../widget-tournament-6/_t6.js"></script>
+<script>window.TN_TOUR = (el) => window.T4.render(el, { init: { tid: 'ti-2026' }, opt: { v3: true, tier: 'fill', tierEn: true, final: 'merge', dt: 'mono' } })</script>
+<script>window.TN_V5 = true; window.TN_HDINFO = true; window.TN_FMT = 'steps'; window.TN_GS = 'heat'; window.TN_COMPACT = true; window.TN_FIXW = true; window.TN_FIXL = true; window.TN_FIXV = true; window.TN_SEGW = true; window.TN_HS = 'heat'; window.TN_HSM = 'seg'</script>
+<script src="_ours.js"></script>
+<script>window.NEWS = []</script><script src="../widget-news/_feed.js"></script><script src="../widget-news/_nw2.js"></script>
+<script>window.WP_BASE = ''</script><script src="../widget-participants/_wp.js"></script><script src="../widget-positions/_pp.js"></script><script src="../widget-heroes/_hs.js"></script>
+<script>
+  // «Участники» — в главной колонке под групповой стадией (вторым блоком); _ours.js перерисовывает #main целиком — ставим виджет заново после каждой перерисовки
+  (() => {
+    // «Кто смотрит» — в панели песочницы справа (СОСТОЯНИЯ_СТРАНИЦ['gs-tournament'] в blocks.ts → ?who=fan|ed)
+    const who = new URLSearchParams(location.search).get('who') === 'ed' ? 'ed' : 'fan'
+    const phone = () => !document.body.classList.contains('is-desk')
+    const place = () => { const l = document.querySelector('#main .top-l'); if (!l || document.getElementById('wp')) return
+      const el = document.createElement('div'); el.id = 'wp'; l.firstElementChild ? l.firstElementChild.after(el) : l.append(el)
+      WP.mount(el, { who, phone: phone(), fit: 'w4', colMode: 'icon', colLeft: true, flt: true, r10: true, pm: 'hover', dm: 'note', dn: 'line', srcIc: true, drIc: true, r2ns: true, dnum: true, coMan: true, r2: true }) }
+    // «Новости» (widget-news v73) — компьютер: правая колонка под «Форматом»; телефон: в конце главной колонки
+    const news = () => { if (document.getElementById('wn')) return; const r = document.querySelector('#main .top-r'), l = document.querySelector('#main .top-l'); if (!r || !l) return
+      const el = document.createElement('div'); el.id = 'wn'; (phone() ? l : r).append(el); NW2.render(el, { pic: 'mix', phone: phone(), fresh: true, btn: 'more', icon: 'doc', open: 'inline', reveal: 'type', pts: 2, even: true, rich: true, para2: true, hl: 'chip', ava: true, sq: true, sm: true, pad: true, calm: true, pl: 'logos' }) }
+    // «Игроки по позициям» (widget-positions v7) — в главной колонке сразу под «Участниками»
+    const posw = () => { const wp = document.getElementById('wp'); if (!wp || document.getElementById('wpp')) return
+      const el = document.createElement('div'); el.id = 'wpp'; el.style.marginTop = '16px'; wp.after(el); PP.render(el, { phone: phone(), hv: 'wide', dim: true, ic: 'csk' }) }
+    // «Статистика героев» (widget-heroes v6) — на месте карточки из _ours.js
+    const heroesw = () => { if (document.getElementById('whs')) return; const c = [...document.querySelectorAll('#main section.card')].find((x) => x.querySelector('.hd b')?.textContent === 'Статистика героев'); if (!c) return
+      const el = document.createElement('div'); el.id = 'whs'; c.replaceWith(el); HS.render(el, { phone: phone(), reset: 'corner', nice: true, dim: true, sortHi: true }) }
+    new MutationObserver(() => { place(); posw(); heroesw(); news() }).observe(document.getElementById('main'), { childList: true }); place(); posw(); heroesw(); news()
+  })()
+</script>
+</body></html>

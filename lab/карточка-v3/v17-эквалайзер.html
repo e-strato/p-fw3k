@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_v3.css" />
+<style>
+/* v17 · Эквалайзер — заход 2, с нуля (дирижёр 01.10: прошлая «Телеметрия» — плохой вариант). Статистика графиком: шесть статов —
+   столбиками во всю ширину перед игроком, как эквалайзер; высота = значение, цифра на вершине, подпись под чертой.
+   Игрок стоит над графиком. Ниже — ник, напротив позиция и имя; форма за 10 матчей дорожкой; команда строкой.
+   Только скругления. Шрифты — IBM Plex Sans, цифры — IBM Plex Mono */
+.e17 { --r: .9em; --shape: inset(0 round .9em); --f-disp: 'IBM Plex Sans'; --f-ui: 'IBM Plex Sans'; --mono: 'IBM Plex Mono', monospace; --base: 21.2em; }
+.e17__face, .e17 .bk { font-family: 'IBM Plex Sans', sans-serif; }
+.e17__face { position: absolute; inset: 0; }
+.e17__plate { position: absolute; inset: 0; border-radius: var(--r); overflow: hidden; background: var(--c-card-ink);
+  box-shadow: 0 1.4em 2.6em -1em color-mix(in srgb, var(--c-black) 85%, transparent); }
+
+/* 2 Фон: тёмный цвет силы над чертой графика, логотип команды за игроком; по фону — горизонтальные линии шкалы */
+.e17__bg { position: absolute; inset: 0;
+  background:
+    radial-gradient(60% 35% at 50% 22%, color-mix(in srgb, var(--tier) 30%, transparent), transparent 75%),
+    linear-gradient(180deg, color-mix(in srgb, var(--tier-2) 85%, var(--c-card-ink)), var(--c-card-ink) 66%); }
+.e17__logo { left: 3.5em; top: 2.2em; width: 15em; height: 12em; background: color-mix(in srgb, var(--tier) 20%, transparent); }
+.e17__scale { position: absolute; left: 0; right: 0; top: calc(var(--base) - 8em); height: 8em;
+  background: repeating-linear-gradient(0deg, color-mix(in srgb, var(--c-white) 7%, transparent) 0 .05em, transparent .05em 2em); }
+
+/* 3 Рамка: кант поверх всего */
+.e17__edge { position: absolute; inset: 0; z-index: 12; border-radius: var(--r); pointer-events: none; box-shadow: inset 0 0 0 .15em var(--tier); }
+
+/* 5 Фото: игрок над графиком, свечение за головой */
+.e17__halo { position: absolute; left: 11em; top: 5.6em; width: 11em; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--tier-hi) 55%, transparent), color-mix(in srgb, var(--tier) 22%, transparent) 55%, transparent); }
+.e17 .ph { left: 3.2em; top: 2em; width: 15.6em;
+  -webkit-mask: linear-gradient(180deg, var(--c-black) 70%, transparent 90%); mask: linear-gradient(180deg, var(--c-black) 70%, transparent 90%); }
+
+/* 8 Статы — эквалайзер: столбики перед игроком, высота = значение (8.5em = 100), стекло цвета уровня, яркая крышка, цифра на вершине */
+.e17__bars { position: absolute; left: 1em; right: 1em; top: calc(var(--base) - 10.4em); height: 10.4em; z-index: 6; display: grid; grid-template-columns: repeat(6, 1fr); gap: .45em; align-items: end; }
+.e17__bars span { position: relative; display: grid; justify-items: center; align-content: end; height: 100%; }
+.e17__bars b { margin-bottom: .2em; font-family: var(--mono); font-size: 1.05em; font-weight: 700; line-height: 1; text-shadow: 0 0 .4em var(--c-card-ink); }
+.e17__bars i { width: 100%; height: calc(var(--v) * .085em); border-radius: .3em .3em 0 0; position: relative; overflow: hidden;
+  background: linear-gradient(180deg, color-mix(in srgb, currentColor 38%, transparent), color-mix(in srgb, currentColor 8%, transparent));
+  box-shadow: inset 0 .14em 0 currentColor; backdrop-filter: blur(.25em); -webkit-backdrop-filter: blur(.25em);
+  animation: e17-grow .9s cubic-bezier(.2, .9, .25, 1) both; transform-origin: bottom; }
+.e17__bars span:nth-child(2) i { animation-delay: .06s; } .e17__bars span:nth-child(3) i { animation-delay: .12s; }
+.e17__bars span:nth-child(4) i { animation-delay: .18s; } .e17__bars span:nth-child(5) i { animation-delay: .24s; } .e17__bars span:nth-child(6) i { animation-delay: .3s; }
+@keyframes e17-grow { from { transform: scaleY(0); } }
+.e17__base { position: absolute; left: 0; right: 0; top: var(--base); height: .1em; z-index: 7; background: var(--tier); box-shadow: 0 0 .7em color-mix(in srgb, var(--tier) 60%, transparent); }
+.e17__keys { position: absolute; left: 1em; right: 1em; top: calc(var(--base) + .35em); z-index: 6; display: grid; grid-template-columns: repeat(6, 1fr); gap: .45em; text-align: center; }
+.e17__keys span { font-family: var(--mono); font-size: .5em; font-weight: 600; color: var(--c-muted); }
+
+/* 4 Эффекты: блеск по фото; с Holo — столбики светятся; с Prism и Legend — по ним переливается радуга (бегущий блик убран — правка 01.10) */
+.kc--holo .e17__bars i, .kc--prism .e17__bars i, .kc--legend .e17__bars i { box-shadow: inset 0 .14em 0 currentColor, 0 0 .8em color-mix(in srgb, currentColor 35%, transparent); }
+.e17__bars i::after { content: ''; position: absolute; inset: 0; opacity: 0; mix-blend-mode: screen;
+  background: linear-gradient(180deg, var(--c-rarity-holo-1), var(--c-rarity-holo-4), var(--c-rarity-holo-3)); background-size: 100% 300%;
+  background-position: 0 calc(var(--my, 50%) + var(--drift)); animation: drift 6s ease-in-out infinite alternate; }
+.kc--prism .e17__bars i::after, .kc--legend .e17__bars i::after { opacity: .35; }
+
+/* 7 Раскладка: рейтинг справа сверху, герои в воздухе под ним, номер карты — чипом слева сверху */
+.e17__ovr { position: absolute; right: 1.2em; top: .8em; z-index: 9; }
+.e17__ovr b { font-size: 3em; font-weight: 700; line-height: 1; letter-spacing: -.04em; color: var(--c-white); text-shadow: 0 .05em .4em color-mix(in srgb, var(--c-black) 45%, transparent); }
+.e17__heroes { position: absolute; right: 1.2em; top: 4.5em; z-index: 7; display: grid; gap: .3em; justify-items: center; }
+.e17__heroes div { display: grid; justify-items: center; gap: .15em; }
+.e17__heroes .hero-ic { width: 1.8em; aspect-ratio: 1; border-radius: 50%; box-shadow: 0 0 0 .08em color-mix(in srgb, var(--tier) 70%, transparent), 0 .3em .8em color-mix(in srgb, var(--c-black) 50%, transparent); }
+.e17__heroes small { font-family: var(--mono); font-size: .5em; font-weight: 600; white-space: nowrap; color: var(--c-muted); }
+.e17__heroes small b { color: var(--c-white); }
+.e17__serial { position: absolute; left: 1em; top: 1em; z-index: 9; display: grid; padding: .35em .65em; border-radius: .45em; line-height: 1.2;
+  background: repeating-linear-gradient(118deg, transparent 0 .6em, color-mix(in srgb, var(--c-white) 4%, transparent) .6em .7em), var(--c-card-ink); } /* фон — как у нижней части карты (правка 01.10) */
+.e17__serial b { font-family: var(--mono); font-size: .8em; font-weight: 700; color: var(--tier-hi); }
+.e17__serial small { font-size: .56em; font-weight: 500; color: var(--c-muted); }
+
+/* 6 + 8 Ник слева, напротив — позиция и имя */
+.e17__who { position: absolute; left: 1.2em; top: 23.1em; z-index: 6; }
+.e17__nick { font-weight: 700; line-height: 1; letter-spacing: -.02em; white-space: nowrap; }
+.e17__side { position: absolute; right: 1.2em; top: 23.15em; z-index: 6; display: grid; justify-items: end; gap: .3em; text-align: right; }
+.e17__role { font-size: .95em; font-weight: 600; white-space: nowrap; }
+.e17__role b { font-weight: 700; color: var(--tier-hi); }
+.e17__name { display: flex; align-items: center; gap: .45em; font-size: .72em; font-weight: 500; color: var(--c-muted); white-space: nowrap; }
+
+/* 8 Нижняя строка (правка 01.10: команда не полосой): слева — логотип и название команды, справа — форма за 10 матчей дорожкой и счёт */
+.e17__row { position: absolute; left: 1.2em; right: 1.2em; top: 26.9em; z-index: 6; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .8em;
+  padding-top: .9em; border-top: .06em solid color-mix(in srgb, var(--c-white) 10%, transparent); }
+.e17__team { display: flex; align-items: center; gap: .45em; font-size: .82em; font-weight: 700; white-space: nowrap; }
+.e17__team .logo { width: 1.9em; height: 1.9em; }
+.e17__row ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(10, 1fr); gap: .2em; }
+.e17__row li { height: 1em; border-radius: .22em; }
+.e17__row li[data-w='true'] { background: color-mix(in srgb, var(--c-stat-high) 75%, transparent); }
+.e17__row li[data-w='false'] { box-shadow: inset 0 0 0 .1em color-mix(in srgb, var(--c-stat-low) 80%, transparent); }
+.e17__row small { font-size: .56em; font-weight: 600; color: var(--c-muted); white-space: nowrap; }
+.e17__row small b { font-family: var(--mono); color: var(--c-white); }
+
+/* 9 Оборот: те же столбики крупнее — по статам с полными названиями; герои, форма, кнопка */
+.e17 .bk { box-shadow: inset 0 0 0 .15em var(--tier); padding: 1.3em; gap: .7em; }
+.e17 .bk__top em, .e17 .bk__stats b, .e17 .bk__heroes em { font-family: var(--mono); }
+.e17 .bk__top em { color: var(--c-white); }
+.e17 .bk__stats { grid-template-columns: 1fr; gap: .35em; }
+.e17 .bk__stats li { grid-template-columns: 6.5em 1fr 2em; align-items: center; gap: .6em; font-size: .72em; }
+.e17 .bk__stats b { order: 3; text-align: right; font-size: 1.1em; }
+.e17 .bk__stats i { grid-column: auto; height: .7em; border-radius: .2em; }
+.e17 .bk__stats i::after { border-radius: .2em; }
+.e17 .bk__heroes { grid-template-columns: repeat(3, 1fr); }
+.e17 .bk__heroes li { grid-template-columns: 1fr; justify-items: center; text-align: center; gap: .2em; }
+.e17 .bk__heroes .hero-ic { width: 2.2em; aspect-ratio: 1; border-radius: 50%; }
+.e17 .bk__btn { border-radius: .6em; }
+</style></head>
+<body><section class="section v3">
+  <div class="sec-head">
+    <h2 class="sec-title">v17 · Эквалайзер</h2>
+    <p class="sec-lead">Статистика графиком, с нуля. Шесть статов — столбиками во всю ширину перед игроком, как эквалайзер: высота — значение, цифра на вершине, цвет — уровень.
+      Игрок стоит над графиком. Ниже ник, напротив позиция и имя, внизу строкой — команда слева, форма за 10 матчей справа. Шрифты: IBM Plex Sans, цифры — Plex Mono.</p>
+  </div>
+  <div id="v3"></div>
+</section>
+<script src="_v3.js"></script>
+<script>
+V3.страница({
+  класс: 'e17',
+  иерархия: [
+    'Скруглённый прямоугольник, только скругления.',
+    'Тёмный цвет силы и логотип команды за игроком; за графиком — тонкие линии шкалы.',
+    'Кант цвета силы поверх всего; черта графика — светящаяся линия во всю ширину.',
+    'Блеск редкости по фото. С Holo столбики светятся, с Prism и Legend по ним переливается радуга.',
+    'Игрок стоит над графиком, за головой свечение.',
+    'Ник крупно слева, напротив — флаг и настоящее имя.',
+    'Рейтинг в правом верхнем углу крупно, без обводок. Под ним три героя в воздухе: матчи и винрейт. Номер карты и сезон — чипом слева сверху.',
+    'Статы — шесть столбиков перед игроком: высота — значение, цифра на вершине, цвет — уровень, подпись под чертой; при показе вырастают. Позиция — напротив ника. Нижняя строка: слева логотип и название команды, справа форма за 10 матчей дорожкой и счёт.',
+    'Свой оборот — подробный: статы толстыми полосками с полными названиями, герои, форма, кнопка «Страница игрока».',
+  ],
+  оборот: (п, r, h) => h.оборот(п),
+  лицо: (п, r, h) => {
+    const побед = [...п.форма].filter((x) => x === 'В').length
+    return `
+<div class="e17__face">
+  <div class="e17__plate" data-l="1">
+    <div class="e17__bg" data-l="2">${h.маска(п, 'e17__logo')}<i class="e17__scale"></i></div>
+    <i class="e17__halo" data-l="5"></i>
+    ${h.фото(п)}
+    ${h.блеск(r)}
+  </div>
+  <i class="e17__edge" data-l="3"></i>
+  <div class="e17__bars" data-l="8">${h.статы(п).map((с) => `<span data-v="${с.ур}"><b>${с.v}</b><i style="--v: ${с.v}"></i></span>`).join('')}</div>
+  <i class="e17__base" data-l="3"></i>
+  <div class="e17__keys" data-l="8">${h.статы(п).map((с) => `<span>${с.к}</span>`).join('')}</div>
+  <div class="e17__serial" data-l="7"><b>${h.серия(п)}</b><small>${h.СЕЗОН}</small></div>
+  <div class="e17__ovr" data-l="7"><b>${п.рейтинг}</b></div>
+  <div class="e17__heroes" data-l="7">${п.герои.map((г) => `<div>${h.герой(г)}<small><b>${г[2]} М</b> · ${г[3]}%</small></div>`).join('')}</div>
+  <div class="e17__who" data-l="6"><div class="e17__nick" style="font-size: ${Math.min(2.2, 10 / (п.ник.length * .58)).toFixed(2)}em">${п.ник}</div></div>
+  <div class="e17__side"><span class="e17__role" data-l="8"><b>Pos ${п.pos}</b> · ${h.РОЛИ[п.pos]}</span>${п.имя ? `<span class="e17__name" data-l="6">${h.флаг(п)}${п.имя}</span>` : ''}</div>
+  <div class="e17__row" data-l="8"><span class="e17__team">${h.лого(п)}${h.команда(п)}</span><ol title="Форма за 10 матчей">${[...п.форма].map((x) => `<li data-w="${x === 'В'}"></li>`).join('')}</ol><small><b>${побед}</b>–<b>${10 - побед}</b></small></div>
+</div>`
+  },
+})
+</script>
+</body></html>

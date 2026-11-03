@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_v3.css" />
+<style>
+/* v16 · Паук в квадрате — заход 3 (дирижёр 01.10: «сверху и снизу область для контента, посередине ровный квадрат, куда вписаны персонаж
+   и его стата; стата выделяется не фоном, а только контуром, но чётко»). Сверху: номер карты, герои, рейтинг. Посередине квадрат: игрок
+   и паук навыков контуром (максимум — у сторон квадрата, малое значение не у центра); паук двигается в 3D. Снизу: логотип команды и ник, напротив —
+   позиция и имя; верх и низ одной высоты. Только скругления. Шрифт один — IBM Plex Sans */
+.d16 { --r: .9em; --shape: inset(0 round .9em); --f-disp: 'IBM Plex Sans'; --f-ui: 'IBM Plex Sans'; }
+.d16__face, .d16 .bk { font-family: 'IBM Plex Sans', sans-serif; }
+.d16__face { position: absolute; inset: 0; }
+.d16__plate { position: absolute; inset: 0; border-radius: var(--r); background: var(--c-card-ink);
+  box-shadow: 0 1.4em 2.6em -1em color-mix(in srgb, var(--c-black) 85%, transparent); }
+
+/* 2 Фон: квадрат посередине — тёмный цвет силы, логотип команды за игроком */
+.d16__sq { position: absolute; left: 0; top: 4.4em; width: 22em; height: 22em; overflow: hidden;
+  background:
+    radial-gradient(60% 50% at 50% 38%, color-mix(in srgb, var(--tier) 30%, transparent), transparent 75%),
+    linear-gradient(180deg, color-mix(in srgb, var(--tier-2) 90%, var(--c-card-ink)), color-mix(in srgb, var(--tier-2) 35%, var(--c-card-ink))); }
+.d16__logo { left: 3.5em; top: 3.4em; width: 15em; height: 12.5em; background: color-mix(in srgb, var(--tier) 20%, transparent); }
+
+/* 3 Рамка: кант по краю карты и тонкий кант квадрата */
+.d16__edge { position: absolute; inset: 0; z-index: 12; border-radius: var(--r); pointer-events: none; box-shadow: inset 0 0 0 .15em var(--tier); }
+.d16__sqline { position: absolute; left: 0; right: 0; top: 4.4em; height: 22em; z-index: 8; pointer-events: none;
+  box-shadow: inset 0 .08em 0 color-mix(in srgb, var(--tier) 70%, transparent), inset 0 -.08em 0 color-mix(in srgb, var(--tier) 70%, transparent); }
+
+/* 5 Фото: игрок по центру квадрата, свечение за головой */
+.d16__halo { position: absolute; left: 11.3em; top: 7em; width: 10em; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--tier-hi) 55%, transparent), color-mix(in srgb, var(--tier) 22%, transparent) 55%, transparent); }
+.d16 .ph { left: 3.2em; top: 3em; width: 15.6em;
+  -webkit-mask: linear-gradient(180deg, var(--c-black) 62%, transparent 84%); mask: linear-gradient(180deg, var(--c-black) 62%, transparent 84%); }
+
+/* 8 Паук навыков (заход 5: паук меньше — R 40, подписи на 55) — заход 4 (01.10: «паук некрасивый, допридумать»): тонкие оси-лучи от центра, фигура — яркий контур без заливки,
+   точки — кольца; подписи вынесены на концы осей по кругу, к ним — пунктир от точки. С Prism — второй тонкий контур внутри.
+   Лицо игрока свободно от цифр. Сетка svg = квадрат 144 × 144 */
+.d16__radar { left: 0; top: 0; width: 22em; height: 22em; }
+.d16__radar .shape { fill: none; stroke: var(--tier-hi); stroke-width: 1.6; stroke-linejoin: round;
+  filter: drop-shadow(0 0 1.2px color-mix(in srgb, var(--c-black) 90%, transparent)); }
+.d16__radar .rd__holo { fill: none !important; stroke: color-mix(in srgb, var(--tier-hi) 50%, transparent); stroke-width: .6; transform: scale(.9); mix-blend-mode: normal; opacity: 1; }
+.d16__radar .dot { r: 2px; fill: var(--c-card-ink); stroke: var(--tier-hi); stroke-width: 1.2; }
+.d16__radar .v { font-size: 13px; paint-order: stroke; stroke: color-mix(in srgb, var(--c-card-ink) 85%, transparent); stroke-width: 3px; }
+.d16__radar .k { font-size: 5.6px; letter-spacing: .04em; fill: color-mix(in srgb, var(--c-white) 80%, transparent); paint-order: stroke; stroke: color-mix(in srgb, var(--c-card-ink) 85%, transparent); stroke-width: 2px; }
+/* 4 Эффекты: с Holo — внешнее свечение контура */
+.d16__radar .rd__glow { fill: none; stroke: var(--tier); stroke-width: 5; opacity: .35; filter: blur(1.5px); }
+
+/* 7 Верхняя область: номер карты слева, герои по центру, рейтинг справа */
+/* Заход 5 (01.10): верхняя и нижняя области одной высоты (4.4em), квадрат ровно посередине; команда — только логотипом, слева от ника */
+.d16__top { position: absolute; left: 1.2em; right: 1.2em; top: 0; height: 4.4em; z-index: 7; display: flex; justify-content: space-between; align-items: center; }
+.d16__serial { display: grid; line-height: 1.2; }
+.d16__serial b { font-size: .8em; font-weight: 700; color: var(--tier-hi); }
+.d16__serial small { font-size: .6em; font-weight: 500; color: var(--c-muted); }
+.d16__heroes { display: flex; gap: .5em; }
+.d16__heroes div { display: flex; align-items: center; gap: .35em; }
+.d16__heroes .hero-ic { width: 1.6em; aspect-ratio: 1; border-radius: 50%; box-shadow: 0 0 0 .08em color-mix(in srgb, var(--tier) 70%, transparent); }
+.d16__heroes small { display: grid; font-size: .5em; font-weight: 500; line-height: 1.2; color: var(--c-muted); }
+.d16__heroes small b { font-weight: 700; color: var(--c-white); }
+.d16__ovr b { font-size: 2.6em; font-weight: 700; line-height: 1; letter-spacing: -.04em; color: var(--c-white); }
+
+/* 6 + 8 Нижняя область: логотип команды и ник слева, напротив — позиция и имя */
+.d16__who { position: absolute; left: 1.2em; top: 26.4em; height: 4.4em; z-index: 6; display: flex; align-items: center; gap: .6em; }
+.d16__who .logo { width: 2.4em; height: 2.4em; }
+.d16__nick { font-weight: 700; line-height: 1; letter-spacing: -.02em; white-space: nowrap; }
+.d16__side { position: absolute; right: 1.2em; top: 26.4em; height: 4.4em; z-index: 6; display: grid; align-content: center; justify-items: end; gap: .3em; text-align: right; }
+.d16__role { font-size: .95em; font-weight: 600; white-space: nowrap; }
+.d16__role b { font-weight: 700; color: var(--tier-hi); }
+.d16__name { display: flex; align-items: center; gap: .45em; font-size: .72em; font-weight: 500; color: var(--c-muted); white-space: nowrap; }
+
+/* 9 Оборот: подробно — статы полосками с полными названиями, герои, форма, кнопка */
+.d16 .bk { box-shadow: inset 0 0 0 .15em var(--tier); padding: 1.3em; gap: .7em; }
+.d16 .bk__top b, .d16 .bk__top em { font-weight: 700; }
+.d16 .bk__top em { color: var(--c-white); }
+.d16 .bk__stats { grid-template-columns: 1fr; gap: .35em; }
+.d16 .bk__stats li { grid-template-columns: 6.5em 1fr 2em; align-items: center; gap: .6em; font-size: .72em; }
+.d16 .bk__stats b { order: 3; text-align: right; font-size: 1.1em; }
+.d16 .bk__stats i { grid-column: auto; height: .45em; }
+.d16 .bk__heroes { grid-template-columns: repeat(3, 1fr); }
+.d16 .bk__heroes li { grid-template-columns: 1fr; justify-items: center; text-align: center; gap: .2em; }
+.d16 .bk__heroes .hero-ic { width: 2.2em; aspect-ratio: 1; border-radius: 50%; }
+.d16 .bk__btn { border-radius: .6em; }
+</style></head>
+<body><section class="section v3">
+  <div class="sec-head">
+    <h2 class="sec-title">v16 · Паук в квадрате</h2>
+    <p class="sec-lead">Сверху и снизу — области для контента, посередине ровный квадрат с игроком и его статой. Квадрат во всю ширину, без боковых отступов. Паук навыков — ярким контуром без заливки, подписи вынесены на концы осей по кругу, лицо свободно от цифр;
+      малое значение не у центра. Паук двигается в 3D за курсором. Сверху номер карты, герои и рейтинг; снизу логотип команды и ник, напротив — позиция и имя; верх и низ одной высоты. Шрифт один — IBM Plex Sans.</p>
+  </div>
+  <div id="v3"></div>
+</section>
+<script src="_v3.js"></script>
+<script>
+V3.страница({
+  класс: 'd16',
+  иерархия: [
+    'Скруглённый прямоугольник: сверху и снизу области под контент одной высоты, посередине ровный квадрат во всю ширину, без боковых отступов.',
+    'Квадрат: тёмный цвет силы, логотип команды за игроком.',
+    'Кант цвета силы по краю карты и тонкий кант квадрата.',
+    'Блеск редкости в квадрате. С Holo контур паука светится, с Prism внутри появляется второй тонкий контур.',
+    'Игрок по центру квадрата, за головой свечение.',
+    'Нижняя область: логотип команды и ник крупно слева, напротив — флаг и настоящее имя.',
+    'Верхняя область: номер карты и сезон слева, три героя по центру (матчи и винрейт), рейтинг справа — крупно, без обводок.',
+    'Паук навыков в квадрате — ярким контуром без заливки, тонкие оси-лучи; подписи вынесены на концы осей по кругу, к ним пунктир от точки, лицо свободно; малое значение не у центра; двигается в 3D. Позиция — напротив ника, цветом силы. Команда — только логотипом, слева от ника.',
+    'Свой оборот — подробный: статы полосками с полными названиями, герои, форма, кнопка «Страница игрока».',
+  ],
+  оборот: (п, r, h) => h.оборот(п),
+  лицо: (п, r, h) => `
+<div class="d16__face">
+  <div class="d16__plate" data-l="1"></div>
+  <div class="d16__sq" data-l="2">
+    ${h.маска(п, 'd16__logo')}
+    <i class="d16__halo" data-l="5"></i>
+    ${h.фото(п)}
+    ${h.радар(п, 'd16__radar rd--3d', { R: 40, сетка: false, мин: .3, наОсях: 55, вид: '-72 -72 144 144' })}
+    ${h.блеск(r)}
+  </div>
+  <i class="d16__sqline" data-l="3"></i>
+  <i class="d16__edge" data-l="3"></i>
+  <div class="d16__top">
+    <div class="d16__serial" data-l="7"><b>${h.серия(п)}</b><small>${h.СЕЗОН}</small></div>
+    <div class="d16__heroes" data-l="7">${п.герои.map((г) => `<div>${h.герой(г)}<small><b>${г[2]} М</b>${г[3]}%</small></div>`).join('')}</div>
+    <div class="d16__ovr" data-l="7"><b>${п.рейтинг}</b></div>
+  </div>
+  <div class="d16__who"><span data-l="8">${h.лого(п)}</span><div class="d16__nick" data-l="6" style="font-size: ${Math.min(2.1, 8.6 / (п.ник.length * .58)).toFixed(2)}em">${п.ник}</div></div>
+  <div class="d16__side"><span class="d16__role" data-l="8"><b>Pos ${п.pos}</b> · ${h.РОЛИ[п.pos]}</span>${п.имя ? `<span class="d16__name" data-l="6">${h.флаг(п)}${п.имя}</span>` : ''}</div>
+</div>`,
+})
+</script>
+</body></html>

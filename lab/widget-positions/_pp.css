@@ -1,0 +1,102 @@
+/* Виджет «Игроки по позициям» (_pp.js) — стиль итоговых виджетов (_w.css, _type.css) */
+.pp{ width:100%; max-width:720px; container-type:inline-size; container-name:pp; }
+.is-phone .pp{ max-width:none; border-radius:0; border-left:0; border-right:0; }
+/* позиции 1–5 значками, как в Доте */
+.pp-seg{ display:grid; grid-template-columns:repeat(5, 1fr); gap:2px; margin:12px 16px 4px; padding:2px; border-radius:var(--w-r-sm); background:var(--w-mid-bg); }
+.w .pp-seg button{ display:flex; align-items:center; justify-content:center; gap:6px; height:30px; border-radius:6px; color:var(--w-muted-fg); font:500 13px/1 var(--w-font); font-variant-numeric:tabular-nums; }
+.w .pp-seg button:hover{ color:var(--w-fg); }
+.w .pp-seg button.is-on{ background:var(--w-muted); color:var(--w-fg); }
+.pp-pi{ width:16px; height:16px; flex:none; }
+/* шапка колонок и строки */
+.pp-hd, .pp-r{ display:grid; grid-template-columns:20px 16px minmax(0, 1fr) auto 64px; align-items:center; gap:10px; padding:0 16px; }
+.pp-hd{ height:32px; font:var(--t-label); color:var(--w-muted-fg); } .pp-hd .n{ grid-column:2 / 4; } .pp-hd .r{ text-align:right; }
+.pp-r{ height:44px; position:relative; }
+.pp-r + .pp-r::before{ content:''; position:absolute; left:16px; right:16px; top:0; height:1px; background:var(--w-border); }
+.pp-r .k{ font:var(--t-num-s); color:var(--w-muted-fg); text-align:right; }
+.pp-r img.f{ width:16px; height:11px; border-radius:2px; object-fit:cover; }
+.pp-r .n{ display:flex; align-items:center; gap:6px; min-width:0; }
+.pp-r .nk{ font:var(--t-cell); color:var(--w-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pp-r .tl{ display:grid; place-items:center; flex:none; cursor:help; } .pp-r .tl img{ width:16px; height:16px; object-fit:contain; }
+.w .pp-r [data-tip]{ position:relative; }
+/* герои: иконка, винрейт, матчи */
+.pp-r .hs{ display:flex; gap:10px; }
+.pp-h{ display:grid; grid-template-columns:32px auto; grid-template-rows:auto auto; column-gap:5px; align-items:center; }
+.pp-h img{ grid-row:1 / 3; width:32px; height:18px; border-radius:3px; object-fit:cover; background:var(--w-muted); }
+.pp-h b{ font:600 11px/12px var(--w-font); font-variant-numeric:tabular-nums; color:var(--w-fg); }
+.pp-h b.up{ color:var(--w-up); } .pp-h b.dn{ color:#e5484d; }
+.pp-h i{ font:500 10px/11px var(--w-font); font-style:normal; font-variant-numeric:tabular-nums; color:var(--w-muted-fg); }
+/* рейтинг: главный белым, второй мелко серым */
+.pp-r .r{ display:flex; align-items:baseline; justify-content:flex-end; gap:3px; }
+.pp-r .r b{ font:600 13px/16px var(--w-font); font-variant-numeric:tabular-nums; color:var(--w-fg); }
+.pp-r .r i{ font:400 9px/1 var(--w-font); font-style:normal; color:var(--w-muted-fg); font-variant-numeric:tabular-nums; }
+/* узко (телефон): героев без цифр — только иконки, цифры при наведении */
+@container pp (max-width:520px){
+  .pp-hd, .pp-r{ grid-template-columns:16px 16px minmax(0, 1fr) auto 56px; gap:8px; }
+  .pp-hd .hs{ font-size:0; } .pp-hd .hs::after{ content:'Герои'; font:var(--t-label); }
+  .pp-r .hs{ gap:3px; } .pp-h{ display:block; } .pp-h b, .pp-h i{ display:none; } .pp-h img{ width:26px; height:15px; }
+}
+/* подсказка — имя команды у лого */
+.w .pp-r [data-tip]:hover::after, .w .pp-r [data-tip].is-tip::after{ content:attr(data-tip); position:absolute; left:50%; bottom:calc(100% + 6px); transform:translateX(-50%); z-index:6; white-space:nowrap; padding:4px 8px; border-radius:6px;
+  background:#18181b; border:1px solid var(--w-border); box-shadow:0 8px 20px #000a; font:var(--t-sub); color:var(--w-fg); pointer-events:none; }
+
+/* ——— v2 / v3: герои понятнее; телефон — без наведения ——— */
+/* v2 under — иконка, под ней винрейт и матчи раздельно; между героями шире */
+.pp--under .pp-r{ height:52px; }
+.pp--under .pp-r .hs{ gap:14px; }
+.pp-hu{ display:grid; justify-items:center; gap:3px; width:40px; }
+.pp-hu img{ width:40px; height:22px; border-radius:3px; object-fit:cover; background:var(--w-muted); }
+.pp-hu > span{ display:flex; gap:5px; font:500 10px/1 var(--w-font); font-variant-numeric:tabular-nums; }
+.pp-hu b{ font-weight:600; color:var(--w-fg); } .pp-hu b.up{ color:var(--w-up); } .pp-hu b.dn{ color:#e5484d; }
+.pp-hu i{ font-style:normal; color:var(--w-muted-fg); }
+/* v3 badge — матчи числом в углу иконки, винрейт полоской под ней и числом */
+.pp--badge .pp-r{ height:52px; }
+.pp--badge .pp-r .hs{ gap:12px; }
+.pp-hb{ display:grid; justify-items:start; gap:3px; width:40px; }
+.pp-hb .im{ position:relative; }
+.pp-hb img{ display:block; width:40px; height:22px; border-radius:3px; object-fit:cover; background:var(--w-muted); }
+.pp-hb .im i{ position:absolute; right:2px; bottom:1px; padding:0 3px; border-radius:3px; background:#000b; font:600 9px/12px var(--w-font); font-style:normal; color:#fff; font-variant-numeric:tabular-nums; }
+.pp-hb u{ display:block; width:100%; height:3px; border-radius:2px; background:var(--w-muted); overflow:hidden; text-decoration:none; }
+.pp-hb u b{ display:block; height:100%; background:var(--w-muted-fg); } .pp-hb u.up b{ background:var(--w-up); } .pp-hb u.dn b{ background:#e5484d; }
+.pp-hb em{ font:500 10px/1 var(--w-font); font-style:normal; color:var(--w-muted-fg); font-variant-numeric:tabular-nums; }
+/* узко: у v2 / v3 цифры остаются (наведения на телефоне нет), иконки чуть меньше */
+@container pp (max-width:520px){
+  .pp--under .pp-r .hs, .pp--badge .pp-r .hs{ gap:6px; }
+  .pp-hu, .pp-hb{ width:34px; } .pp-hu img, .pp-hb img{ width:34px; height:19px; }
+  .pp--under .pp-hd .hs::after, .pp--badge .pp-hd .hs::after{ content:'Герои'; }
+}
+
+/* ——— v4 wide: пустое место — в дело: под ником команда, у героя имя, винрейт полоской и числом, матчи словом ——— */
+.pp--wide{ max-width:1100px; }
+.pp--wide .pp-hd, .pp--wide .pp-r{ grid-template-columns:20px 16px minmax(120px, 180px) minmax(0, 1fr) 72px; gap:12px; }
+.pp--wide .pp-r{ height:56px; }
+.pp--wide .pp-r .nw{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.pp--wide .pp-r .nw small{ display:flex; align-items:center; gap:4px; font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pp--wide .pp-r .nw small img{ width:12px; height:12px; object-fit:contain; flex:none; }
+.pp--wide .pp-r .hs{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:16px; min-width:0; } /* min-width:0 — три героя не шире своей колонки, не заезжают на «Рейтинг» (03.11) */
+.pp-hw{ display:flex; align-items:center; gap:8px; min-width:0; }
+.pp-hw img{ width:44px; height:25px; border-radius:4px; object-fit:cover; background:var(--w-muted); flex:none; }
+.pp-hw .t{ display:flex; flex-direction:column; gap:4px; min-width:0; flex:1; }
+.pp-hw .nm{ font:500 12px/14px var(--w-font); color:var(--w-fg); text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pp-hw .st{ display:flex; align-items:center; gap:6px; font:500 10px/1 var(--w-font); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.pp-hw .st u{ display:block; width:36px; height:3px; border-radius:2px; background:var(--w-muted); overflow:hidden; text-decoration:none; flex:none; }
+.pp-hw .st u b{ display:block; height:100%; background:var(--w-muted-fg); } .pp-hw .st u.up b{ background:var(--w-up); } .pp-hw .st u.dn b{ background:#e5484d; }
+.pp-hw .st > b{ font-weight:600; color:var(--w-fg); } .pp-hw .st > b.up{ color:var(--w-up); } .pp-hw .st > b.dn{ color:#e5484d; }
+.pp-hw .st i{ font-style:normal; color:var(--w-muted-fg); }
+/* узко: герои — иконками с цифрами под ними, как v2 */
+@container pp (max-width:760px){
+  .pp--wide .pp-hd, .pp--wide .pp-r{ grid-template-columns:16px 16px minmax(0, 1fr) auto 56px; gap:8px; }
+  .pp--wide .pp-r .hs{ display:flex; gap:6px; }
+  .pp-hw{ display:grid; justify-items:center; gap:3px; width:36px; }
+  .pp-hw img{ width:36px; height:20px; }
+  .pp-hw .nm, .pp-hw .st u{ display:none; }
+  .pp-hw .st{ gap:4px; }
+  .pp-hw .st i span{ display:none; }
+}
+
+/* v5 — наведение на строку: остальные тише (только где есть мышь) */
+.pp--dim .pp-r{ transition:opacity .18s ease; }
+@media (hover:hover){ .pp--dim .pp-list:hover .pp-r:not(:hover){ opacity:.3; } }
+
+/* v6 — значки позиций как на Cyberscore: цветной квадрат, у неактивной позиции — приглушён */
+.pp-pi--cs{ width:18px; height:18px; }
+.w .pp-seg button:not(.is-on) .pp-pi--cs{ filter:saturate(.35) brightness(.8); }

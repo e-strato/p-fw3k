@@ -1,0 +1,45 @@
+/* Замены v2 (созвон 23.10, решение 34) — поверх _s2 / _s6v6 / _s8 + widgets-unified/_cons.css и _type.css: меньше коробок, лого 16 у тега, всё тише */
+.s3-lg{ width:16px; height:16px; border-radius:3px; }
+.s3-lt{ display:inline-flex; align-items:center; gap:4px; min-width:0; }
+.s3-dash{ margin:0 2px; font-weight:400; color:var(--w-muted-fg); }
+
+/* Строка матча: дата 44 · значок игры 16 · PR — IC · число серым */
+.w .s3-r{ display:flex; align-items:center; gap:10px; width:100%; min-height:var(--g-row, 52px); padding:0 12px; border-radius:0; text-align:left; }
+.w .s3-r:hover{ background:rgba(255,255,255,.04); }
+.s3-r__t{ flex:1; min-width:0; display:flex; align-items:center; font:var(--t-title); white-space:nowrap; overflow:hidden; }
+.s3-r .u-count{ flex:none; }
+
+/* Шапка матча: PR — IC с лого */
+.s3 .s6-hd__m > b{ display:flex; align-items:center; }
+.s3 .s6-cap .u-live{ font:var(--t-live); color:var(--w-down); } /* LIVE в строке под матчем — тем же видом, что в колонке даты */
+
+/* Матч: заголовок команды (лого + тег), под ним только игроки с заменой; строка без заливки */
+.s3-team{ display:flex; align-items:center; height:28px; margin-top:8px; padding:0 12px; font:var(--t-title); }
+.s3-team:first-child{ margin-top:0; }
+.s3 .s8-r.is-bad{ background:none; }
+.w.s3 button.s8-r.is-bad:hover{ background:rgba(255,255,255,.04); }
+
+/* Замен нет: PR — IC строкой вместо двух крупных лого */
+.s3-vs{ display:flex; align-items:center; font:var(--t-title); color:var(--w-muted-fg); }
+.s3 .s6-none b{ margin-top:4px; }
+
+/* Шаг «Проверь»: без подложки */
+.s3 .s6-sum{ padding:0; background:none; }
+.s3 .s6-sum > div{ gap:8px; font:var(--t-title); }
+
+/* v4–v7: где значок игры в списке */
+.s3-gi{ flex:none; width:12px; height:12px; border-radius:3px; object-fit:contain; }
+.s3-gl{ align-items:center; gap:6px; margin:12px 12px 0; } .s3-gl:first-child{ margin-top:4px; }  /* v4 раздел по игре */
+.s3-r__m{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }                      /* v5 вторая строка */
+.s3-r__g{ display:flex; align-items:center; gap:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.s3-wg{ display:flex; align-items:center; gap:4px; }                                               /* v6 в колонке даты */
+.s3-rt{ flex:none; display:flex; align-items:center; gap:8px; }                                    /* v7 у числа */
+.u-when:has(.s3-wg){ width:auto; min-width:44px; }
+/* v8: лого команд крупнее (дирижёр 23.10) */
+.s3--big .s3-lg{ width:20px; height:20px; }
+.s3--big .s3-lt{ gap:6px; }
+/* v9: в матче шапка без лого (как v1), у заголовков команд лого 16 */
+.s3--phd .s3-team .s3-lg{ width:16px; height:16px; }
+.s3--phd .s3-team .s3-lt{ gap:4px; }
+/* tint: наведение на строку цветом команд — слева первая, справа вторая (как у трансферов) */
+.w .s3-r[style*='--ta']:hover{ background:linear-gradient(90deg, var(--ta, rgba(255,255,255,.08)), var(--tb, rgba(255,255,255,.08))); }

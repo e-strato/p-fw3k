@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<base href="../widget-tournament-4/" />
+<title>v5 · Карта переходов</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="_t4.css" /><link rel="stylesheet" href="../widget-states/_s.css" /></head>
+<body><div class="lab-board">
+  <h1>Состояния виджета · v5 · Карта переходов</h1>
+  <p class="lab-board__lead">Откуда пользователь приходит на каждый из трёх экранов Подсказка — только пульсирующие точки на том, что можно нажать, без слов. Стрелка — что он сделал на странице.</p>
+  <div class="s-map" id="map"><svg id="svg"></svg></div>
+</div>
+<script src="_data.js"></script><script src="_t4.js"></script><script src="../widget-states/_states.js"></script>
+<script>
+  const W = 320, H = 400, X = 280, map = document.getElementById('map'), svg = document.getElementById('svg')
+  const acts = { home: 'зашёл на сайт', match: 'открыл матч', team: 'открыл команду' }
+  map.style.width = X + W + 240 + 'px'; map.style.height = S.key.length * H + 'px'
+  const SY = (S.key.length * H) / 2 - 28
+  map.insertAdjacentHTML('beforeend', `<div class="s-start" style="left:0;top:${SY}px">Пользователь<br>на странице</div>`)
+  S.key.forEach((k, r) => map.insertAdjacentHTML('beforeend', `<div class="s-node" style="left:${X}px;top:${r * H}px;width:${W}px"><div class="s-fr__h">${k.name}</div><div class="s-why">${k.why}</div><div><div data-k="${k.id}"></div></div></div>`))
+  document.querySelectorAll('[data-k]').forEach(el => S.mount(el, S.by(el.dataset.k), { hint: 'dots' }))
+  svg.innerHTML = '<defs><marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 8 4 0 8z" fill="#52525b"/></marker></defs>' + S.key.map((k, r) => {
+    const p0 = [120, SY + 28], p3 = [X - 8, r * H + 10], dx = (p3[0] - p0[0]) / 2
+    return `<path class="s-map__path" marker-end="url(#ar)" d="M${p0} C${[p0[0] + dx, p0[1]]} ${[p3[0] - dx, p3[1]]} ${p3}"/><text class="s-map__lbl" x="${(p0[0] + p3[0]) / 2 + 30}" y="${(p0[1] + p3[1]) / 2 - 6}" text-anchor="middle">${acts[k.id]}</text>` }).join('')
+</script>
+</body></html>

@@ -1,0 +1,83 @@
+/* Виджет MVP v15–v19 — семья v12 «Над виджетом». База — _mvp7.css (.m7, CTA) и _mvp10.css (.m10--rise, .m12-*), карта — _hg-card.css */
+.m15 .m12-stage{ z-index:2; }
+.m15.is-one .m12-stage + .m12-what{ padding-top:16px; }
+.m15 .m12-what{ z-index:2; }
+/* Обычная кнопка (как v14) — у v15, v17, v19 */
+.m15--stage .m7-cta, .m15--faces .m7-cta, .m15--auto .m7-cta{ height:40px; padding:0 12px 0 16px; border-radius:var(--w-r-sm); clip-path:none; background:var(--gold); box-shadow:none; }
+.m15--stage .m7-cta:hover, .m15--faces .m7-cta:hover, .m15--auto .m7-cta:hover{ filter:none; background:#f6cf6a; }
+.m15--stage .m7-cta.is-mine, .m15--faces .m7-cta.is-mine, .m15--auto .m7-cta.is-mine{ background:rgba(34,197,94,.14); box-shadow:inset 0 0 0 1px rgba(34,197,94,.35); }
+.m15--stage .m7-cta.is-mine::before, .m15--faces .m7-cta.is-mine::before, .m15--auto .m7-cta.is-mine::before{ display:none; }
+
+/* ——— v15 · Сцена: прожекторы и подиум ——— */
+.m15-spot{ position:absolute; top:-72px; width:180px; height:360px; pointer-events:none; opacity:1; transform-origin:50% 0;
+  background:linear-gradient(180deg, rgba(255,240,184,.55), rgba(241,194,76,.16) 55%, transparent 85%); clip-path:polygon(44% 0, 56% 0, 100% 100%, 0 100%); filter:blur(3px);
+  animation:m15-sway 7s ease-in-out infinite alternate; }
+.m15-spot.is-l{ left:-30px; rotate:-22deg; }
+.m15-spot.is-r{ right:-30px; rotate:22deg; animation-delay:-3.5s; }
+@keyframes m15-sway{ from{ transform:rotate(-4deg); } to{ transform:rotate(4deg); } }
+.m15-podium{ position:absolute; left:50%; top:262px; width:250px; height:40px; translate:-50% 0; border-radius:50%; pointer-events:none;
+  background:radial-gradient(closest-side, rgba(255,240,184,.38), rgba(241,194,76,.16) 55%, transparent); box-shadow:0 0 0 1px rgba(241,194,76,.12); }
+.m15--stage .m12-stage{ padding-bottom:4px; }
+.m15-nums{ position:relative; z-index:2; display:grid; grid-template-columns:repeat(3, 1fr); margin:0 16px 16px; padding:8px 0; border-radius:var(--w-r-sm); background:rgba(241,194,76,.06); box-shadow:inset 0 0 0 1px rgba(241,194,76,.14); }
+.m15-nums span{ display:flex; flex-direction:column; align-items:center; gap:2px; }
+.m15-nums span + span{ box-shadow:-1px 0 0 rgba(241,194,76,.14); }
+.m15-nums b{ font-size:16px; line-height:20px; font-weight:700; font-variant-numeric:tabular-nums; color:var(--w-fg); }
+.m15-nums small{ font-size:11px; line-height:14px; color:var(--w-muted-fg); }
+.m15--stage .m12-what{ padding-bottom:8px; }
+
+/* ——— v16 · Лента наискось и искры ——— */
+.m16-rays{ opacity:.3; }
+.m16-sparks{ position:absolute; left:0; right:0; top:-72px; height:340px; z-index:3; pointer-events:none; overflow:hidden; }
+.m16-sparks i{ position:absolute; left:var(--x); bottom:40px; width:var(--s); height:var(--s); border-radius:50%; background:#ffe08a; box-shadow:0 0 6px 1px rgba(255,214,107,.8);
+  opacity:0; animation:m16-up var(--t) linear var(--d) infinite; }
+@keyframes m16-up{ 0%{ opacity:0; transform:translateY(0); } 15%{ opacity:1; } 100%{ opacity:0; transform:translateY(-300px) translateX(12px); } }
+.m16-wrap{ position:relative; display:block; }
+.m16-wrap.is-anim{ animation:m12-in .6s cubic-bezier(.2,.9,.25,1.15) both; }
+/* Лента через левый верхний угол карты: широкая полоса, концы уходят за край — как кушак */
+.m16-ribbon{ position:absolute; left:-34px; top:30px; z-index:20; width:170px; rotate:-38deg; display:grid; place-items:center; height:24px; pointer-events:none;
+  background:linear-gradient(180deg, #ffe08a, #f1c24c 50%, #c99225); box-shadow:0 4px 10px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.55), inset 0 -1px 0 rgba(0,0,0,.2); }
+.m16-ribbon b{ font:800 11px/1 'Archivo', 'Inter', sans-serif; font-stretch:112%; letter-spacing:.06em; color:#1a1206; white-space:nowrap; }
+.m16-wrap .kc__in{ clip-path:none; }
+
+/* ——— v17 · Лица под картой ——— */
+.m17-faces{ position:relative; z-index:2; display:flex; justify-content:center; align-items:flex-end; gap:20px; padding:16px 16px 4px; }
+.w .m17-face{ display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--w-muted-fg); }
+.m17-face__ph{ display:grid; place-items:end center; width:40px; height:40px; border-radius:50%; overflow:hidden; background:radial-gradient(circle at 50% 30%, #3a2d10, #15110a); box-shadow:inset 0 0 0 1px rgba(241,194,76,.25); transition:width .25s, height .25s, box-shadow .25s; }
+.m17-face__ph img{ width:100%; height:100%; object-fit:cover; object-position:50% 15%; filter:grayscale(.6) brightness(.8); transition:filter .25s; }
+.m17-face small{ font-size:11px; line-height:14px; font-weight:500; }
+.w .m17-face.is-on{ color:var(--gold-hi); }
+.m17-face.is-on .m17-face__ph{ width:48px; height:48px; box-shadow:inset 0 0 0 2px var(--gold), 0 0 16px rgba(241,194,76,.35); }
+.m17-face.is-on img, .w .m17-face:hover img{ filter:none; }
+
+/* ——— v18 · Цифры сбоку ——— */
+.m18-stage{ grid-template-columns:auto 1fr; align-items:end; gap:12px; place-items:end start; padding:0 16px; }
+.m18-stage .m12-card.kc{ --w:196px; }
+.m18-col{ display:flex; flex-direction:column; gap:12px; min-width:0; padding-bottom:8px; }
+.m18-col.is-anim{ animation:m7-up .5s .15s cubic-bezier(.2,.9,.25,1) both; }
+.m18-lbl{ font-size:12px; line-height:16px; font-weight:600; color:var(--gold-hi); white-space:nowrap; }
+.m18-n{ display:flex; flex-direction:column; padding-left:8px; box-shadow:inset 2px 0 0 rgba(241,194,76,.35); }
+.m18-n b{ font-size:18px; line-height:22px; font-weight:700; font-variant-numeric:tabular-nums; color:var(--w-fg); white-space:nowrap; }
+.m18-n small{ font-size:11px; line-height:14px; color:var(--w-muted-fg); }
+.m15--side .m12-nav{ padding-bottom:12px; }
+.m15--side.is-one .m10-foot{ padding-top:16px; }
+.m15--side .m10-foot{ padding-top:4px; }
+
+/* ——— v19 · Глитч-сборка и автопрокрутка ——— */
+.m19-glitch.is-anim{ animation:m19-in .7s steps(1) both, m12-in .6s cubic-bezier(.2,.9,.25,1.15) both; }
+@keyframes m19-in{
+  0%{ clip-path:inset(0 0 100% 0); filter:hue-rotate(60deg) brightness(1.6); }
+  12%{ clip-path:inset(0 0 72% 0); transform:translateX(-6px); }
+  24%{ clip-path:inset(18% 0 40% 0); transform:translateX(5px); filter:hue-rotate(-40deg) brightness(1.4); }
+  38%{ clip-path:inset(0 0 30% 0); transform:translateX(-3px); }
+  52%{ clip-path:inset(30% 0 0 0); transform:translateX(4px); filter:brightness(1.3); }
+  66%{ clip-path:inset(0 0 12% 0); transform:none; }
+  80%{ clip-path:inset(0); filter:brightness(1.15); }
+  100%{ clip-path:inset(-20% -20% -20% -20%); filter:none; } }
+.m19-bars{ position:relative; z-index:2; display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; padding:16px 40px 0; }
+.w .m19-bars button{ height:12px; display:flex; align-items:center; }
+.m19-bars i{ display:block; width:100%; height:3px; border-radius:2px; background:var(--w-ring); position:relative; overflow:hidden; }
+.m19-bars .is-done i{ background:var(--gold); }
+.m19-bars .is-on i{ background:linear-gradient(90deg, var(--gold) 0 var(--p, 0%), var(--w-ring) var(--p, 0%)); }
+@property --p{ syntax:'<percentage>'; inherits:false; initial-value:0%; }
+@keyframes m19-fill{ from{ --p:var(--from, 0%); } to{ --p:100%; } }
+.m15--auto .m12-what{ padding-top:8px; }

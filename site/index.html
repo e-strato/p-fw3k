@@ -1,0 +1,604 @@
+<!doctype html>
+<!--
+  FantasyWeb — каркас страницы.
+  ⚠️ *.html в корне website/ СГЕНЕРИРОВАНЫ: этот каркас + pages/<имя>.html + blocks/**/*.html → `node build.mjs`.
+  Правьте блоки, страницы и layout.html, не собранные файлы (гейт `node build.mjs --check` поймает ручную правку).
+  Витрина компонентов — ../storybook.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Главная — FantasyWeb</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..900;1,400..900&family=Archivo:ital,wdth,wght@0,62..125,700..900;1,62..125,700..900&family=Cinzel:wght@700;900&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..700&display=swap" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<main>
+<!-- Шапка продукта: бренд, игра (Dota / LoL — переключает турниры в списке матчей), монеты, разделы. Внизу на телефоне — таб-бар.
+     Разделы, которых ещё нет, — data-soon (плашка «скоро»). Текущий раздел (aria-current) ставит app.js по адресу страницы. -->
+<header class="ui-header">
+  <div class="ui-header__in">
+    <div class="ui-header__top">
+      <a class="ui-header__brand" href="index.html">Fantasy · Dota 2</a>
+      <div class="btn-row ui-header__game" role="group" aria-label="Игра">
+        <button class="btn btn--quiet btn--xs" type="button" aria-pressed="true" data-game-pick="dota">Dota</button>
+        <button class="btn btn--quiet btn--xs" type="button" aria-pressed="false" data-game-pick="lol">LoL</button>
+      </div>
+      <div class="ui-header__coins"><span>Монеты</span><b>1 000</b><button class="btn btn--quiet btn--sm" type="button" data-soon="Забрать +50">Забрать +50</button></div>
+    </div>
+    <nav class="ui-tabs ui-header__nav" aria-label="Разделы">
+      <a class="ui-tabs__a" href="index.html">Главная</a>
+      <a class="ui-tabs__a" href="schedule.html">Матчи</a>
+      <a class="ui-tabs__a" href="match-center.html">Match Center</a>
+      <a class="ui-tabs__a" href="lineup.html">Состав</a>
+      <a class="ui-tabs__a" href="#" data-soon="Бустеры">Бустеры</a>
+      <a class="ui-tabs__a" href="gallery.html">Коллекция</a>
+      <a class="ui-tabs__a" href="#" data-soon="Квесты">Квесты</a>
+      <a class="ui-tabs__a" href="#" data-soon="Лидеры">Лидеры</a>
+      <a class="ui-tabs__a" href="#" data-soon="История">История</a>
+      <a class="ui-tabs__a" href="onboarding.html">Как это работает</a>
+    </nav>
+  </div>
+  <nav class="ui-tabbar" aria-label="Разделы">
+    <a href="schedule.html"><i>▦</i>Матчи</a>
+    <a href="#" data-soon="Поиск"><i>⌕</i>Поиск</a>
+    <a href="lineup.html"><i>★</i>Состав</a>
+    <a href="#app-matches" data-list-go="fav"><i>☆</i>Избранное</a>
+    <a href="#" data-soon="Профиль"><i>◉</i>Профиль</a>
+  </nav>
+</header>
+<!-- Главная сайта (решение 8: сайт = продукт; лаба «главная-sofascore» v9). Две сетки на 3 колонки (1fr · 1fr · 330px):
+     верх — витрина карт, блоки Fantasy и пятёрка с бустером справа; низ — парами в ряд: матчи · матч дня, лучшие игроки · выступления, сетка на обе колонки (ряды ровные по высоте).
+     Каждый виджет — свой блок в blocks/app/. Стили — styles.css [=== Главная сайта ===], поведение — app.js [Главная сайта]. -->
+<section class="section section--ui" id="app-home">
+<!-- Главный постер — первым на главной, над «Матчами сегодня» (дирижёр 07.10: перенос лабы home-desktop v6 «Главный постер»).
+     Сверху полоса 7 дней со счётчиком матчей, под ней широкий постер главного матча дня (в эфире — счёт и «Смотреть», ближайший — живой таймер),
+     рядом три постера поменьше: клик ставит матч главным. День и фильтр игр пересобирают набор. Данные условные, как в Match Center.
+     Разметку строит home-poster.js; стили — styles.css [=== Постер главной ===]. -->
+<div class="hp" data-hp></div>
+<script src="week-data.js"></script>
+<script src="home-poster.js"></script>
+  <div class="app-home__body">
+  <div class="app-home__top">
+<!-- Матчи на главной — первым блоком (дирижёр 07.10: «блок матчей на главную, в начало, после того как переведём строку матча»).
+     Строка матча — как у них (та же, что в Match Center: styles.css [=== Match Center ===], container query «mx» на .mc); строка раскрывается по клику, как в Match Center (раскрытие — лаба «Раскрытая строка матча» v5, поведение — app.js [Match Center]; разметка строк — копия из blocks/screens/match-center.html).
+     Сейчас: 5 в эфире и ближайший. Данные условные, как в Match Center. -->
+<div class="app-home__mx mc">
+  <div class="app-home__mx-h"><h2>Матчи сегодня</h2><p><span><i class="mx-dot"></i>5 в эфире</span><span>21 скоро</span><a href="match-center.html">Все матчи · Match Center ›</a></p></div>
+  <section class="mx-tour">
+<article class="mx-row st-live is-air is-click" data-id="ts-tun">
+      <div class="mx-row__in mx-x">
+        <div class="mx-x__g">
+          <p class="mx-x__h"><span class="mx-gt">Dota 2</span><span class="mx-x__tour">BLAST Slam VIII · Плей-офф · Bo3</span><a class="mx-x__go" href="match-page.html?game=dota&amp;state=live">матч ›</a></p><span class="mx-x__lb mx-x__lb--k" title="Убийства или раунды на текущей карте">☠</span><span class="mx-x__lb mx-x__lb--pre" title="Прогноз модели до матча">PRE</span><span class="mx-x__lb mx-x__lb--odds" title="Коэффициент до матча">ODDS</span><span class="mx-x__lb mx-x__lb--live" title="Коэффициент в эфире">LIVE</span><span class="mx-x__lb mx-x__lb--val" title="Ценность ставки: прогноз против коэффициента">VAL</span>
+          <span class="mx-x__t"><img class="mx-lg" src="img/teams/ts.png" alt=""><span class="mx-x__n"><b class="mx-nm">Team Spirit</b><span class="mx-form"><i class="w"></i><i class="w"></i><i class="w"></i></span></span></span><span class="mx-x__v mx-x__v--k">18</span><span class="mx-x__v mx-x__v--pre">52%</span><span class="mx-x__v mx-x__v--odds">1.81</span><span class="mx-x__v mx-x__v--live">1.45</span><span class="mx-x__v mx-x__v--val">+4%</span>
+          <span class="mx-x__t"><img class="mx-lg" src="img/teams/tun.png" alt=""><span class="mx-x__n"><b class="mx-nm">Tundra Esports</b><span class="mx-form"><i class="l"></i><i class="l"></i></span></span></span><span class="mx-x__v mx-x__v--k">12</span><span class="mx-x__v mx-x__v--pre">48%</span><span class="mx-x__v mx-x__v--odds">1.96</span><span class="mx-x__v mx-x__v--live">2.45</span><span class="mx-x__v mx-x__v--val is-none">—</span>
+          <p class="mx-x__f"><span class="mx-x__st is-live"><i></i>Идёт</span><button class="mx-fav is-on" type="button" title="Уведомлять о матче"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2a4 4 0 0 0-4 4v2.5L3 11h10l-1-2.5V6a4 4 0 0 0-4-4ZM6.5 13a1.5 1.5 0 0 0 3 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></button><span class="mx-x__clock"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.2l2 1.3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Карта 2 · 24:15</span></p><p class="mx-x__ic"><a href="match-page.html?game=dota&amp;state=live" title="Трансляция"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3.5" width="12" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M7 6.3v3.4L9.8 8Z" fill="currentColor"/></svg></a><a href="match-page.html?game=dota&amp;state=live" title="Обсуждение"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5A1.5 1.5 0 0 1 4.5 3h7A1.5 1.5 0 0 1 13 4.5v5A1.5 1.5 0 0 1 11.5 11H7l-3 2.5V11h0a1 1 0 0 1-1-1Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></a><span class="mx-chev"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></p>
+        </div>
+        <div class="mx-x__time"><b>1 : 0</b><small class="is-live">Карта 2 · 24:15</small></div>
+        <div class="mx-xo mx-xo--b"><div class="mx-xo__clip"><div class="mx-xo__pad"><div class="mx-q__c"><small>Карты серии</small><div class="mx-q-maps"><span><small>К1</small>34:21</span><span class="is-now"><small>К2 · идёт</small>18:12</span><span class="is-wait"><small>К3</small>—</span></div></div><div class="mx-q__c"><small>Золото · <span class="mx-q-gold-l">+4.2 тыс.</span></small><div class="mx-q-gold"><i class="up" style="--h:0%"></i><i class="up" style="--h:3%"></i><i class="up" style="--h:5%"></i><i class="up" style="--h:2%"></i><i class="dn" style="--h:4%"></i><i class="dn" style="--h:6%"></i><i class="dn" style="--h:3%"></i><i class="up" style="--h:2%"></i><i class="up" style="--h:8%"></i><i class="up" style="--h:14%"></i><i class="up" style="--h:19%"></i><i class="up" style="--h:15%"></i><i class="up" style="--h:11%"></i><i class="up" style="--h:16%"></i><i class="up" style="--h:23%"></i><i class="up" style="--h:29%"></i><i class="up" style="--h:34%"></i><i class="up" style="--h:31%"></i><i class="up" style="--h:38%"></i><i class="up" style="--h:42%"></i></div></div><div class="mx-q__c"><small>Драфт</small><div class="mx-q-draft"><p><img class="mx-lg sm" src="img/teams/ts.png" alt="" /><img class="mx-q-hero" src="img/heroes/terrorblade.webp" alt="" /><img class="mx-q-hero" src="img/heroes/morphling.webp" alt="" /><img class="mx-q-hero" src="img/heroes/mars.webp" alt="" /><img class="mx-q-hero" src="img/heroes/hoodwink.webp" alt="" /><img class="mx-q-hero" src="img/heroes/tusk.webp" alt="" /></p><p><img class="mx-lg sm" src="img/teams/tun.png" alt="" /><img class="mx-q-hero" src="img/heroes/tusk.webp" alt="" /><img class="mx-q-hero" src="img/heroes/faceless_void.webp" alt="" /><img class="mx-q-hero" src="img/heroes/lycan.webp" alt="" /><img class="mx-q-hero" src="img/heroes/beastmaster.webp" alt="" /><img class="mx-q-hero" src="img/heroes/rubick.webp" alt="" /></p></div></div><div class="mx-q__c"><small>Твои игроки</small><div class="mx-q-pl"><img class="mx-q-ava" src="img/players/yatoro.webp" alt="" /><span><b>Yatoro</b><small>твой игрок</small></span><em>+12.4</em></div></div></div></div></div>
+        <div class="mx-xo mx-xo--a"><div class="mx-xo__clip"><div class="mx-xo__pad"><a class="mx-btn mx-btn--main" href="#">Смотреть</a><a class="mx-btn" href="match-page.html?game=dota&amp;state=live">Страница матча</a></div></div></div>
+      </div>
+</article>
+<article class="mx-row st-live is-air is-click" data-id="vit-mgz">
+      <div class="mx-row__in mx-x">
+        <div class="mx-x__g">
+          <p class="mx-x__h"><span class="mx-gt">CS2</span><span class="mx-x__tour">ESL Pro League S24 · Группа C · Bo3</span><a class="mx-x__go" href="match-page.html?game=cs&amp;state=live">матч ›</a></p><span class="mx-x__lb mx-x__lb--k" title="Убийства или раунды на текущей карте">☠</span><span class="mx-x__lb mx-x__lb--pre" title="Прогноз модели до матча">PRE</span><span class="mx-x__lb mx-x__lb--odds" title="Коэффициент до матча">ODDS</span><span class="mx-x__lb mx-x__lb--live" title="Коэффициент в эфире">LIVE</span><span class="mx-x__lb mx-x__lb--val" title="Ценность ставки: прогноз против коэффициента">VAL</span>
+          <span class="mx-x__t"><span class="mx-lg mx-lg--mono">VIT</span><span class="mx-x__n"><b class="mx-nm">Team Vitality</b><span class="mx-form"><i class="w"></i><i class="w"></i><i class="w"></i></span></span></span><span class="mx-x__v mx-x__v--k">7</span><span class="mx-x__v mx-x__v--pre">56%</span><span class="mx-x__v mx-x__v--odds">1.68</span><span class="mx-x__v mx-x__v--live">1.34</span><span class="mx-x__v mx-x__v--val is-none">—</span>
+          <span class="mx-x__t"><span class="mx-lg mx-lg--mono">MGZ</span><span class="mx-x__n"><b class="mx-nm">The MongolZ</b><span class="mx-form"><i class="w"></i><i class="w"></i><i class="w"></i></span></span></span><span class="mx-x__v mx-x__v--k">5</span><span class="mx-x__v mx-x__v--pre">44%</span><span class="mx-x__v mx-x__v--odds">2.14</span><span class="mx-x__v mx-x__v--live">2.68</span><span class="mx-x__v mx-x__v--val">+6%</span>
+          <p class="mx-x__f"><span class="mx-x__st is-live"><i></i>Идёт</span><button class="mx-fav" type="button" title="Уведомлять о матче"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2a4 4 0 0 0-4 4v2.5L3 11h10l-1-2.5V6a4 4 0 0 0-4-4ZM6.5 13a1.5 1.5 0 0 0 3 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></button><span class="mx-x__clock"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.2l2 1.3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Карта 2 · Mirage · 7:5</span></p><p class="mx-x__ic"><a href="match-page.html?game=cs&amp;state=live" title="Трансляция"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3.5" width="12" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M7 6.3v3.4L9.8 8Z" fill="currentColor"/></svg></a><a href="match-page.html?game=cs&amp;state=live" title="Обсуждение"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5A1.5 1.5 0 0 1 4.5 3h7A1.5 1.5 0 0 1 13 4.5v5A1.5 1.5 0 0 1 11.5 11H7l-3 2.5V11h0a1 1 0 0 1-1-1Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></a><span class="mx-chev"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></p>
+        </div>
+        <div class="mx-x__time"><b>1 : 0</b><small class="is-live">Карта 2 · Mirage · 7:5</small></div>
+        <div class="mx-xo mx-xo--b"><div class="mx-xo__clip"><div class="mx-xo__pad"><div class="mx-q__c mx-q__c--w2"><small>Карты серии</small><div class="mx-q-maps"><span><small>Mirage</small>34:21</span><span class="is-now"><small>Inferno · идёт</small>18:12</span><span class="is-wait"><small>Ancient</small>—</span></div></div><div class="mx-q__c"><small>Шанс победы</small><p class="mx-q-sp">64%<span>Team Vitality</span>36%</p><div class="mx-q-bar mx-q-bar--win"><i style="--p:64%"></i></div></div><div class="mx-q__c"><small>Следующая карта</small><p class="mx-q-txt">Ancient · выбор The MongolZ<small>кто возьмёт — тот выиграет</small></p></div></div></div></div>
+        <div class="mx-xo mx-xo--a"><div class="mx-xo__clip"><div class="mx-xo__pad"><a class="mx-btn mx-btn--main" href="#">Смотреть</a><a class="mx-btn" href="match-page.html?game=cs&amp;state=live">Страница матча</a></div></div></div>
+      </div>
+</article>
+<article class="mx-row st-break is-air is-click" data-id="g2-faze">
+      <div class="mx-row__in mx-x">
+        <div class="mx-x__g">
+          <p class="mx-x__h"><span class="mx-gt">CS2</span><span class="mx-x__tour">ESL Pro League S24 · Группа C · Bo3</span><a class="mx-x__go" href="match-page.html?game=cs&amp;state=live">матч ›</a></p><span class="mx-x__lb mx-x__lb--k" title="Убийства или раунды на текущей карте">☠</span><span class="mx-x__lb mx-x__lb--pre" title="Прогноз модели до матча">PRE</span><span class="mx-x__lb mx-x__lb--odds" title="Коэффициент до матча">ODDS</span><span class="mx-x__lb mx-x__lb--live" title="Коэффициент в эфире">LIVE</span><span class="mx-x__lb mx-x__lb--val" title="Ценность ставки: прогноз против коэффициента">VAL</span>
+          <span class="mx-x__t"><span class="mx-lg mx-lg--mono">G2</span><span class="mx-x__n"><b class="mx-nm">G2 Esports</b><span class="mx-form"><i class="w"></i><i class="w"></i></span></span></span><span class="mx-x__v mx-x__v--k">13</span><span class="mx-x__v mx-x__v--pre">65%</span><span class="mx-x__v mx-x__v--odds">1.45</span><span class="mx-x__v mx-x__v--live">1.16</span><span class="mx-x__v mx-x__v--val is-none">—</span>
+          <span class="mx-x__t"><span class="mx-lg mx-lg--mono">FZ</span><span class="mx-x__n"><b class="mx-nm">FaZe Clan</b><span class="mx-form"><i class="w"></i><i class="w"></i><i class="l"></i></span></span></span><span class="mx-x__v mx-x__v--k">11</span><span class="mx-x__v mx-x__v--pre">35%</span><span class="mx-x__v mx-x__v--odds">2.69</span><span class="mx-x__v mx-x__v--live">3.36</span><span class="mx-x__v mx-x__v--val">+2%</span>
+          <p class="mx-x__f"><span class="mx-x__st is-mute"><i></i>Перерыв</span><button class="mx-fav" type="button" title="Уведомлять о матче"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2a4 4 0 0 0-4 4v2.5L3 11h10l-1-2.5V6a4 4 0 0 0-4-4ZM6.5 13a1.5 1.5 0 0 0 3 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></button><span class="mx-x__clock"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.2l2 1.3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>карта 3 через 4 мин</span></p><p class="mx-x__ic"><a href="match-page.html?game=cs&amp;state=live" title="Трансляция"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3.5" width="12" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M7 6.3v3.4L9.8 8Z" fill="currentColor"/></svg></a><a href="match-page.html?game=cs&amp;state=live" title="Обсуждение"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5A1.5 1.5 0 0 1 4.5 3h7A1.5 1.5 0 0 1 13 4.5v5A1.5 1.5 0 0 1 11.5 11H7l-3 2.5V11h0a1 1 0 0 1-1-1Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></a><span class="mx-chev"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></p>
+        </div>
+        <div class="mx-x__time"><b>1 : 1</b><small class="is-mute">Перерыв · карта 3 через 4 мин</small></div>
+        <div class="mx-xo mx-xo--b"><div class="mx-xo__clip"><div class="mx-xo__pad"><div class="mx-q__c mx-q__c--w2"><small>Карты серии</small><div class="mx-q-maps"><span><small>Mirage</small>13:9</span><span><small>Inferno</small>11:13</span><span class="is-now"><small>Ancient</small>4 мин</span></div></div><div class="mx-q__c"><small>Шанс победы</small><p class="mx-q-sp">64%<span>G2 Esports</span>36%</p><div class="mx-q-bar mx-q-bar--win"><i style="--p:64%"></i></div></div><div class="mx-q__c"><small>Следующая карта</small><p class="mx-q-txt">Ancient · выбор FaZe Clan<small>кто возьмёт — тот выиграет</small></p></div></div></div></div>
+        <div class="mx-xo mx-xo--a"><div class="mx-xo__clip"><div class="mx-xo__pad"><a class="mx-btn mx-btn--main" href="#">Смотреть</a><a class="mx-btn" href="match-page.html?game=cs&amp;state=live">Страница матча</a></div></div></div>
+      </div>
+</article>
+<article class="mx-row st-pause is-air is-click" data-id="gg-pv">
+      <div class="mx-row__in mx-x">
+        <div class="mx-x__g">
+          <p class="mx-x__h"><span class="mx-gt">Dota 2</span><span class="mx-x__tour">BLAST Slam VIII · Плей-офф · Bo3</span><a class="mx-x__go" href="match-page.html?game=dota&amp;state=live">матч ›</a></p><span class="mx-x__lb mx-x__lb--k" title="Убийства или раунды на текущей карте">☠</span><span class="mx-x__lb mx-x__lb--pre" title="Прогноз модели до матча">PRE</span><span class="mx-x__lb mx-x__lb--odds" title="Коэффициент до матча">ODDS</span><span class="mx-x__lb mx-x__lb--live" title="Коэффициент в эфире">LIVE</span><span class="mx-x__lb mx-x__lb--val" title="Ценность ставки: прогноз против коэффициента">VAL</span>
+          <span class="mx-x__t"><img class="mx-lg" src="img/teams/gg.png" alt=""><span class="mx-x__n"><b class="mx-nm">Gaimin Gladiators</b><span class="mx-form"><i class="w"></i></span></span></span><span class="mx-x__v mx-x__v--k">18</span><span class="mx-x__v mx-x__v--pre">47%</span><span class="mx-x__v mx-x__v--odds">2.00</span><span class="mx-x__v mx-x__v--live">1.60</span><span class="mx-x__v mx-x__v--val">+2%</span>
+          <span class="mx-x__t"><img class="mx-lg" src="img/teams/pv.png" alt=""><span class="mx-x__n"><b class="mx-nm">PARIVISION</b><span class="mx-form"><i class="w"></i><i class="w"></i><i class="w"></i><i class="l"></i></span></span></span><span class="mx-x__v mx-x__v--k">12</span><span class="mx-x__v mx-x__v--pre">53%</span><span class="mx-x__v mx-x__v--odds">1.77</span><span class="mx-x__v mx-x__v--live">2.21</span><span class="mx-x__v mx-x__v--val is-none">—</span>
+          <p class="mx-x__f"><span class="mx-x__st is-warn"><i></i>Пауза</span><button class="mx-fav" type="button" title="Уведомлять о матче"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2a4 4 0 0 0-4 4v2.5L3 11h10l-1-2.5V6a4 4 0 0 0-4-4ZM6.5 13a1.5 1.5 0 0 0 3 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></button><span class="mx-x__clock"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.2l2 1.3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>6 мин</span></p><p class="mx-x__ic"><a href="match-page.html?game=dota&amp;state=live" title="Трансляция"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3.5" width="12" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M7 6.3v3.4L9.8 8Z" fill="currentColor"/></svg></a><a href="match-page.html?game=dota&amp;state=live" title="Обсуждение"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5A1.5 1.5 0 0 1 4.5 3h7A1.5 1.5 0 0 1 13 4.5v5A1.5 1.5 0 0 1 11.5 11H7l-3 2.5V11h0a1 1 0 0 1-1-1Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></a><span class="mx-chev"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></p>
+        </div>
+        <div class="mx-x__time"><b>0 : 1</b><small class="is-warn">Пауза · 6 мин</small></div>
+        <div class="mx-xo mx-xo--b"><div class="mx-xo__clip"><div class="mx-xo__pad"><div class="mx-q__c"><small>Почему пауза</small><p class="mx-q-txt">Техническая пауза: у Gaimin Gladiators отвалился игрок, ждут переподключения<small>обычно до 10 минут</small></p></div><div class="mx-q__c"><small>Карты серии</small><div class="mx-q-maps"><span><small>К1</small>29:33</span><span class="is-now"><small>К2 · пауза</small>11:9</span><span class="is-wait"><small>К3</small>—</span></div></div><div class="mx-q__c"><small>Драфт</small><div class="mx-q-draft"><p><img class="mx-lg sm" src="img/teams/gg.png" alt="" /><img class="mx-q-hero" src="img/heroes/terrorblade.webp" alt="" /><img class="mx-q-hero" src="img/heroes/morphling.webp" alt="" /><img class="mx-q-hero" src="img/heroes/mars.webp" alt="" /><img class="mx-q-hero" src="img/heroes/hoodwink.webp" alt="" /><img class="mx-q-hero" src="img/heroes/tusk.webp" alt="" /></p><p><img class="mx-lg sm" src="img/teams/pv.png" alt="" /><img class="mx-q-hero" src="img/heroes/tusk.webp" alt="" /><img class="mx-q-hero" src="img/heroes/faceless_void.webp" alt="" /><img class="mx-q-hero" src="img/heroes/lycan.webp" alt="" /><img class="mx-q-hero" src="img/heroes/beastmaster.webp" alt="" /><img class="mx-q-hero" src="img/heroes/rubick.webp" alt="" /></p></div></div></div></div></div>
+        <div class="mx-xo mx-xo--a"><div class="mx-xo__clip"><div class="mx-xo__pad"><a class="mx-btn mx-btn--main" href="#">Смотреть</a><a class="mx-btn" href="match-page.html?game=dota&amp;state=live">Страница матча</a></div></div></div>
+      </div>
+      <p class="mx-note">Техническая пауза: у Gaimin Gladiators отвалился игрок, ждут переподключения</p>
+</article>
+<article class="mx-row st-draft is-air is-click" data-id="t1-gen">
+      <div class="mx-row__in mx-x">
+        <div class="mx-x__g">
+          <p class="mx-x__h"><span class="mx-gt">LoL</span><span class="mx-x__tour">Worlds 2026 · Швейцарка, раунд 3 · Bo1</span><a class="mx-x__go" href="match-page.html?game=dota&amp;state=live">матч ›</a></p><span class="mx-x__lb mx-x__lb--k" title="Убийства или раунды на текущей карте">☠</span><span class="mx-x__lb mx-x__lb--pre" title="Прогноз модели до матча">PRE</span><span class="mx-x__lb mx-x__lb--odds" title="Коэффициент до матча">ODDS</span><span class="mx-x__lb mx-x__lb--live" title="Коэффициент в эфире">LIVE</span><span class="mx-x__lb mx-x__lb--val" title="Ценность ставки: прогноз против коэффициента">VAL</span>
+          <span class="mx-x__t"><span class="mx-lg mx-lg--mono">T1</span><span class="mx-x__n"><b class="mx-nm">T1</b><span class="mx-form"><i class="w"></i></span></span></span><span class="mx-x__v mx-x__v--k is-none">—</span><span class="mx-x__v mx-x__v--pre">62%</span><span class="mx-x__v mx-x__v--odds">1.52</span><span class="mx-x__v mx-x__v--live">1.52</span><span class="mx-x__v mx-x__v--val">+2%</span>
+          <span class="mx-x__t"><span class="mx-lg mx-lg--mono">GEN</span><span class="mx-x__n"><b class="mx-nm">Gen.G</b><span class="mx-form"><i class="w"></i></span></span></span><span class="mx-x__v mx-x__v--k is-none">—</span><span class="mx-x__v mx-x__v--pre">38%</span><span class="mx-x__v mx-x__v--odds">2.47</span><span class="mx-x__v mx-x__v--live">2.47</span><span class="mx-x__v mx-x__v--val is-none">—</span>
+          <p class="mx-x__f"><span class="mx-x__st is-live"><i></i>Драфт</span><button class="mx-fav" type="button" title="Уведомлять о матче"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2a4 4 0 0 0-4 4v2.5L3 11h10l-1-2.5V6a4 4 0 0 0-4-4ZM6.5 13a1.5 1.5 0 0 0 3 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></button><span class="mx-x__clock"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.2l2 1.3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>карта 1</span></p><p class="mx-x__ic"><a href="match-page.html?game=dota&amp;state=live" title="Трансляция"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3.5" width="12" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M7 6.3v3.4L9.8 8Z" fill="currentColor"/></svg></a><a href="match-page.html?game=dota&amp;state=live" title="Обсуждение"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5A1.5 1.5 0 0 1 4.5 3h7A1.5 1.5 0 0 1 13 4.5v5A1.5 1.5 0 0 1 11.5 11H7l-3 2.5V11h0a1 1 0 0 1-1-1Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></a><span class="mx-chev"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></p>
+        </div>
+        <div class="mx-x__time"><b>0 : 0</b><small class="is-live">Драфт · карта 1</small></div>
+        <div class="mx-xo mx-xo--b"><div class="mx-xo__clip"><div class="mx-xo__pad"><div class="mx-q__c mx-q__c--w2"><small>Пики · идёт выбор</small><p class="mx-q-txt">T1: Azir, Lee Sin, <b style="color:var(--c-live)">выбирает…</b><small>Gen.G: Orianna, Vi</small></p></div><div class="mx-q__c"><small>Кто победит</small><p class="mx-q-sp">58%<span>голоса</span>42%</p><div class="mx-q-bar mx-q-bar--win"><i style="--p:58%"></i></div></div></div></div></div>
+        <div class="mx-xo mx-xo--a"><div class="mx-xo__clip"><div class="mx-xo__pad"><a class="mx-btn mx-btn--main" href="#">Смотреть</a><a class="mx-btn" href="match-page.html?game=dota&amp;state=live">Страница матча</a></div></div></div>
+      </div>
+</article>
+<article class="mx-row st-soon is-click" data-id="flc-tl">
+      <div class="mx-row__in mx-x">
+        <div class="mx-x__g">
+          <p class="mx-x__h"><span class="mx-gt">Dota 2</span><span class="mx-x__tour">BLAST Slam VIII · Плей-офф · Bo3</span><a class="mx-x__go" href="match-page.html?game=dota&amp;state=pre">матч ›</a></p><span class="mx-x__lb mx-x__lb--k" title="Убийства или раунды на текущей карте">☠</span><span class="mx-x__lb mx-x__lb--pre" title="Прогноз модели до матча">PRE</span><span class="mx-x__lb mx-x__lb--odds" title="Коэффициент до матча">ODDS</span><span class="mx-x__lb mx-x__lb--live" title="Коэффициент в эфире">LIVE</span><span class="mx-x__lb mx-x__lb--val" title="Ценность ставки: прогноз против коэффициента">VAL</span>
+          <span class="mx-x__t"><img class="mx-lg" src="img/teams/flc.png" alt=""><span class="mx-x__n"><b class="mx-nm">Team Falcons</b><span class="mx-form"><i class="w"></i><i class="w"></i></span></span></span><span class="mx-x__v mx-x__v--k is-none">—</span><span class="mx-x__v mx-x__v--pre">52%</span><span class="mx-x__v mx-x__v--odds">1.81</span><span class="mx-x__v mx-x__v--live is-none">—</span><span class="mx-x__v mx-x__v--val is-none">—</span>
+          <span class="mx-x__t"><img class="mx-lg" src="img/teams/tl.png" alt=""><span class="mx-x__n"><b class="mx-nm">Team Liquid</b><span class="mx-form"><i class="w"></i></span></span></span><span class="mx-x__v mx-x__v--k is-none">—</span><span class="mx-x__v mx-x__v--pre">48%</span><span class="mx-x__v mx-x__v--odds">1.96</span><span class="mx-x__v mx-x__v--live is-none">—</span><span class="mx-x__v mx-x__v--val">+6%</span>
+          <p class="mx-x__f"><span class="mx-x__st "><i></i>Запланирован</span><button class="mx-fav is-on" type="button" title="Уведомлять о матче"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2a4 4 0 0 0-4 4v2.5L3 11h10l-1-2.5V6a4 4 0 0 0-4-4ZM6.5 13a1.5 1.5 0 0 0 3 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></button><span class="mx-x__clock"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.2l2 1.3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>17:00</span></p><p class="mx-x__ic"><a href="match-page.html?game=dota&amp;state=pre" title="Трансляция"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3.5" width="12" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M7 6.3v3.4L9.8 8Z" fill="currentColor"/></svg></a><a href="match-page.html?game=dota&amp;state=pre" title="Обсуждение"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5A1.5 1.5 0 0 1 4.5 3h7A1.5 1.5 0 0 1 13 4.5v5A1.5 1.5 0 0 1 11.5 11H7l-3 2.5V11h0a1 1 0 0 1-1-1Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></a><span class="mx-chev"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></p>
+        </div>
+        <div class="mx-x__time"><b>17:00</b><small>Сегодня</small></div>
+        <div class="mx-xo mx-xo--b"><div class="mx-xo__clip"><div class="mx-xo__pad"><div class="mx-q__c"><small>Форма · 5 матчей</small><div class="mx-q-forms"><p><img class="mx-lg sm" src="img/teams/flc.png" alt="" /><span class="mx-form"><i class="w"></i><i class="w"></i><i class="l"></i><i class="w"></i><i class="w"></i></span><small style="color:var(--c-caption)">4 из 5</small></p><p><img class="mx-lg sm" src="img/teams/tl.png" alt="" /><span class="mx-form"><i class="l"></i><i class="w"></i><i class="w"></i><i class="l"></i><i class="l"></i></span><small style="color:var(--c-caption)">2 из 5</small></p></div></div><div class="mx-q__c"><small>Личные встречи</small><p class="mx-q-big"><b>3 : 2</b><span>в пользу Team Falcons<br />последняя — 2:1, 12 сен</span></p></div><div class="mx-q__c"><small>Прогноз зрителей</small><p class="mx-q-big"><b>2 : 0</b><span>31% голосов<br />2 140 проголосовали</span></p></div></div></div></div>
+        <div class="mx-xo mx-xo--a"><div class="mx-xo__clip"><div class="mx-xo__pad"><a class="mx-btn mx-btn--main" href="match-page.html?game=dota&amp;state=pre">Страница матча</a><a class="mx-btn" href="#">★ Напомнить</a></div></div></div>
+      </div>
+</article>
+  </section>
+</div>
+    <div class="app-home__showcase">
+<!-- Витрина карт: главный крючок Fantasy — три мини-карты «Жетон» веером (финал 05.10: мини-форма Хайперглитча, лаба card-mini v3).
+     Наклон и блик за курсором — app.js [Карта Хайперглитч]; при наведении веер раскрывается. -->
+<div class="card card--ui w-showcase">
+  <div class="w-showcase__txt">
+    <h2>Собери пятёрку из карт про-игроков</h2>
+    <p>Карта приносит очки за каждую карту матча. Редкость даёт бонус до +25%, а сама карта растёт вместе с игроком.</p>
+    <ul class="w-showcase__facts"><li><b>48</b> из 120 в коллекции</li><li><b>3</b> новых карты сезона</li></ul>
+    <div class="btn-row">
+      <button class="btn" type="button" data-soon="Открытие бустера">Открыть бустер · 600</button>
+      <button class="btn btn--quiet" type="button" data-soon="Коллекция">В коллекцию</button>
+    </div>
+  </div>
+  <div class="w-showcase__fan hg">
+    <div><div class="kc mk kc--elite kc--legend m3" data-tilt style="--w: 170px"><div class="kc__in"><div class="kc__face"><div class="mk-plate"><i class="logo-mask mk-logo" data-l="2" style="--logo: url('img/teams/pv.png')"></i><i class="logo-mask mk-logo mk-logo--a" data-l="2" data-deco="2" style="--logo: url('img/teams/pv.png')"></i><i class="logo-mask mk-logo mk-logo--b" data-l="2" data-deco="2" style="--logo: url('img/teams/pv.png')"></i><i class="mk-pix" data-deco="1"></i><i class="mk-halo"></i><img class="ph" data-l="5" src="img/players/9class.webp" alt="9Class" /><i class="mk-scan" data-deco="3"></i><i class="fx fx-shine" data-l="4"></i><i class="fx fx-spark" data-l="4"><b></b><b></b><b></b><b></b><b></b><b></b></i><div class="m3__band"><span class="m3__pos">P4</span><span class="m3__nick">9Class</span></div><div class="m3__foot"><b>PARIVISION</b></div></div><svg class="mk-frame" viewBox="0 0 160 200" preserveAspectRatio="none" aria-hidden="true"><polygon points="14,1 159,1 159,181 140,199 1,199 1,14" /></svg><div class="m3__tab"><img class="logo" src="img/teams/pv.png" alt="PARIVISION" /></div><div class="m3__ovr"><b>95</b></div><i class="fx fx-glare"></i></div></div></div></div>
+    <div><div class="kc mk kc--gold kc--holo m3" data-tilt style="--w: 170px"><div class="kc__in"><div class="kc__face"><div class="mk-plate"><i class="logo-mask mk-logo" data-l="2" style="--logo: url('img/teams/ts.png')"></i><i class="logo-mask mk-logo mk-logo--a" data-l="2" data-deco="2" style="--logo: url('img/teams/ts.png')"></i><i class="logo-mask mk-logo mk-logo--b" data-l="2" data-deco="2" style="--logo: url('img/teams/ts.png')"></i><i class="mk-pix" data-deco="1"></i><i class="mk-halo"></i><img class="ph" data-l="5" src="img/players/yatoro.webp" alt="Yatoro" /><i class="mk-scan" data-deco="3"></i><i class="fx fx-shine" data-l="4"></i><div class="m3__band"><span class="m3__pos">P1</span><span class="m3__nick">Yatoro</span></div><div class="m3__foot"><b>Team Spirit</b></div></div><svg class="mk-frame" viewBox="0 0 160 200" preserveAspectRatio="none" aria-hidden="true"><polygon points="14,1 159,1 159,181 140,199 1,199 1,14" /></svg><div class="m3__tab"><img class="logo" src="img/teams/ts.png" alt="Team Spirit" /></div><div class="m3__ovr"><b>82</b></div><i class="fx fx-glare"></i></div></div></div></div>
+    <div><div class="kc mk kc--elite kc--prism m3" data-tilt style="--w: 170px"><div class="kc__in"><div class="kc__face"><div class="mk-plate"><i class="logo-mask mk-logo" data-l="2" style="--logo: url('img/teams/tun.png')"></i><i class="logo-mask mk-logo mk-logo--a" data-l="2" data-deco="2" style="--logo: url('img/teams/tun.png')"></i><i class="logo-mask mk-logo mk-logo--b" data-l="2" data-deco="2" style="--logo: url('img/teams/tun.png')"></i><i class="mk-pix" data-deco="1"></i><i class="mk-halo"></i><img class="ph" data-l="5" src="img/players/pure.webp" alt="Pure" /><i class="mk-scan" data-deco="3"></i><i class="fx fx-shine" data-l="4"></i><i class="fx fx-spark" data-l="4"><b></b><b></b><b></b><b></b><b></b><b></b></i><div class="m3__band"><span class="m3__pos">P1</span><span class="m3__nick">Pure</span></div><div class="m3__foot"><b>Tundra Esports</b></div></div><svg class="mk-frame" viewBox="0 0 160 200" preserveAspectRatio="none" aria-hidden="true"><polygon points="14,1 159,1 159,181 140,199 1,199 1,14" /></svg><div class="m3__tab"><img class="logo" src="img/teams/tun.png" alt="Tundra Esports" /></div><div class="m3__ovr"><b>93</b></div><i class="fx fx-glare"></i></div></div></div></div>
+  </div>
+</div>
+    </div>
+    <div class="app-home__quests">
+<!-- Квесты дня: прогресс по шагам (6 прогнозов), награды на 3-м и 6-м шаге. -->
+<div class="card card--ui w-quests">
+  <div class="card__h"><h2>Квесты дня</h2><small>Обновятся в 00:00</small></div>
+  <div class="card__b">
+    <p class="w-quests__n"><b>2/6</b> прогнозов</p>
+    <ol class="w-quests__steps" aria-label="Шаги: 2 из 6"><li class="is-done"></li><li class="is-done"></li><li><span>+30</span></li><li></li><li></li><li><span>+30</span></li></ol>
+    <button class="btn btn--quiet btn--sm" type="button" data-soon="Квесты">К квестам</button>
+  </div>
+</div>
+    </div>
+    <div class="app-home__accuracy">
+<!-- Сундук точности: 15 угаданных прогнозов за неделю — бесплатный сундук. -->
+<div class="card card--ui w-accuracy">
+  <div class="card__h"><h2>Бустер точности</h2><small>Раз в неделю</small></div>
+  <div class="card__b">
+    <p class="w-accuracy__n"><b>4/15</b> угадано</p>
+    <i class="progress" style="--p: 27%"></i>
+    <p>Бесплатный бустер за точные прогнозы. Осталось <b>11</b>.</p>
+  </div>
+</div>
+    </div>
+    <div class="app-home__week">
+<!-- Команда недели: лучшие очки за карту по позициям 1–5, издание даёт +5% к очкам. Мои игроки — фиолетовым. Данные условные. -->
+<div class="card card--ui w-week">
+  <div class="card__h"><h2>Команда недели</h2><small>Лучшие очки за карту · издание +5%</small></div>
+  <div class="card__b">
+    <ol class="w-week__five">
+      <li class="is-mine"><i class="avatar avatar--lg" style="--img: url(img/players/yatoro.webp)"></i><b>Yatoro</b><span>24.5</span></li>
+      <li><i class="avatar avatar--lg">Q</i><b>Quinn</b><span>22.1</span></li>
+      <li><i class="avatar avatar--lg">C</i><b>Collapse</b><span>19.8</span></li>
+      <li class="is-mine"><i class="avatar avatar--lg" style="--img: url(img/players/9class.webp)"></i><b>9Class</b><span>17.3</span></li>
+      <li><i class="avatar avatar--lg">M</i><b>Miposhka</b><span>15.9</span></li>
+    </ol>
+    <button class="btn btn--quiet btn--sm" type="button" data-soon="Бустеры">К бустерам</button>
+  </div>
+</div>
+    </div>
+    <div class="app-home__showdown">
+<!-- Противостояние: линия очков игрока в live-матче; карта получает XP, если её игрок перебил линию. Данные условные. -->
+<div class="card card--ui w-showdown">
+  <div class="card__h"><h2>Противостояние · YG — Xipto</h2><small>Идёт</small></div>
+  <div class="card__b">
+    <div class="w-showdown__vs"><i class="team-logo t-yg is-logo" title="Yangon Galacticos">YG</i><span>Ice · линия <b>16.5</b> очков</span><i class="team-logo t-xip" title="Xipto Esports">XIP</i></div>
+    <i class="progress" style="--p: 73%"></i>
+    <p>Сейчас 12.1. Карта получает XP, если её игрок перебил линию. Карт этого матча у тебя нет.</p>
+    <div class="btn-row">
+      <button class="btn btn--quiet btn--sm" type="button" data-soon="Матч YG — Xipto">К матчу</button>
+      <button class="btn btn--quiet btn--sm" type="button" data-soon="Бустер «Игроки дня»">Бустер «Игроки дня»</button>
+    </div>
+  </div>
+</div>
+    </div>
+    <div class="app-home__vote">
+<!-- Издание месяца: голосование. После голоса у вариантов появляются проценты (data-pct). -->
+<div class="card card--ui w-vote" data-vote>
+  <div class="card__h"><h2>Издание месяца</h2><small>9 204 голоса</small></div>
+  <div class="card__b">
+    <p>Какое издание выпустить в октябре?</p>
+    <div class="w-vote__opts">
+      <button class="btn btn--quiet" type="button" aria-pressed="false" data-pct="38">Патч-срез<em>38%</em></button>
+      <button class="btn btn--quiet" type="button" aria-pressed="false" data-pct="45">Легенды TI<em>45%</em></button>
+      <button class="btn btn--quiet" type="button" aria-pressed="false" data-pct="17">Камбэки<em>17%</em></button>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+  <div class="app-home__main">
+    <div class="app-home__matches" id="app-matches">
+<!-- Матчи дня по турнирам: вкладки «Все / Избранное / Мои игроки», фильтр статуса, тумблер Fantasy (метки ★ и прогноз очков),
+     турнир сворачивается. Строка: data-status (live / ft / up), data-mine, data-fav — по ним фильтрует app.js [Главная сайта].
+     Игра (Dota / LoL в шапке) — data-game у турнира. Время live-карты тикает (data-clock, секунды). Данные условные. -->
+<div class="card card--ui w-matches is-fantasy" data-matches>
+  <div class="w-matches__top">
+    <div class="ui-tabs" role="tablist">
+      <button class="ui-tabs__a" type="button" role="tab" aria-selected="true" data-list="all">Все</button>
+      <button class="ui-tabs__a" type="button" role="tab" aria-selected="false" data-list="fav">Избранное</button>
+      <button class="ui-tabs__a" type="button" role="tab" aria-selected="false" data-list="mine">Мои игроки</button>
+    </div>
+    <span class="w-matches__day">Сегодня, 1 октября</span>
+  </div>
+  <div class="w-matches__bar">
+    <button class="btn btn--quiet btn--sm" type="button" aria-pressed="false" data-status-filter="live">Live · 2</button>
+    <button class="btn btn--quiet btn--sm" type="button" aria-pressed="false" data-status-filter="ft">Завершённые</button>
+    <button class="btn btn--quiet btn--sm" type="button" aria-pressed="false" data-status-filter="up">Предстоящие</button>
+    <button class="switch" type="button" aria-pressed="true" data-fantasy>Fantasy</button>
+  </div>
+  <div class="w-matches__list">
+    <div class="w-matches__grp" data-game="dota">
+      <button class="w-matches__gh" type="button" aria-expanded="true">
+        <i class="team-logo team-logo--game">D2</i>
+        <span><b>DreamLeague · Сезон 27</b><small>Европа · онлайн · Плей-офф · Bo3</small></span>
+        <span class="w-matches__n">4</span>
+      </button>
+      <div class="w-matches__gb">
+        <div class="w-matches__row is-live" data-status="live" data-mine data-fav>
+          <span class="w-matches__st is-live">К2<b data-clock="1661">27:41</b></span>
+          <span class="w-matches__teams"><span class="w-matches__team t-ts"><i class="team-logo t-ts is-logo" title="Team Spirit">TS</i><span>Team Spirit</span><em class="w-matches__mine">★ 1</em></span><span class="w-matches__team t-tun"><i class="team-logo t-tun is-logo" title="Tundra Esports">TUN</i><span>Tundra Esports</span><em class="w-matches__mine">★ 1</em></span></span>
+          <span class="w-matches__sc is-live"><b>1</b><b>0</b></span>
+          <button class="star" type="button" aria-pressed="true" aria-label="В избранное"></button>
+        </div>
+        <div class="w-matches__row" data-status="up" data-mine>
+          <span class="w-matches__st">18:00<small>Bo3</small></span>
+          <span class="w-matches__teams"><span class="w-matches__team t-pv"><i class="team-logo t-pv is-logo" title="PARIVISION">PV</i><span>PARIVISION</span><em class="w-matches__mine">★ 1</em></span><span class="w-matches__team t-bb"><i class="team-logo t-bb is-logo" title="BetBoom Team">BB</i><span>BetBoom Team</span></span></span>
+          <span class="w-matches__sc"><small class="w-matches__fc">★ прогноз 21.4</small></span>
+          <button class="star" type="button" aria-pressed="false" aria-label="В избранное"></button>
+        </div>
+        <div class="w-matches__row" data-status="ft">
+          <span class="w-matches__st">Завершён</span>
+          <span class="w-matches__teams"><span class="w-matches__team t-gg"><i class="team-logo t-gg is-logo" title="Gaimin Gladiators">GG</i><span>Gaimin Gladiators</span></span><span class="w-matches__team is-lost t-flc"><i class="team-logo t-flc is-logo" title="Team Falcons">FLC</i><span>Team Falcons</span></span></span>
+          <span class="w-matches__sc"><b>2</b><b class="is-lost">1</b></span>
+          <button class="star" type="button" aria-pressed="false" aria-label="В избранное"></button>
+        </div>
+        <div class="w-matches__row" data-status="up">
+          <span class="w-matches__st">21:30<small>Bo3</small></span>
+          <span class="w-matches__teams"><span class="w-matches__team t-tl"><i class="team-logo t-tl is-logo" title="Team Liquid">TL</i><span>Team Liquid</span></span><span class="w-matches__team t-aur"><i class="team-logo t-aur is-logo" title="Aurora">AUR</i><span>Aurora</span></span></span>
+          <span class="w-matches__sc"></span>
+          <button class="star" type="button" aria-pressed="false" aria-label="В избранное"></button>
+        </div>
+      </div>
+    </div>
+    <div class="w-matches__grp" data-game="dota">
+      <button class="w-matches__gh" type="button" aria-expanded="true">
+        <i class="team-logo team-logo--game">D2</i>
+        <span><b>EPL World Series SEA</b><small>Юго-Восточная Азия · Групповой этап · Bo3</small></span>
+        <span class="w-matches__n">1</span>
+      </button>
+      <div class="w-matches__gb">
+        <div class="w-matches__row is-live" data-status="live">
+          <span class="w-matches__st is-live">К3<b data-clock="842">14:02</b></span>
+          <span class="w-matches__teams"><span class="w-matches__team t-yg"><i class="team-logo t-yg is-logo" title="Yangon Galacticos">YG</i><span>Yangon Galacticos</span></span><span class="w-matches__team t-xip"><i class="team-logo t-xip" title="Xipto Esports">XIP</i><span>Xipto Esports</span></span></span>
+          <span class="w-matches__sc is-live"><b>1</b><b>1</b></span>
+          <button class="star" type="button" aria-pressed="false" aria-label="В избранное"></button>
+        </div>
+      </div>
+    </div>
+    <div class="w-matches__grp" data-game="lol" hidden>
+      <button class="w-matches__gh" type="button" aria-expanded="true">
+        <i class="team-logo team-logo--game">LoL</i>
+        <span><b>LCK Summer</b><small>Сеул, Корея · Плей-офф · Bo5</small></span>
+        <span class="w-matches__n">1</span>
+      </button>
+      <div class="w-matches__gb">
+        <div class="w-matches__row" data-status="ft">
+          <span class="w-matches__st">Завершён</span>
+          <span class="w-matches__teams"><span class="w-matches__team"><i class="team-logo" title="T1">T1</i><span>T1</span></span><span class="w-matches__team is-lost"><i class="team-logo" title="Gen.G">GEN</i><span>Gen.G</span></span></span>
+          <span class="w-matches__sc"><b>3</b><b class="is-lost">2</b></span>
+          <button class="star" type="button" aria-pressed="false" aria-label="В избранное"></button>
+        </div>
+      </div>
+    </div>
+    <div class="w-matches__grp" data-game="lol" hidden>
+      <button class="w-matches__gh" type="button" aria-expanded="true">
+        <i class="team-logo team-logo--game">LoL</i>
+        <span><b>LEC Summer</b><small>Берлин, Германия · Финал верхней сетки · Bo5</small></span>
+        <span class="w-matches__n">1</span>
+      </button>
+      <div class="w-matches__gb">
+        <div class="w-matches__row" data-status="up">
+          <span class="w-matches__st">20:00<small>Bo5</small></span>
+          <span class="w-matches__teams"><span class="w-matches__team"><i class="team-logo" title="G2 Esports">G2</i><span>G2 Esports</span></span><span class="w-matches__team"><i class="team-logo" title="Fnatic">FNC</i><span>Fnatic</span></span></span>
+          <span class="w-matches__sc"></span>
+          <button class="star" type="button" aria-pressed="false" aria-label="В избранное"></button>
+        </div>
+      </div>
+    </div>
+    <p class="w-matches__empty" hidden>Под фильтр ничего не попало</p>
+  </div>
+</div>
+    </div>
+    <div class="app-home__featured">
+<!-- Матч дня: счёт серии, live-статус (время карты тикает — data-clock), график нетворса с событиями (FB, Рошан, башни, бараки),
+     статистика карты (две встречные полосы цветами команд, --p — доля), «Кто победит?» — голос без денег; после голоса кнопки показывают
+     проценты полосой цвета команды. Цвета команд — --ta / --tb (токены --c-team-*). Данные условные. -->
+<div class="card card--ui w-featured" style="--ta: var(--c-team-ts); --tb: var(--c-team-tun)">
+  <div class="card__h"><h2>Матч дня</h2><small>DreamLeague · Сезон 27 · Плей-офф · Bo3 · <a class="w-feat__go" href="match-page.html?game=dota&amp;state=live">Весь матч →</a></small></div>
+  <div class="w-featured__sc">
+    <div class="w-featured__team"><i class="team-logo team-logo--lg t-ts is-logo" title="Team Spirit">TS</i><b>Team Spirit</b></div>
+    <div class="w-featured__mid"><b>1 : 0</b><span>Карта 2 · <i data-clock="1661">27:41</i> · 22:18</span></div>
+    <div class="w-featured__team"><i class="team-logo team-logo--lg t-tun is-logo" title="Tundra Esports">TUN</i><b>Tundra Esports</b></div>
+  </div>
+  <div class="w-featured__nw">
+    <div class="w-featured__nwh"><span>Нетворс · карта 2</span><b>TS +0.6k</b></div>
+    <div class="w-featured__g">
+      <svg viewBox="0 0 400 100" preserveAspectRatio="none" aria-label="Преимущество по нетворсу по минутам"><line x1="0" x2="400" y1="50" y2="50" /><rect class="b" x="1.0" y="50.0" width="7.1" height="19.2" rx="1.5" /><rect class="b" x="10.1" y="50.0" width="7.1" height="25.2" rx="1.5" /><rect class="b" x="19.2" y="50.0" width="7.1" height="8.1" rx="1.5" /><rect class="b" x="28.3" y="50.0" width="7.1" height="7.4" rx="1.5" /><rect class="a" x="37.4" y="35.7" width="7.1" height="14.3" rx="1.5" /><rect class="a" x="46.5" y="34.8" width="7.1" height="15.2" rx="1.5" /><rect class="a" x="55.5" y="48.5" width="7.1" height="1.5" rx="1.5" /><rect class="a" x="64.6" y="47.7" width="7.1" height="2.3" rx="1.5" /><rect class="b" x="73.7" y="50.0" width="7.1" height="10.4" rx="1.5" /><rect class="b" x="82.8" y="50.0" width="7.1" height="8.1" rx="1.5" /><rect class="a" x="91.9" y="37.5" width="7.1" height="12.5" rx="1.5" /><rect class="a" x="101.0" y="20.0" width="7.1" height="30.0" rx="1.5" /><rect class="a" x="110.1" y="40.5" width="7.1" height="9.5" rx="1.5" /><rect class="a" x="119.2" y="23.0" width="7.1" height="27.0" rx="1.5" /><rect class="a" x="128.3" y="5.8" width="7.1" height="44.2" rx="1.5" /><rect class="a" x="137.4" y="13.3" width="7.1" height="36.7" rx="1.5" /><rect class="a" x="146.5" y="27.4" width="7.1" height="22.6" rx="1.5" /><rect class="a" x="155.5" y="37.8" width="7.1" height="12.2" rx="1.5" /><rect class="a" x="164.6" y="22.0" width="7.1" height="28.0" rx="1.5" /><rect class="a" x="173.7" y="42.7" width="7.1" height="7.3" rx="1.5" /><rect class="b" x="182.8" y="50.0" width="7.1" height="13.9" rx="1.5" /><rect class="b" x="191.9" y="50.0" width="7.1" height="8.5" rx="1.5" /><rect class="a" x="201.0" y="47.1" width="7.1" height="2.9" rx="1.5" /><rect class="b" x="210.1" y="50.0" width="7.1" height="13.6" rx="1.5" /><rect class="a" x="219.2" y="38.9" width="7.1" height="11.1" rx="1.5" /><rect class="a" x="228.3" y="46.9" width="7.1" height="3.1" rx="1.5" /></svg>
+      <i class="w-featured__ev" style="left: 8.0%; top: 10%" title="Первая кровь · Team Spirit">FB</i><i class="w-featured__ev" style="left: 21.6%; top: 90%" title="Башня T1 · Tundra Esports">T1</i><i class="w-featured__ev" style="left: 35.2%; top: 10%" title="Рошан · Aegis · Team Spirit">R</i><i class="w-featured__ev" style="left: 48.9%; top: 10%" title="Башня T2 · Team Spirit">T2</i>
+    </div>
+    <div class="w-featured__ax"><span>0'</span><span>14'</span><span>27'</span></div>
+    <div class="w-featured__stats">
+      <div class="w-featured__st"><b>18</b><i style="--p: 62%"></i><span>Убийства</span><i style="--p: 38%"></i><b>11</b></div>
+      <div class="w-featured__st"><b>5</b><i style="--p: 71%"></i><span>Башни</span><i style="--p: 29%"></i><b>2</b></div>
+      <div class="w-featured__st"><b>1</b><i style="--p: 100%"></i><span>Рошаны</span><i style="--p: 0%"></i><b>0</b></div>
+      <div class="w-featured__st"><b>42.3</b><i style="--p: 50%"></i><span>Золото, k</span><i style="--p: 50%"></i><b>41.7</b></div>
+      <div class="w-featured__st"><b>51.0</b><i style="--p: 52%"></i><span>Опыт, k</span><i style="--p: 48%"></i><b>47.2</b></div>
+    </div>
+  </div>
+  <div class="w-featured__who" data-vote>
+    <p><b>Кто победит?</b><span>Голос без денег · угадаешь — +30 монет</span></p>
+    <div class="w-featured__btns">
+      <button class="btn btn--quiet t-ts" type="button" aria-pressed="false" data-pct="58"><i class="team-logo team-logo--xs t-ts is-logo" title="Team Spirit">TS</i>Team Spirit<em>58%</em></button>
+      <button class="btn btn--quiet t-tun" type="button" aria-pressed="false" data-pct="42"><i class="team-logo team-logo--xs t-tun is-logo" title="Tundra Esports">TUN</i>Tundra Esports<em>42%</em></button>
+    </div>
+  </div>
+</div>
+    </div>
+    <div class="app-home__leaders">
+<!-- Лучшие игроки турнира: вкладки Рейтинг / KDA / GPM / Fantasy переключают списки (data-stat). Мои игроки — фиолетовым. Данные условные. -->
+<div class="card card--ui w-leaders">
+  <div class="card__h"><h2>Лучшие игроки</h2><small>DreamLeague</small></div>
+  <div class="btn-row btn-row--center" role="tablist">
+    <button class="btn btn--quiet btn--sm" type="button" aria-pressed="true" data-stat-tab="rt">Рейтинг</button>
+    <button class="btn btn--quiet btn--sm" type="button" aria-pressed="false" data-stat-tab="kda">KDA</button>
+    <button class="btn btn--quiet btn--sm" type="button" aria-pressed="false" data-stat-tab="gpm">GPM</button>
+    <button class="btn btn--quiet btn--sm" type="button" aria-pressed="false" data-stat-tab="fp">Fantasy</button>
+  </div>
+  <ol class="w-leaders__list" data-stat="rt">
+    <li><i class="avatar">N</i><span><b>No[o]ne</b><small><i class="team-logo team-logo--xs t-pv is-logo" title="PARIVISION">PV</i>PARIVISION</small></span><b class="rating rating--x">8.9</b></li>
+    <li><i class="avatar">S</i><span><b>Save-</b><small><i class="team-logo team-logo--xs t-bb is-logo" title="BetBoom Team">BB</i>BetBoom Team</small></span><b class="rating rating--x">8.9</b></li>
+    <li><i class="avatar">I</i><span><b>Insania</b><small><i class="team-logo team-logo--xs t-tl is-logo" title="Team Liquid">TL</i>Team Liquid</small></span><b class="rating rating--x">8.9</b></li>
+    <li><i class="avatar">N</i><span><b>Nisha</b><small><i class="team-logo team-logo--xs t-tl is-logo" title="Team Liquid">TL</i>Team Liquid</small></span><b class="rating rating--x">8.8</b></li>
+    <li><i class="avatar">B</i><span><b>Boxi</b><small><i class="team-logo team-logo--xs t-tl is-logo" title="Team Liquid">TL</i>Team Liquid</small></span><b class="rating rating--x">8.7</b></li>
+    <li><i class="avatar">D</i><span><b>Dukalis</b><small><i class="team-logo team-logo--xs t-pv is-logo" title="PARIVISION">PV</i>PARIVISION</small></span><b class="rating rating--x">8.5</b></li>
+    <li><i class="avatar">D</i><span><b>Dy</b><small><i class="team-logo team-logo--xs t-pv is-logo" title="PARIVISION">PV</i>PARIVISION</small></span><b class="rating rating--x">8.4</b></li>
+    <li><i class="avatar">C</i><span><b>Cr1t-</b><small><i class="team-logo team-logo--xs t-flc is-logo" title="Team Falcons">FLC</i>Team Falcons</small></span><b class="rating rating--x">8.4</b></li>
+  </ol>
+  <ol class="w-leaders__list" data-stat="kda" hidden>
+    <li><i class="avatar">I</i><span><b>Insania</b><small><i class="team-logo team-logo--xs t-tl is-logo" title="Team Liquid">TL</i>Team Liquid</small></span><em>8.4</em></li>
+    <li><i class="avatar">Q</i><span><b>Q</b><small><i class="team-logo team-logo--xs t-aur is-logo" title="Aurora">AUR</i>Aurora</small></span><em>8.4</em></li>
+    <li><i class="avatar">S</i><span><b>Seleri</b><small><i class="team-logo team-logo--xs t-gg is-logo" title="Gaimin Gladiators">GG</i>Gaimin Gladiators</small></span><em>8</em></li>
+    <li><i class="avatar">B</i><span><b>Boxi</b><small><i class="team-logo team-logo--xs t-tl is-logo" title="Team Liquid">TL</i>Team Liquid</small></span><em>8</em></li>
+    <li><i class="avatar">M</i><span><b>Miposhka</b><small><i class="team-logo team-logo--xs t-ts is-logo" title="Team Spirit">TS</i>Team Spirit</small></span><em>7.9</em></li>
+    <li><i class="avatar">A</i><span><b>Ace</b><small><i class="team-logo team-logo--xs t-gg is-logo" title="Gaimin Gladiators">GG</i>Gaimin Gladiators</small></span><em>7.6</em></li>
+    <li><i class="avatar">D</i><span><b>Dukalis</b><small><i class="team-logo team-logo--xs t-pv is-logo" title="PARIVISION">PV</i>PARIVISION</small></span><em>7.4</em></li>
+    <li><i class="avatar">N</i><span><b>No[o]ne</b><small><i class="team-logo team-logo--xs t-pv is-logo" title="PARIVISION">PV</i>PARIVISION</small></span><em>7.3</em></li>
+  </ol>
+  <ol class="w-leaders__list" data-stat="gpm" hidden>
+    <li><i class="avatar">M</i><span><b>MieRo</b><small><i class="team-logo team-logo--xs t-bb is-logo" title="BetBoom Team">BB</i>BetBoom Team</small></span><em>839</em></li>
+    <li><i class="avatar">S</i><span><b>Satanic</b><small><i class="team-logo team-logo--xs t-pv is-logo" title="PARIVISION">PV</i>PARIVISION</small></span><em>833</em></li>
+    <li><i class="avatar">A</i><span><b>ATF</b><small><i class="team-logo team-logo--xs t-flc is-logo" title="Team Falcons">FLC</i>Team Falcons</small></span><em>831</em></li>
+    <li><i class="avatar">g</i><span><b>gpk</b><small><i class="team-logo team-logo--xs t-bb is-logo" title="BetBoom Team">BB</i>BetBoom Team</small></span><em>813</em></li>
+    <li><i class="avatar">b</i><span><b>bzm</b><small><i class="team-logo team-logo--xs t-tun is-logo" title="Tundra Esports">TUN</i>Tundra Esports</small></span><em>769</em></li>
+    <li><i class="avatar">3</i><span><b>33</b><small><i class="team-logo team-logo--xs t-tun is-logo" title="Tundra Esports">TUN</i>Tundra Esports</small></span><em>764</em></li>
+    <li><i class="avatar">A</i><span><b>Ace</b><small><i class="team-logo team-logo--xs t-gg is-logo" title="Gaimin Gladiators">GG</i>Gaimin Gladiators</small></span><em>763</em></li>
+    <li><i class="avatar">S</i><span><b>Sneyking</b><small><i class="team-logo team-logo--xs t-flc is-logo" title="Team Falcons">FLC</i>Team Falcons</small></span><em>761</em></li>
+  </ol>
+  <ol class="w-leaders__list" data-stat="fp" hidden>
+    <li><i class="avatar">g</i><span><b>gpk</b><small><i class="team-logo team-logo--xs t-bb is-logo" title="BetBoom Team">BB</i>BetBoom Team</small></span><em>+94.7</em></li>
+    <li><i class="avatar">A</i><span><b>ATF</b><small><i class="team-logo team-logo--xs t-flc is-logo" title="Team Falcons">FLC</i>Team Falcons</small></span><em>+92.3</em></li>
+    <li><i class="avatar">S</i><span><b>Save-</b><small><i class="team-logo team-logo--xs t-bb is-logo" title="BetBoom Team">BB</i>BetBoom Team</small></span><em>+92.1</em></li>
+    <li><i class="avatar">S</i><span><b>Satanic</b><small><i class="team-logo team-logo--xs t-pv is-logo" title="PARIVISION">PV</i>PARIVISION</small></span><em>+89.7</em></li>
+    <li><i class="avatar">3</i><span><b>33</b><small><i class="team-logo team-logo--xs t-tun is-logo" title="Tundra Esports">TUN</i>Tundra Esports</small></span><em>+87.9</em></li>
+    <li><i class="avatar" style="--img: url(img/players/rue.webp)"></i><span><b>rue</b><small><i class="team-logo team-logo--xs t-ts is-logo" title="Team Spirit">TS</i>Team Spirit</small></span><em>+86.7</em></li>
+    <li><i class="avatar">b</i><span><b>bzm</b><small><i class="team-logo team-logo--xs t-tun is-logo" title="Tundra Esports">TUN</i>Tundra Esports</small></span><em>+83.4</em></li>
+    <li><i class="avatar">D</i><span><b>Dukalis</b><small><i class="team-logo team-logo--xs t-pv is-logo" title="PARIVISION">PV</i>PARIVISION</small></span><em>+82.3</em></li>
+  </ol>
+</div>
+    </div>
+    <div class="app-home__perf">
+<!-- Лучшие выступления дня: рейтинг 3–10 (шкала SofaScore: <6 · 6–6,9 · 7–7,9 · 8–8,9 · 9+), клик по строке — разбивка
+     по 5 категориям. Данные условные. -->
+<div class="card card--ui w-perf">
+  <div class="card__h"><h2>Лучшие выступления дня</h2><small>Нажми на игрока — разбивка рейтинга</small></div>
+  <ol class="w-perf__list">
+    <li>
+      <button class="w-perf__row" type="button" aria-expanded="false"><i class="avatar">M</i><span><b>Malr1ne</b><small>Mid · POS 2 · FLC</small></span><span class="w-perf__sc"><i class="team-logo team-logo--xs t-gg is-logo" title="Gaimin Gladiators">GG</i>2–1<i class="team-logo team-logo--xs t-flc is-logo" title="Team Falcons">FLC</i></span><b class="rating rating--b">9.5</b></button>
+      <div class="w-perf__brk" hidden>
+          <span>Фарм</span><i class="progress" style="--p: 55%"></i><b>5.5</b>
+          <span>Драки</span><i class="progress" style="--p: 90%"></i><b>9</b>
+          <span>Саппорт и обзор</span><i class="progress" style="--p: 75%"></i><b>7.5</b>
+          <span>Объекты</span><i class="progress" style="--p: 57%"></i><b>5.7</b>
+          <span>Выживание</span><i class="progress" style="--p: 55%"></i><b>5.5</b>
+      </div>
+    </li>
+    <li>
+      <button class="w-perf__row" type="button" aria-expanded="false"><i class="avatar">A</i><span><b>Ace</b><small>Offlane · POS 3 · GG</small></span><span class="w-perf__sc"><i class="team-logo team-logo--xs t-gg is-logo" title="Gaimin Gladiators">GG</i>2–1<i class="team-logo team-logo--xs t-flc is-logo" title="Team Falcons">FLC</i></span><b class="rating rating--b">9.4</b></button>
+      <div class="w-perf__brk" hidden>
+          <span>Фарм</span><i class="progress" style="--p: 55%"></i><b>5.5</b>
+          <span>Драки</span><i class="progress" style="--p: 57%"></i><b>5.7</b>
+          <span>Саппорт и обзор</span><i class="progress" style="--p: 56%"></i><b>5.6</b>
+          <span>Объекты</span><i class="progress" style="--p: 67%"></i><b>6.7</b>
+          <span>Выживание</span><i class="progress" style="--p: 81%"></i><b>8.1</b>
+      </div>
+    </li>
+    <li>
+      <button class="w-perf__row" type="button" aria-expanded="false"><i class="avatar">t</i><span><b>tOfu</b><small>Support · POS 4 · GG</small></span><span class="w-perf__sc"><i class="team-logo team-logo--xs t-gg is-logo" title="Gaimin Gladiators">GG</i>2–1<i class="team-logo team-logo--xs t-flc is-logo" title="Team Falcons">FLC</i></span><b class="rating rating--b">9.4</b></button>
+      <div class="w-perf__brk" hidden>
+          <span>Фарм</span><i class="progress" style="--p: 55%"></i><b>5.5</b>
+          <span>Драки</span><i class="progress" style="--p: 62%"></i><b>6.2</b>
+          <span>Саппорт и обзор</span><i class="progress" style="--p: 92%"></i><b>9.2</b>
+          <span>Объекты</span><i class="progress" style="--p: 57%"></i><b>5.7</b>
+          <span>Выживание</span><i class="progress" style="--p: 71%"></i><b>7.1</b>
+      </div>
+    </li>
+    <li>
+      <button class="w-perf__row" type="button" aria-expanded="false"><i class="avatar">M</i><span><b>Moon</b><small>Offlane · POS 3 · YG</small></span><span class="w-perf__sc"><i class="team-logo team-logo--xs t-yg is-logo" title="Yangon Galacticos">YG</i>1–1<i class="team-logo team-logo--xs t-xip" title="Xipto Esports">XIP</i></span><b class="rating rating--x">8.8</b></button>
+      <div class="w-perf__brk" hidden>
+          <span>Фарм</span><i class="progress" style="--p: 55%"></i><b>5.5</b>
+          <span>Драки</span><i class="progress" style="--p: 67%"></i><b>6.7</b>
+          <span>Саппорт и обзор</span><i class="progress" style="--p: 81%"></i><b>8.1</b>
+          <span>Объекты</span><i class="progress" style="--p: 77%"></i><b>7.7</b>
+          <span>Выживание</span><i class="progress" style="--p: 94%"></i><b>9.4</b>
+      </div>
+    </li>
+    <li>
+      <button class="w-perf__row" type="button" aria-expanded="false"><i class="avatar">V</i><span><b>Ven</b><small>Support · POS 4 · XIP</small></span><span class="w-perf__sc"><i class="team-logo team-logo--xs t-yg is-logo" title="Yangon Galacticos">YG</i>1–1<i class="team-logo team-logo--xs t-xip" title="Xipto Esports">XIP</i></span><b class="rating rating--x">8</b></button>
+      <div class="w-perf__brk" hidden>
+          <span>Фарм</span><i class="progress" style="--p: 55%"></i><b>5.5</b>
+          <span>Драки</span><i class="progress" style="--p: 74%"></i><b>7.4</b>
+          <span>Саппорт и обзор</span><i class="progress" style="--p: 68%"></i><b>6.8</b>
+          <span>Объекты</span><i class="progress" style="--p: 83%"></i><b>8.3</b>
+          <span>Выживание</span><i class="progress" style="--p: 63%"></i><b>6.3</b>
+      </div>
+    </li>
+  </ol>
+</div>
+    </div>
+    <div class="app-home__bracket">
+<!-- Сетка плей-офф DreamLeague: верхняя (ЧФ → ПФ → финал) и нижняя (раунд 1 → 2). Совпадает с матчами дня. Данные условные. -->
+<div class="card card--ui w-bracket">
+  <div class="card__h"><h2>DreamLeague · плей-офф</h2><small>Призовой $1 000 000</small></div>
+  <h3 class="w-bracket__side">Верхняя сетка</h3>
+  <div class="w-bracket__scroll">
+    <div class="w-bracket__grid">
+      <div class="w-bracket__col"><h3>Четвертьфинал</h3>
+        <div class="w-bracket__m"><span class="w-bracket__t"><i class="team-logo team-logo--xs t-ts is-logo" title="Team Spirit">TS</i><span>Team Spirit</span><b>2</b></span><span class="w-bracket__t is-lost"><i class="team-logo team-logo--xs t-aur is-logo" title="Aurora">AUR</i><span>Aurora</span><b>0</b></span></div>
+        <div class="w-bracket__m"><span class="w-bracket__t"><i class="team-logo team-logo--xs t-tun is-logo" title="Tundra Esports">TUN</i><span>Tundra Esports</span><b>2</b></span><span class="w-bracket__t is-lost"><i class="team-logo team-logo--xs t-tl is-logo" title="Team Liquid">TL</i><span>Team Liquid</span><b>1</b></span></div>
+        <div class="w-bracket__m"><span class="w-bracket__t"><i class="team-logo team-logo--xs t-pv is-logo" title="PARIVISION">PV</i><span>PARIVISION</span><b></b></span><span class="w-bracket__t"><i class="team-logo team-logo--xs t-bb is-logo" title="BetBoom Team">BB</i><span>BetBoom Team</span><b></b></span><small>Сегодня в 18:00</small></div>
+        <div class="w-bracket__m"><span class="w-bracket__t"><i class="team-logo team-logo--xs t-gg is-logo" title="Gaimin Gladiators">GG</i><span>Gaimin Gladiators</span><b>2</b></span><span class="w-bracket__t is-lost"><i class="team-logo team-logo--xs t-flc is-logo" title="Team Falcons">FLC</i><span>Team Falcons</span><b>1</b></span></div>
+      </div>
+      <div class="w-bracket__col"><h3>Полуфинал</h3>
+        <div class="w-bracket__m is-live"><span class="w-bracket__t"><i class="team-logo team-logo--xs t-ts is-logo" title="Team Spirit">TS</i><span>Team Spirit</span><b>1</b></span><span class="w-bracket__t"><i class="team-logo team-logo--xs t-tun is-logo" title="Tundra Esports">TUN</i><span>Tundra Esports</span><b>0</b></span><small class="w-bracket__live">Live</small></div>
+        <div class="w-bracket__m"><span class="w-bracket__t is-tbd"><i class="team-logo team-logo--xs"></i><span>—</span><b></b></span><span class="w-bracket__t"><i class="team-logo team-logo--xs t-gg is-logo" title="Gaimin Gladiators">GG</i><span>Gaimin Gladiators</span><b></b></span></div>
+      </div>
+      <div class="w-bracket__col"><h3>Финал верхней</h3>
+        <div class="w-bracket__m is-tbd">Определится позже</div>
+      </div>
+    </div>
+  </div>
+  <h3 class="w-bracket__side">Нижняя сетка</h3>
+  <div class="w-bracket__scroll">
+    <div class="w-bracket__grid w-bracket__grid--2">
+      <div class="w-bracket__col"><h3>Раунд 1</h3>
+        <div class="w-bracket__m"><span class="w-bracket__t"><i class="team-logo team-logo--xs t-tl is-logo" title="Team Liquid">TL</i><span>Team Liquid</span><b></b></span><span class="w-bracket__t"><i class="team-logo team-logo--xs t-aur is-logo" title="Aurora">AUR</i><span>Aurora</span><b></b></span><small>Сегодня в 21:30</small></div>
+        <div class="w-bracket__m"><span class="w-bracket__t"><i class="team-logo team-logo--xs t-flc is-logo" title="Team Falcons">FLC</i><span>Team Falcons</span><b></b></span><span class="w-bracket__t is-tbd"><i class="team-logo team-logo--xs"></i><span>—</span><b></b></span></div>
+      </div>
+      <div class="w-bracket__col"><h3>Раунд 2</h3>
+        <div class="w-bracket__m is-tbd">Определится позже</div>
+      </div>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+  <div class="app-home__side">
+<!-- Fantasy · твои игроки сегодня: очки дня, дедлайн замен (data-countdown, секунды), коры и саппорты (3 + 2), капитан — «C».
+     Игрок без матча — подсказка «переставить» (замена на игрока со скамейки — app.js). Данные условные. -->
+<div class="card card--ui w-lineup">
+  <div class="card__h"><h2>Твои игроки сегодня</h2><small><a class="w-feat__go" href="lineup.html">Изменить состав →</a></small></div>
+  <div class="card__b">
+    <div class="w-lineup__top"><p class="w-lineup__pts"><b>142.5</b> очков</p><p class="w-lineup__dl">Замены до 17:30<b data-countdown="3861">01:04:21</b></p></div>
+    <h3>Коры</h3>
+    <ul>
+      <li><i class="avatar" style="--img: url(img/players/yatoro.webp)"><b class="w-lineup__cap" title="Капитан">C</b></i><span><b>Yatoro</b><small>★★★★ · Holo · TS</small></span><em class="is-live">+31.2</em></li>
+      <li><i class="avatar" style="--img: url(img/players/pure.webp)"></i><span><b>Pure</b><small>★★★★★ · Prism · TUN</small></span><em class="is-live">+24.8</em></li>
+      <li><i class="avatar">S</i><span><b>Satanic</b><small>★★★ · Base · PV</small></span><em class="is-off">18:00</em></li>
+    </ul>
+    <h3>Саппорты</h3>
+    <ul data-lineup-support>
+      <li><i class="avatar" style="--img: url(img/players/9class.webp)"></i><span><b>9Class</b><small>★★★★★ · Legend · PV</small></span><em class="is-off">18:00</em></li>
+      <li data-out><i class="avatar">S</i><span><b>Scofield</b><small>★★ · Base · HR</small></span><em class="is-off">Не играет</em></li>
+    </ul>
+    <template data-bench><li><i class="avatar">M</i><span><b>Miposhka</b><small>★★★★ · Base · TS</small></span><em class="is-live">+8.4</em></li></template>
+    <p class="w-lineup__warn" data-lineup-warn>Scofield сегодня не играет — на скамейке Miposhka<button type="button" data-lineup-swap>Переставить</button></p>
+    <a class="btn w-lineup__cta" href="#app-matches" data-list-go="mine">Мои игроки в матчах</a>
+  </div>
+</div>
+<!-- Бустер «Игроки дня» (был сундук; дирижёр 05.10 — везде бустер): карты игроков, у которых сегодня матч. Бесплатный — по таймеру
+     (data-countdown, секунды); шансы редкостей открыты. Бустер — живой 3D: страница chest.html в режиме превью (?form=booster&mini, booster.js)
+     в iframe. Клик по бустеру и кнопка открывают его в окне поверх страницы (дирижёр 05.10: «должно открываться в модалке»;
+     app.js [Бустер в окне]); ссылка на chest.html — запасной путь без скриптов. -->
+<div class="card card--ui w-chest">
+  <div class="card__h"><h2>Бустер «Игроки дня»</h2></div>
+  <div class="card__b">
+    <a class="w-chest__art" href="chest.html?form=booster" aria-label="Открыть бустер" data-booster><iframe src="chest.html?form=booster&amp;mini" title="Бустер «Игроки дня»" loading="lazy" tabindex="-1"></iframe></a>
+    <p>Внутри 3 карты игроков, у которых сегодня матч. Бесплатный — через <b data-countdown="15129">04:12:09</b></p>
+    <dl class="w-chest__odds">
+      <div><dt>Base</dt><dd><i class="progress" style="--p: 70%"></i><b>70%</b></dd></div>
+      <div><dt>Holo</dt><dd><i class="progress" style="--p: 22%"></i><b>22%</b></dd></div>
+      <div><dt>Prism</dt><dd><i class="progress" style="--p: 7%"></i><b>7%</b></dd></div>
+      <div><dt>Legend</dt><dd><i class="progress" style="--p: 1%"></i><b>1%</b></dd></div>
+    </dl>
+    <a class="btn w-chest__cta" href="chest.html?form=booster" data-booster>Открыть за 600 монет</a>
+  </div>
+</div>
+  </div>
+  </div>
+</section>
+<!-- Футер продукта (правка начальника 30.09: «не хватает футера»; дирижёр 05.10: из лабы «Футер» берём v2 «По мотивам Esports World Cup»).
+     Постер: ссылки тремя колонками, огромный знак Fantasy / Dota 2 на диагональной фактуре, «Честная игра» тремя значками, внизу полоса —
+     копирайт, приложения, соцсети, язык. Иконки — свои SVG. Разделов, которых нет, — data-soon (плашка «скоро»). Телефон — container query «ft»
+     на обёртке .site-ft. Стили — styles.css [=== Футер ===]. -->
+<div class="site-ft">
+<footer class="ft f2">
+  <div class="f2__main">
+    <div class="f2__links">
+      <div><h4>Играть</h4><ul><li><a href="onboarding.html">Как это работает</a></li><li><a href="#" data-soon="Как считаются очки">Как считаются очки</a></li><li><a href="chest.html?form=booster">Бустеры</a></li><li><a href="gallery.html">Маркет карт</a></li><li><a href="#" data-soon="Лидеры">Лидеры</a></li></ul></div>
+      <div><h4>Помощь</h4><ul><li><a href="#" data-soon="Вопросы и ответы">Вопросы и ответы</a></li><li><a href="#" data-soon="Поддержка">Поддержка</a></li><li><a href="#" data-soon="Статус сервиса">Статус сервиса</a></li><li><a href="#" data-soon="Партнёрам и командам">Партнёрам и командам</a></li><li><a href="#" data-soon="Пресса">Пресса</a></li></ul></div>
+      <div><h4>Правила</h4><ul><li><a href="#" data-soon="Соглашение">Соглашение</a></li><li><a href="#" data-soon="Бустеры и шансы">Бустеры и шансы</a></li><li><a href="#" data-soon="Честная игра">Честная игра</a></li><li><a href="#" data-soon="Конфиденциальность">Конфиденциальность</a></li><li><a href="#" data-soon="Cookies">Cookies</a></li></ul></div>
+    </div>
+    <div class="f2__mark"><b>Fantasy</b><b>Dota 2</b><p>Сезон 1 · DreamLeague, BLAST, The International</p></div>
+  </div>
+  <div class="f2__fair" aria-label="Честная игра">
+    <span><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Zm0 3.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11Zm-1 2v7h2v-7h-2Z" /></svg>Монеты не покупаются и не выводятся</span>
+    <span><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 4a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Zm9 9a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7ZM18.3 4.3l1.4 1.4L5.7 19.7l-1.4-1.4L18.3 4.3Z" /></svg>Шансы каждого бустера открыты</span>
+    <span><span class="ft-age">18+</span>Fantasy — не ставки, играй в удовольствие</span>
+  </div>
+  <div class="f2__band">
+    <div><small>Fantasy · Dota 2</small><p class="ft-fine">© 2026 Fantasy · Dota 2. Не связан с Valve и Riot Games. Данные матчей — Liquipedia и OpenDota.</p></div>
+    <div><small>Играй с телефона</small><div class="f2__apps"><a class="f2__app" href="#" data-soon="Приложение"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.5 2-3.6a4.3 4.3 0 0 0-3.4-1.8c-1.4-.1-2.8.9-3.5.9s-1.8-.9-3-.8a4.5 4.5 0 0 0-3.8 2.3c-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7 2-1.2 2.8-2.3c.9-1.3 1.3-2.6 1.3-2.6s-2.5-1-2.5-3.7ZM14.1 5.6A4 4 0 0 0 15 2.7a4.1 4.1 0 0 0-2.7 1.4 3.8 3.8 0 0 0-1 2.8 3.4 3.4 0 0 0 2.8-1.3Z" /></svg><span><i>Скачать в</i>App Store</span></a><a class="f2__app" href="#" data-soon="Приложение"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 2.9v18.2c0 .6.6.9 1.1.6L20 13.1c.5-.3.5-1.1 0-1.4L5.6 2.3c-.5-.3-1.1 0-1.1.6Z" /></svg><span><i>Доступно в</i>Google Play</span></a></div></div>
+    <div><small>Мы в соцсетях</small><div class="f2__soc"><a href="#" aria-label="Telegram" data-soon="Telegram"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 3.6 2.9 10.8c-1.3.5-1.3 1.2-.2 1.6l4.8 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.3-2.2 4.8 3.5c.9.5 1.5.2 1.7-.8l3.1-14.7c.3-1.3-.5-1.9-1.5-1.4Zm-3.4 4-8.6 7.8-.3 3.5-1.6-5 10.1-6.4c.5-.3.9 0 .4.1Z" /></svg></a><a href="#" aria-label="Twitch" data-soon="Twitch"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3 3 6v13h4v2h2.5l2-2H15l5-5V3H4Zm14 10-3 3h-3.5l-2 2v-2H6V5h12v8Zm-3-6h-2v5h2V7Zm-5 0H8v5h2V7Z" /></svg></a><a href="#" aria-label="YouTube" data-soon="YouTube"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12c0 1.6.1 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.3-1.6.4-3.2.4-4.8s-.1-3.2-.4-4.8ZM10 15V9l5.2 3-5.2 3Z" /></svg></a><a href="#" aria-label="Discord" data-soon="Discord"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.3 5.3A16 16 0 0 0 15.4 4l-.5 1a14 14 0 0 0-5.8 0L8.6 4a16 16 0 0 0-3.9 1.3C2.2 9 1.6 12.7 1.9 16.3a16 16 0 0 0 4.8 2.5l1-1.6c-.6-.2-1.1-.5-1.6-.8l.4-.3a11 11 0 0 0 11 0l.4.3c-.5.3-1 .6-1.6.8l1 1.6a16 16 0 0 0 4.8-2.5c.4-4.2-.7-7.8-2.8-11ZM8.8 14.2c-1 0-1.7-.9-1.7-2s.8-2 1.7-2 1.8.9 1.7 2c0 1.1-.8 2-1.7 2Zm6.4 0c-1 0-1.7-.9-1.7-2s.8-2 1.7-2 1.8.9 1.7 2c0 1.1-.7 2-1.7 2Z" /></svg></a><a href="#" aria-label="X" data-soon="X"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.8 3h3.1l-6.8 7.8L22 21h-6.2l-4.9-6.4L5.3 21H2.2l7.3-8.3L2 3h6.4l4.4 5.8L17.8 3Zm-1.1 16.2h1.7L7.4 4.7H5.6l11.1 14.5Z" /></svg></a></div></div>
+    <div><small>Язык</small><span class="ft-lang"><svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm6.9 6h-3a15 15 0 0 0-1.3-3.9A8 8 0 0 1 18.9 8ZM12 4c.8 1.1 1.5 2.5 1.9 4h-3.8c.4-1.5 1.1-2.9 1.9-4ZM4.3 14a8 8 0 0 1 0-4h3.4a16 16 0 0 0 0 4H4.3Zm.8 2h3c.3 1.4.7 2.7 1.3 3.9A8 8 0 0 1 5.1 16Zm3-8h-3a8 8 0 0 1 4.3-3.9C8.8 5.3 8.4 6.6 8.1 8ZM12 20c-.8-1.1-1.5-2.5-1.9-4h3.8c-.4 1.5-1.1 2.9-1.9 4Zm2.3-6H9.7a14 14 0 0 1 0-4h4.6a14 14 0 0 1 0 4Zm.3 5.9c.6-1.2 1-2.5 1.3-3.9h3a8 8 0 0 1-4.3 3.9Zm1.7-5.9a16 16 0 0 0 0-4h3.4a8 8 0 0 1 0 4h-3.4Z" /></svg>Русский<svg class="ft-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5H7Z" /></svg></span></div>
+  </div>
+</footer>
+</div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

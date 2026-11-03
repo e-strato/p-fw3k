@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_home.css" />
+<style>
+/* v2 «Турнир-хаб» — главная Dota 2 во время TI: центр экрана — сам турнир (стадии с датами, три действия), справа — что ещё идёт. */
+.t { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 20px; align-items: start; }
+.t-main { display: grid; gap: 16px; min-width: 0; }
+
+/* Переключатель турниров дня */
+.t-tabs { display: flex; gap: 6px; }
+.t-tabs button { white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px; border: 0; border-radius: 8px; background: var(--c-ui-panel); color: var(--c-muted); font-size: 13.5px; font-weight: 600; }
+.t-tabs button::before { content: ''; width: 8px; height: 8px; border-radius: 2px; background: var(--gc); }
+.t-tabs button:hover { background: var(--c-ui-item); }
+.t-tabs button[aria-pressed='true'] { background: var(--c-ui-hover); color: var(--c-text); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gc) 60%, transparent); }
+.t-tabs button small { color: var(--c-live); font-weight: 600; }
+
+/* Баннер турнира */
+.t-ban { position: relative; isolation: isolate; display: grid; gap: 22px; padding: 24px 28px 26px; overflow: hidden; border-radius: 16px;
+  background:
+    radial-gradient(70% 90% at 82% 0%, color-mix(in srgb, var(--gc) 42%, transparent), transparent 70%),
+    radial-gradient(50% 70% at 0% 100%, color-mix(in srgb, var(--c-accent) 22%, transparent), transparent 70%),
+    linear-gradient(170deg, color-mix(in srgb, var(--gc) 10%, var(--c-ui-panel)), var(--c-ui-bg) 85%); }
+.t-ban::before { content: ''; position: absolute; inset: 0; z-index: -1; opacity: .16; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+/* Крупный знак игры на фоне — буквами, без своих картинок */
+.t-ban__mark { position: absolute; z-index: -1; right: -10px; top: -46px; font: 700 300px/1 var(--font-c); letter-spacing: -.05em; color: color-mix(in srgb, var(--gc) 16%, transparent); pointer-events: none; }
+.t-ban__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.t-ban h1 { font: 700 56px/1 var(--font-c); letter-spacing: -.02em; }
+.t-ban__sub { display: flex; align-items: center; gap: 10px; margin-top: 10px; color: var(--c-muted); font-size: 14px; }
+.t-ban__sub b { color: var(--c-coin); font-weight: 700; }
+
+/* Стадии с датами — как «Group stage / The International» над баннером TI */
+.t-st { display: flex; align-items: center; gap: 0; }
+.t-st li { display: grid; justify-items: center; gap: 2px; min-width: 120px; padding: 0 10px; white-space: nowrap; position: relative; z-index: 1; list-style: none; text-align: center; }
+.t-st li b { font-size: 13px; font-weight: 600; color: var(--c-muted); } .t-st li small { color: var(--c-caption); font-size: 12px; }
+.t-st li i { width: 12px; height: 12px; margin-bottom: 6px; transform: rotate(45deg); border-radius: 2px; background: var(--c-ui-hover); }
+.t-st li.done i { background: var(--c-stat-high); } .t-st li.now i { background: var(--c-live); box-shadow: 0 0 0 5px color-mix(in srgb, var(--c-live) 22%, transparent); }
+.t-st li.now b { color: var(--c-text); }
+.t-st hr { flex: 1; min-width: 24px; height: 2px; margin: 0 -44px 30px; border: 0; background: var(--c-ui-hover); }
+.t-st { padding: 0; margin: 0; }
+
+/* Три действия — Фэнтези · Прогнозы · Награды */
+.t-acts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.t-act { position: relative; display: grid; grid-template-rows: auto 1fr auto; gap: 12px; min-height: 236px; padding: 16px; border-radius: 12px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--c-white) 5%, var(--c-ui-panel)), color-mix(in srgb, var(--c-ui-bg) 60%, var(--c-ui-panel)));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--c-white) 8%, transparent), 0 20px 40px -24px var(--c-black); transition: transform .2s, box-shadow .2s; }
+.t-act:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-accent) 60%, transparent), 0 26px 50px -24px var(--c-black); }
+.t-act h3 { display: flex; align-items: baseline; justify-content: space-between; font-size: 18px; font-weight: 700; }
+.t-act h3 small { color: var(--c-caption); font-size: 12.5px; font-weight: 500; }
+.t-act .h-btn { width: 100%; }
+/* Фэнтези: пять слотов пятёрки */
+.t-five { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; align-self: center; }
+.t-five span { display: grid; place-items: end center; aspect-ratio: 3 / 4; overflow: hidden; border-radius: 8px; background: var(--c-ui-item) center 20% / cover; box-shadow: inset 0 0 0 1px var(--c-ui-line); font-size: 10.5px; font-weight: 600; }
+.t-five span.is-set { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-card-stroke) 70%, transparent); background-color: var(--c-card-to); }
+.t-five span em { width: 100%; padding: 3px 0; background: linear-gradient(transparent, color-mix(in srgb, var(--c-black) 80%, transparent)); font-style: normal; text-align: center; }
+.t-five span.is-empty { place-items: center; color: var(--c-ui-dim); font-size: 20px; border: 1px dashed var(--c-ui-hover); background: none; box-shadow: none; }
+.t-meta { color: var(--c-muted); font-size: 12.5px; } .t-meta b { color: var(--c-text); font-variant-numeric: tabular-nums; }
+/* Прогнозы: кусок сетки */
+.t-br { display: grid; grid-template-columns: 1fr 22px 1fr; align-items: center; gap: 0; align-self: center; }
+.t-br__col { display: grid; gap: 6px; }
+.t-br__p { display: grid; gap: 1px; padding: 5px 7px; border-radius: 6px; background: var(--c-ui-item); font-size: 11.5px; }
+.t-br__p p { display: flex; align-items: center; gap: 5px; } .t-br__p p.is-w { font-weight: 700; } .t-br__p p.is-l { color: var(--c-ui-dim); }
+.t-br__p p em { margin-left: auto; font-style: normal; font-size: 11px; }
+.t-br__p p em.ok { color: var(--c-stat-high); } .t-br__p p em.no { color: var(--c-live); }
+.t-br__p.is-open { box-shadow: inset 0 0 0 1px var(--c-accent); }
+.t-br__ln { height: 60%; border: 2px solid var(--c-ui-hover); border-left: 0; border-radius: 0 6px 6px 0; }
+/* Награды: прогресс до следующей */
+.t-rw { display: grid; gap: 10px; align-self: center; }
+.t-rw__n { display: flex; align-items: baseline; gap: 6px; } .t-rw__n b { font: 700 44px/1 var(--font-c); } .t-rw__n span { color: var(--c-caption); font-size: 14px; }
+.t-rw__bar { height: 8px; border-radius: 4px; background: var(--c-ui-item); overflow: hidden; } .t-rw__bar i { display: block; height: 100%; width: var(--p); border-radius: 4px; background: linear-gradient(90deg, var(--c-accent), var(--c-card-stroke)); }
+.t-rw__next { display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--c-muted); }
+.t-rw__next i { width: 34px; height: 44px; flex: none; border-radius: 5px; background: linear-gradient(160deg, var(--c-card-from), var(--c-card-to)); box-shadow: 0 0 0 1px var(--c-card-stroke), 0 0 18px -4px var(--c-card-stroke); }
+
+/* Матчи турнира сегодня */
+.t-day h2 { display: flex; align-items: baseline; gap: 10px; margin: 2px 0 10px; font-size: 16px; font-weight: 700; }
+.t-day h2 small { color: var(--c-caption); font-size: 13px; font-weight: 500; }
+.t-ms { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.t-m { display: grid; gap: 8px; padding: 12px 14px; border-radius: 10px; background: var(--c-ui-panel); }
+.t-m:hover { background: var(--c-ui-item); }
+.t-m__h { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--c-caption); font-size: 12px; }
+.t-m__h b { font-weight: 600; color: var(--c-text); font-variant-numeric: tabular-nums; }
+.t-m p { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 13.5px; font-weight: 600; }
+.t-m p span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.t-m p em { margin-left: auto; font: 700 17px var(--font-c); font-style: normal; }
+.t-m p.is-l { color: var(--c-caption); font-weight: 500; }
+.t-m.is-air { background: linear-gradient(170deg, color-mix(in srgb, var(--c-live) 9%, var(--c-ui-panel)), var(--c-ui-panel) 70%); }
+.t-m.is-off { opacity: .55; }
+
+/* Справа — что ещё идёт */
+.t-side { display: grid; gap: 10px; }
+.t-side > h3 { margin: 4px 0 2px; color: var(--c-muted); font-size: 14px; font-weight: 600; }
+.t-oth { position: relative; display: grid; gap: 6px; min-height: 112px; padding: 14px 16px; overflow: hidden; border: 0; border-radius: 12px; text-align: left;
+  background: radial-gradient(80% 120% at 100% 0%, color-mix(in srgb, var(--gc) 30%, transparent), transparent 70%), var(--c-ui-panel); transition: transform .2s; }
+.t-oth:hover { transform: translateY(-2px); }
+.t-oth[aria-pressed='true'] { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--gc) 80%, transparent); }
+.t-oth b { font-size: 16px; font-weight: 700; }
+.t-oth span { color: var(--c-muted); font-size: 12.5px; }
+.t-oth small { display: flex; align-items: center; gap: 8px; margin-top: auto; color: var(--c-caption); font-size: 12px; }
+.t-oth small em { margin-left: auto; font-style: normal; color: var(--c-live); font-weight: 600; }
+.t-oth__mk { position: absolute; right: 10px; bottom: -14px; font: 700 64px/1 var(--font-c); color: color-mix(in srgb, var(--gc) 22%, transparent); }
+</style></head>
+<body><main class="h-page">
+  <h1>v2 · Турнир-хаб</h1>
+  <p>Как главная Dota 2 во время The International: центр экрана — сам турнир. Стадии с датами (пройдено · сейчас · впереди), три действия — Фэнтези, Прогнозы, Награды — и матчи турнира сегодня. Справа — что ещё идёт в 5 играх, с датой окончания. Турнир переключается вкладками сверху или карточкой справа.</p>
+  <p class="h-cap">Десктоп · 1440 × 900 — первый экран (рамка уменьшена под ширину окна)</p>
+  <div class="h-wrap"><div class="h-frame" id="f"></div></div>
+</main>
+<script src="_home.js"></script>
+<script>
+const { ТУРНИРЫ, ЭФИР, ИГРЫ, время, доСтарта, имя, лого, тег, статус, шапка } = H
+const ЗНАК = { dota: 'D2', cs: 'CS', lol: 'LoL', val: 'VAL', mlbb: 'ML' }
+const ИГРОКИ = { dota: [['yatoro', 'Yatoro'], ['pure', 'Pure'], ['9class', '9Class']], cs: [['_silhouette', 'ZywOo'], ['_silhouette', 'm0NESY']], lol: [['_silhouette', 'Faker'], ['_silhouette', 'Chovy'], ['_silhouette', 'Bin']], val: [['_silhouette', 'f0rsakeN']], mlbb: [['_silhouette', 'Kiboy'], ['_silhouette', 'Sanz']] }
+const ПРОГРЕСС = { blast: [340, 500], epl: [120, 250], worlds: [610, 800], vct: [90, 250], mpl: [40, 150], 'epl-sea': [20, 100] }
+let tid = 'blast'
+
+const матч = m => {
+  const эф = ЭФИР.includes(m.st), итог = m.st === 'done', побA = итог && m.sa > m.sb
+  const шапка_ = эф ? `<span>${статус(m)}</span>` : m.st === 'soon' || m.st === 'delay'
+    ? `<span><b>${время(m.t)}</b> · <span data-tick="${m.t}">${доСтарта(m.t).txt}</span></span>`
+    : `<span>${статус(m)}</span>`
+  const счёт = k => m.sa == null || m.st === 'moved' || m.st === 'cancel' ? '' : `<em>${m['s' + k]}</em>`
+  return `<a class="t-m ${эф ? 'is-air' : ''} ${m.st === 'cancel' || m.st === 'moved' ? 'is-off' : ''}" href="#">
+    <p class="t-m__h">${шапка_}<span>${m.bo}</span></p>
+    <p class="${итог && !побA ? 'is-l' : ''}">${лого(m.a, 20)}<span>${имя(m.a)}</span>${счёт('a')}</p>
+    <p class="${итог && побA ? 'is-l' : ''}">${лого(m.b, 20)}<span>${имя(m.b)}</span>${счёт('b')}</p>
+    <p class="t-m__h"><span>${m.стадия}</span></p></a>`
+}
+
+const хаб = tr => {
+  const эф = tr.матчи.filter(m => ЭФИР.includes(m.st)).length
+  const след = tr.матчи.filter(m => m.st === 'soon' || m.st === 'delay').sort((a, b) => a.t - b.t)[0]
+  const [очки, цель] = ПРОГРЕСС[tr.id]
+  const игроки = ИГРОКИ[tr.g]
+  const пятёрка = [0, 1, 2, 3, 4].map(i => игроки[i]
+    ? `<span class="is-set" style="background-image:url(/p-fw3k/site/img/players/${игроки[i][0]}.${игроки[i][0] === '_silhouette' ? 'png' : 'webp'})"><em>${игроки[i][1]}</em></span>`
+    : `<span class="is-empty">+</span>`).join('')
+  const пары = tr.матчи.slice(0, 2)
+  const пара = (m, ok) => {
+    const итог = m.st === 'done', w = итог ? (m.sa > m.sb ? 'a' : 'b') : null
+    return `<div class="t-br__p ${итог ? '' : 'is-open'}">
+      <p class="${w === 'a' ? 'is-w' : w ? 'is-l' : ''}">${лого(m.a, 14)}${H.К[m.a][2]}${w === 'a' ? `<em class="${ok ? 'ok' : 'no'}">${ok ? '✓' : '✕'}</em>` : ''}</p>
+      <p class="${w === 'b' ? 'is-w' : w ? 'is-l' : ''}">${лого(m.b, 14)}${H.К[m.b][2]}${w === 'b' ? `<em class="${ok ? 'ok' : 'no'}">${ok ? '✓' : '✕'}</em>` : ''}</p></div>`
+  }
+  const закрытие = след ? след.t : 24 * 60 + 14 * 60
+  return `<section class="t-ban" style="--gc:var(--h-game-${tr.g})">
+    <span class="t-ban__mark">${ЗНАК[tr.g]}</span>
+    <div class="t-ban__top">
+      <div><h1>${tr.имя}</h1><p class="t-ban__sub">${тег(tr.g)}<span>${tr.место} · призовой <b>${tr.фонд}</b> · ${tr.день}</span>${эф ? `<span class="h-live"><i class="h-dot"></i>${эф} в эфире</span>` : ''}</p></div>
+      <ul class="t-st">${tr.стадии.map(([n, d, c], i) => `${i ? '<hr />' : ''}<li class="${c}"><i></i><b>${n}</b><small>${d}</small></li>`).join('')}</ul>
+    </div>
+    <div class="t-acts">
+      <a class="t-act" href="#"><h3>Фэнтези<small>пятёрка на ${tr.стадии.find(s => s[2] === 'now')[0].toLowerCase()}</small></h3>
+        <div class="t-five">${пятёрка}</div>
+        <div><p class="t-meta">Выбрано <b>${игроки.length} из 5</b> · состав закрывается <b data-tick="${закрытие}">${доСтарта(закрытие).txt}</b></p></div>
+        </a>
+      <a class="t-act" href="#"><h3>Прогнозы<small>угадано 3 из 4</small></h3>
+        <div class="t-br"><div class="t-br__col">${пары.map((m, i) => пара(m, i === 0)).join('')}</div><div class="t-br__ln"></div>
+          <div class="t-br__col"><div class="t-br__p is-open"><p>? победитель</p><p class="is-l">финал верхней</p></div></div></div>
+        <p class="t-meta">${след ? `Открыт прогноз: <b>${имя(след.a)} — ${имя(след.b)}</b>` : 'Новые пары — завтра'}</p></a>
+      <a class="t-act" href="#"><h3>Награды<small>за турнир</small></h3>
+        <div class="t-rw"><p class="t-rw__n"><b>${очки}</b><span>из ${цель} очков</span></p><div class="t-rw__bar"><i style="--p:${очки / цель * 100}%"></i></div>
+          <p class="t-rw__next"><i></i><span>Следующая — бустер «Хайперглитч»<br />ещё ${цель - очки} очков: прогнозы и состав</span></p></div>
+        <p class="t-meta">До конца турнира — <b>${tr.конец}</b></p></a>
+    </div>
+    <div class="t-acts" style="grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: -10px">
+      <a class="h-btn h-btn--main" href="#">Собрать состав</a><a class="h-btn" href="#">Сделать прогноз</a><a class="h-btn" href="#">Смотреть награды</a>
+    </div>
+  </section>
+  <section class="t-day"><h2>Матчи турнира сегодня <small>${tr.матчи.length} · все — на странице турнира ›</small></h2>
+    <div class="t-ms" style="grid-template-columns: repeat(${Math.max(tr.матчи.length, 3)}, minmax(0, 1fr))">${tr.матчи.map(матч).join('')}</div></section>`
+}
+
+const f = document.getElementById('f')
+const рисовать = () => {
+  const tr = ТУРНИРЫ.find(t => t.id === tid)
+  f.innerHTML = `${шапка('Матчи')}<div class="h-body"><div class="t">
+    <div class="t-main">
+      <div class="t-tabs">${ТУРНИРЫ.slice(0, 5).map(t => { const n = t.матчи.filter(m => ЭФИР.includes(m.st)).length
+        return `<button type="button" data-t="${t.id}" aria-pressed="${t.id === tid}" style="--gc:var(--h-game-${t.g})">${t.имя}${n ? `<small>● ${n}</small>` : ''}</button>` }).join('')}</div>
+      ${хаб(tr)}
+    </div>
+    <aside class="t-side"><h3>Что ещё идёт</h3>
+      ${ТУРНИРЫ.filter(t => t.id !== tid).map(t => { const n = t.матчи.filter(m => ЭФИР.includes(m.st)).length
+        return `<button class="t-oth" type="button" data-t="${t.id}" style="--gc:var(--h-game-${t.g})"><span class="t-oth__mk">${ЗНАК[t.g]}</span>
+          <b>${t.имя}</b><span>${t.день}</span><small>${тег(t.g)} до ${t.конец}${n ? `<em>● ${n} в эфире</em>` : ''}</small></button>` }).join('')}
+    </aside></div></div>`
+  H.тик()
+}
+f.addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (b) { tid = b.dataset.t; рисовать() } })
+рисовать(); H.вписать()
+</script>
+</body></html>

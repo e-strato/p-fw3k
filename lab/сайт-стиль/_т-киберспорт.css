@@ -1,0 +1,42 @@
+/* Набор 8 · Киберспорт сейчас (Claude-B, 01.10) — по разбору сайтов Fnatic, Team Liquid, LoL Esports, Esports World Cup, BLAST.tv:
+   тёмная база с синим оттенком (как #001538 у Liquid), один тёплый акцент (оранжевый Fnatic #FF5900 → #FF5A36), золото — для наград
+   и очков (EWC #987C4B, светлее), live — зелёная пульсирующая точка. Широкий display — только крупно (Unbounded вместо Druk Wide / gear),
+   всё остальное — Inter с табличными цифрами. Скругления 14–24 px, кнопки со стрелкой, ховер — подъём на 2 px и светлее фон. */
+body.t-esp {
+  --s-page: #070a13; --s-bg: #0b0f1a; --s-panel: #141a29; --s-panel-2: #1c2436; --s-panel-3: #232c41; --s-line: #263049; --s-line-2: #1e2639;
+  --s-text: #f2f4f8; --s-muted: #8a93a6; --s-accent: #ff5a36; --s-accent-soft: #ff5a361f; --s-on-accent: #ffffff;
+  --s-live: #2ed47a; --s-coin: #f2b84b; --s-win: #2ed47a; --s-lose: #ff6b6b; --s-track: #232c41; --s-shadow: #02040a;
+  --s-team-a: var(--c-team-ts); --s-team-b: var(--c-team-tun); --s-hd-bg: #0b0f1aeb; --s-hd-h: 68px;
+  --s-medal: linear-gradient(145deg, #ffe3a6, #f2b84b 50%, #7a5414); --s-medal-ink: #2a1a00;
+  --s-gold: #f2b84b; --s-silver: #c9d2de; --s-bronze: #d08a55;
+  --s-font: 'Inter', system-ui, sans-serif; --s-font-h: 'Inter', system-ui, sans-serif; --s-font-num: 'Inter', system-ui, sans-serif; --s-fs: 14px;
+  --s-font-d: 'Unbounded', 'Inter', sans-serif; /* display — только крупные заголовки и цифры */
+  --s-r: 20px; --s-r-s: 12px; --s-r-btn: 10px; --s-r-pill: 999px; --s-pad: 22px; --s-gap: 20px; --s-row-pad: 12px; --s-bar-h: 6px;
+  --s-h3: 16px; --s-h3-w: 700; --s-h1: 40px; --s-h1-w: 600; --s-track-h1: -.02em; --s-nick-w: 700; --s-num-w: 700; --s-score-w: 700; --s-team-w: 700;
+  --s-panel-edge: inset 0 0 0 1px #263049;
+  --s-btn-glow: 0 10px 28px -12px #ff5a36;
+}
+.t-esp .ap { font-feature-settings: 'tnum' 1; }
+/* Шапка — полупрозрачная, бренд-знак скруглён, активная вкладка — пилюлей */
+.t-esp .a-brand__mark { border-radius: 10px; }
+.t-esp .a-nav a { border-radius: 999px; padding: 8px 14px; }
+.t-esp .a-nav a[aria-current] { background: var(--s-panel-2); }
+.t-esp .a-btn { transition: translate .2s, background .2s; }
+.t-esp .a-btn:hover { translate: 0 -2px; background: var(--s-panel-3); }
+.t-esp .a-btn--pri:hover { background: #ff6c4c; }
+.t-esp .a-chips button[aria-pressed='true'] { background: var(--s-text); color: var(--s-bg); }
+.t-esp .a-ph h3 { font-weight: 700; }
+/* Live — точка пульсирует, без капс-баннеров (Fnatic) */
+.t-esp .a-dot { box-shadow: none; animation: l8-pulse 1.6s ease-out infinite; }
+@keyframes l8-pulse { 0% { box-shadow: 0 0 0 0 #2ed47a99; } 100% { box-shadow: 0 0 0 8px #2ed47a00; } }
+@media (prefers-reduced-motion: reduce) { .t-esp .a-dot { animation: none; } }
+/* Общие блоки на токенах темы — чуть мягче */
+.t-esp .a-lr--me, .t-esp .a-opt.is-on, .t-esp .a-teamt.is-on, .t-esp .a-qq__opts .is-on { background: var(--s-accent-soft); }
+.t-esp .a-acc__seg i { height: 8px; border-radius: 999px; }
+.t-esp .a-acc__seg i.is-on { background: var(--s-coin); }
+.t-esp .a-reward b, .t-esp .a-q em, .t-esp .a-qq__r { color: var(--s-coin); }
+.t-esp .a-tile b { font: 600 30px/1.1 var(--s-font-d); letter-spacing: -.02em; }
+.t-esp .a-chest { background: radial-gradient(50% 60% at 50% 60%, #f2b84b26, transparent 70%), var(--s-panel-2); }
+.t-esp .a-vid__img { border-radius: 14px; }
+.t-esp .a-hero { border-radius: 6px; }
+.t-esp .a-modal { border-radius: 24px; }

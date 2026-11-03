@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../бустеры/_бустер.css" />
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+</head>
+<body>
+<!-- v2 · Сползает, как чехол. Верхний кусок подпрыгивает и кувырком улетает назад; нижний — как чехол: колоду тянет вверх,
+     а обёртка с лёгким покачиванием съезжает вниз и уходит за край. -->
+<div class="bs"></div>
+<script type="module">
+import { play, THREE } from './_обёртка.js'
+play({
+  name: 'Обёртка сползает, как чехол',
+  note: 'Верхний кусок кувырком улетает назад, нижний съезжает вниз, как чехол, — колода выходит из него вверх.',
+  async remove({ K, A, B }) {
+    const top = A.n.y > 0 ? A : B, low = top === A ? B : A
+    K.tween(950, (k) => { top.h.position.set(k * 0.6, k * 2.6 - k * k * 0.4, -k * 1.6); top.h.rotation.set(-k * 3.2, k * 0.5, k * 0.6) }, (k) => 1 - (1 - k) ** 2)
+    // Чехол: сначала чуть вниз с трением (рывками), потом свободно
+    K.tween(1500, (k) => { low.h.position.y = -(k < 0.35 ? k * 0.5 + Math.sin(k * 40) * 0.01 : 0.175 + (k - 0.35) ** 2 * 9); low.h.rotation.z = Math.sin(k * 9) * 0.03 * (1 - k) }, (k) => k)
+    await K.wait(450)
+  },
+})
+</script>
+</body></html>

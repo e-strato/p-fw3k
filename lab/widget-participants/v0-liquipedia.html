@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>v0 · Как на Liquipedia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" />
+<link rel="stylesheet" href="../кадр.css" />
+<!-- Т2 «Участники» v0 — копия блока Participants с Liquipedia (PARI Universe/1, тёмная тема) — точка отсчёта (дирижёр 28.10: «для начала полностью скопировать с Liquipedia»).
+     Данные и картинки — _data.js и img/ (Liquipedia, 28.10). Работают: Show rosters, Compact view, Enable hover, стрелка карточки, Main / Subs. «Экран» в панели — компьютер / телефон 390 (одна колонка). -->
+<style>
+  body{ margin:0; background:#121212; color:#e6e6e6; font:400 14px/20px 'Open Sans', Arial, sans-serif; }
+  .lab-board{ padding:24px 32px 48px; }
+  .is-phone .lab-board{ width:390px; box-sizing:border-box; margin:0 auto; padding:16px 12px 32px; }
+  .is-phone .grid{ grid-template-columns:1fr; }
+  .is-phone h2{ font-size:22px; }
+  h2{ margin:0 0 12px; font:400 28px/36px 'Open Sans', Arial, sans-serif; color:#fff; border-bottom:1px solid #333; padding-bottom:4px; display:flex; align-items:baseline; gap:10px; }
+  h2 small{ font-size:12px; color:#9aa; } h2 small a{ color:#7aa7e0; }
+  .ctl{ display:flex; align-items:center; gap:20px; margin-bottom:16px; flex-wrap:wrap; }
+  .pi{ display:inline-flex; align-items:center; gap:6px; border:1px solid #555; border-radius:4px; padding:4px 10px; font-weight:600; font-size:14px; color:#eee; background:#1a1a1a; }
+  .sw{ display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; font-size:15px; }
+  .sw i{ width:36px; height:20px; border-radius:10px; background:#555; position:relative; transition:background .15s; }
+  .sw i::after{ content:''; position:absolute; top:3px; left:3px; width:14px; height:14px; border-radius:50%; background:#fff; transition:left .15s; }
+  .sw.on i{ background:#b8141c; } .sw.on i::after{ left:19px; }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(290px, 1fr)); gap:12px; align-items:start; }
+  .c{ background:#1e1e1e; border:1px solid #333; border-radius:4px; position:relative; }
+  .c__h{ display:flex; align-items:center; gap:10px; padding:10px 12px; cursor:pointer; }
+  .c__h img{ width:44px; height:28px; object-fit:contain; flex:none; }
+  .c__h b{ flex:1; min-width:0; font-weight:700; font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .compact .c__h img{ width:28px; height:20px; } .compact .c__h b{ font-size:14px; }
+  .lab{ font-weight:600; font-size:11px; background:#2a2a2a; border:1px solid #3a3a3a; border-radius:3px; padding:0 8px; line-height:22px; }
+  .chev{ width:24px; height:24px; display:grid; place-items:center; border-radius:3px; color:#ccc; font-size:11px; }
+  .chev:hover{ background:#2c2c2c; }
+  .q{ display:flex; align-items:center; gap:8px; margin:0 8px 6px; padding:4px 8px; background:#262626; border-radius:3px; font-weight:600; font-size:13px; color:#7aa7e0; }
+  .q span:first-child{ flex:1; } .pl{ background:#a08a1a; color:#fff; border-radius:3px; padding:0 10px; font-size:12px; line-height:22px; }
+  .body{ padding:0 8px 8px; }
+  .c.col .body{ display:none; }
+  .pill{ display:flex; background:#262626; border-radius:4px; padding:2px; margin:0 0 6px; }
+  .pill button{ flex:1; border:0; background:none; color:#ddd; font:600 13px/22px 'Open Sans', Arial, sans-serif; border-radius:3px; cursor:pointer; }
+  .pill button.on{ background:#3a3a3a; color:#fff; }
+  .m{ display:flex; align-items:center; gap:6px; padding:6px 8px; background:#232323; border-bottom:1px solid #1a1a1a; font-size:15px; }
+  .m:nth-child(odd){ background:#262626; }
+  .m img.f{ width:18px; height:12px; object-fit:cover; flex:none; }
+  .m a{ color:#e6e6e6; text-decoration:none; flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .m a:hover{ text-decoration:underline; }
+  .m .tm{ width:20px; height:20px; object-fit:contain; }
+  .r{ font-size:11px; font-weight:700; background:#1a1a1a; border-radius:3px; min-width:22px; text-align:center; padding:0 6px; line-height:20px; color:#ddd; }
+  /* Enable hover — у свёрнутой карточки состав всплывает при наведении */
+  .hover .c.col:hover .body{ display:block; position:absolute; left:-1px; right:-1px; top:100%; z-index:5; background:#1e1e1e; border:1px solid #333; border-top:0; border-radius:0 0 4px 4px; padding-top:6px; }
+  .hover .c.col:hover .body::before{ content:'Player roster'; display:block; font-weight:600; font-size:13px; margin:0 0 6px 4px; color:#bbb; }
+</style></head>
+<body><div class="lab-board"><div id="w"></div></div>
+<script src="_data.js"></script>
+<script>
+  const DEV = [{ id: 'desk', name: 'Компьютер' }, { id: 'phone', name: 'Телефон' }]
+  const S = { dev: 0, rosters: true, compact: true, hover: true, col: {}, tab: {} }
+  const w = document.getElementById('w')
+  const sw = (k, s) => `<span class="sw ${S[k] ? 'on' : ''}" data-sw="${k}"><i></i>${s}</span>`
+  const m = (x) => `<div class="m"><img class="f" src="${x.fsrc}" alt="${x.flag}" title="${x.flag}"><a href="#">${x.nick}</a>${x.team ? `<img class="tm" src="${x.team[1]}" title="${x.team[0]}">` : ''}<span class="r">${x.role}</span></div>`
+  function card(t, i) {
+    const col = S.col[i] ?? !S.rosters, tab = S.tab[i] ?? 0
+    return `<div class="c ${col ? 'col' : ''}">
+      <div class="c__h" data-col="${i}"><img src="${t.logo}" alt=""><b>${t.name}</b><span class="lab">${t.st}</span><span class="chev">${col ? '▼' : '▲'}</span></div>
+      ${t.q && col ? `<div class="q"><span>${t.q[0]}</span><span class="pl">${t.q[1]}</span></div>` : ''}
+      <div class="body">
+        ${t.q && !col ? `<div class="q" style="margin:0 0 6px"><span>${t.q[0]}</span><span class="pl">${t.q[1]}</span></div>` : ''}
+        ${t.tabs.length > 1 ? `<div class="pill">${t.tabs.map((x, k) => `<button data-tab="${i}:${k}" class="${tab === k ? 'on' : ''}">${x.tab}</button>`).join('')}</div>` : ''}
+        ${t.tabs[tab].m.map(m).join('')}
+      </div></div>`
+  }
+  function render() {
+    document.body.classList.toggle('is-phone', DEV[S.dev].id === 'phone')
+    w.innerHTML = `<h2>Participants <small>[<a href="#">edit</a>] &nbsp;↗ Share</small></h2>
+      <div class="ctl"><span class="pi">🔗 Player Info</span>${sw('rosters', 'Show rosters')}${sw('compact', 'Compact view')}${sw('hover', 'Enable hover')}</div>
+      <div class="grid ${S.compact ? 'compact' : ''} ${S.hover ? 'hover' : ''}">${PU_TEAMS.map(card).join('')}</div>`
+  }
+  w.addEventListener('click', (e) => {
+    const s = e.target.closest('[data-sw]'); if (s) { S[s.dataset.sw] = !S[s.dataset.sw]; if (s.dataset.sw === 'rosters') S.col = {}; return render() }
+    const c = e.target.closest('[data-col]'); if (c) { const i = c.dataset.col; S.col[i] = !(S.col[i] ?? !S.rosters); return render() }
+    const t = e.target.closest('[data-tab]'); if (t) { const [i, k] = t.dataset.tab.split(':'); S.tab[i] = +k; return render() }
+    if (e.target.closest('a')) e.preventDefault()
+  })
+  window.LAB = { view: 'toolbar', go: (f, i) => { S.dev = i; render() }, cur: () => ({ f: 0, i: S.dev }),
+    flows: () => [{ name: 'Экран', steps: DEV.map((d) => ({ name: d.name, what: d.name })) }],
+    axes: () => [{ key: 'device', name: 'Экран', value: DEV[S.dev].id, options: DEV.map((d) => ({ v: d.id, label: d.name })) }],
+    set: (k, v) => { S.dev = DEV.findIndex((d) => d.id === v); render() },
+    caption: () => DEV[S.dev].id === 'phone' ? 'Телефон 390 — карточки одной колонкой' : 'Компьютер — карточки сеткой' }
+  render()
+</script>
+</body></html>

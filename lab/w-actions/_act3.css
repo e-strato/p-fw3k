@@ -1,0 +1,159 @@
+/* Лаба w-actions v9–v11 — «Пульс матча» как система (код — _act3.js, спека — внутренняя документация/29.10/w-actions-спека.md). Вид наших виджетов */
+.a3{ display:flex; flex-direction:column; padding:0 12px 12px; border:1px solid var(--w-border); border-radius:var(--w-r, 12px); background:var(--w-card, var(--w-page)); color:var(--w-fg); font:400 13px/18px var(--w-font); }
+.a3 button, .a3-fw button, .a3-fullL button{ font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer; }
+.a3-min, .a3-full{ display:flex; flex-direction:column; gap:8px; } .wx.is-c .a3-full, .wx:not(.is-c) .a3-min{ display:none; }
+.a3-hd{ display:flex; align-items:center; justify-content:space-between; height:32px; } .a3-hd > b{ font:var(--t-title); }
+.a3-on{ display:inline-flex; align-items:center; gap:4px; font:var(--t-sub); color:var(--w-muted-fg); } .a3-on i{ width:6px; height:6px; border-radius:50%; background:#dc2626; animation:a3b 1.4s infinite; } .a3-on b{ font-weight:500; }
+@keyframes a3b{ 50%{ opacity:.3; } }
+
+/* ---- плеер ---- */
+.a3-pl{ position:relative; aspect-ratio:16 / 9; border-radius:var(--w-r-sm, 8px); overflow:hidden; background:#000; color:#fff; user-select:none; }
+.a3-vid{ position:absolute; inset:0; background:var(--art) center / cover; filter:brightness(.75); }
+.a3-pl.is-play .a3-vid{ filter:none; animation:a3ken 14s ease-in-out infinite alternate; } @keyframes a3ken{ from{ transform:scale(1) translate(0, 0); } to{ transform:scale(1.12) translate(-3%, 2%); } }
+.a3-pl.is-paused .a3-vid{ filter:grayscale(.4) brightness(.6); animation-play-state:paused; }
+.a3-pl::after{ content:''; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,.45), transparent 30%, transparent 60%, rgba(0,0,0,.6)); pointer-events:none; }
+.a3-top{ position:absolute; z-index:2; left:8px; right:8px; top:8px; display:flex; align-items:center; gap:4px; min-width:0; }
+.a3-onair, .a3-src, .a3-vw{ display:inline-flex; align-items:center; gap:4px; flex:none; height:18px; padding:0 6px; border-radius:4px; font:700 10px/14px var(--w-font); letter-spacing:.03em; }
+.a3-onair{ background:rgba(0,0,0,.55); } .a3-onair.on{ background:#dc2626; } .a3-onair i{ width:6px; height:6px; border-radius:50%; background:#fff; animation:a3b 1s infinite; }
+.a3-src{ flex:0 1 auto; min-width:0; background:rgba(0,0,0,.45); font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; line-height:18px; }
+.a3-vw{ margin-left:auto; background:rgba(0,0,0,.55); font-weight:500; } .a3-vw b{ font-weight:500; }
+.a3-fw .a3-src{ display:none; } .a3-pill .a3-onair{ flex:none; }
+.a3-big{ position:absolute !important; z-index:3; left:50%; top:50%; transform:translate(-50%, -50%); display:inline-flex !important; align-items:center; gap:6px; height:36px; padding:0 14px 0 10px !important; border-radius:999px !important; background:rgba(0,0,0,.6) !important; backdrop-filter:blur(6px); font:600 13px/16px var(--w-font) !important; white-space:nowrap; }
+.a3-big:hover{ background:rgba(0,0,0,.8) !important; } .a3-big--p{ font-weight:500 !important; }
+.a3-spin{ position:absolute; z-index:3; left:50%; top:50%; width:28px; height:28px; margin:-14px 0 0 -14px; border:3px solid rgba(255,255,255,.25); border-top-color:#fff; border-radius:50%; animation:a3s .8s linear infinite; } @keyframes a3s{ to{ transform:rotate(360deg); } }
+.a3-ctl{ position:absolute; z-index:3; left:0; right:0; bottom:0; display:flex; align-items:center; gap:2px; padding:6px; opacity:0; transform:translateY(4px); transition:opacity .2s, transform .2s; }
+.a3-pl.show-ctl .a3-ctl, .a3-pl.is-paused .a3-ctl, .a3-pl:hover .a3-ctl{ opacity:1; transform:none; }
+.a3-ctl > button{ display:grid !important; place-items:center; width:28px; height:28px; border-radius:6px; } .a3-ctl > button:hover{ background:rgba(255,255,255,.18) !important; }
+.a3-ctl .is-mute{ animation:a3hint 1.2s 1; } @keyframes a3hint{ 30%{ background:rgba(255,255,255,.35); } }
+.a3-el{ margin-left:6px; font:500 11px/14px 'JetBrains Mono', monospace; opacity:.85; } .a3-sp{ flex:1; }
+.a3-go{ margin-left:6px; width:auto !important; padding:0 8px !important; height:22px !important; border-radius:999px !important; background:#dc2626 !important; font:600 11px/14px var(--w-font) !important; }
+.a3-eq{ display:inline-flex; align-items:flex-end; gap:2px; height:12px; margin-left:4px; } .a3-eq i{ width:2px; background:#fff; border-radius:1px; animation:a3eq .9s ease-in-out infinite; } .a3-eq i:nth-child(2){ animation-delay:.2s; } .a3-eq i:nth-child(3){ animation-delay:.45s; } .a3-eq i:nth-child(4){ animation-delay:.1s; }
+@keyframes a3eq{ 0%, 100%{ height:3px; } 50%{ height:12px; } } .a3-eq--s{ height:10px; }
+
+/* ---- циферблат, «Как тебе момент?», пульс ---- */
+.a3-row{ display:flex; align-items:center; gap:8px; } .a3-row .a3-dial{ flex:1; min-width:0; }
+.a3-mini{ position:relative; width:56px; height:40px; flex:none; border-radius:6px !important; background:linear-gradient(to top, rgba(0,0,0,.5), transparent), var(--art) center / cover #000 !important; color:#fff !important; display:grid !important; place-items:center; }
+.a3-mini i{ position:absolute; left:3px; top:3px; padding:0 3px; border-radius:3px; background:#dc2626; font:700 8px/12px var(--w-font); font-style:normal; } .a3-mini svg{ width:16px; height:16px; opacity:.9; }
+.a3-dial{ display:grid; grid-template-columns:repeat(4, 1fr); gap:2px; }
+.a3-c{ display:flex !important; flex-direction:column; align-items:center; justify-content:center; gap:1px; min-width:0; padding:2px 0 !important; border-radius:6px; } .a3-c:hover, .a3-c.on{ background:var(--w-mid-bg, var(--w-muted)) !important; }
+.a3-c > b{ font:700 13px/15px var(--w-font); font-variant-numeric:tabular-nums; white-space:nowrap; } .a3-c > b.hl{ color:var(--w-up); } .a3-c small{ font:400 9px/11px var(--w-font); color:var(--w-muted-fg); white-space:nowrap; }
+.a3-sk{ width:40px; height:12px; } .a3-sk polyline{ fill:none; stroke-width:1.5; vector-effect:non-scaling-stroke; }
+.a3-ring{ position:relative; display:block; width:30px; height:30px; } .a3-ring svg{ transform:rotate(-90deg); } .a3-ring circle{ fill:none; stroke-width:3.5; } .a3-ring .bg{ stroke:var(--w-muted); } .a3-ring .fg{ stroke:#38bdf8; stroke-linecap:round; transition:stroke-dashoffset .6s; }
+.a3-ring b{ position:absolute; inset:0; display:grid; place-items:center; font:700 8px/1 var(--w-font); }
+.a3-info{ margin:0; padding:6px 8px; border-radius:6px; background:var(--w-mid-bg, var(--w-muted)); font:var(--t-sub); color:var(--w-muted-fg); }
+.a3-vote{ display:flex; align-items:center; gap:6px; } .a3-vq{ flex:1; font:var(--t-title); } .a3-vq small{ display:block; font:var(--t-sub); color:var(--w-muted-fg); }
+.a3-v{ position:relative; display:inline-flex !important; align-items:center; gap:6px; height:32px; padding:0 10px !important; border-radius:8px; background:var(--w-mid-bg, var(--w-muted)) !important; font:600 12px/16px var(--w-font) !important; }
+.a3-v span{ font-size:15px; line-height:1; } .a3-v:hover:not([disabled]){ box-shadow:inset 0 0 0 1px var(--w-ring); }
+.a3-v--up.on{ background:color-mix(in srgb, var(--w-up) 22%, transparent) !important; color:var(--w-up) !important; } .a3-v--dn.on{ background:color-mix(in srgb, var(--w-down) 22%, transparent) !important; color:var(--w-down) !important; }
+.a3-v[disabled]{ cursor:default; } .a3-v[disabled]:not(.on){ opacity:.4; }
+.a3-cd{ position:absolute; right:3px; top:3px; width:12px; height:12px; transform:rotate(-90deg); } .a3-cd circle{ fill:none; stroke:currentColor; stroke-width:3; transition:stroke-dashoffset 1s linear; }
+.a3-vote.is-c{ flex-direction:column; gap:2px; } .a3-vote.is-c .a3-v{ width:32px; height:19px; padding:0 !important; justify-content:center; border-radius:5px; } .a3-vote.is-c .a3-v span{ font-size:11px; } .a3-vote.is-c .a3-cd{ display:none; }
+.a3-vs{ margin:0; font:var(--t-sub); color:var(--w-muted-fg); }
+.a3-pu{ padding:6px 6px 4px; border-radius:var(--w-r-sm, 8px); background:var(--w-mid-bg, var(--w-muted)); } .a3-pu svg{ display:block; width:100%; height:64px; }
+.a3-pu .z{ stroke:var(--w-border); vector-effect:non-scaling-stroke; } .a3-pu .ev{ stroke:var(--w-border); stroke-dasharray:2 3; vector-effect:non-scaling-stroke; } .a3-pu .g{ fill:color-mix(in srgb, var(--w-up) 22%, transparent); }
+.a3-pu .m{ fill:none; stroke:#38bdf8; stroke-width:2; vector-effect:non-scaling-stroke; } .a3-pu .me.up{ fill:var(--w-up); stroke:var(--w-page); stroke-width:1.5; } .a3-pu .me.dn{ fill:var(--w-down); stroke:var(--w-page); stroke-width:1.5; }
+.a3-lg{ display:flex; gap:10px; margin-top:2px; font:400 10px/12px var(--w-font); color:var(--w-muted-fg); } .a3-lg span{ display:inline-flex; align-items:center; gap:4px; } .a3-lg i{ width:8px; height:3px; border-radius:2px; } .a3-lg i.g{ background:var(--w-up); opacity:.6; } .a3-lg i.m{ background:#38bdf8; } .a3-r{ margin-left:auto; }
+
+/* ---- источники: чипы (v9), миниатюры и сетка (v10), список (v11) ---- */
+.a3-chips{ display:flex; flex-wrap:wrap; gap:4px; }
+.a3-chip{ display:inline-flex; align-items:center; height:26px; border-radius:999px; background:var(--w-mid-bg, var(--w-muted)); overflow:hidden; } .a3-chip.on{ background:var(--w-fg); color:var(--w-primary-fg); }
+.a3-chip > button:first-child{ display:inline-flex !important; align-items:baseline; gap:4px; height:100%; padding:0 10px !important; font:500 12px/16px var(--w-font) !important; } .a3-chip small{ font:400 10px/12px var(--w-font); opacity:.6; }
+.a3-pinb{ display:grid !important; place-items:center; width:24px; height:100%; margin-left:-6px; opacity:.6; } .a3-pinb:hover{ opacity:1; } .a3-chip.is-pin{ box-shadow:inset 0 0 0 1px #38bdf8; }
+.a3-mh{ display:flex; align-items:center; justify-content:space-between; } .a3-mh small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.a3-gb{ display:inline-flex !important; align-items:center; gap:4px; height:24px; padding:0 8px !important; border-radius:6px; background:var(--w-mid-bg, var(--w-muted)) !important; font:500 11px/14px var(--w-font) !important; } .a3-gb.on{ background:var(--w-fg) !important; color:var(--w-primary-fg) !important; }
+.a3-thumbs{ display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; }
+.a3-th, .a3-gc{ position:relative; aspect-ratio:16 / 9; border-radius:6px !important; overflow:hidden; background:linear-gradient(to top, rgba(0,0,0,.75), transparent 60%), var(--art) center / cover #000 !important; color:#fff !important; text-align:left; }
+.a3-th:hover, .a3-gc:hover{ outline:1px solid var(--w-ring); } .a3-thn{ position:absolute; left:4px; bottom:3px; font:600 9px/12px var(--w-font); } .a3-thv{ position:absolute; right:4px; top:3px; display:inline-flex; align-items:center; gap:2px; font:500 9px/12px var(--w-font); }
+.a3-th .a3-sk{ position:absolute; right:4px; bottom:4px; width:28px; height:8px; opacity:.8; }
+.a3-grid{ display:grid; grid-template-columns:1fr 1fr; gap:4px; } .a3-gc.on{ outline:2px solid #38bdf8; outline-offset:-2px; } .a3-gc .a3-eq{ position:absolute; left:6px; top:6px; }
+.a3-ph{ display:flex; align-items:center; justify-content:space-between; gap:8px; height:44px; padding:0 8px 0 12px; border:1px dashed var(--w-border); border-radius:var(--w-r-sm, 8px); font:var(--t-sub); color:var(--w-muted-fg); }
+.a3-ph span{ display:inline-flex; align-items:center; gap:6px; } .a3-ph button{ display:inline-flex !important; align-items:center; gap:4px; height:28px; padding:0 10px !important; border-radius:6px; background:var(--w-mid-bg, var(--w-muted)) !important; color:var(--w-fg) !important; font:500 12px/16px var(--w-font) !important; }
+.a3-list{ display:flex; flex-direction:column; gap:2px; padding-top:8px; border-top:1px solid var(--w-border); } .a3-list > small{ font:var(--t-sub); color:var(--w-muted-fg); padding-bottom:2px; }
+.a3-li{ display:grid !important; grid-template-columns:48px 1fr auto; grid-template-rows:auto auto; align-items:center; column-gap:8px; padding:4px !important; border-radius:8px; text-align:left; } .a3-li:hover, .a3-li.on{ background:var(--w-mid-bg, var(--w-muted)) !important; }
+.a3-lit{ grid-row:1 / span 2; width:48px; height:27px; border-radius:4px; background:var(--art) center / cover #000; } .a3-li > span:nth-child(2){ font:500 12px/16px var(--w-font); } .a3-li small{ display:block; font:400 10px/12px var(--w-font); color:var(--w-muted-fg); }
+.a3-li b{ display:inline-flex; align-items:center; gap:3px; font:500 11px/14px var(--w-font); color:var(--w-muted-fg); } .a3-li em{ grid-column:3; font-style:normal; font:500 10px/12px var(--w-font); color:var(--w-muted-fg); text-align:right; } .a3-li.on em{ color:#ef4444; }
+
+/* ---- плавающие окна: тянутся, прилипают к углу ---- */
+.a3-float{ position:fixed; inset:0; z-index:70; pointer-events:none; }
+.a3-fw{ position:absolute; pointer-events:auto; border-radius:10px; box-shadow:0 12px 32px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08); cursor:grab; transition:left .25s cubic-bezier(.2,.8,.2,1), top .25s cubic-bezier(.2,.8,.2,1); touch-action:none; }
+.a3-fw.is-drag{ transition:none; cursor:grabbing; box-shadow:0 18px 48px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.18); } .a3-fw .a3-pl{ border-radius:10px; }
+.a3-fx, .a3-fmin{ position:absolute !important; z-index:4; top:-8px; right:-8px; display:grid !important; place-items:center; width:22px; height:22px; border-radius:50% !important; background:#27272a !important; color:#fff !important; box-shadow:0 0 0 1px rgba(255,255,255,.15); }
+.a3-pill{ display:flex; align-items:center; gap:8px; height:44px; padding:0 6px 0 10px; border-radius:999px; background:#0a0a0a; color:#fff; box-shadow:0 0 0 1px rgba(255,255,255,.1); cursor:pointer; }
+.a3-fw.is-pill{ border-radius:999px; } .a3-pill .a3-onair{ position:static; } .a3-pn{ flex:1; min-width:0; font:600 12px/16px var(--w-font); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .a3-pmute{ display:grid; opacity:.6; }
+.a3-pill > button{ display:grid !important; place-items:center; width:28px; height:28px; border-radius:50% !important; background:rgba(255,255,255,.1) !important; color:#fff !important; }
+
+/* ---- на весь экран ---- */
+.a3-fullL{ position:fixed; inset:0; z-index:90; display:none; background:#000; } .a3-fullL.on{ display:block; }
+.a3-fs{ position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; } .a3-fs > .a3-pl, .a3-fs > .a3-grid{ width:100%; max-height:100%; border-radius:0; } .a3-fs > .a3-grid{ height:100%; } .a3-fs .a3-gc{ aspect-ratio:auto; border-radius:0 !important; }
+.a3-fbar{ position:absolute; left:50%; bottom:56px; transform:translateX(-50%); display:flex; align-items:center; gap:10px; width:min(560px, calc(100% - 24px)); padding:8px 10px; border-radius:14px; background:rgba(10,10,10,.7); backdrop-filter:blur(12px); color:#fff; --w-muted:rgba(255,255,255,.12); --w-mid-bg:rgba(255,255,255,.1); --w-muted-fg:rgba(255,255,255,.65); }
+.a3-fbar .a3-dial{ flex:1; } .a3-fbar .a3-info{ display:none; }
+.a3-fsx{ position:absolute !important; right:16px; top:16px; display:grid !important; place-items:center; width:36px; height:36px; border-radius:50% !important; background:rgba(255,255,255,.12) !important; color:#fff !important; }
+
+/* ---- телефон: свёрнутый — док над нижним баром, до 440, по центру; кнопка «Трансляция» снизу не нужна ---- */
+body:not(.is-desk) .wx.ac-host{ position:fixed; left:50%; right:auto; bottom:76px; z-index:40; width:calc(100% - 16px); max-width:440px; transform:translateX(-50%); box-shadow:0 8px 24px rgba(0,0,0,.5); border-radius:var(--w-r, 12px); }
+body:not(.is-desk) .wx.ac-host.is-c .a3-hd{ display:none; } body:not(.is-desk) .wx.ac-host.is-c .a3{ padding:6px 8px; } body:not(.is-desk) .wx.ac-host.is-c:has(.a3) .wx-p{ padding-bottom:0 !important; }
+body:not(.is-desk) .wx.ac-host.is-c .a3-row{ padding-right:30px; } body:not(.is-desk) .wx.ac-host:not(.is-c) .wx-p{ max-height:78vh; overflow:auto; }
+body:has(.a3) [data-pip], body:has(.a3) .pip-fab, body:has(.a3) .pip{ display:none !important; }
+
+/* v12–v14 — без нижней группы ♡ / 💬 / поделиться (этот виджет её заменяет) */
+body.a3-nosoc .pills, body.a3-nosoc .pl-soc, body.a3-nosoc [data-plsoc]{ display:none !important; }
+/* повтор момента в плеере */
+.a3-rep{ position:absolute; z-index:3; left:8px; right:8px; bottom:42px; display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:8px; background:rgba(0,0,0,.7); backdrop-filter:blur(6px); font:600 11px/14px var(--w-font); }
+.a3-rep i{ flex:1; height:3px; border-radius:2px; background:rgba(255,255,255,.2); overflow:hidden; } .a3-rep u{ display:block; height:100%; background:#fff; transition:width 1s linear; }
+.a3-rep button{ height:22px; padding:0 8px !important; border-radius:999px !important; background:#dc2626 !important; color:#fff !important; font:600 11px/14px var(--w-font) !important; }
+/* v12 авто-режиссёр */
+.a3-auto{ display:inline-flex !important; align-items:center; gap:6px; height:24px; padding:0 8px !important; border-radius:999px; background:var(--w-mid-bg, var(--w-muted)) !important; font:500 11px/14px var(--w-font) !important; }
+.a3-auto i{ width:22px; height:12px; border-radius:6px; background:var(--w-ring); position:relative; transition:background .2s; } .a3-auto i::after{ content:''; position:absolute; left:2px; top:2px; width:8px; height:8px; border-radius:50%; background:#fff; transition:left .2s; }
+.a3-auto.on i{ background:#fb923c; } .a3-auto.on i::after{ left:12px; }
+.a3-why{ margin:0; padding:6px 8px; border-radius:8px; background:color-mix(in srgb, #fb923c 14%, transparent); color:#fdba74; font:500 11px/15px var(--w-font); animation:a3in .4s; } @keyframes a3in{ from{ opacity:0; transform:translateY(-4px); } }
+.a3-dts{ display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.a3-dt{ position:relative; display:flex !important; flex-direction:column; justify-content:flex-end; gap:3px; aspect-ratio:16 / 9; padding:6px !important; border-radius:8px !important; overflow:hidden; color:#fff !important; text-align:left;
+  background:linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,.1) 70%), var(--art) center / cover #000 !important; transition:box-shadow .3s; }
+.a3-dt.on{ box-shadow:inset 0 0 0 2px #fff; } .a3-dt.is-hot{ box-shadow:inset 0 0 0 2px #fb923c, 0 0 18px rgba(251,146,60,.35); } .a3-dt.on.is-hot{ box-shadow:inset 0 0 0 2px #fb923c, inset 0 0 0 4px #fff; }
+.a3-dtn{ font:700 11px/14px var(--w-font); } .a3-dtv{ display:inline-flex; align-items:center; gap:3px; font:500 10px/12px var(--w-font); } .a3-dtv em{ font-style:normal; font-weight:700; } .a3-dtv em.up{ color:#86efac; } .a3-dtv em.dn{ color:#fca5a5; }
+.a3-hy{ height:3px; border-radius:2px; background:rgba(255,255,255,.2); overflow:hidden; } .a3-hy i{ display:block; height:100%; background:linear-gradient(90deg, #fbbf24, #f97316); transition:width .6s; }
+.a3-dt .a3-sk{ position:absolute; right:6px; top:6px; width:40px; height:10px; }
+/* v13 где все */
+.a3-tmap{ display:flex; gap:4px; aspect-ratio:16 / 10; } .a3-tmc{ display:flex; min-width:0; transition:flex-grow .8s ease; } .a3-tmc--col{ flex-direction:column; gap:4px; }
+.a3-tm{ position:relative; flex-basis:0; min-width:0; min-height:0; border-radius:8px !important; overflow:hidden; color:#fff !important; text-align:left; background:linear-gradient(to top, rgba(0,0,0,.8), rgba(0,0,0,.05) 70%), var(--art) center / cover #000 !important; transition:flex-grow .8s ease; }
+.a3-tm.big{ flex-grow:1 !important; } .a3-tm.on{ box-shadow:inset 0 0 0 2px #fff; } .a3-tmp{ position:absolute; left:6px; top:5px; font:800 18px/20px var(--w-font); text-shadow:0 1px 4px rgba(0,0,0,.6); } .a3-tm:not(.big) .a3-tmp{ font-size:13px; line-height:15px; }
+.a3-tmo{ position:absolute; right:6px; bottom:5px; height:16px; font-size:9px; }
+.a3-flows{ display:flex; flex-direction:column; gap:4px; } .a3-fl{ display:flex; align-items:center; gap:4px; padding:4px 8px; border-radius:6px; background:var(--w-mid-bg, var(--w-muted)); font:400 11px/14px var(--w-font); color:var(--w-muted-fg); animation:a3in .4s; }
+.a3-fl b{ color:var(--w-fg); font-weight:600; } .a3-fl em{ margin-left:auto; font-style:normal; color:#38bdf8; font-weight:600; }
+/* v14 моменты толпы */
+.a3-rb{ display:flex; align-items:flex-end; gap:2px; height:44px; } .a3-rb i{ flex:1; min-height:2px; border-radius:2px 2px 0 0; background:var(--w-border); } .a3-rb i.pk{ background:#fb923c; cursor:pointer; } .a3-rb i.pk:hover{ background:#fdba74; }
+.a3-mom{ display:flex; flex-direction:column; gap:2px; }
+.a3-mc{ display:grid !important; grid-template-columns:44px 1fr auto 20px; align-items:center; gap:6px; min-height:34px; padding:0 8px !important; border-radius:8px; text-align:left; } .a3-mc:hover, .a3-mc.on{ background:var(--w-mid-bg, var(--w-muted)) !important; }
+.a3-mc span{ font:500 11px/14px 'JetBrains Mono', monospace; color:var(--w-muted-fg); } .a3-mc b{ font:500 12px/16px var(--w-font); } .a3-mc em{ font-style:normal; font:600 11px/14px var(--w-font); color:#fb923c; } .a3-mc i{ font-style:normal; color:var(--w-muted-fg); }
+.a3-tmc--col .a3-tm{ min-height:32px; } /* самая маленькая плитка не схлопывается */
+
+/* v15 — мини тепловая карта эфиров, действия «Поделиться / Сохранить / Следить» */
+.a3-heat{ display:flex; gap:3px; height:84px; } .a3-hc{ display:flex; min-width:0; } .a3-hc--col{ flex-direction:column; gap:3px; }
+.a3-ht{ position:relative; display:flex !important; flex-direction:column; justify-content:space-between; flex-basis:0; min-width:0; min-height:18px; padding:4px 6px !important; border-radius:6px !important; overflow:hidden; text-align:left;
+  background:color-mix(in srgb, var(--h) 30%, var(--w-mid-bg, #18181b)) !important; box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--h) 55%, transparent); transition:flex-grow .8s ease, background .8s, box-shadow .8s; }
+.a3-ht.big{ flex-grow:1 !important; } .a3-ht.on{ box-shadow:inset 0 0 0 1.5px var(--w-fg); }
+.a3-ht b{ font:800 15px/17px var(--w-font); } .a3-ht:not(.big) b{ font-size:11px; line-height:12px; } .a3-ht span{ font:500 9px/11px var(--w-font); color:color-mix(in srgb, var(--w-fg) 80%, transparent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.a3-ht em{ position:absolute; right:5px; top:4px; font-style:normal; font:700 9px/11px var(--w-font); color:var(--h); filter:brightness(1.3); }
+.a3-hc--col .a3-ht{ flex-direction:row; align-items:center; gap:6px; } .a3-hc--col .a3-ht em{ position:static; margin-left:auto; } .a3-hc--col .a3-ht span{ flex:1; }
+.a3-htw{ position:absolute; left:5px; bottom:4px; width:6px; height:6px; border-radius:50%; background:#dc2626; animation:a3b 1s infinite; } .a3-ht.big .a3-htw{ left:auto; right:6px; bottom:6px; }
+.a3-hl{ display:flex; gap:10px; font:400 9px/11px var(--w-font); color:var(--w-muted-fg); } .a3-hl span{ display:inline-flex; align-items:center; gap:3px; } .a3-hl i{ width:8px; height:8px; border-radius:2px; }
+.a3-acts{ display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; }
+.a3-acts button{ display:inline-flex !important; align-items:center; justify-content:center; gap:6px; height:34px; border-radius:8px; background:var(--w-mid-bg, var(--w-muted)) !important; font:500 12px/16px var(--w-font) !important; }
+.a3-acts button:hover{ box-shadow:inset 0 0 0 1px var(--w-ring); } .a3-acts button.on{ color:#a78bfa !important; background:color-mix(in srgb, #a78bfa 16%, transparent) !important; }
+.a3-acts.is-c{ display:flex; flex-direction:column; gap:2px; } .a3-acts.is-c button{ width:32px; height:19px; border-radius:5px; } .a3-acts.is-c svg{ width:12px; height:12px; }
+.a3-shm{ display:flex; flex-direction:column; gap:2px; padding:4px; border-radius:8px; background:var(--w-mid-bg, var(--w-muted)); animation:a3in .25s; }
+.a3-shm button{ display:flex !important; align-items:center; gap:8px; height:32px; padding:0 8px !important; border-radius:6px; font:500 12px/16px var(--w-font) !important; } .a3-shm button:hover{ background:var(--w-muted) !important; }
+.a3-flash{ color:#c4b5fd; animation:a3in .3s; }
+.a3-toast{ position:fixed; left:50%; bottom:150px; z-index:95; transform:translate(-50%, 8px); padding:8px 12px; border-radius:10px; background:#27272a; color:#fafafa; font:500 12px/16px var(--w-font, system-ui); opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; }
+.a3-toast.on{ opacity:1; transform:translate(-50%, 0); } body.is-desk .a3-toast{ bottom:32px; }
+
+/* v16 — до матча: постер с отсчётом и «Напомнить», анонс эфиров */
+.a3--pre .a3-on i{ background:var(--w-ring); animation:none; }
+.a3-pre .a3-vid{ filter:grayscale(.5) brightness(.45); } .a3-pre .a3-onair{ background:#3f3f46; }
+.a3-cnt{ position:absolute; z-index:3; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; } .a3-cnt small{ font:500 11px/14px var(--w-font); color:rgba(255,255,255,.75); }
+.a3-cnt > b{ font:700 26px/30px 'JetBrains Mono', monospace; letter-spacing:.02em; }
+.a3-rem{ display:inline-flex !important; align-items:center; gap:6px; height:30px; margin-top:6px; padding:0 12px !important; border-radius:999px !important; background:rgba(255,255,255,.14) !important; color:#fff !important; font:600 12px/16px var(--w-font) !important; backdrop-filter:blur(6px); }
+.a3-rem.on{ background:color-mix(in srgb, #a78bfa 35%, transparent) !important; }
+.a3-ann{ display:flex; flex-direction:column; gap:2px; } .a3-an{ display:grid; grid-template-columns:48px 1fr auto; align-items:center; gap:8px; padding:4px; border-radius:8px; }
+.a3-an > span:nth-child(2){ font:500 12px/16px var(--w-font); } .a3-an small{ display:block; font:400 10px/12px var(--w-font); color:var(--w-muted-fg); } .a3-an em{ font-style:normal; font:500 11px/14px var(--w-font); color:var(--w-muted-fg); }
+.a3-mini--pre{ filter:none; } .a3-mini--pre i{ background:#3f3f46 !important; } .a3-mini--pre svg{ width:14px; height:14px; }

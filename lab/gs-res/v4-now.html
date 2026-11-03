@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>v4 · Как сейчас</title>
+<style>html, body{ margin:0; height:100%; background:#000; overflow:hidden; }
+.box{ position:relative; height:100%; display:flex; justify-content:center; }
+iframe{ border:0; flex:none; transform-origin:top center; background:#09090b; }</style></head>
+<!-- gs-res v4 · Как сейчас — страница матча v33 в live как есть. Переключатель «Разрешение» в панели: телефон 390 · компьютер 1440 · широкий 2200 (дирижёр 27.10: «переключатель, чтобы переключаться внутри одного варианта на все три разрешения»).
+     Страница — во вложенном окне настоящей ширины; не влезает — ужата целиком. Остальные переключатели панели — страницы (проброшены). -->
+<body><div class="box"><iframe src="../gs-match/_old/v33-draft.html?fit=1&amp;state=live" title="Страница матча"></iframe></div>
+<script>
+  const RES = { phone: [390, 'Телефон 390'], desk: [1440, 'Компьютер 1440'], wide: [2200, 'Широкий 2200'] };
+  const f = document.querySelector('iframe'), inner = () => f.contentWindow && f.contentWindow.LAB;
+  let res = 'desk';
+  const fit = () => { const W = RES[res][0], k = Math.min(1, innerWidth / W); f.style.width = W + 'px'; f.style.transform = `scale(${k})`; f.style.height = innerHeight / k + 'px'; };
+  addEventListener('resize', fit); fit();
+  // панель песочницы: «Разрешение» — своё, остальное — от страницы внутри (без «Вида» — его задаёт ширина)
+  window.LAB = { view: 'toolbar', flows: () => [], go() {}, cur: () => ({ f: 0, i: 0 }),
+    axes: () => [{ key: 'res', name: 'Разрешение', value: res, options: Object.entries(RES).map(([v, [, label]]) => ({ v, label })) },
+      ...((inner() && inner().axes()) || []).filter(a => a.key !== 'view')],
+    set(key, v) { if (key === 'res') { res = v; fit(); } else inner() && inner().set(key, v); },
+    toggles: () => (inner() && inner().toggles ? inner().toggles() : []),
+    toggle(key) { inner() && inner().toggle(key); },
+    caption: () => (inner() && inner().caption ? inner().caption() : ''),
+  };
+</script></body></html>

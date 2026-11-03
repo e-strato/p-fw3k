@@ -1,0 +1,151 @@
+/* Тема v3 · Apple — поверх v2 «Унифицировано» (widgets-23). Всё под body.th-apple
+   iOS / macOS, тёмная схема: виджет — inset grouped список на #1c1c1e, строки разделены hairline с отступом слева,
+   системные цвета (systemBlue / Red / Green / Yellow / Orange), сегмент — UISegmentedControl, кнопки — filled / plain,
+   материал с размытием — только там, где что-то лежит поверх. Шрифты не трогаем. */
+
+/* ——— Токены: системные цвета dark ——— */
+.th-apple{
+  --ios-bg:#000; --ios-group:#1c1c1e; --ios-cell2:#2c2c2e; --ios-cell3:#3a3a3c;
+  --ios-label:#fff; --ios-label2:rgba(235,235,245,.6); --ios-label3:rgba(235,235,245,.3);
+  --ios-sep:rgba(84,84,88,.65); --ios-fill:rgba(118,118,128,.24); --ios-fill2:rgba(118,118,128,.32); --ios-hl:rgba(255,255,255,.06);
+  --ios-blue:#0a84ff; --ios-red:#ff453a; --ios-green:#30d158; --ios-yellow:#ffd60a; --ios-orange:#ff9f0a; --ios-teal:#64d2ff; --ios-brown:#ac8e68; --ios-indigo:#5e5ce6;
+
+  --w-page:#000; --w-bg:var(--ios-group); --w-fg:var(--ios-label); --w-muted-fg:#98989f;
+  --w-mid-bg:var(--ios-cell2); --w-muted:var(--ios-cell3); --w-hover:#48484a; --w-border:var(--ios-sep); --w-ring:#636366;
+  --w-primary:var(--ios-blue); --w-primary-fg:#fff;
+  --w-up:var(--ios-green); --w-up-bg:rgba(48,209,88,.16); --w-up-fg:var(--ios-green);
+  --w-down:var(--ios-red); --w-down-bg:rgba(255,69,58,.16); --w-down-fg:#ff6961;
+  --w-star:var(--ios-yellow); --w-a:var(--ios-blue); --w-b:var(--ios-orange);
+  --w-r:16px; --w-r-sm:10px;
+}
+body.th-apple{ background:#000; }
+.th-apple .slot > b{ color:var(--w-muted-fg); }
+
+/* ——— Карточка: плотная поверхность, без рамки и тени ——— */
+.th-apple .w{ border:0; border-radius:16px; background:var(--ios-group); }
+.th-apple .w.m6{ background:none; border-radius:0; }
+
+/* Шапки: ссылки — systemBlue (как кнопки навбара), назад — синий шеврон */
+.th-apple .w .t5-arch, .th-apple .w .s6-arch, .th-apple .w .t2-top{ color:var(--ios-blue); transition:opacity .15s; }
+.th-apple .w .t5-arch:hover, .th-apple .w .s6-arch:hover, .th-apple .w .t2-top:hover{ color:var(--ios-blue); opacity:.7; }
+.th-apple .w .t5-ib, .th-apple .w .s6-ib{ color:var(--ios-blue); }
+.th-apple .w .t5-ib:hover, .th-apple .w .s6-ib:hover{ background:none; color:var(--ios-blue); opacity:.7; }
+/* Подписи разделов — как заголовок секции в Settings: secondaryLabel */
+.th-apple .t5--v3 .t5-lbl, .th-apple .t2--sk .t2-th, .th-apple .s8-rh{ color:var(--w-muted-fg); }
+
+/* ——— Строки: hairline-разделитель с отступом слева (от текста, не от края), подсветка нажатия на всю ширину ——— */
+.th-apple .w .t5-tr{ position:relative; width:calc(100% + 24px); margin:0 -12px; padding:4px 12px; border-radius:0; transition:background .15s; }
+.th-apple .w .t5-tr + .t5-tr::before{ content:''; position:absolute; top:0; left:68px; right:0; height:.5px; background:var(--ios-sep); }
+.th-apple .w .t5-tr:hover, .th-apple.uni .w .t5-tr:hover{ background:var(--ios-hl); }
+.th-apple .w .t5-tr:hover::before, .th-apple .w .t5-tr:hover + .t5-tr::before{ opacity:0; }
+
+.th-apple .w .s3-r{ position:relative; transition:background .15s; }
+.th-apple .w .s3-r + .s3-r::before{ content:''; position:absolute; top:0; left:66px; right:0; height:.5px; background:var(--ios-sep); }
+.th-apple .w .s3-r:hover, .th-apple .w .s3-r[style*='--ta']:hover{ background:var(--ios-hl); }
+.th-apple .w .s3-r:hover::before, .th-apple .w .s3-r:hover + .s3-r::before{ opacity:0; }
+
+.th-apple .w.t2--sk .t2-r{ position:relative; transition:background .15s; }
+.th-apple .w.t2--sk .t2-r + .t2-r::before{ content:''; position:absolute; top:0; left:62px; right:0; height:.5px; background:var(--ios-sep); }
+.th-apple .w.t2--sk .t2-r:hover, .th-apple .w.t2-rows--tint .t2-r:hover{ background:var(--ios-hl); }
+.th-apple .w.t2--sk .t2-r:hover::before, .th-apple .w.t2--sk .t2-r:hover + .t2-r::before{ opacity:0; }
+.th-apple .t2--sk .t2-av{ border-radius:50%; } /* фото — круглый аватар, как в «Контактах» */
+
+/* Состав матча в заменах: строки hairline от ника */
+.th-apple .w .s8-r{ position:relative; }
+.th-apple .w .s8-r + .s8-r::before{ content:''; position:absolute; top:0; left:100px; right:0; height:.5px; background:var(--ios-sep); }
+.th-apple.uni .w.s3 button.s8-r.is-bad:hover, .th-apple .w.s3 button.s8-r.is-bad:hover{ background:var(--ios-hl); }
+.th-apple .s8-r .s6-chev{ color:#5a5a5e; }
+.th-apple .s3-team{ color:var(--w-muted-fg); }
+.th-apple .w .s8-id{ border-radius:6px; background:var(--ios-fill); color:var(--w-muted-fg); }
+
+/* Тиры: systemYellow · systemTeal · systemBrown */
+.th-apple .t5-tier--1, .th-apple.uni .w .t5-tr:has(.t5-tier--1){ --tc:var(--ios-yellow); }
+.th-apple .t5-tier--2, .th-apple.uni .w .t5-tr:has(.t5-tier--2){ --tc:var(--ios-teal); }
+.th-apple .t5-tier--3, .th-apple.uni .w .t5-tr:has(.t5-tier--3){ --tc:var(--ios-brown); }
+.th-apple .t6 .t5-tier, .th-apple .t6 .t5-tier--fill, .th-apple .t6 .t5-tier.t5-tier--s{ color:color-mix(in srgb, var(--tc, var(--w-muted-fg)) 85%, var(--w-muted-fg)); }
+
+/* ——— Сегмент — UISegmentedControl: подложка fill, бегунок #636366 с тенью, текст белый в обоих состояниях ——— */
+.th-apple.uni .t5-seg, .th-apple.uni .m6-seg, .th-apple .s6-seg{ gap:0; padding:2px; border-radius:9px; background:var(--ios-fill); }
+.th-apple.uni .w .t5-seg button, .th-apple.uni .w .m6-seg button, .th-apple .w .s6-seg button{ position:relative; border-radius:7px; color:var(--ios-label); transition:background .2s, box-shadow .2s; }
+.th-apple.uni .w .t5-seg button.is-on, .th-apple.uni .w .m6-seg button.is-on, .th-apple .w .s6-seg button.is-on{ background:#636366; color:#fff; box-shadow:0 3px 8px rgba(0,0,0,.12), 0 3px 1px rgba(0,0,0,.04), inset 0 0 0 .5px rgba(255,255,255,.04); }
+/* тонкие вертикальные разделители между невыбранными сегментами */
+.th-apple.uni .w .t5-seg button + button::before, .th-apple.uni .w .m6-seg button + button::before, .th-apple .w .s6-seg button + button::before{
+  content:''; position:absolute; left:0; top:7px; bottom:7px; width:.5px; background:rgba(142,142,147,.3); transition:opacity .2s; }
+.th-apple .w .t5-seg button.is-on::before, .th-apple .w .t5-seg button.is-on + button::before,
+.th-apple .w .m6-seg button.is-on::before, .th-apple .w .m6-seg button.is-on + button::before,
+.th-apple .w .s6-seg button.is-on::before, .th-apple .w .s6-seg button.is-on + button::before{ opacity:0; }
+.th-apple.uni .w .t5-seg button:hover:not(.is-on), .th-apple.uni .w .m6-seg button:hover:not(.is-on){ color:var(--ios-label); opacity:.75; }
+.th-apple .s6-seg__n{ color:var(--ios-yellow); }
+
+/* ——— Таблица групп: зоны мягким системным цветом, строки разделены hairline ——— */
+.th-apple .t5--v3 .t5-tbl tbody tr + tr td{ border-top:.5px solid var(--ios-sep); }
+.th-apple .t5-tbl tr.t5-z--up td{ background:rgba(48,209,88,.10); }
+.th-apple .t5-tbl tr.t5-z--mid td{ background:rgba(255,159,10,.10); }
+.th-apple .t5-tbl tr.t5-z--down td{ background:rgba(255,69,58,.10); }
+.th-apple .t5-sq{ border-radius:50%; }
+.th-apple .t5-sq.t5-z--mid{ background:var(--ios-orange); }
+.th-apple .w .t5-inf{ border-color:var(--ios-blue); color:var(--ios-blue); }
+/* Поповер — материал с размытием (лежит поверх таблицы) */
+.th-apple .t5-pop{ border:0; border-radius:12px; background:rgba(44,44,46,.72); -webkit-backdrop-filter:blur(20px) saturate(180%); backdrop-filter:blur(20px) saturate(180%); box-shadow:0 8px 32px rgba(0,0,0,.5); }
+
+/* Сетка: ячейки — вторичная поверхность, матч страницы — контур systemBlue */
+.th-apple .t5-bx, .th-apple .t5-fc{ border-radius:10px; background:var(--ios-cell2); }
+.th-apple .t5-bx.is-on{ box-shadow:inset 0 0 0 1.5px var(--ios-blue); }
+.th-apple .t5-ln path{ stroke:#48484a; }
+.th-apple .t5-fm, .th-apple .t5-ch__ru{ border-top:.5px solid var(--ios-sep); }
+
+/* ——— Замены, мастер: шаги — systemBlue, плашки — сгруппированные ячейки, кнопки — filled / plain ——— */
+.th-apple .s6-steps i{ background:var(--ios-fill2); }
+.th-apple .s6-steps .is-on i{ background:var(--ios-blue); }
+.th-apple .s6-steps .is-done i{ background:color-mix(in srgb, var(--ios-blue) 55%, #2c2c2e); }
+.th-apple .w .s6-steps .is-on{ color:var(--ios-label); }
+.th-apple .s6-who{ min-height:44px; border-radius:10px; background:var(--ios-cell2); }
+.th-apple .s6-who--none{ background:rgba(255,214,10,.12); color:var(--ios-yellow); } .th-apple .s6-who--none b{ color:var(--ios-yellow); }
+.th-apple .s6-av{ background:linear-gradient(180deg, #a5a5aa, #6c6c70); color:#fff; } /* аватар-инициал, как в «Контактах» */
+.th-apple .w .s6-res--add .s6-av{ background:var(--ios-blue); }
+.th-apple .w .s6-lnk{ color:var(--ios-blue); text-decoration:none; }
+.th-apple .w .s6-lnk:hover{ color:var(--ios-blue); opacity:.7; }
+.th-apple .s6-note{ border-radius:10px; background:var(--ios-cell2); }
+.th-apple .s6-in{ border:0; border-radius:10px; background:var(--ios-fill); }
+.th-apple .s6-in::placeholder{ color:var(--ios-label3); }
+.th-apple .s6-in:focus{ box-shadow:0 0 0 3px rgba(10,132,255,.5); }
+.th-apple .s6-drop{ border:0; border-radius:12px; background:rgba(44,44,46,.8); -webkit-backdrop-filter:blur(20px) saturate(180%); backdrop-filter:blur(20px) saturate(180%); box-shadow:0 8px 32px rgba(0,0,0,.5); }
+.th-apple .w .s6-res{ border-radius:8px; } .th-apple .w .s6-res:hover{ background:var(--ios-hl); }
+.th-apple .w .s6-pl button, .th-apple .w .s6-terms button, .th-apple .w .s6-pp button, .th-apple .w .s6-maps button{ border-radius:10px; background:var(--ios-cell2); color:var(--ios-label); }
+.th-apple .w .s6-pl button:hover, .th-apple .w .s6-terms button:hover, .th-apple .w .s6-pp button:hover{ background:var(--ios-cell3); }
+.th-apple .w .s6-pl button.is-on, .th-apple .w .s6-terms button.is-on, .th-apple .w .s6-pp button.is-on, .th-apple .w .s6-maps button.is-on{ background:var(--ios-blue); color:#fff; }
+.th-apple .w .s6-pl button.is-on b, .th-apple .w .s6-pl button.is-on .s6-cap{ color:#fff; }
+.th-apple .s6-date{ border:0; border-radius:8px; background:var(--ios-fill); }
+/* Низ мастера — тулбар-материал: hairline сверху, размытие */
+.th-apple .s6-ft{ border-top:.5px solid var(--ios-sep); background:rgba(28,28,30,.8); -webkit-backdrop-filter:blur(20px) saturate(180%); backdrop-filter:blur(20px) saturate(180%); }
+.th-apple .w .s6-btn{ border:0; border-radius:10px; transition:opacity .15s, background .15s; }
+.th-apple .w .s6-btn:hover{ background:var(--ios-hl); }
+.th-apple .w .s6-btn--pri{ background:var(--ios-blue); color:#fff; }
+.th-apple .w .s6-btn--pri:hover{ background:#409cff; }
+.th-apple .w .s6-btn--ghost{ color:var(--ios-blue); }
+.th-apple .w .s6-btn--ghost:hover{ background:none; opacity:.7; }
+.th-apple .s6-ft--warn, .th-apple .s6-ft--ok{ border-top:0; border-radius:10px; -webkit-backdrop-filter:none; backdrop-filter:none; }
+.th-apple .s6-ft--warn{ background:rgba(255,214,10,.12); color:var(--ios-yellow); }
+.th-apple .s6-ft--ok{ background:rgba(48,209,88,.14); color:var(--ios-green); }
+.th-apple .s6-tag--news{ background:rgba(10,132,255,.18); color:#409cff; }
+.th-apple .s6-tag--ids{ background:rgba(255,214,10,.16); color:var(--ios-yellow); }
+.th-apple .s6-tag--pos{ background:rgba(94,92,230,.22); color:#a3a1ff; }
+.th-apple .s6-none--all svg{ color:var(--ios-green); }
+
+/* Трансферы: » и пустая команда — tertiaryLabel */
+.th-apple .tr5-go{ color:var(--ios-label3); }
+.th-apple .tr5-nl{ border-color:#636366; }
+
+/* ——— MVP: та же карточка 16; кнопка снизу — отдельная ячейка-действие (синий текст, шеврон tertiary) ——— */
+.th-apple .m6-main{ border:0; border-radius:16px; background:linear-gradient(180deg, #232326, var(--ios-group) 70%); }
+.th-apple .m6-fade{ background:linear-gradient(transparent, rgba(28,28,30,.85) 60%, var(--ios-group)); }
+.th-apple .m6-seg{ margin-bottom:12px; }
+/* сегмент поверх игрока при наклоне — материал с размытием */
+.th-apple.uni .m6-seg{ background:rgba(118,118,128,.24); -webkit-backdrop-filter:blur(20px) saturate(180%); backdrop-filter:blur(20px) saturate(180%); }
+.th-apple .m6--depth .m6-seg.m6-up{ box-shadow:0 8px 20px rgba(0,0,0,.35); }
+.th-apple .m6-gl i{ background:linear-gradient(90deg, transparent, rgba(10,132,255,.35) 20%, rgba(255,214,10,.22) 55%, transparent); }
+.th-apple .w a.m6-dock{ height:44px; margin-top:8px; padding:0 12px 0 16px; border:0; border-radius:12px; background:var(--ios-group); color:var(--ios-blue); transition:background .15s; }
+.th-apple .w a.m6-dock:hover{ background:var(--ios-cell2); }
+.th-apple .m6-dock svg{ color:#5a5a5e; }
+.th-apple .m6-dock--split .m6-dock__c{ background:var(--ios-fill); color:var(--ios-label); }
+.th-apple .w a.m6-dock.is-mine{ color:var(--ios-green); }

@@ -1,0 +1,15 @@
+/* gs-panel — варианты переключателя «Состояние матча» в правой панели песочницы (дирижёр 26.10: «состояния точно нет, придумай другое — покажи в лабе»).
+   Кадр — макет панели песочницы в натуральную величину (ширина 280, цвета — как у песочницы), рядом — что выбрано и как это читается. */
+*{ box-sizing:border-box; }
+body{ margin:0; min-height:100vh; display:flex; gap:48px; padding:40px; background:#1a1a1a; color:#e6e6e6; font:13px/1.4 Inter, system-ui, sans-serif; }
+.pn{ width:280px; flex:none; display:flex; flex-direction:column; gap:16px; padding:16px; border-radius:12px; background:#262626; }
+.pn h1{ margin:0; font-size:16px; color:#fff; } .pn .path{ font-size:12px; color:#a3a3a3; }
+.lbl{ font-size:12px; color:#a3a3a3; margin-bottom:6px; }
+.ghost{ height:28px; border-radius:6px; background:#404040; opacity:.5; }
+.side{ max-width:460px; color:#a3a3a3; }
+.side b{ color:#fff; } .side code{ color:#a78bfa; }
+.side h2{ margin:0 0 8px; font-size:15px; color:#fff; }
+.side ul{ margin:8px 0 0; padding-left:18px; } .side li{ margin:4px 0; }
+.dot{ display:inline-block; width:7px; height:7px; border-radius:50%; flex:none; }
+.d-live{ background:#ef4444; } .d-pre{ background:#60a5fa; } .d-post{ background:#a3a3a3; } .d-feed{ background:#a78bfa; } .d-bad{ background:#f59e0b; }
+button{ font:inherit; color:inherit; border:0; background:none; cursor:pointer; padding:0; }

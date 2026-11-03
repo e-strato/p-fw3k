@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>v3 · Красивее, наведение — строка и колонка</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="../widgets-unified/_type.css" /><link rel="stylesheet" href="_hs.css" />
+<!-- 2.5 «Статистика героев» v3 — как v1 / v2 (сброс — на выбор в панели), но красивее: строки спокойнее, числа по правому краю, группы заголовков тоном, WR — пилюлями, колонка сортировки подсвечена; наведение на ячейку — подсвечиваются строка и колонка (дирижёр 02.11: «покрасивее; выделять строку и колонку, на которой наведено»).
+     v1 — то же, что было на странице турнира (v41), но в лабе: все герои, группы колонок через линии, сортировка по клику на заголовок; ширина колонок не меняется (фиксированная раскладка, у каждого заголовка место под стрелку); сброс — кнопка «Сбросить сортировку» под таблицей (неактивна, пока сортировка по умолчанию — «Пик + бан ↓»); на телефоне — группа сегментом (дирижёр 02.11: «ширина не должна меняться, сбросить сортировку, давай в лабе»).
+     Данные — все 98 героев PARI Universe/1 (Liquipedia, PARI_Universe/1/Statistics, 02.11: 84 игры, Radiant 42–42) — ../gs-tournament/_heroes-full.js; картинки — ../gs-match/img/heroes (у Tinker нет). Код — _hs.js (HS.render). -->
+<style>
+  body{ margin:0; background:var(--w-page); color:var(--w-fg); font-family:var(--w-font); }
+  .lab-board{ padding:32px 48px; }
+  .is-phone .lab-board{ padding:32px 0; } .is-phone #w{ width:390px; margin:0 auto; }
+</style></head>
+<body><div class="lab-board"><div id="w"></div></div>
+<script src="../gs-tournament/_heroes-full.js"></script><script src="_hs.js"></script>
+<script>
+  const DEV = [{ v: 'desk', label: 'Компьютер' }, { v: 'phone', label: 'Телефон' }]
+  const RS = [{ v: 'btn', label: 'Кнопкой внизу' }, { v: 'chip', label: 'Плашкой сверху' }]
+  const S = { device: 'desk', reset: 'btn' }, w = document.getElementById('w')
+  function render() { const ph = S.device === 'phone'; document.body.classList.toggle('is-phone', ph); HS.render(w, { phone: ph, reset: S.reset, nice: true }) }
+  window.LAB = { view: 'toolbar', go: (f, i) => { S.device = DEV[i].v; render() }, cur: () => ({ f: 0, i: DEV.findIndex((d) => d.v === S.device) }),
+    flows: () => [{ name: 'Экран', steps: DEV.map((d) => ({ name: d.label, what: d.label })) }],
+    axes: () => [{ key: 'device', name: 'Экран', value: S.device, options: DEV }, { key: 'reset', name: 'Сброс', value: S.reset, options: RS }],
+    set: (k, v) => { S[k] = v; render() },
+    caption: () => 'Наведи — строка и колонка подсвечиваются; нажми на заголовок — сортировка; сброс — в панели: кнопкой внизу или плашкой сверху' }
+  render()
+</script>
+</body></html>

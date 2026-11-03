@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_home-m.css" />
+<style>.hm-phone iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }</style></head>
+<body><main class="hm-page">
+  <h1>v5 · Как десктоп</h1>
+  <p>Дирижёр 08.10: мобилка, похожая на текущий десктоп. В рамке — настоящая главная сайта на ширине 390: шапка сайта, «Октябрь», фильтр игр и полоса дней лентой вбок, главный постер (v6 десктопа) во всю ширину, под ним три постера поменьше, ниже «Матчи сегодня». Всё кликается, таймеры живые.</p>
+  <div class="hm-board">
+    <figure class="hm-fig"><figcaption><b>Первый экран</b>Фильтр игр, полоса дней, главный постер Spirit — Tundra в эфире.</figcaption><div class="hm-phone"><iframe src="/p-fw3k/site/index.html" title="Главная, первый экран"></iframe></div></figure>
+    <figure class="hm-fig"><figcaption><b>Ещё три постера</b>Под главным — три поменьше и «Все матчи дня». Нажатие ставит матч главным.</figcaption><div class="hm-phone"><iframe src="/p-fw3k/site/index.html" data-to=".hp-side" title="Главная, малые постеры"></iframe></div></figure>
+    <figure class="hm-fig"><figcaption><b>Ближайший героем</b>Фильтр «Dota 2», нажат Falcons — Liquid: главный постер с живым таймером, «Напомнить», «Собрать состав».</figcaption><div class="hm-phone"><iframe src="/p-fw3k/site/index.html" data-game="dota" data-pick="flc-tl-1020" title="Главная, ближайший матч"></iframe></div></figure>
+    <figure class="hm-fig"><figcaption><b>Матчи сегодня</b>Ниже постера — строки матчей, как на десктопе; строка раскрывается по нажатию.</figcaption><div class="hm-phone"><iframe src="/p-fw3k/site/index.html" data-to=".app-home__mx" title="Главная, матчи сегодня"></iframe></div></figure>
+  </div>
+</main>
+<script>
+// Кадры раскадровки: после загрузки главной кликаем фильтр/постер и прокручиваем к нужному блоку
+document.querySelectorAll('.hm-phone iframe').forEach(f => f.addEventListener('load', () => {
+  const doc = f.contentDocument, d = f.dataset
+  if (d.game) doc.querySelector(`[data-hp] [data-g="${d.game}"]`)?.click()
+  if (d.pick) doc.querySelector(`[data-hp] .hp-p--row[data-id="${d.pick}"]`)?.click()
+  if (d.to) { const el = doc.querySelector(d.to); if (el) doc.scrollingElement.scrollTop = el.getBoundingClientRect().top + doc.scrollingElement.scrollTop - 72 }
+}))
+</script></body></html>

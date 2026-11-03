@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_footer.css" />
+<style>
+/* v1 · По мотивам Sorare: соцсети иконками сверху, четыре колонки с заголовками — каждая отвечает на один вопрос
+   (как играть · правила · игры и маркеты · о проекте), полоса «Честная игра», внизу язык слева и копирайт справа */
+.f1 { margin-top: 12px; padding: 40px 48px 28px; background: var(--c-ui-panel); }
+.f1__top { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 24px; padding-bottom: 32px; border-bottom: 1px solid var(--c-ui-line); }
+.f1__brand { display: flex; align-items: center; gap: 18px; }
+.f1__mark { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 14px; background: linear-gradient(145deg, var(--c-accent), color-mix(in srgb, var(--c-accent) 40%, var(--c-black))); color: var(--c-white); font: 900 28px 'Archivo', var(--font); box-shadow: 0 12px 30px -12px var(--c-accent); }
+.f1__brand b { display: block; color: var(--c-text); font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
+.f1__brand p { margin: 4px 0 0; max-width: 440px; font-size: 14px; }
+.f1__soc { display: flex; gap: 10px; }
+.f1__soc a { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--c-ui-item); color: var(--c-text); font-size: 20px; transition: background .2s, color .2s, translate .2s; }
+.f1__soc a:hover { background: var(--c-accent); color: var(--c-on-accent); translate: 0 -2px; }
+.f1__cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; padding: 32px 0; }
+.f1__cols h4 { display: flex; align-items: center; gap: 8px; margin: 0 0 14px; color: var(--c-text); font-size: 15px; font-weight: 700; }
+.f1__cols h4 .ft-ic { color: var(--c-accent); font-size: 18px; }
+.f1__cols ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; font-size: 14px; }
+.f1__cols li { display: flex; align-items: center; gap: 8px; }
+.f1__soon { padding: 1px 7px; border-radius: 5px; background: var(--c-ui-item); color: var(--c-ui-dim); font-size: 11px; font-weight: 600; }
+.f1__game { display: inline-grid; place-items: center; width: 26px; height: 18px; border-radius: 4px; background: var(--c-ui-chip); color: var(--c-muted); font: 700 10px var(--font-c); }
+.f1__fair { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; padding: 4px 0 28px; }
+.f1__fair div { display: grid; grid-template-columns: 44px 1fr; gap: 2px 14px; align-items: center; padding: 16px; border-radius: 10px; background: var(--c-ui-item); }
+.f1__fair .ft-ic, .f1__fair .ft-age { grid-row: span 2; justify-self: center; font-size: 26px; color: var(--c-coin); }
+.f1__fair .ft-age { width: 40px; height: 30px; font-size: 13px; }
+.f1__fair strong { color: var(--c-text); font-size: 14px; font-weight: 600; }
+.f1__fair small { font-size: 12.5px; }
+.f1__bot { display: flex; align-items: center; gap: 20px; padding-top: 22px; border-top: 1px solid var(--c-ui-line); }
+.f1__bot .ft-lang { flex: none; }
+.f1__bot .ft-lang .ft-ic { font-size: 16px; }
+.f1__bot .ft-fine { flex: 1; text-align: right; }
+@container ft (max-width: 480px) {
+  .f1 { padding: 28px 16px 22px; }
+  .f1__top { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-bottom: 24px; }
+  .f1__mark { width: 46px; height: 46px; font-size: 22px; }
+  .f1__soc { flex-wrap: wrap; gap: 8px; }
+  .f1__soc a { width: 40px; height: 40px; font-size: 18px; }
+  .f1__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 16px; padding: 24px 0; }
+  .f1__fair { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .f1__bot { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .f1__bot .ft-fine { text-align: left; }
+}
+</style></head>
+<body><div class="ft-lab" id="lab"></div>
+<template id="ft">
+<footer class="ft f1">
+  <div class="f1__top">
+    <div class="f1__brand"><span class="f1__mark">F</span><div><b>Fantasy · Dota 2</b><p>Собирай карты про-игроков и угадывай, как они сыграют. За игровые монеты — без денег.</p></div></div>
+    <div class="f1__soc" aria-label="Мы в соцсетях"><a aria-label="Telegram"><i data-ic="tg"></i></a><a aria-label="Twitch"><i data-ic="twitch"></i></a><a aria-label="YouTube"><i data-ic="yt"></i></a><a aria-label="Discord"><i data-ic="discord"></i></a><a aria-label="X"><i data-ic="x"></i></a><a aria-label="TikTok"><i data-ic="tiktok"></i></a></div>
+  </div>
+  <div class="f1__cols">
+    <div><h4><i data-ic="help"></i>Как играть</h4><ul><li><a>Как это работает</a></li><li><a>Как считаются очки</a></li><li><a>Состав и капитан</a></li><li><a>Вопросы и ответы</a></li><li><a>Поддержка</a></li></ul></div>
+    <div><h4><i data-ic="shield"></i>Правила</h4><ul><li><a>Пользовательское соглашение</a></li><li><a>Бустеры и шансы</a></li><li><a>Честная игра</a></li><li><a>Конфиденциальность</a></li><li><a>Cookies</a></li></ul></div>
+    <div><h4><i data-ic="play"></i>Игры и маркеты</h4><ul><li><span class="f1__game">D2</span><a>Fantasy Dota 2</a></li><li><span class="f1__game">LoL</span><a>Fantasy LoL</a><span class="f1__soon">скоро</span></li><li><span class="f1__game">CS</span><a>Fantasy CS 2</a><span class="f1__soon">скоро</span></li><li><span class="f1__game">D2</span><a>Маркет карт Dota 2</a></li><li><span class="f1__game">D2</span><a>Бустеры</a></li></ul></div>
+    <div><h4><i data-ic="globe"></i>О проекте</h4><ul><li><a>О нас</a></li><li><a>Патчноуты</a></li><li><a>Пригласи друга</a></li><li><a>Партнёрам и командам</a></li><li><a>Пресса</a></li></ul></div>
+  </div>
+  <div class="f1__fair" aria-label="Честная игра">
+    <div><i data-ic="coin"></i><strong>Монеты — только для игры</strong><small>Не покупаются и не выводятся. +50 каждый день</small></div>
+    <div><i data-ic="odds"></i><strong>Шансы открыты</strong><small>У каждого бустера — шанс каждой редкости</small></div>
+    <div><span class="ft-age">18+</span><strong>Играй в удовольствие</strong><small>Fantasy — не ставки. Если игра мешает — <a style="color: var(--c-accent)">помощь</a></small></div>
+  </div>
+  <div class="f1__bot">
+    <span class="ft-lang"><i data-ic="globe"></i>Русский<i data-ic="down"></i></span>
+    <p class="ft-fine">© 2026 Fantasy · Dota 2. Не связан с Valve и Riot Games; Dota 2 — товарный знак Valve. Данные матчей — Liquipedia и OpenDota.</p>
+  </div>
+</footer>
+</template>
+<script src="_footer.js"></script>
+<script>FOOTER.страница({
+  имя: 'v1 · По мотивам Sorare',
+  мотив: '<b>По мотивам Sorare:</b> ряд соцсетей иконками сверху, четыре колонки с заголовками — каждая отвечает на один вопрос, своя колонка «Игры и маркеты» (у Sorare — по видам спорта, у нас Dota 2 / LoL / CS 2), язык слева внизу, копирайт справа.',
+  описание: 'Самый понятный: ищешь правила — колонка «Правила», ищешь другую игру — «Игры и маркеты». Между колонками и копирайтом — «Честная игра» тремя плашками.',
+})</script>
+</body></html>

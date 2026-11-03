@@ -1,0 +1,49 @@
+/* Набор 1 · Табло — как пример начальника (лента матчей букмекера / киберспорт-трекера): почти чёрный, плотно, мелкий кегль,
+   колонки цифр, тонкие разделители вместо панелей с воздухом, один фиолетовый акцент, красный live. Шрифт — Inter */
+body.t-tablo {
+  --s-page: #0b0c0f; --s-bg: #0f1013; --s-panel: #16171c; --s-panel-2: #1e2026; --s-line: #26282f; --s-line-2: #1f2127;
+  --s-text: #e8e9ec; --s-muted: #858994; --s-accent: #8b6cff; --s-accent-soft: #8b6cff1f; --s-on-accent: #ffffff;
+  --s-live: #ff4d5e; --s-coin: #f2c94c; --s-win: #3ccf7e; --s-lose: #ff6b6b; --s-track: #262830; --s-shadow: #000000;
+  --s-team-a: #4f8cff; --s-team-b: #ff8a3d; --s-hd-bg: #0c0d10; --s-hd-h: 48px;
+  --s-medal: linear-gradient(145deg, #f6c79c, #b06d3a 55%, #5b2f14); --s-medal-ink: #2a1408;
+  --s-gold: #f1c24c; --s-silver: #c9d2de; --s-bronze: #d08a55;
+  --s-font: 'Inter', system-ui, sans-serif; --s-font-h: 'Inter', system-ui, sans-serif; --s-font-num: 'Inter', system-ui, sans-serif; --s-fs: 13px;
+  --s-r: 6px; --s-r-s: 4px; --s-r-btn: 5px; --s-r-pill: 5px; --s-pad: 14px; --s-gap: 10px; --s-row-pad: 7px; --s-bar-h: 4px;
+  --s-h3: 13px; --s-h1: 30px; --s-h1-w: 700; --s-track-h1: -.01em; --s-nick-w: 800; --s-num-w: 700;
+  --s-panel-edge: inset 0 0 0 1px #26282f;
+}
+.t-tablo .ap { font-feature-settings: 'tnum' 1; }
+/* Шапка: вкладки статуса как в примере (Live · Schedule · Finished) */
+.t-tablo .a-nav a { padding: 6px 10px; font-size: 12.5px; }
+.t-tablo .a-nav a[aria-current] { background: none; color: var(--s-text); box-shadow: inset 0 -2px 0 var(--s-accent); border-radius: 0; }
+.t-tablo .a-brand__mark { border-radius: 4px; width: 26px; height: 26px; font-size: 13px; }
+.t-tablo .a-ph { margin-bottom: 8px; }
+.t-tablo .a-ph h3 { color: var(--s-muted); font-weight: 600; }
+/* Лента матчей — как строки примера: шапка турнира серой плашкой, строки в два этажа, справа большие часы */
+.t-tablo .a-ml { padding: 0; overflow: hidden; }
+.t-tablo .a-ml .a-ph { padding: 10px 14px; margin: 0; border-bottom: 1px solid var(--s-line); }
+.t-tablo .a-tour { margin: 0; padding: 7px 14px; background: var(--s-panel-2); border-bottom: 1px solid var(--s-line); font-size: 12px; }
+.t-tablo .a-mr { grid-template-columns: minmax(0, 1fr) 90px 110px 96px 120px; padding: 8px 14px; }
+.t-tablo .a-mr__st { order: 5; justify-self: center; display: flex; align-items: center; font-size: 17px; font-weight: 700; color: var(--s-text); }
+.t-tablo .a-mr--live .a-mr__st { color: var(--s-live); font-size: 14px; }
+.t-tablo .a-mr__teams { order: 1; } .t-tablo .a-mr__mine { order: 2; } .t-tablo .a-mr__pred { order: 3; } .t-tablo .a-mr__act { order: 4; justify-self: start; }
+.t-tablo .a-mr > span + span { border-left: 1px solid var(--s-line-2); padding-left: 12px; }
+.t-tablo .a-mr__t { font-size: 13px; }
+.t-tablo .a-chips button { border-radius: 4px; padding: 4px 9px; font-size: 12px; }
+.t-tablo .a-chips button[aria-pressed='true'] { background: var(--s-accent); color: #fff; }
+/* Матч дня — плотнее, без воздуха */
+.t-tablo .a-feat { gap: 12px; }
+.t-tablo .a-feat__team .a-logo { width: 40px; height: 40px; }
+.t-tablo .a-feat__team b { font-size: 18px; }
+.t-tablo .a-feat__score b { font-size: 36px; }
+.t-tablo .a-cmp__row { font-size: 12px; }
+.t-tablo .a-mine__it { padding: 8px; }
+/* Онбординг и игрок — те же плотные строки */
+.t-tablo .a-ob__main { padding: 20px 24px; background: var(--s-panel); box-shadow: var(--s-panel-edge); }
+.t-tablo .a-lead { font-size: 14px; }
+.t-tablo .a-opt, .t-tablo .a-qq, .t-tablo .a-teamt { padding: 11px 13px; }
+.t-tablo .a-plh { padding: 20px 24px; }
+.t-tablo .a-plh__nick { font-size: 56px; }
+.t-tablo .a-nums b { font-size: 24px; }
+.t-tablo .a-info__h { background: var(--s-panel-2); border-bottom: 1px solid var(--s-line); }
+.t-tablo .a-tbl__r { padding: 7px 0; font-size: 12.5px; }

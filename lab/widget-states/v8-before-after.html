@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<base href="../widget-tournament-4/" />
+<title>v8 · До и после</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="_t4.css" /><link rel="stylesheet" href="../widget-states/_s.css" /></head>
+<body><div class="lab-board">
+  <h1>Состояния виджета · v8 · До и после</h1>
+  <p class="lab-board__lead">Каждый экран — до и после клика по главному действию. На «до» всё затемнено, кроме того, куда нажать.</p>
+  <div class="s-ba"><div class="s-steps" id="tr"></div><div class="s-ba__pair"><div class="s-ba__c"><div class="s-ba__h">До — куда нажать</div><div class="s-z125"><div><div id="a"></div></div></div></div><div class="s-ba__c"><div class="s-ba__h">После</div><div class="s-z125"><div><div id="b"></div></div></div></div></div></div>
+</div>
+<script src="_data.js"></script><script src="_t4.js"></script><script src="../widget-states/_states.js"></script>
+<script>
+  let i = 0
+  const show = () => { const k = S.key[i]
+    document.getElementById('tr').innerHTML = S.key.map((x, j) => `<button class="s-st ${j === i ? 'is-on' : ''}" data-j="${j}"><span class="s-n">${j + 1}</span><span class="s-st__t"><b>${x.name}</b><span class="s-cap">${x.hints[0][0] ? x.hints[0][1] + ' — ' + x.hints[0][2] : ''}</span></span></button>`).join('')
+    document.querySelectorAll('[data-j]').forEach(b => b.onclick = () => { i = +b.dataset.j; show() })
+    S.mount(document.getElementById('a'), k, { hint: 'spotlight' }); S.mount(document.getElementById('b'), k, { after: true }) }
+  show()
+</script>
+</body></html>

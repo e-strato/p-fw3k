@@ -1,0 +1,86 @@
+/* v11–v13 замен (дирижёр 22.10): всё с заглавной, LIVE явно и первым, три раскладки состава — строки одной высоты, Steam ID чипом с копированием */
+.s8-live{ align-self:flex-start; display:inline-flex; align-items:center; height:18px; padding:0 6px; border-radius:4px; background:var(--w-down); font-size:11px; font-weight:600; color:#fff; letter-spacing:.01em; }
+
+/* Шапка таблицы */
+.s8-rh{ display:grid; align-items:center; gap:8px; height:20px; margin:8px 0 0; padding:0 12px; font-size:11px; font-weight:500; color:var(--w-muted-fg); }
+.s8-rh--a{ grid-template-columns:44px 1fr; }
+.s8-rh--b{ grid-template-columns:80px 1fr auto; }
+.s8-rh--c{ grid-template-columns:28px 1fr auto; }
+.s8-rh span:last-child:not(:nth-child(2)){ text-align:right; }
+
+/* Строка — общее */
+.s8-r{ display:grid; align-items:center; gap:8px; width:100%; padding:0 12px; text-align:left; font-size:12px; }
+.w .s8-r{ border-radius:0; }
+button.s8-r{ cursor:pointer; }
+.s8-r.is-bad{ background:rgba(255,255,255,.05); }
+.w button.s8-r.is-bad:hover{ background:rgba(255,255,255,.08); }
+.s8-r.is-ok .s8-n{ color:var(--w-up-fg); }
+.s8-n{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; line-height:18px; font-weight:600; }
+.s8-n.is-no{ color:var(--w-muted-fg); }
+.s8-n.s6-swap{ display:flex; align-items:center; gap:4px; }
+.s8-n.s6-swap b{ min-width:0; overflow:hidden; text-overflow:ellipsis; }
+.s8-m{ min-width:0; display:flex; flex-direction:column; justify-content:center; gap:2px; }
+.s8-s{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; line-height:14px; color:var(--w-muted-fg); }
+.s8-s.is-ok{ color:var(--w-up-fg); }
+.s8-p{ display:flex; flex-direction:column; color:var(--w-muted-fg); }
+.s8-p b{ font-size:13px; line-height:16px; font-weight:600; color:var(--w-fg); font-variant-numeric:tabular-nums; }
+.s8-p small{ font-size:10px; line-height:12px; white-space:nowrap; }
+.s8-p--row{ flex-direction:row; align-items:baseline; gap:6px; }
+.s8-p--row small{ font-size:11px; }
+.s8-p--ring{ display:grid; place-items:center; width:24px; height:24px; border-radius:50%; background:var(--w-muted); font-size:12px; font-weight:600; color:var(--w-fg); }
+.is-bad .s8-p--ring{ background:rgba(245,158,11,.2); color:#fcd34d; }
+.s8-r .s6-chev{ color:var(--w-muted-fg); display:inline-flex; }
+.s8-r .s6-undo{ justify-self:end; }
+
+/* Steam ID — чип, клик копирует */
+.w .s8-id{ justify-self:start; display:inline-flex; align-items:center; gap:4px; height:18px; padding:0 6px; border-radius:4px; background:var(--w-muted); font-size:11px; font-weight:500; color:var(--w-muted-fg); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.w .s8-id:hover{ background:var(--w-hover); color:var(--w-fg); }
+.s8-id svg{ opacity:.7; }
+.s8-toast{ position:absolute; left:50%; bottom:56px; translate:-50% 0; z-index:20; padding:6px 10px; border-radius:var(--w-r-sm); background:var(--w-fg); color:var(--w-primary-fg); font-size:12px; font-weight:500; white-space:nowrap; box-shadow:0 8px 24px -8px #000; animation:s8-in .2s ease-out; }
+@keyframes s8-in{ from{ opacity:0; translate:-50% 6px; } }
+
+/* v11 «Две строки»: позиция — номер и роль столбиком; у всех строк ник + вторая строка (Steam ID-чип или метка замены); высота 48 */
+.s8-r--a{ grid-template-columns:44px 1fr auto; height:48px; }
+/* v12 «Одна строка»: «1 Carry» в строку, справа Steam ID-чип или метка замены; высота 40 */
+.s8-r--b{ grid-template-columns:80px 1fr auto; height:40px; }
+.s8-r--b .s8-m{ flex-direction:row; align-items:center; }
+.s8-tag{ justify-self:end; max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; color:#fcd34d; }
+/* v13 «Номер в кружке»: номер кружком, ник + роль по-русски второй строкой, справа Steam ID-чип; высота 48 */
+.s8-r--c{ grid-template-columns:28px 1fr auto; height:48px; }
+.s8-r--c .s8-id{ justify-self:end; }
+/* правки по скринам: кнопка-строка теряла отступ (.w button сбрасывает padding), чип растягивался, ник в v12 по центру */
+.w .s8-r{ padding:0 12px; }
+.s8-m .s8-id{ align-self:flex-start; }
+.s8-r--b .s8-m{ justify-content:flex-start; }
+.s8-r--b{ grid-template-columns:76px 1fr auto; }
+.s8-rh--b{ grid-template-columns:76px 1fr auto; }
+.s8-tag{ max-width:none; }
+/* v14 — как v11, но позиция как в v12: «1 Carry» в одну строку (дирижёр 22.10) */
+.s8--prow .s8-rh--a, .s8--prow .s8-r--a{ grid-template-columns:76px 1fr auto; }
+/* v15–v18 — вид LIVE и числа расхождений (дирижёр 22.10) */
+.s9-live--dot{ display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:600; color:var(--w-down); }
+.s9-live--dot i{ width:6px; height:6px; border-radius:50%; background:var(--w-down); }
+.s9-live--outline{ height:16px; padding:0 4px; border-radius:4px; box-shadow:inset 0 0 0 1px var(--w-down); font-size:10px; line-height:16px; font-weight:700; color:var(--w-down); }
+.s9-live--text{ font-size:11px; font-weight:700; color:var(--w-down); }
+.s9-pulse{ display:inline-block; width:8px; height:8px; margin-right:6px; border-radius:50%; background:var(--w-down); vertical-align:1px; animation:s9-p 1.4s ease-in-out infinite; }
+@keyframes s9-p{ 50%{ box-shadow:0 0 0 4px rgba(239,68,68,.25); } }
+.s9-n{ flex:none; font-size:16px; line-height:20px; font-weight:700; font-variant-numeric:tabular-nums; }
+.s9-w{ flex:none; font-size:12px; font-weight:500; color:var(--w-muted-fg); white-space:nowrap; }
+.s9-b{ flex:none; display:grid; place-items:center; min-width:24px; height:24px; padding:0 6px; border-radius:6px; background:var(--w-muted); font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+/* Шаг «Срок»: строки короче (32), выбор карты / даты — под своей строкой (дирижёр 22.10) */
+.s6-terms--col{ gap:4px; }
+.w .s6-terms--col button{ height:32px; border-radius:var(--w-r-sm); }
+.s6-terms--col .s6-maps, .s6-terms--col .s6-date{ margin:0 0 4px 12px; }
+/* Шапка матча (v18): справа ничего нет — заголовок на всю ширину, распорку убираем (дирижёр 22.10: «чтобы не так сильно обрезалось») */
+.s7 .s6-hd__m + .s6-sp{ display:none; }
+/* v19: значок игры перед названием матча */
+.s9-gl{ display:inline-block; width:12px; height:12px; margin-right:6px; vertical-align:-1px; object-fit:contain; }
+.s9-gl--cs{ background:var(--m) center / contain no-repeat; } /* лого CS2 картинкой (дирижёр 23.10) */
+/* v20–v22: где показать игру */
+.s9-lgw{ position:relative; flex:none; display:flex; }
+.s9-gl.s9-gl--b{ position:absolute; right:-4px; bottom:-4px; margin:0; width:14px; height:14px; padding:1px; border-radius:4px; background-color:var(--w-bg); box-shadow:0 0 0 2px var(--w-bg); }
+.s9-gl--cs.s9-gl--b{ padding:0; border-radius:3px; background:var(--m) center / contain no-repeat; }
+.s9-gm{ font-weight:600; color:var(--w-fg); }
+.s9-glbl{ display:flex; align-items:center; gap:0; margin-top:8px; }
+/* Общая высота виджетов турнира, замен и трансферов — 380 (дирижёр 22.10) */
+.s7.s6{ height:380px; }

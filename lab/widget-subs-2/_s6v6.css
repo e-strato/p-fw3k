@@ -1,0 +1,80 @@
+/* v6 замен (дирижёр 22.10: «логика та же, визуал ближе к нашим другим виджетам») — шрифты и строки как у турнира v6 и трансферов v12:
+   заголовок 13/600 + ссылка 12 серым, строки во всю ширину без скруглений, шапка таблицы 11, сегмент 24, тонкие полосы */
+.s6-hd > b{ font-size:13px; }
+.w .s6-arch{ font-size:12px; font-weight:500; }
+.s6-prog{ padding:0 12px 8px; }
+.s6-prog__t b{ font-size:12px; font-weight:500; color:var(--w-fg); }
+.s6-bar{ height:2px; border-radius:1px; }
+.s6-bd{ padding:0 0 12px; }
+.s6-lbl, .s6-lbl--top{ height:20px; margin:4px 0 0; padding:0 12px; font-size:11px; line-height:20px; }
+/* Матчи — строки как у трансферов: во всю ширину, 52, наведение — заливка */
+.w .s6-qm--tall{ width:100%; margin:0; padding:6px 12px; border-radius:0; min-height:52px; gap:10px; }
+.w .s6-qm--tall:hover{ background:rgba(255,255,255,.06); }
+.s6-qm--tall .s6-lg{ width:22px; height:22px; }
+.s6-qm__m .s6-qm__n{ font-size:13px; line-height:18px; }
+.s6-qm__m .s6-cap{ font-size:11px; }
+.s6-qm__r .s6-chip{ height:auto; padding:0; background:none; font-size:12px; font-weight:600; color:var(--w-fg); }
+.s6-qm__r .s6-chip--live{ color:var(--w-down); }
+/* Состав — как таблица турнира: сегмент 24, шапка 11, строки 32 во всю ширину, расхождение и сверено — фоном строки */
+.s6-seg{ margin:0 12px; border-radius:var(--w-r-sm); }
+.w .s6-seg button{ height:24px; font-size:12px; }
+.s6-rh{ margin:8px 0 0; padding:0 12px; height:20px; line-height:20px; }
+.s6-rr{ min-height:32px; padding:0 12px; border-radius:0; }
+.s6-rr + .s6-rr{ margin-top:0; }
+.w .s6-rr__h{ padding:4px 12px; min-height:40px; }
+.s6-rr__n{ font-size:12px; }
+.s6-ft{ min-height:40px; font-size:12px; }
+/* Шаги замены */
+.s6-steps{ padding:0 12px 8px; }
+.s6-steps i{ height:2px; }
+.s6-q{ font-size:13px; line-height:18px; }
+.w .s6-btn{ height:32px; border-radius:var(--w-r-sm); font-size:13px; font-weight:500; }
+.s6-bd--wz{ padding:0 12px 12px; }
+/* Сегмент команд — обычный, как группы у турнира (дирижёр 22.10): текст по центру, без оранжевых кружков; число несверенных — жёлтым числом рядом */
+.w .s6-seg button{ gap:6px; padding:0 8px; }
+.s6-seg .s6-lg{ width:14px; height:14px; }
+.s6-seg .s6-nm{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.s6-seg__n{ min-width:0; height:auto; padding:0; border-radius:0; background:none; color:#fcd34d; font-size:12px; font-weight:600; }
+/* Низ — как снэкбар-алерт: отступы 4 снизу и по бокам, скругление, жёлтая (сверено — зелёная) заливка, без линии сверху */
+.s6-ft--warn, .s6-ft--ok{ margin:0 4px 4px; min-height:36px; padding:8px 12px; border-top:0; border-radius:var(--w-r-sm); }
+.s6-ft--warn{ background:rgba(245,158,11,.14); }
+.s6-ft--ok{ background:var(--w-up-bg); }
+/* Шапка матча: время / LIVE — текстом, как в списке, чтобы название матча не обрезалось */
+.s6-hd .s6-chip{ height:auto; padding:0; background:none; font-size:12px; font-weight:600; color:var(--w-fg); }
+.s6-hd .s6-chip--live{ color:var(--w-down); }
+/* Без «Осталось N замен» и полосы (дирижёр 22.10: «по идее не нужна») */
+.s6-prog{ display:none; }
+
+/* v7–v10 — список матчей без «светофора» (дирижёр 22.10) */
+.s7-t{ display:inline-flex; align-items:center; gap:4px; font-size:11px; color:var(--w-muted-fg); white-space:nowrap; }
+.s7-live{ width:6px; height:6px; border-radius:50%; background:var(--w-down); }
+.s7-cnt{ display:grid; place-items:center; flex:none; min-width:22px; height:22px; padding:0 6px; border-radius:999px; background:var(--w-muted); font-size:12px; font-weight:600; color:var(--w-fg); }
+.s7-ok{ flex:none; color:var(--w-muted-fg); } .s7-ok svg{ width:14px; height:14px; }
+.s7-st{ flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
+.s7-st > span{ display:flex; align-items:center; gap:8px; min-width:0; font-size:13px; line-height:18px; font-weight:600; }
+.s7-st .s6-lg{ width:18px; height:18px; }
+.s7-st__r{ display:flex; flex-direction:column; align-items:flex-end; gap:2px; flex:none; }
+.s7-st__r .s6-cap{ font-size:11px; }
+.s7-big{ display:flex; flex-direction:column; align-items:flex-end; flex:none; }
+.s7-big b{ font-size:18px; line-height:22px; font-weight:700; font-variant-numeric:tabular-nums; }
+.s7-big.is-zero b{ color:var(--w-muted-fg); }
+.s7-big .s6-cap{ font-size:10px; line-height:12px; }
+/* v7–v10: строки состава одной высоты — с заменой и без (дирижёр 22.10); у замены всё в одну строку, подача метки — своя в каждой версии */
+.s7 .s6-rr, .s7 .w .s6-rr__h, .w.s7 .s6-rr__h{ min-height:40px; }
+.s7 .s6-rr__n{ flex-direction:row; align-items:center; gap:8px; white-space:nowrap; overflow:hidden; }
+.s7 .s6-rr__n .s6-cap{ overflow:hidden; text-overflow:ellipsis; }
+.s7 .s6-rr.is-ok .s6-rr__n{ flex-direction:row; }
+.s7 .s6-tag{ flex:none; height:18px; padding:0 6px; font-size:10px; line-height:18px; }
+/* v7 Число: метка — короткой плашкой в той же строке */
+/* v8 Команды строками: метки нет, у позиции — жёлтая точка */
+.s7--stack .s6-rr.is-bad .s6-tag{ display:none; }
+.s7--stack .s6-rr.is-bad .s6-rr__p{ position:relative; color:#fcd34d; }
+.s7--stack .s6-rr.is-bad .s6-rr__p::after{ content:''; position:absolute; left:12px; top:-2px; width:6px; height:6px; border-radius:50%; background:#f59e0b; }
+/* v9 Разделы: строка без заливки, новый игрок — жёлтым, метки нет */
+.s7--groups .s6-rr.is-bad{ background:none; }
+.s7--groups .s6-rr.is-bad .s6-swap b{ color:#fcd34d; }
+.s7--groups .s6-rr.is-bad .s6-tag{ display:none; }
+/* v10 Монохром: заливка серая, метка — серым текстом */
+.s7--mono .s6-rr.is-bad{ background:rgba(255,255,255,.05); }
+.s7--mono .s6-rr.is-bad .s6-tag{ background:none; padding:0; color:var(--w-muted-fg); }
+.s6-hd__m{ flex:1; min-width:0; } /* название матча в шапке — на всю доступную ширину */

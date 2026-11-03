@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<base href="../gs-match/" />
+<title>v49 · Свёрнут меньше раскрытого</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&family=Inter:wght@400;500;700;800&family=Roboto:wght@400;500&family=JetBrains+Mono:wght@500;600;700&family=IBM+Plex+Mono:wght@500&family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="../widget-tournament/_w.css" />
+<link rel="stylesheet" href="../widget-tournament-5/_t5.css" />
+<link rel="stylesheet" href="../widget-subs-2/_s2.css" />
+<link rel="stylesheet" href="../widget-subs-2/_s6v6.css" />
+<link rel="stylesheet" href="../widget-subs-2/_s8.css" />
+<link rel="stylesheet" href="../widget-transfers-2/_tr4.css" />
+<link rel="stylesheet" href="../widgets-unified/_type.css" />
+<link rel="stylesheet" href="../widgets-unified/_cons.css" />
+<link rel="stylesheet" href="../widget-tournament-6/_t6.css" />
+<link rel="stylesheet" href="../widget-subs-3/_s3.css" />
+<link rel="stylesheet" href="../widget-transfers-3/_tr5.css" />
+<link rel="stylesheet" href="../widget-mvp-3/_m5.css" />
+<link rel="stylesheet" href="../widgets-23/_uni.css" />
+<link rel="stylesheet" href="_gs.css" />
+<link rel="stylesheet" href="../w-gold/_wgold.css" /><link rel="stylesheet" href="../w-players/_wplayers.css" /><link rel="stylesheet" href="../w-header/_wheader.css" /><link rel="stylesheet" href="../w-bar/_wbar.css" /><link rel="stylesheet" href="../w-social/_wsoc.css" /><link rel="stylesheet" href="../w-maps/_wmseg.css" /><link rel="stylesheet" href="../w-preview/_wstat.css" /><link rel="stylesheet" href="../w-draft/_wdraft.css" />
+<link rel="stylesheet" href="../gs-match-2/_hd2.css" /><link rel="stylesheet" href="../gs-match-2/_dr3.css" /><link rel="stylesheet" href="../widget-expand/_wx.css" /><link rel="stylesheet" href="../widget-promo/_promo.css" /><link rel="stylesheet" href="../widget-promo/_disc.css" />
+</head>
+<!-- v49-wide3 — как v48, но свёрнут на широком: справа 5 последних сообщений с затуханием и поле, не выше экрана; раскрыт — чат 420 px (дирижёр 29.10). Заглушки.
+     v48-wide2 — как v47, но на широком (> 520) две колонки и в свёрнутом: экран | чат с полем (дирижёр 29.10). Заглушки.
+     v47-wide — как v46, но виджет шире 520 px: раскрыт — экран и чат в две колонки, свёрнут — экран высотой 220, не растягивается; уже 520 — как на десктопе (дирижёр 29.10). Заглушки.
+     v46-dots — как v45, но «👥 2 418» и ручка — в одной строке со значком свернуть / развернуть; ручка — 6 точек 3 × 2 (дирижёр 29.10). Заглушки.
+     v45-grip — как v44, но кнопка «отправить» (самолётик), пояснение не закрывается, заголовка нет, «👥 2 418» внизу; раскрыт — посередине низа ручка, тянешь — чат выше / компактнее (дирижёр 29.10). Заглушки.
+     v44-seg — как v43, но поле ввода с нашей обычной рамкой (без фиолетового Twitch), выбор команды — сегментом [лого Spirit | лого Vision] (дирижёр 29.10). Заглушки.
+     v43-twk — как v39, но ники цветами Kick (неон), время одно, 9 px справа, видно при наведении вместе с ♥ (дирижёр 29.10). Заглушки.
+     v39-twitch — Как v35, но чат в стиле Twitch: «ник: текст», у каждого свой цвет ника, лого команды бейджем перед ником, подсветка строки при наведении, фиолетовый акцент поля (лаба widget-promo, дирижёр 29.10). Заглушки.
+     v35-line — Как v34, но чат плотными строками (как Twitch): лого, ник, текст, картинка миниатюрой, ♥ мелко справа. 📎 в поле — картинка (или Ctrl+V), превью перед отправкой. Пояснение под экраном с ×, в раскрытом — «?» в шапке (лаба widget-promo, дирижёр 29.10). Заглушки.
+     v33-frame — как v32, но телевизор в корпусе: общая рамка, выпуклое стекло с бликом, LED-табло вставкой с отступами, LIVE в строке иконок, ник моноширинным 12 (дирижёр 29.10). Заглушки.
+     v32-static — как v31, но LED-текст стоит на месте, переносится по строкам (дирижёр 29.10: «ничего не бегущей строкой, понравился сам эффект»). Заглушки.
+     v31-mix — экран-телевизор (мем фоном, развёртка, LIVE) с LED-строкой янтарём, аватар и ник; «Голосование лайками» одной строкой; раскрыт — экран тот же, ниже претенденты с ♥ и «до экрана −N» (дирижёр 29.10). Заглушки.
+     v28-tv — Логика v25, подписи — иконками. Экран — кинескоп: мем фоном, полосы развёртки, виньетка, LIVE, залайканный коммент субтитром моношрифтом с мигающим курсором (лаба widget-promo, дирижёр 29.10). Заглушки.
+     v25-board — Самое залайканное — большой экран, его держит трибуна, чьё сообщение набрало больше ♡ («Spirit держат экран 2:14»); ниже претендент другой трибуны и сколько ♡ не хватает, чтобы перебить; общий чат со значками (лаба widget-promo, дирижёр 29.10). Заглушки.
+     v20-tribes — Две трибуны: выбрал команду — пишешь за неё, шкала «чья трибуна громче» за минуту, лучший крик каждой трибуны к моменту; раскрыт — две колонки чата. Крючок — свои против чужих (лаба widget-promo, дирижёр 29.10: «с точки зрения геймеров — как завлечь в чат»). Заглушки.
+     v15-pulse — Как v12, но раскрыт — свой график: сколько комментов в минуту, пики = моменты; нажал пик — момент и лучший коммент (лаба widget-promo, дирижёр 29.10). Моменты, тексты, лайки — заглушки.
+     v1-top — Квадрат первым в правой колонке, над турниром — наша графика (лаба widget-promo, созвон 28.10 §3.8). База — gs-match-2 v32.
+     v30-wx — шаг 4, как v27, но виджеты правой колонки сворачиваются, как в лабе widget-expand v20: свёрнут — главное (турнир — две команды матча, замены — одной строкой), раскрыт — всё; значок справа внизу (дирижёр 29.10). MVP не сворачивается.
+     v27-dr-tall — как v26, но график выше: 480 на ПК (было 380), 320 на телефоне (было 260) (дирижёр 28.10).
+     v26-dr-kda — шаг 3, как v21, но KDA тремя числами цветом: убийства зелёным, смерти красным, помощь серым (дирижёр 28.10).
+     v21-dr-below — шаг 3, как v20, но график выше (380), кнопки графика — маленькой группой справа сверху; под графиком пятёрки без банов: мини-иконка, позиция 1–5, ник, KDA; между ними счёт по убийствам и перевес по золоту (созвон 28.10 §2.1–2.7). Код — ../gs-match-2/_dr3.js.
+     v20-btn-soft — как v19, но «назад» и «поделиться» меньше (30) и тише — без рамки, лёгкий фон, серая иконка; значки — SVG ровно по центру (дирижёр 28.10).
+     v19-tabs-flush — как v18, но без отступов слева и справа: вкладки от края до края окна (дирижёр 28.10).
+     v18-tabs-fill-nosep — как v14, но вкладки карт растянуты на всю ширину окна поровну, без разделителей между ними (дирижёр 28.10).
+     v14-hdj-sq — как v13, но серая полоса в две строки: сверху мелко «TI 2026 · Плей-офф, день 2 из 3 · Bo3», ниже матч и счёт; «назад» и «поделиться» — квадратными кнопками по краям (дирижёр 28.10).
+     v13-hd-col — как v12, но серая полоса с путём — не во всю ширину, а наверху окна в главной колонке, над вкладками карт; правая колонка начинается вровень с ним (дирижёр 28.10).
+     v12-hd-win — как v10, но сверху — серая полоса с путём «турнир › стадия › матч», а вкладки карт — только в главной колонке окном браузера; график и драфт — внутри этого окна, без своих рамок (дирижёр 28.10).
+     v10-hd-chrome — как v3, но как в Chrome: полоса вкладок карт, под ней «страница» со строкой пути, как адресная строка (дирижёр 28.10: «может как в браузере — вкладки, под ними путь»). Без лого турнира, «Сетки», колокольчика. Код — ../gs-match-2/_hd2.js.
+     v3-live — как v2, но открывается сразу live-матч (Vision — Spirit, карта 3) и нигде нет «Записей карт» (дирижёр 28.10).
+     v2-flat — как v1, но у графика одна рамка: карточка вокруг виджета графика без своей рамки (дирижёр 28.10: «убрать двойную окантовку»).
+     v1-lean — как v0, но убрано по созвону 28.10 (созвон-2-матч.html): «Статистика к матчу» — только в «Превью» и до матча (§2.8); на карте нет игроков — блока «О матче» (§4.2);
+     справа нет трансферов (§3.2); остров снят (§3.4) — в нижней группе ♡ / 💬 / поделиться / «Трансляция»; две колонки от 1920 убраны, шире 1920 — поля по бокам (§4.2). -->
+<body class="uni"><div class="app"><header class="pt" id="portal"></header><div id="feed"></div><div id="more"></div></div><nav class="tabbar" id="tabbar" aria-label="Разделы"></nav>
+<dialog class="sh" id="sheet" aria-label="Игрок"></dialog><div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>window.GS_GRAPH = 'w'; window.GS_PLAYERS = 'w'; window.GS_LAYOUT = 'v4'; window.GS_HD = 'w'; window.WH_COLLAPSE = 'scroll'; window.GS_BAR = 'w'; window.GS_TABS = false; window.GS_MSEG = 'w'; window.GS_MSEG_MAIN = true; document.addEventListener('DOMContentLoaded', () => document.body.classList.add('ears-1920', 'gold-flat')); window.GS_V20 = true; window.GS_STAT = 'w'; window.GS_PIP = 'w'; window.GS_PAUSE = 'state'; window.GS_BARHIDE = 'island'; window.GS_DRAFT = 'cs'; window.GS_SPLIT = false; window.GS_LIVE_LEAN = true; window.GS_NO_TR = true; window.GS_NOISL = true; window.GS_STATE = 'live'; window.GS_NO_REC = true; window.GS_HD2 = true; window.HD2 = 'j'; window.HDJ = 'sq'; window.HDFILL = 'nosep'; window.HDFLUSH = true; window.HDBTN = 'soft'; window.DR3 = 'below'; window.DR3_KDA = 'color'; window.DR3_PL = 'hover'; window.GS_PROMO_AT = 'top'; window.DISC = 'mix'; window.MX_STATIC = true; window.MX_FRAME = true; window.CH = 'line'; window.CH_SKIN = 'twk'; window.CH_SEG = true; window.CH_V45 = true; window.CH_V46 = true; window.CH_V47 = true; window.CH_V48 = true; window.CH_V49 = true; window.WX_POS = 'peek2'; window.GS_T4C = (el, o) => { el.dataset.wxKey = 't4'; WXT4(el, o); }; window.GS_S3C = (el, o) => { el.dataset.wxKey = 's3'; WXKey(el, w => S3.render(w, o), '.s6-hd', false); }; window.GS_GOLD_OPT = { h: W => (W >= 600 ? 480 : 320), rail: 'top' }; window.GS_HD2_WIN = true; window.WB_LOOK = 'ic'; window.GS_ONLYW = true; window.GS_SOC = 'rail'; window.GS_SOC_M = 'pillsI'; window.GS_DESKBAR = 'float'; window.GS_FLUID = true; window.WH_LOOK = 'card'; window.WH_CTX = 'tour'; window.WB_POST = 'time'; window.GS_FLUID_MAX = 799; document.addEventListener('DOMContentLoaded', () => document.body.classList.add('dk-float')); window.TB_LOOK = 'svg'</script><!-- наши виджеты (правая колонка компьютера) — код и данные из их лаб -->
+<script src="../widget-tournament-4/_data.js"></script><script src="../widget-tournament-5/_logos.js"></script><script src="../widget-tournament-5/_demo.js"></script>
+<script src="../widget-subs-2/_data.js"></script><script src="../widget-subs-2/_games.js"></script><script src="../widget-subs-3/_s3data.js"></script>
+<script>window.TR5_BASE = '../widget-transfers-2/'; window.MVP2_BASE = '../widget-mvp-2/'; window.TR5_CFG = { gameDate: true }</script>
+<script src="../widget-transfers/_data.js"></script><script src="../widget-transfers-2/_paths.js"></script><script src="../widget-transfers-2/_mix.js"></script><script src="../widget-transfers-3/_free.js"></script>
+<script src="../widget-mvp/_data.js"></script><script src="../widget-mvp-2/_paths.js"></script>
+<script src="data/_matches.js"></script><script src="data/_tournament.js"></script><script src="_wfit.js"></script>
+<script src="../widgets-unified/_cons.js"></script><script src="../widget-tournament-6/_t6.js"></script><script src="../widget-subs-3/_s3.js"></script><script src="../widget-transfers-3/_tr5.js"></script><script src="../widget-mvp-3/_m5.js"></script>
+<script src="../w-gold/_wgold.js"></script><script src="../w-players/_wplayers.js"></script><script src="../w-header/_wheader.js"></script><script src="../w-bar/_wbar.js"></script><script src="../w-maps/_wmseg.js"></script><script src="../w-preview/_wstat.js"></script><script src="../w-draft/_wdraft.js"></script><script src="../w-social/_wsoc.js"></script><script src="../gs-match-2/_hd2.js"></script><script src="../gs-match-2/_dr3.js"></script><script src="../widget-expand/_wx.js"></script><script src="../widget-promo/_promo.js"></script><script src="../widget-promo/_disc.js"></script><script src="_gs.js"></script>
+</body></html>

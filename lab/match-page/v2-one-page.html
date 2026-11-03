@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../match-row/_rich.css" /><link rel="stylesheet" href="_page.css" />
+<style>
+.v2-anchors { position: sticky; top: 0; z-index: 4; display: flex; gap: 22px; margin: 14px 0 18px; padding: 0 4px; border-bottom: 1px solid var(--c-ui-line); background: var(--c-ui-bg); overflow-x: auto; scrollbar-width: none; }
+.v2-anchors a { flex: none; padding: 12px 0; border-bottom: 2px solid transparent; color: var(--c-ui-dim); font-size: 14px; font-weight: 600; }
+.v2-anchors a:first-child { color: var(--c-text); border-bottom-color: var(--c-accent); }
+.v2-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 330px; gap: 20px; align-items: start; }
+.v2-main { grid-column: 1 / 3; display: grid; gap: 20px; min-width: 0; } .v2-side { position: sticky; top: 64px; display: grid; gap: 20px; min-width: 0; }
+.v2-g2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.v2-sec-h { display: flex; align-items: baseline; gap: 10px; margin: 8px 0 -6px; font-size: 20px; font-weight: 700; } .v2-sec-h small { color: var(--c-caption); font-size: 13px; font-weight: 500; }
+@container row (max-width: 700px) {
+  .v2-anchors { gap: 16px; } .v2-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; } .v2-main { grid-column: auto; gap: 12px; } .v2-side { position: static; gap: 12px; }
+  .v2-g2 { grid-template-columns: minmax(0, 1fr); gap: 12px; } .v2-sec-h { font-size: 17px; }
+}
+</style></head>
+<body><main class="p-page">
+  <h1>v2 · Одна лента с якорями</h1>
+  <p>Как dltv и hltv: вся страница матча — одна лента без вкладок, сверху крупное табло (как было в v3) и липкая полоса якорей (Трансляция · Карты · Ход · Игроки · Команды · Новости). Порядок блоков меняется по моменту: до матча первым идёт превью, в эфире — трансляция и ход карты, в итоге — игрок матча и рейтинг. Справа узкая липкая колонка: шанс победы, твои игроки, паспорт матча, дальше у команд, другие матчи. 07.10: + серия по картам, полная таблица игроков, составы с ролями, форма, пул, турнир, видео.</p>
+  <div class="p-tools"><div class="p-seg" data-moments></div><div class="p-seg"><button type="button" data-g="dota">Dota 2 · Spirit — Tundra</button><button type="button" data-g="cs">CS2 · G2 — FaZe</button></div></div>
+  <p class="p-cap">Десктоп · 1440 (рамка уменьшена под ширину окна)</p><div class="p-wrap"><div class="p-frame p-frame--desk" data-mp></div></div>
+  <p class="p-cap">Телефон · 390 — листается внутри рамки</p><div class="p-frame p-frame--phone" data-mp></div>
+</main>
+<script src="../match-row/_rich.js"></script>
+<script>
+window.MP = {}
+MP.вариант = (m, x) => {
+  const мом = m.S.мом, сек = x.сек, g2 = (...a) => `<div class="v2-g2">${a.join('')}</div>`, заг = (t, s = '') => `<h2 class="v2-sec-h">${t}${s ? `<small>${s}</small>` : ''}</h2>`, cs = m.g === 'cs'
+  const ход = cs ? 'Раунды' : 'Золото по минутам'
+  const Б = {
+    превью: заг('Превью', 'форма и показатели') + сек('', x.показатели(m)) + g2(сек('Форма', x.форма(m, 'a')), сек('Форма', x.форма(m, 'b'))) + g2(сек('Личные встречи', x.встречи(m)), сек('Аналитика', x.инсайты(m))),
+    трансляция: заг('Трансляция') + сек('', x.стрим(m)),
+    карты: заг(cs ? 'Карты и вето' : 'Карты и драфт') + x.карты(m) + g2(сек('', x.вето(m)), сек(cs ? 'Карты: победы за 3 месяца' : 'Любимые герои', x.пул(m))),
+    серия: заг('Серия по картам', m.S.мом === 'done' ? m.S.под : '') + сек('', x.сводка(m)),
+    ход: заг('Ход ' + (мом === 'live2' ? 'карты 2' : мом === 'done' ? 'серии' : 'карты 1'), m.S.под) + сек(ход, x.ход(m)) + g2(сек(cs ? 'Раунды по закупке' : 'Объекты карты', x.объекты(m)), сек('Что происходит', x.лог(m))),
+    игроки: заг('Игроки', мом === 'done' ? 'за серию' : 'на текущей карте') + сек('', x.скорборд(m, 'a')) + сек('', x.скорборд(m, 'b')) + сек('Лучшие в матче', x.рекорды(m)),
+    составы: заг('Составы') + g2(сек('', x.составы(m, 'a')), сек('', x.составы(m, 'b'))),
+    команды: заг('Команды рядом') + сек('', x.рядом(m)),
+    турнир: заг('Турнир', 'путь и что на кону') + сек('', x.турнир(m)),
+    итог: заг('Итог', m.S.под) + g2(сек('', x.mvp(m)), сек('Рейтинг после матча', x.рейтинг(m))),
+    видео: заг('Видео') + сек('', x.видео(m)),
+    новости: заг('Новости матча') + сек('', x.новости(m)),
+  }
+  const порядок = {
+    pre: ['превью', 'турнир', 'карты', 'составы', 'команды', 'видео', 'новости'],
+    draft: ['карты', 'трансляция', 'превью', 'составы', 'турнир', 'новости'],
+    live1: ['трансляция', 'ход', 'игроки', 'серия', 'карты', 'турнир', 'новости'],
+    break: ['серия', 'команды', 'игроки', 'видео', 'трансляция', 'турнир', 'новости'],
+    live2: ['трансляция', 'ход', 'игроки', 'серия', 'карты', 'турнир', 'новости'],
+    done: ['итог', 'серия', 'игроки', 'видео', 'команды', 'турнир', 'новости'],
+  }[мом]
+  const ИМЯ = { превью: 'Превью', трансляция: 'Трансляция', карты: 'Карты', серия: 'Серия', ход: 'Ход', игроки: 'Игроки', составы: 'Составы', команды: 'Команды', турнир: 'Турнир', итог: 'Итог', видео: 'Видео', новости: 'Новости' }
+  return `<div class="p-body v2">${x.табло(m)}
+    <nav class="v2-anchors">${порядок.map((k) => `<a href="#">${ИМЯ[k]}</a>`).join('')}</nav>
+    <div class="v2-grid"><div class="v2-main">${порядок.map((k) => Б[k]).join('')}</div>
+    <aside class="v2-side">${сек('Шанс победы', x.шанс(m))}${сек(мом === 'pre' ? 'Прогноз счёта' : 'Твои игроки', мом === 'pre' ? x.прогноз(m) : x.мои(m))}${сек('О матче', x.паспорт(m))}${сек('Дальше у команд', x.дальше(m))}${сек('Другие матчи', x.другие())}</aside></div></div>`
+}
+</script>
+<script src="_page.js"></script>
+</body></html>

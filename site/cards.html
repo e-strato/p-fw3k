@@ -1,0 +1,978 @@
+<!doctype html>
+<!--
+  FantasyWeb — каркас страницы.
+  ⚠️ *.html в корне website/ СГЕНЕРИРОВАНЫ: этот каркас + pages/<имя>.html + blocks/**/*.html → `node build.mjs`.
+  Правьте блоки, страницы и layout.html, не собранные файлы (гейт `node build.mjs --check` поймает ручную правку).
+  Витрина компонентов — ../storybook.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Карточка — FantasyWeb</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..900;1,400..900&family=Archivo:ital,wdth,wght@0,62..125,700..900;1,62..125,700..900&family=Cinzel:wght@700;900&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..700&display=swap" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="site-header__in">
+    <a class="site-logo" href="index.html">Fantasy · Dota 2</a>
+    <nav class="site-nav">
+      <a href="index.html">Главная</a>
+      <a href="cards.html">Карточка</a>
+    </nav>
+  </div>
+</header>
+<main>
+<section class="section" id="cards-hero">
+  <div class="cards-hero">
+    <div class="sec-head sec-head--hero">
+      <h1 class="sec-title">Карточка</h1>
+      <p class="sec-lead">Главный объект продукта. Предлагаем направление Arcane: портрет на всю карту, ник на цветной полосе. Сила видна по рамке, редкость — по блеску.</p>
+      <p><a class="btn" href="cards-all.html">Все 8 направлений →</a></p>
+    </div>
+    <div class="cards-hero__card">
+<!-- Карточка игрока, полная (решение 5: Arcane / STAN). Стили — styles.css [=== Карточка ===], наклон — app.js [Карточка].
+     Другой игрок / вид: меняй данные и модификаторы силы (--bronze/silver/gold/elite) и редкости (--base/holo/prism/legend).
+     Размер — style="--w: 312px" (по умолчанию 440px). -->
+<div class="player-card player-card--elite player-card--legend" data-tilt>
+  <div class="player-card__in">
+    <div class="player-card__body"></div>
+    <div class="player-card__art">
+      <i class="player-card__shine"></i>
+      <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+      <span class="player-card__big">95</span>
+      <img class="player-card__ph" src="img/players/9class.webp" alt="9Class" />
+    </div>
+    <img class="player-card__ph player-card__ph--pop" src="img/players/9class.webp" alt="" aria-hidden="true" />
+    <i class="player-card__corner"></i><i class="player-card__corner"></i>
+    <div class="player-card__strip">
+      <small>#012 / 400</small>
+      <b class="player-card__nick">9Class</b>
+      <span class="player-card__ovr"><b>95</b><small>OVR</small></span>
+    </div>
+    <div class="player-card__info">
+      <div class="player-card__tags"><b class="player-card__rarity">Legend</b><span class="player-card__pips"><i></i><i></i><i></i><i></i></span><small class="player-card__src">from 42 pro matches</small></div>
+      <div class="player-card__team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>Team Vision · <b>POS 4</b> · Support</span></div>
+      <div class="player-card__heroes">
+        <div class="player-card__hero"><img src="img/heroes/tusk.webp" alt="Tusk" /><span><b>Tusk</b><small>24 % карт · мета-пик</small></span><em>+5%</em></div>
+        <div class="player-card__hero"><img src="img/heroes/rubick.webp" alt="Rubick" /><span><b>Rubick</b><small>19 % карт</small></span><em>+12%</em></div>
+        <div class="player-card__hero player-card__hero--best"><img src="img/heroes/hoodwink.webp" alt="Hoodwink" /><span><b>Hoodwink</b><small>12 % карт · редкий пик</small></span><em>+25%</em></div>
+      </div>
+      <div class="player-card__stats">
+        <span><b data-l="hi">82</b><small>FRM</small></span>
+        <span><b data-l="mid">60</b><small>FGT</small></span>
+        <span><b data-l="lo">47</b><small>POOL</small></span>
+        <span><b data-l="hi">91</b><small>SUR</small></span>
+        <span><b data-l="lo">36</b><small>VIS</small></span>
+        <span><b data-l="mid">67</b><small>FORM</small></span>
+      </div>
+    </div>
+    <i class="player-card__glare"></i>
+  </div>
+</div>
+    </div>
+  </div>
+</section>
+<section class="section" id="cards-asis">
+  <div class="sec-head">
+    <h2 class="sec-title">Как есть: одна карта — два смысла</h2>
+    <p class="sec-lead">Фиолетовый сейчас значит и «сильная», и Holo. 93 Pure — золотая Base, 89 rue — фиолетовая Holo: с первого взгляда не понять, какая лучше.</p>
+  </div>
+  <div class="cards-asis">
+    <figure class="cards-asis__shot">
+      <img src="img/cards/asis.webp" alt="Карточка 9Class в проде сейчас" width="634" height="800" loading="lazy" />
+      <figcaption>Прод, карточка 9Class</figcaption>
+    </figure>
+    <div class="cards-asis__list">
+      <article class="card">
+        <span class="tag tag--critical">CRITICAL</span>
+        <h3>Сила и редкость смешаны</h3>
+        <p>Рамка теперь — только рейтинг, поверхность — только редкость. Ниже живая матрица.</p>
+      </article>
+      <article class="card">
+        <span class="tag tag--major">MAJOR</span>
+        <h3>Длинный ник ломает карту</h3>
+        <p>Ник обрезается многоточием, полный — в подсказке. Пример в блоке «Три формы».</p>
+      </article>
+      <article class="card">
+        <span class="tag tag--major">MAJOR</span>
+        <h3>Статы без расшифровки</h3>
+        <p>Расшифровка — в подсказке на стате и в «Анатомии».</p>
+      </article>
+      <article class="card">
+        <span class="tag tag--minor">MINOR</span>
+        <h3>Нет героев</h3>
+        <p>Три героя под ником: доля карт и бонус, лучший отмечен звездой.</p>
+      </article>
+    </div>
+  </div>
+</section>
+<section class="section" id="cards-system">
+  <div class="sec-head">
+    <h2 class="sec-title">Сила — рамка, редкость — блеск</h2>
+    <p class="sec-lead">Цвет рамки и полосы показывает только рейтинг. Материал показывает только редкость: матовая, радужный перелив, призма с искрами, фольга со свечением. Оси не смешиваются.</p>
+  </div>
+  <div class="cards-matrix-wrap">
+    <div class="cards-matrix">
+      <span></span>
+      <div class="cards-matrix__col"><b>Base</b><span>матовая</span><small>в бустере 75 %</small></div>
+      <div class="cards-matrix__col"><b>Holo</b><span>радужный перелив</span><small>в бустере 18,6 %</small></div>
+      <div class="cards-matrix__col"><b>Prism</b><span>призма и искры</span><small>в бустере 5 %</small></div>
+      <div class="cards-matrix__col"><b>Legend</b><span>фольга и свечение</span><small>в бустере 1,4 %</small></div>
+      <div class="cards-matrix__row" style="color: var(--c-tier-elite)"><b>Elite</b><small>рейтинг 90+</small></div>
+      <div class="player-card player-card--elite player-card--base" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">95</span>
+            <img class="player-card__ph" src="img/players/9class.webp" alt="9Class" loading="lazy" />
+          </div>
+          <img class="player-card__ph player-card__ph--pop" src="img/players/9class.webp" alt="" aria-hidden="true" loading="lazy" />
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#012 / 400</small>
+            <b class="player-card__nick" title="9Class">9Class</b>
+            <span class="player-card__ovr"><b>95</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Base</b><span class="player-card__pips"><i></i><i></i><i></i><i></i></span><small class="player-card__src">from 42 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>Team Vision · <b>POS 4</b> · Support</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/tusk.webp" alt="Tusk" loading="lazy" /><span><b>Tusk</b><small>24 % карт · мета-пик</small></span><em>+5%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/rubick.webp" alt="Rubick" loading="lazy" /><span><b>Rubick</b><small>19 % карт</small></span><em>+12%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/hoodwink.webp" alt="Hoodwink" loading="lazy" /><span><b>Hoodwink</b><small>12 % карт · редкий пик</small></span><em>+25%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="hi">82</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="mid">60</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="lo">47</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="hi">91</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="lo">36</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="mid">67</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <div class="player-card player-card--elite player-card--holo" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">95</span>
+            <img class="player-card__ph" src="img/players/9class.webp" alt="9Class" loading="lazy" />
+          </div>
+          <img class="player-card__ph player-card__ph--pop" src="img/players/9class.webp" alt="" aria-hidden="true" loading="lazy" />
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#012 / 400</small>
+            <b class="player-card__nick" title="9Class">9Class</b>
+            <span class="player-card__ovr"><b>95</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Holo</b><span class="player-card__pips"><i></i><i></i><i></i><i></i></span><small class="player-card__src">from 42 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>Team Vision · <b>POS 4</b> · Support</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/tusk.webp" alt="Tusk" loading="lazy" /><span><b>Tusk</b><small>24 % карт · мета-пик</small></span><em>+5%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/rubick.webp" alt="Rubick" loading="lazy" /><span><b>Rubick</b><small>19 % карт</small></span><em>+12%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/hoodwink.webp" alt="Hoodwink" loading="lazy" /><span><b>Hoodwink</b><small>12 % карт · редкий пик</small></span><em>+25%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="hi">82</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="mid">60</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="lo">47</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="hi">91</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="lo">36</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="mid">67</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <div class="player-card player-card--elite player-card--prism" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">95</span>
+            <img class="player-card__ph" src="img/players/9class.webp" alt="9Class" loading="lazy" />
+          </div>
+          <img class="player-card__ph player-card__ph--pop" src="img/players/9class.webp" alt="" aria-hidden="true" loading="lazy" />
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#012 / 400</small>
+            <b class="player-card__nick" title="9Class">9Class</b>
+            <span class="player-card__ovr"><b>95</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Prism</b><span class="player-card__pips"><i></i><i></i><i></i><i></i></span><small class="player-card__src">from 42 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>Team Vision · <b>POS 4</b> · Support</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/tusk.webp" alt="Tusk" loading="lazy" /><span><b>Tusk</b><small>24 % карт · мета-пик</small></span><em>+5%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/rubick.webp" alt="Rubick" loading="lazy" /><span><b>Rubick</b><small>19 % карт</small></span><em>+12%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/hoodwink.webp" alt="Hoodwink" loading="lazy" /><span><b>Hoodwink</b><small>12 % карт · редкий пик</small></span><em>+25%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="hi">82</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="mid">60</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="lo">47</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="hi">91</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="lo">36</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="mid">67</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <div class="player-card player-card--elite player-card--legend" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">95</span>
+            <img class="player-card__ph" src="img/players/9class.webp" alt="9Class" loading="lazy" />
+          </div>
+          <img class="player-card__ph player-card__ph--pop" src="img/players/9class.webp" alt="" aria-hidden="true" loading="lazy" />
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#012 / 400</small>
+            <b class="player-card__nick" title="9Class">9Class</b>
+            <span class="player-card__ovr"><b>95</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Legend</b><span class="player-card__pips"><i></i><i></i><i></i><i></i></span><small class="player-card__src">from 42 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>Team Vision · <b>POS 4</b> · Support</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/tusk.webp" alt="Tusk" loading="lazy" /><span><b>Tusk</b><small>24 % карт · мета-пик</small></span><em>+5%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/rubick.webp" alt="Rubick" loading="lazy" /><span><b>Rubick</b><small>19 % карт</small></span><em>+12%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/hoodwink.webp" alt="Hoodwink" loading="lazy" /><span><b>Hoodwink</b><small>12 % карт · редкий пик</small></span><em>+25%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="hi">82</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="mid">60</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="lo">47</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="hi">91</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="lo">36</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="mid">67</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <div class="cards-matrix__row" style="color: var(--c-tier-gold)"><b>Gold</b><small>рейтинг 75–89</small></div>
+      <!-- данные условные -->
+      <div class="player-card player-card--gold player-card--base" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">82</span>
+            <img class="player-card__ph" src="img/players/yatoro.webp" alt="Yatoro" loading="lazy" />
+          </div>
+          <img class="player-card__ph player-card__ph--pop" src="img/players/yatoro.webp" alt="" aria-hidden="true" loading="lazy" />
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#047 / 400</small>
+            <b class="player-card__nick" title="Yatoro">Yatoro</b>
+            <span class="player-card__ovr"><b>82</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Base</b><span class="player-card__pips"><i></i><i></i><i></i></span><small class="player-card__src">from 38 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ua" aria-label="UA"></i><span>Team Spirit · <b>POS 1</b> · Carry</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/faceless_void.webp" alt="Faceless Void" loading="lazy" /><span><b>Faceless Void</b><small>21 % карт · мета-пик</small></span><em>+5%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/morphling.webp" alt="Morphling" loading="lazy" /><span><b>Morphling</b><small>17 % карт</small></span><em>+10%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/terrorblade.webp" alt="Terrorblade" loading="lazy" /><span><b>Terrorblade</b><small>9 % карт · редкий пик</small></span><em>+25%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="hi">93</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="mid">71</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="mid">64</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="hi">78</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="lo">41</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="mid">74</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <!-- данные условные -->
+      <div class="player-card player-card--gold player-card--holo" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">82</span>
+            <img class="player-card__ph" src="img/players/yatoro.webp" alt="Yatoro" loading="lazy" />
+          </div>
+          <img class="player-card__ph player-card__ph--pop" src="img/players/yatoro.webp" alt="" aria-hidden="true" loading="lazy" />
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#047 / 400</small>
+            <b class="player-card__nick" title="Yatoro">Yatoro</b>
+            <span class="player-card__ovr"><b>82</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Holo</b><span class="player-card__pips"><i></i><i></i><i></i></span><small class="player-card__src">from 38 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ua" aria-label="UA"></i><span>Team Spirit · <b>POS 1</b> · Carry</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/faceless_void.webp" alt="Faceless Void" loading="lazy" /><span><b>Faceless Void</b><small>21 % карт · мета-пик</small></span><em>+5%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/morphling.webp" alt="Morphling" loading="lazy" /><span><b>Morphling</b><small>17 % карт</small></span><em>+10%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/terrorblade.webp" alt="Terrorblade" loading="lazy" /><span><b>Terrorblade</b><small>9 % карт · редкий пик</small></span><em>+25%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="hi">93</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="mid">71</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="mid">64</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="hi">78</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="lo">41</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="mid">74</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <!-- данные условные -->
+      <div class="player-card player-card--gold player-card--prism" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">82</span>
+            <img class="player-card__ph" src="img/players/yatoro.webp" alt="Yatoro" loading="lazy" />
+          </div>
+          <img class="player-card__ph player-card__ph--pop" src="img/players/yatoro.webp" alt="" aria-hidden="true" loading="lazy" />
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#047 / 400</small>
+            <b class="player-card__nick" title="Yatoro">Yatoro</b>
+            <span class="player-card__ovr"><b>82</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Prism</b><span class="player-card__pips"><i></i><i></i><i></i></span><small class="player-card__src">from 38 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ua" aria-label="UA"></i><span>Team Spirit · <b>POS 1</b> · Carry</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/faceless_void.webp" alt="Faceless Void" loading="lazy" /><span><b>Faceless Void</b><small>21 % карт · мета-пик</small></span><em>+5%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/morphling.webp" alt="Morphling" loading="lazy" /><span><b>Morphling</b><small>17 % карт</small></span><em>+10%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/terrorblade.webp" alt="Terrorblade" loading="lazy" /><span><b>Terrorblade</b><small>9 % карт · редкий пик</small></span><em>+25%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="hi">93</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="mid">71</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="mid">64</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="hi">78</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="lo">41</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="mid">74</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <!-- данные условные -->
+      <div class="player-card player-card--gold player-card--legend" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">82</span>
+            <img class="player-card__ph" src="img/players/yatoro.webp" alt="Yatoro" loading="lazy" />
+          </div>
+          <img class="player-card__ph player-card__ph--pop" src="img/players/yatoro.webp" alt="" aria-hidden="true" loading="lazy" />
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#047 / 400</small>
+            <b class="player-card__nick" title="Yatoro">Yatoro</b>
+            <span class="player-card__ovr"><b>82</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Legend</b><span class="player-card__pips"><i></i><i></i><i></i></span><small class="player-card__src">from 38 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ua" aria-label="UA"></i><span>Team Spirit · <b>POS 1</b> · Carry</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/faceless_void.webp" alt="Faceless Void" loading="lazy" /><span><b>Faceless Void</b><small>21 % карт · мета-пик</small></span><em>+5%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/morphling.webp" alt="Morphling" loading="lazy" /><span><b>Morphling</b><small>17 % карт</small></span><em>+10%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/terrorblade.webp" alt="Terrorblade" loading="lazy" /><span><b>Terrorblade</b><small>9 % карт · редкий пик</small></span><em>+25%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="hi">93</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="mid">71</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="mid">64</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="hi">78</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="lo">41</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="mid">74</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <div class="cards-matrix__row" style="color: var(--c-tier-silver)"><b>Silver</b><small>рейтинг 60–74</small></div>
+      <!-- данные условные -->
+      <div class="player-card player-card--silver player-card--base" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">70</span>
+            <span class="player-card__ph player-card__ph--none" aria-label="Фото нет"></span>
+          </div>
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#188 / 400</small>
+            <b class="player-card__nick" title="takizawa">takizawa</b>
+            <span class="player-card__ovr"><b>70</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Base</b><span class="player-card__pips"><i></i><i></i></span><small class="player-card__src">from 27 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>VP.Prodigy · <b>POS 3</b> · Offlane</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/lycan.webp" alt="Lycan" loading="lazy" /><span><b>Lycan</b><small>15 % карт</small></span><em>+8%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/beastmaster.webp" alt="Beastmaster" loading="lazy" /><span><b>Beastmaster</b><small>11 % карт</small></span><em>+12%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/mars.webp" alt="Mars" loading="lazy" /><span><b>Mars</b><small>8 % карт · редкий пик</small></span><em>+20%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="mid">74</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="mid">71</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="mid">58</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="mid">66</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="mid">52</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="mid">63</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <!-- данные условные -->
+      <div class="player-card player-card--silver player-card--holo" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">70</span>
+            <span class="player-card__ph player-card__ph--none" aria-label="Фото нет"></span>
+          </div>
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#188 / 400</small>
+            <b class="player-card__nick" title="takizawa">takizawa</b>
+            <span class="player-card__ovr"><b>70</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Holo</b><span class="player-card__pips"><i></i><i></i></span><small class="player-card__src">from 27 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>VP.Prodigy · <b>POS 3</b> · Offlane</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/lycan.webp" alt="Lycan" loading="lazy" /><span><b>Lycan</b><small>15 % карт</small></span><em>+8%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/beastmaster.webp" alt="Beastmaster" loading="lazy" /><span><b>Beastmaster</b><small>11 % карт</small></span><em>+12%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/mars.webp" alt="Mars" loading="lazy" /><span><b>Mars</b><small>8 % карт · редкий пик</small></span><em>+20%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="mid">74</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="mid">71</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="mid">58</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="mid">66</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="mid">52</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="mid">63</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <!-- данные условные -->
+      <div class="player-card player-card--silver player-card--prism" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">70</span>
+            <span class="player-card__ph player-card__ph--none" aria-label="Фото нет"></span>
+          </div>
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#188 / 400</small>
+            <b class="player-card__nick" title="takizawa">takizawa</b>
+            <span class="player-card__ovr"><b>70</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Prism</b><span class="player-card__pips"><i></i><i></i></span><small class="player-card__src">from 27 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>VP.Prodigy · <b>POS 3</b> · Offlane</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/lycan.webp" alt="Lycan" loading="lazy" /><span><b>Lycan</b><small>15 % карт</small></span><em>+8%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/beastmaster.webp" alt="Beastmaster" loading="lazy" /><span><b>Beastmaster</b><small>11 % карт</small></span><em>+12%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/mars.webp" alt="Mars" loading="lazy" /><span><b>Mars</b><small>8 % карт · редкий пик</small></span><em>+20%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="mid">74</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="mid">71</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="mid">58</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="mid">66</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="mid">52</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="mid">63</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <!-- данные условные -->
+      <div class="player-card player-card--silver player-card--legend" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">70</span>
+            <span class="player-card__ph player-card__ph--none" aria-label="Фото нет"></span>
+          </div>
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#188 / 400</small>
+            <b class="player-card__nick" title="takizawa">takizawa</b>
+            <span class="player-card__ovr"><b>70</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Legend</b><span class="player-card__pips"><i></i><i></i></span><small class="player-card__src">from 27 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>VP.Prodigy · <b>POS 3</b> · Offlane</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/lycan.webp" alt="Lycan" loading="lazy" /><span><b>Lycan</b><small>15 % карт</small></span><em>+8%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/beastmaster.webp" alt="Beastmaster" loading="lazy" /><span><b>Beastmaster</b><small>11 % карт</small></span><em>+12%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/mars.webp" alt="Mars" loading="lazy" /><span><b>Mars</b><small>8 % карт · редкий пик</small></span><em>+20%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="mid">74</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="mid">71</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="mid">58</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="mid">66</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="mid">52</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="mid">63</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <div class="cards-matrix__row" style="color: var(--c-tier-bronze)"><b>Bronze</b><small>рейтинг меньше 60</small></div>
+      <!-- данные условные -->
+      <div class="player-card player-card--bronze player-card--base" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">52</span>
+            <span class="player-card__ph player-card__ph--none" aria-label="Фото нет"></span>
+          </div>
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#301 / 400</small>
+            <b class="player-card__nick" title="izdu">izdu</b>
+            <span class="player-card__ovr"><b>52</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Base</b><span class="player-card__pips"><i></i></span><small class="player-card__src">from 14 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>Yangon Galacticos · <b>POS 2</b> · Mid</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/morphling.webp" alt="Morphling" loading="lazy" /><span><b>Morphling</b><small>16 % карт · мета-пик</small></span><em>+5%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/tusk.webp" alt="Tusk" loading="lazy" /><span><b>Tusk</b><small>10 % карт</small></span><em>+10%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/mars.webp" alt="Mars" loading="lazy" /><span><b>Mars</b><small>7 % карт · редкий пик</small></span><em>+25%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="mid">55</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="lo">48</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="lo">41</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="mid">50</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="lo">38</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="lo">44</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <!-- данные условные -->
+      <div class="player-card player-card--bronze player-card--holo" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">52</span>
+            <span class="player-card__ph player-card__ph--none" aria-label="Фото нет"></span>
+          </div>
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#301 / 400</small>
+            <b class="player-card__nick" title="izdu">izdu</b>
+            <span class="player-card__ovr"><b>52</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Holo</b><span class="player-card__pips"><i></i></span><small class="player-card__src">from 14 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>Yangon Galacticos · <b>POS 2</b> · Mid</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/morphling.webp" alt="Morphling" loading="lazy" /><span><b>Morphling</b><small>16 % карт · мета-пик</small></span><em>+5%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/tusk.webp" alt="Tusk" loading="lazy" /><span><b>Tusk</b><small>10 % карт</small></span><em>+10%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/mars.webp" alt="Mars" loading="lazy" /><span><b>Mars</b><small>7 % карт · редкий пик</small></span><em>+25%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="mid">55</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="lo">48</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="lo">41</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="mid">50</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="lo">38</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="lo">44</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <!-- данные условные -->
+      <div class="player-card player-card--bronze player-card--prism" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">52</span>
+            <span class="player-card__ph player-card__ph--none" aria-label="Фото нет"></span>
+          </div>
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#301 / 400</small>
+            <b class="player-card__nick" title="izdu">izdu</b>
+            <span class="player-card__ovr"><b>52</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Prism</b><span class="player-card__pips"><i></i></span><small class="player-card__src">from 14 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>Yangon Galacticos · <b>POS 2</b> · Mid</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/morphling.webp" alt="Morphling" loading="lazy" /><span><b>Morphling</b><small>16 % карт · мета-пик</small></span><em>+5%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/tusk.webp" alt="Tusk" loading="lazy" /><span><b>Tusk</b><small>10 % карт</small></span><em>+10%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/mars.webp" alt="Mars" loading="lazy" /><span><b>Mars</b><small>7 % карт · редкий пик</small></span><em>+25%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="mid">55</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="lo">48</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="lo">41</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="mid">50</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="lo">38</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="lo">44</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <!-- данные условные -->
+      <div class="player-card player-card--bronze player-card--legend" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">52</span>
+            <span class="player-card__ph player-card__ph--none" aria-label="Фото нет"></span>
+          </div>
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#301 / 400</small>
+            <b class="player-card__nick" title="izdu">izdu</b>
+            <span class="player-card__ovr"><b>52</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Legend</b><span class="player-card__pips"><i></i></span><small class="player-card__src">from 14 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>Yangon Galacticos · <b>POS 2</b> · Mid</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/morphling.webp" alt="Morphling" loading="lazy" /><span><b>Morphling</b><small>16 % карт · мета-пик</small></span><em>+5%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/tusk.webp" alt="Tusk" loading="lazy" /><span><b>Tusk</b><small>10 % карт</small></span><em>+10%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/mars.webp" alt="Mars" loading="lazy" /><span><b>Mars</b><small>7 % карт · редкий пик</small></span><em>+25%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="mid">55</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="lo">48</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="lo">41</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="mid">50</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="lo">38</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="lo">44</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section" id="cards-forms">
+  <div class="sec-head">
+    <h2 class="sec-title">Три формы для разных мест</h2>
+    <p class="sec-lead">Полная — коллекция и бустер. E — «Your players today» и состав. F — Team of the week и сетка. Длинный ник обрезается многоточием, полный — в подсказке.</p>
+  </div>
+  <div class="cards-forms">
+    <figure class="cards-forms__item">
+      <div class="player-card player-card--elite player-card--legend" data-tilt style="--w: 312px">
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">95</span>
+            <img class="player-card__ph" src="img/players/9class.webp" alt="9Class" loading="lazy" />
+          </div>
+          <img class="player-card__ph player-card__ph--pop" src="img/players/9class.webp" alt="" aria-hidden="true" loading="lazy" />
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#012 / 400</small>
+            <b class="player-card__nick" title="9Class">9Class</b>
+            <span class="player-card__ovr"><b>95</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Legend</b><span class="player-card__pips"><i></i><i></i><i></i><i></i></span><small class="player-card__src">from 42 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>Team Vision · <b>POS 4</b> · Support</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/tusk.webp" alt="Tusk" loading="lazy" /><span><b>Tusk</b><small>24 % карт · мета-пик</small></span><em>+5%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/rubick.webp" alt="Rubick" loading="lazy" /><span><b>Rubick</b><small>19 % карт</small></span><em>+12%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/hoodwink.webp" alt="Hoodwink" loading="lazy" /><span><b>Hoodwink</b><small>12 % карт · редкий пик</small></span><em>+25%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="hi">82</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="mid">60</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="lo">47</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="hi">91</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="lo">36</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="mid">67</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <figcaption><b>Полная</b> · 440×616 · коллекция, бустер</figcaption>
+    </figure>
+    <figure class="cards-forms__item">
+      <div class="player-card player-card--e player-card--elite player-card--legend" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__e-strip"><small>OVR</small><b>95</b><hr /><small>POS 4</small><span class="player-card__pips"><i></i><i></i><i></i><i></i></span></div>
+          <div class="player-card__e-art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <img class="player-card__ph" src="img/players/9class.webp" alt="9Class" loading="lazy" />
+          </div>
+          <img class="player-card__ph player-card__ph--pop" src="img/players/9class.webp" alt="" aria-hidden="true" loading="lazy" />
+          <div class="player-card__e-main">
+            <div class="player-card__e-info">
+              <div class="player-card__e-top"><b class="player-card__e-nick" title="9Class">9Class</b><b class="player-card__rarity">Legend</b></div>
+              <div class="player-card__e-team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>Team Vision · <b>Support</b></span></div>
+              <div class="player-card__e-heroes">
+                <div><img src="img/heroes/tusk.webp" alt="" loading="lazy" /><span>Tusk</span><em>+5%</em></div>
+                <div><img src="img/heroes/rubick.webp" alt="" loading="lazy" /><span>Rubick</span><em>+12%</em></div>
+                <div class="player-card__hero--best"><img src="img/heroes/hoodwink.webp" alt="" loading="lazy" /><span>Hoodwink</span><em>+25%</em></div>
+              </div>
+            </div>
+            <div class="player-card__e-stats">
+              <span title="FRM — фарм"><b data-l="hi">82</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="mid">60</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="lo">47</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="hi">91</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="lo">36</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="mid">67</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <figcaption><b>E · горизонтальная</b> · 489×166 · Your players today, состав</figcaption>
+    </figure>
+    <figure class="cards-forms__item">
+      <div class="player-card player-card--f player-card--elite player-card--legend" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__f-art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">95</span>
+            <img class="player-card__ph" src="img/players/9class.webp" alt="9Class" loading="lazy" />
+          </div>
+          <img class="player-card__ph player-card__ph--pop" src="img/players/9class.webp" alt="" aria-hidden="true" loading="lazy" />
+          <div class="player-card__f-info">
+            <b class="player-card__rarity">Legend</b>
+            <div class="player-card__f-ic">
+              <span><img src="img/heroes/tusk.webp" alt="Tusk +5%" loading="lazy" /></span>
+              <span><img src="img/heroes/rubick.webp" alt="Rubick +12%" loading="lazy" /></span>
+              <span class="player-card__hero--best"><img src="img/heroes/hoodwink.webp" alt="Hoodwink +25%" loading="lazy" /></span>
+            </div>
+            <div class="player-card__f-team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>VSN · <b>POS 4</b></span></div>
+          </div>
+          <div class="player-card__f-strip">
+            <b class="player-card__f-nick" title="9Class">9Class</b>
+            <span class="player-card__ovr"><b>95</b><small>OVR</small></span>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <figcaption><b>F · мини</b> · 170×234 · Team of the week, сетка, бустер</figcaption>
+    </figure>
+  </div>
+  <h3 class="cards-forms__sub">Длинный ник: «Y36EKuCTAH_HA_CB9I3u»</h3>
+  <div class="cards-forms">
+    <figure class="cards-forms__item">
+      <!-- данные условные -->
+      <div class="player-card player-card--e player-card--bronze player-card--base" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__e-strip"><small>OVR</small><b>52</b><hr /><small>POS 5</small><span class="player-card__pips"><i></i></span></div>
+          <div class="player-card__e-art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__ph player-card__ph--none" aria-label="Фото нет"></span>
+          </div>
+          <div class="player-card__e-main">
+            <div class="player-card__e-info">
+              <div class="player-card__e-top"><b class="player-card__e-nick" title="Y36EKuCTAH_HA_CB9I3u">Y36EKuCTAH_HA_CB9I3u</b><b class="player-card__rarity">Base</b></div>
+              <div class="player-card__e-team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>Xipto Esports · <b>Support</b></span></div>
+              <div class="player-card__e-heroes">
+                <div><img src="img/heroes/rubick.webp" alt="" loading="lazy" /><span>Rubick</span><em>+5%</em></div>
+                <div><img src="img/heroes/tusk.webp" alt="" loading="lazy" /><span>Tusk</span><em>+8%</em></div>
+                <div class="player-card__hero--best"><img src="img/heroes/hoodwink.webp" alt="" loading="lazy" /><span>Hoodwink</span><em>+25%</em></div>
+              </div>
+            </div>
+            <div class="player-card__e-stats">
+              <span title="FRM — фарм"><b data-l="lo">38</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="mid">55</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="lo">44</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="lo">49</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="mid">71</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="mid">52</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <figcaption>E · Bronze · Base</figcaption>
+    </figure>
+    <figure class="cards-forms__item">
+      <!-- данные условные -->
+      <div class="player-card player-card--f player-card--bronze player-card--base" data-tilt>
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__f-art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">52</span>
+            <span class="player-card__ph player-card__ph--none" aria-label="Фото нет"></span>
+          </div>
+          <div class="player-card__f-info">
+            <b class="player-card__rarity">Base</b>
+            <div class="player-card__f-ic">
+              <span><img src="img/heroes/rubick.webp" alt="Rubick +5%" loading="lazy" /></span>
+              <span><img src="img/heroes/tusk.webp" alt="Tusk +8%" loading="lazy" /></span>
+              <span class="player-card__hero--best"><img src="img/heroes/hoodwink.webp" alt="Hoodwink +25%" loading="lazy" /></span>
+            </div>
+            <div class="player-card__f-team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>XPT · <b>POS 5</b></span></div>
+          </div>
+          <div class="player-card__f-strip">
+            <b class="player-card__f-nick" title="Y36EKuCTAH_HA_CB9I3u">Y36EKuCTAH_HA_CB9I3u</b>
+            <span class="player-card__ovr"><b>52</b><small>OVR</small></span>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <figcaption>F · Bronze · Base</figcaption>
+    </figure>
+  </div>
+</section>
+<section class="section" id="cards-anatomy">
+  <div class="sec-head">
+    <h2 class="sec-title">Анатомия карты</h2>
+  </div>
+  <div class="cards-anat">
+    <div class="cards-anat__card">
+      <div class="player-card player-card--elite player-card--legend" style="--w: 420px">
+        <div class="player-card__in">
+          <div class="player-card__body"></div>
+          <div class="player-card__art">
+            <i class="player-card__shine"></i>
+            <i class="player-card__spark"><b></b><b></b><b></b><b></b><b></b><b></b></i>
+            <span class="player-card__big">95</span>
+            <img class="player-card__ph" src="img/players/9class.webp" alt="9Class" loading="lazy" />
+          </div>
+          <img class="player-card__ph player-card__ph--pop" src="img/players/9class.webp" alt="" aria-hidden="true" loading="lazy" />
+          <i class="player-card__corner"></i><i class="player-card__corner"></i>
+          <div class="player-card__strip">
+            <small>#012 / 400</small>
+            <b class="player-card__nick" title="9Class">9Class</b>
+            <span class="player-card__ovr"><b>95</b><small>OVR</small></span>
+          </div>
+          <div class="player-card__info">
+            <div class="player-card__tags"><b class="player-card__rarity">Legend</b><span class="player-card__pips"><i></i><i></i><i></i><i></i></span><small class="player-card__src">from 42 pro matches</small></div>
+            <div class="player-card__team"><i class="player-card__flag player-card__flag--ru" aria-label="RU"></i><span>Team Vision · <b>POS 4</b> · Support</span></div>
+            <div class="player-card__heroes">
+              <div class="player-card__hero"><img src="img/heroes/tusk.webp" alt="Tusk" loading="lazy" /><span><b>Tusk</b><small>24 % карт · мета-пик</small></span><em>+5%</em></div>
+              <div class="player-card__hero"><img src="img/heroes/rubick.webp" alt="Rubick" loading="lazy" /><span><b>Rubick</b><small>19 % карт</small></span><em>+12%</em></div>
+              <div class="player-card__hero player-card__hero--best"><img src="img/heroes/hoodwink.webp" alt="Hoodwink" loading="lazy" /><span><b>Hoodwink</b><small>12 % карт · редкий пик</small></span><em>+25%</em></div>
+            </div>
+            <div class="player-card__stats">
+              <span title="FRM — фарм"><b data-l="hi">82</b><small>FRM</small></span>
+              <span title="FGT — драки"><b data-l="mid">60</b><small>FGT</small></span>
+              <span title="POOL — пул героев"><b data-l="lo">47</b><small>POOL</small></span>
+              <span title="SUR — выживаемость"><b data-l="hi">91</b><small>SUR</small></span>
+              <span title="VIS — обзор"><b data-l="lo">36</b><small>VIS</small></span>
+              <span title="FORM — форма"><b data-l="mid">67</b><small>FORM</small></span>
+            </div>
+          </div>
+          <i class="player-card__glare"></i>
+        </div>
+      </div>
+      <span class="cards-anat__pin" style="left: 89.5%; top: 92%">1</span>
+      <span class="cards-anat__pin" style="left: 89.5%; top: 45%">2</span>
+      <span class="cards-anat__pin" style="left: 42%; top: 22%">3</span>
+      <span class="cards-anat__pin" style="left: 12%; top: 61%">4</span>
+      <span class="cards-anat__pin" style="left: 29%; top: 61%">5</span>
+      <span class="cards-anat__pin" style="left: 22%; top: 66.5%">6</span>
+      <span class="cards-anat__pin" style="left: 50%; top: 76%">7</span>
+      <span class="cards-anat__pin" style="left: 40%; top: 94%">8</span>
+      <span class="cards-anat__pin" style="left: 89.5%; top: 7%">9</span>
+      <span class="cards-anat__pin" style="left: 72%; top: 61%">10</span>
+    </div>
+    <div class="cards-anat__text">
+      <ol class="cards-anat__list">
+      <li>Рейтинг (OVR) — число и цвет рамки</li>
+      <li>Ник — крупно на полосе, длинный — с многоточием</li>
+      <li>Фото — «большая бошка», голова выходит за рамку</li>
+      <li>Бейдж редкости: Base / Holo / Prism / Legend</li>
+      <li>Ступень силы — ромбы, от 1 до 4</li>
+      <li>Команда, флаг, позиция и роль</li>
+      <li>Три героя: доля карт и бонус, лучший — ★</li>
+      <li>6 статов, цвет значения — высокий / средний / низкий</li>
+      <li>Номер коллекции — #012 / 400</li>
+      <li>«from 42 pro matches» — на скольких матчах основана карта</li>
+      </ol>
+      <h3>Статы</h3>
+      <p class="cards-anat__note">Рабочая версия: в продукте расшифровки нет.</p>
+      <dl class="cards-anat__stats">
+      <div><dt>FRM</dt><dd>фарм</dd></div>
+      <div><dt>FGT</dt><dd>драки</dd></div>
+      <div><dt>POOL</dt><dd>пул героев</dd></div>
+      <div><dt>SUR</dt><dd>выживаемость</dd></div>
+      <div><dt>VIS</dt><dd>обзор</dd></div>
+      <div><dt>FORM</dt><dd>форма</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="site-footer__in">© FantasyWeb</div>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>

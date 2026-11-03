@@ -1,0 +1,140 @@
+/* Тема v5 · Подсветки — поверх v2 «Унифицировано» (widgets-23). Всё под body.th-glow
+   Как у Linear / Vercel / Raycast: тёмные поверхности с холодным оттенком, рамка — градиент со светлой дугой, мягкое свечение вокруг,
+   «прожектор» за курсором (--gx/--gy пишет скрипт страницы), активное — светится акцентом. Шрифты, размеры и логика — как в v2. */
+
+/* ——— Токены ——— */
+body.th-glow{
+  --w-page:#040408; --w-bg:#0b0b12; --w-mid-bg:#12121c; --w-muted:#1b1b29; --w-hover:#262638; --w-skel:#262638;
+  --w-border:rgba(255,255,255,.07); --w-ring:#3b3b52;
+  --w-fg:#f3f3f8; --w-muted-fg:#8f8fab; --w-primary:#f3f3f8; --w-primary-fg:#0b0b12;
+  --w-up:#34d399; --w-up-bg:rgba(52,211,153,.12); --w-up-fg:#a7f3d0;
+  --w-down:#ff4d6a; --w-down-bg:rgba(255,77,106,.13); --w-down-fg:#fda4b4;
+  --w-star:#fcd34d; --w-a:#7aa2ff; --w-b:#fbbf24;
+  /* акцент темы: ярко-зелёный (дирижёр 23.10, образец — #b3e053) и светлее для перелива */
+  --gl-a:#b3e053; --gl-b:#d9f59a; --gl-a-rgb:179,224,83; --gl-b-rgb:217,245,154;
+  --gl-grad:linear-gradient(135deg, var(--gl-a), var(--gl-b));
+  --gl-num:#dcf2a6;                                    /* числа — светлый акцент */
+  min-height:100vh;
+  background:
+    radial-gradient(900px 420px at 30% -8%, rgba(var(--gl-a-rgb),.16), transparent 70%),
+    radial-gradient(700px 380px at 85% 110%, rgba(var(--gl-b-rgb),.08), transparent 70%),
+    var(--w-page);
+}
+body.th-glow .slot > b{ color:#6f6f8a; }
+
+/* ——— Поверхность виджета: одна на все 4 ——— */
+.th-glow .w:not(.m6), .th-glow .w.m6 .m6-main{
+  background:
+    radial-gradient(120% 60% at 50% -20%, rgba(var(--gl-a-rgb),.09), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.02), transparent 160px),
+    var(--w-bg);
+  border-color:transparent;
+}
+.th-glow .w{ position:relative; isolation:isolate; border-radius:14px;
+  box-shadow:0 0 0 1px rgba(0,0,0,.6), 0 24px 60px -24px rgba(var(--gl-a-rgb),.35), 0 8px 24px -12px rgba(0,0,0,.8);
+  transition:box-shadow .6s cubic-bezier(.2,.8,.2,1); }
+.th-glow .w.m6 .m6-main{ border-radius:14px 14px 12px 12px; border-color:rgba(255,255,255,.06); }
+.th-glow .w:hover{ box-shadow:0 0 0 1px rgba(0,0,0,.6), 0 28px 70px -22px rgba(var(--gl-a-rgb),.5), 0 0 40px -14px rgba(var(--gl-b-rgb),.35), 0 8px 24px -12px rgba(0,0,0,.8); }
+
+/* Рамка: тонкая база + яркое пятно у курсора, плывёт за ним мягко (дирижёр 23.10: «плавнее, бегущую строку убрать» — дуги по краю нет) */
+.th-glow .w::before{ content:''; position:absolute; inset:0; z-index:3; border-radius:inherit; padding:1px; pointer-events:none;
+  background:
+    radial-gradient(180px circle at var(--gx, -50%) var(--gy, -50%), rgba(236,250,200,1), rgba(var(--gl-b-rgb),.5) 35%, transparent 70%),
+    linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.05) 40%, rgba(255,255,255,.04));
+  mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite:exclude;
+  transition:--gx .45s cubic-bezier(.2,.8,.2,1), --gy .45s cubic-bezier(.2,.8,.2,1); }
+/* Прожектор внутри — мягкий свет за курсором, только при наведении */
+.th-glow .w::after{ content:''; position:absolute; inset:0; z-index:2; border-radius:inherit; pointer-events:none; opacity:0; transition:opacity .6s cubic-bezier(.2,.8,.2,1), --gx .45s cubic-bezier(.2,.8,.2,1), --gy .45s cubic-bezier(.2,.8,.2,1);
+  background:radial-gradient(260px circle at var(--gx, 50%) var(--gy, 50%), rgba(var(--gl-a-rgb),.09), rgba(var(--gl-b-rgb),.03) 45%, transparent 70%); }
+.th-glow .w:hover::after{ opacity:1; }
+/* свет за курсором плывёт, а не прыгает: --gx / --gy — зарегистрированные свойства с переходом */
+@property --gx{ syntax:'<length-percentage>'; inherits:true; initial-value:-50%; } @property --gy{ syntax:'<length-percentage>'; inherits:true; initial-value:-50%; }
+
+/* MVP: рамка и свет — на всём блоке (карточка + кнопка), у кнопки своя тихая поверхность */
+.th-glow .w.m6{ background:none; }
+.th-glow .w.m6::after{ border-radius:14px; }
+.th-glow .w a.m6-dock{ background:linear-gradient(180deg, #0e0e17, #0b0b12); border-color:transparent; border-radius:0 0 14px 14px; }
+.th-glow .w a.m6-dock:hover{ background:linear-gradient(180deg, #14142a, #0f0f1c); }
+.th-glow .m6-fade{ background:linear-gradient(transparent, rgba(11,11,18,.85) 60%, var(--w-bg)); }
+.th-glow .m6-bg{ opacity:.09; filter:grayscale(1) drop-shadow(0 0 24px rgba(var(--gl-a-rgb),.6)); }
+.th-glow .m6-floor{ background:radial-gradient(rgba(var(--gl-a-rgb),.35), rgba(0,0,0,.5) 40%, transparent 70%); }
+
+/* ——— Шапки, разделители, подписи ——— */
+.th-glow .w .t5-arch:hover, .th-glow .w .s6-arch:hover, .th-glow .w .t2-top:hover{ color:#fff; text-shadow:0 0 12px rgba(var(--gl-b-rgb),.7); }
+.th-glow .w .t5-ib:hover, .th-glow .w .s6-ib:hover{ background:rgba(var(--gl-a-rgb),.14); color:#fff; box-shadow:inset 0 0 0 1px rgba(var(--gl-a-rgb),.35); }
+.th-glow .t5-lbl, .th-glow .t2-th, .th-glow .t5-tbl th{ color:#6f6f8c; }
+.th-glow .w-scroll{ scrollbar-color:#2b2b40 transparent; }
+
+/* ——— LIVE и числа — акцентом ——— */
+.th-glow .u-when .u-live, .th-glow .u-when > b.u-live, .th-glow .t5-live, .th-glow .s9-live--text{ color:#ff5c77; text-shadow:0 0 10px rgba(255,77,106,.75), 0 0 2px rgba(255,77,106,.6); }
+.th-glow .u-count{ color:var(--gl-num); text-shadow:0 0 10px rgba(var(--gl-a-rgb),.55); }
+.th-glow .m6--depth .m6-c--br b{ color:#fff; text-shadow:0 0 18px rgba(var(--gl-a-rgb),.9), 0 0 4px rgba(var(--gl-b-rgb),.5), 0 6px 14px rgba(0,0,0,.9); }
+.th-glow .t5-tbl td:last-child, .th-glow .t5-bx span b, .th-glow .t5-fm__s, .th-glow .t5-fc span b{ color:var(--gl-num); }
+.th-glow .t5-bx span.is-lose b{ color:inherit; }
+
+/* ——— Строки: наведение — как в v2 (цвет тира / команд), поверх — тонкий свет сверху и снизу ——— */
+.th-glow.uni .w .t5-tr, .th-glow .w .s3-r, .th-glow .w.t2--sk .t2-r, .th-glow .w button.s8-r{ transition:background .2s, box-shadow .2s; }
+.th-glow.uni .w .t5-tr:hover{ background:radial-gradient(120% 140% at 0% 50%, color-mix(in srgb, var(--tc, #fff) 18%, transparent), color-mix(in srgb, var(--tc, #fff) 6%, transparent));
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--tc, #fff) 22%, transparent), 0 0 18px -6px color-mix(in srgb, var(--tc, #fff) 40%, transparent); }
+.th-glow .w .s3-r:hover, .th-glow .w.t2-rows--tint .t2-r:hover, .th-glow .w.s3 button.s8-r.is-bad:hover{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06), inset 0 -1px 0 rgba(255,255,255,.04); }
+.th-glow .w .s3-r:not([style*='--ta']):hover{ background:rgba(var(--gl-a-rgb),.08); }
+
+/* ——— Сегменты: одна подложка, активное — светящаяся пилюля ——— */
+.th-glow.uni .t5-seg, .th-glow.uni .m6-seg, .th-glow .s6-seg{ background:rgba(255,255,255,.035); box-shadow:inset 0 0 0 1px rgba(255,255,255,.06); }
+.th-glow.uni .w .t5-seg button, .th-glow.uni .w .m6-seg button, .th-glow .w .s6-seg button{ transition:color .2s, background .2s, box-shadow .2s; }
+.th-glow.uni .w .t5-seg button.is-on, .th-glow.uni .w .m6-seg button.is-on, .th-glow .w .s6-seg button.is-on{ color:#fff;
+  background:linear-gradient(180deg, rgba(var(--gl-a-rgb),.30), rgba(var(--gl-a-rgb),.14));
+  box-shadow:inset 0 0 0 1px rgba(var(--gl-a-rgb),.55), inset 0 1px 0 rgba(255,255,255,.18), 0 0 16px -2px rgba(var(--gl-a-rgb),.55); text-shadow:0 0 10px rgba(var(--gl-a-rgb),.8); }
+.th-glow.uni .m6--depth .m6-seg.m6-up{ box-shadow:inset 0 0 0 1px rgba(255,255,255,.06), 0 10px 24px rgba(0,0,0,.55); background:rgba(14,14,24,.72); backdrop-filter:blur(8px); }
+
+/* ——— Кнопки ——— */
+.th-glow .w .s6-btn{ border-color:rgba(255,255,255,.1); transition:background .2s, box-shadow .2s; }
+.th-glow .w .s6-btn:hover{ background:rgba(var(--gl-a-rgb),.1); box-shadow:0 0 14px -4px rgba(var(--gl-a-rgb),.5); }
+.th-glow .w .s6-btn--pri{ color:#0b0b12; background:linear-gradient(135deg, var(--gl-a), var(--gl-b)); border-color:transparent;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35), 0 0 0 1px rgba(var(--gl-a-rgb),.6), 0 6px 22px -6px rgba(var(--gl-a-rgb),.85); text-shadow:0 1px 1px rgba(0,0,0,.25); }
+.th-glow .w .s6-btn--pri:hover{ background:linear-gradient(135deg, #c2ea6a, #e4f9b4); box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 0 0 1px rgba(var(--gl-b-rgb),.6), 0 8px 28px -4px rgba(var(--gl-b-rgb),.75); }
+.th-glow .w .s6-btn--ghost{ border-color:transparent; }
+.th-glow .w.t2--sk .t2-all{ background:linear-gradient(180deg, #0e0e17, #0b0b12); }
+.th-glow .m6-dock--split .m6-dock__c{ background:rgba(var(--gl-a-rgb),.14); box-shadow:inset 0 0 0 1px rgba(var(--gl-a-rgb),.4), 0 0 14px -4px rgba(var(--gl-a-rgb),.7); color:#fff; }
+.th-glow .w a.m6-dock:hover .m6-dock__c{ box-shadow:inset 0 0 0 1px rgba(var(--gl-b-rgb),.6), 0 0 18px -2px rgba(var(--gl-b-rgb),.7); }
+.th-glow .m6-dock__c::before{ box-shadow:0 0 8px rgba(251,191,36,.8), inset 0 0 0 1px rgba(0,0,0,.25); }
+.th-glow .w a.m6-dock.is-mine{ color:var(--w-up); text-shadow:0 0 12px rgba(52,211,153,.6); }
+
+/* ——— Турнир: таблица, сетка, финал ——— */
+.th-glow .t5-tbl tr.t5-z--up td, .th-glow .t5-tbl tr.t5-z--mid td, .th-glow .t5-tbl tr.t5-z--down td{ background:none; }  /* зона — градиентом по всей строке, не по ячейкам */
+.th-glow .t5-tbl tr.t5-z--up{ background:linear-gradient(90deg, rgba(52,211,153,.18), rgba(52,211,153,.03) 70%); }
+.th-glow .t5-tbl tr.t5-z--mid{ background:linear-gradient(90deg, rgba(251,191,36,.16), rgba(251,191,36,.03) 70%); }
+.th-glow .t5-tbl tr.t5-z--down{ background:linear-gradient(90deg, rgba(255,77,106,.17), rgba(255,77,106,.03) 70%); }
+.th-glow .t5-form i.is-w{ box-shadow:0 0 6px rgba(52,211,153,.8); } .th-glow .t5-form i.is-l{ box-shadow:0 0 6px rgba(255,77,106,.6); }
+.th-glow .t5-sq.t5-z--up{ box-shadow:0 0 6px var(--w-up); } .th-glow .t5-sq.t5-z--mid{ box-shadow:0 0 6px var(--w-b); } .th-glow .t5-sq.t5-z--down{ box-shadow:0 0 6px var(--w-down); }
+.th-glow .t5-bx, .th-glow .t5-fc{ background:linear-gradient(180deg, #15151f, #10101a); box-shadow:inset 0 0 0 1px rgba(255,255,255,.06); }
+.th-glow .t5-bx.is-on{ background:linear-gradient(180deg, rgba(var(--gl-a-rgb),.16), rgba(var(--gl-a-rgb),.05));
+  box-shadow:inset 0 0 0 1px rgba(var(--gl-a-rgb),.7), 0 0 20px -4px rgba(var(--gl-a-rgb),.7); }
+.th-glow .t5-ln path{ stroke:rgba(var(--gl-a-rgb),.35); }
+.th-glow .t5-fm{ border-top-color:rgba(255,255,255,.07); }
+.th-glow .t5-pop{ background:#0f0f18; border-color:rgba(var(--gl-a-rgb),.35); box-shadow:0 10px 30px rgba(0,0,0,.6), 0 0 20px -6px rgba(var(--gl-a-rgb),.5); }
+.th-glow .w .t5-inf{ border-color:rgba(var(--gl-a-rgb),.5); color:var(--gl-num); }
+
+/* ——— Замены: шаги, карточки, алерты ——— */
+.th-glow .s6-steps i{ background:rgba(255,255,255,.08); }
+.th-glow .s6-steps .is-done i{ background:var(--w-up); box-shadow:0 0 8px rgba(52,211,153,.6); }
+.th-glow .s6-steps .is-on i{ background:var(--gl-grad); box-shadow:0 0 10px rgba(var(--gl-a-rgb),.9); }
+.th-glow .s6-who, .th-glow .s6-sum, .th-glow .s6-card, .th-glow .s6-note{ background:linear-gradient(180deg, #15151f, #10101a); box-shadow:inset 0 0 0 1px rgba(255,255,255,.06); }
+.th-glow .w .s6-pl button, .th-glow .w .s6-pp button, .th-glow .w .s6-maps button, .th-glow .w .s6-terms button{ background:rgba(255,255,255,.04); box-shadow:inset 0 0 0 1px rgba(255,255,255,.06); }
+.th-glow .w .s6-pl button.is-on, .th-glow .w .s6-pp button.is-on, .th-glow .w .s6-maps button.is-on, .th-glow .w .s6-terms button.is-on{ color:#fff;
+  background:linear-gradient(180deg, rgba(var(--gl-a-rgb),.32), rgba(var(--gl-a-rgb),.14)); box-shadow:inset 0 0 0 1px rgba(var(--gl-a-rgb),.6), 0 0 14px -2px rgba(var(--gl-a-rgb),.6); }
+.th-glow .s6-in{ border-color:rgba(var(--gl-a-rgb),.6); box-shadow:0 0 0 3px rgba(var(--gl-a-rgb),.15); }
+.th-glow .s6-ft{ border-top-color:rgba(255,255,255,.06); }
+.th-glow .s6-ft--warn{ background:linear-gradient(90deg, rgba(251,191,36,.16), rgba(251,191,36,.05)); box-shadow:inset 0 0 0 1px rgba(251,191,36,.22); }
+.th-glow .s6-ft--ok{ background:linear-gradient(90deg, rgba(52,211,153,.16), rgba(52,211,153,.05)); box-shadow:inset 0 0 0 1px rgba(52,211,153,.22); }
+.th-glow .s8-toast{ background:var(--gl-grad); color:#fff; box-shadow:0 8px 24px -6px rgba(var(--gl-a-rgb),.8); }
+
+/* ——— Трансферы: новое лого чуть светится ——— */
+.th-glow .w.tr5 .tr5-to .t2-lg{ filter:drop-shadow(0 0 6px rgba(255,255,255,.18)); }
+.th-glow .tr5-go{ color:var(--gl-num); opacity:.7; }
+
+@media (prefers-reduced-motion: reduce){
+  .th-glow .w::before, .th-glow .w::after{ transition:none; }
+  .th-glow .w, .th-glow .w::after{ transition:none; }
+}

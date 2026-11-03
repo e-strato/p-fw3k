@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_бустер.css" />
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+</head>
+<body>
+<!-- v4 · Жестянка: три удара. Металлическая коробочка с печатью редкости, крышка на защёлке. Каждый клик — удар: банка подпрыгивает,
+     крышку подбрасывает, из щели бьёт свет — сильнее с каждым ударом, на счётчике 3 → 2 → 1. Третий удар — крышку срывает с
+     кувырком, из банки фонтан монет и искр, карты выпрыгивают. Как тапы по сундуку в Clash Royale, но с нарастанием. -->
+<div class="bs"></div>
+<style>
+.tap { position: absolute; left: 50%; top: 18%; z-index: 5; translate: -50% 0; font: 800 96px/1 'Archivo', var(--font); color: var(--rc); text-shadow: 0 0 40px var(--rc); pointer-events: none; opacity: 0; }
+.tap.is-on { animation: tap .7s cubic-bezier(.2, 1.4, .4, 1); }
+@keyframes tap { 0% { opacity: 0; scale: 1.8; } 25% { opacity: 1; scale: 1; } 100% { opacity: 0; scale: .9; translate: -50% -20px; } }
+</style>
+<script type="module">
+import { start, THREE, packFace, foil, RAR } from './_бустер.js'
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
+const W = 2.1, H = 1.45, D = 0.62, LH = 0.34
+start({
+  name: 'Жестянка: три удара',
+  note: 'Металлическая банка с печатью редкости. Каждый удар подбрасывает крышку и даёт больше света из щели; третий — крышку срывает, фонтан монет и искр.',
+  hint: 'Ударь по банке — 3 раза',
+  build(K) {
+    const g = new THREE.Group(), tin = new THREE.Group(), lid = new THREE.Group(); g.add(tin); tin.add(lid)
+    // Печать на боку банки — тот же рисунок бустера, повёрнутый горизонтально
+    const face = packFace(K.rar, { w: 768, h: 512, sub: 'Жестянка · 3 карты' })
+    const side = foil(K.rar, face); side.metalness = 0.9; side.roughness = 0.22; side.bumpScale = 0.3
+    const plain = new THREE.MeshStandardMaterial({ color: K.rar === 'legend' ? K.col('--c-card-ink') : K.col(RAR[K.rar].main).multiplyScalar(0.6), metalness: 1, roughness: 0.28 })
+    const rimM = new THREE.MeshStandardMaterial({ color: K.rar === 'legend' ? K.col('--c-tier-gold') : K.col('--c-tier-silver'), metalness: 1, roughness: 0.2 })
+    // Корпус: фронт с рисунком, остальное — металл
+    const body = new THREE.Mesh(new RoundedBoxGeometry(W, H, D, 4, 0.08), [plain, plain, plain, plain, side, plain]); tin.add(body)
+    const lidM = new THREE.Mesh(new RoundedBoxGeometry(W + 0.08, LH, D + 0.08, 4, 0.09), [rimM, rimM, plain, rimM, rimM, rimM]); lid.add(lidM)
+    lid.position.y = H / 2 + LH / 2 - 0.12
+    // Эмблема F на крышке сверху
+    const top = new THREE.Mesh(new THREE.CircleGeometry(0.2, 40), new THREE.MeshStandardMaterial({ color: K.col(RAR[K.rar].glow), metalness: 1, roughness: 0.25, emissive: K.glow(), emissiveIntensity: 0.2 })); top.rotation.x = -Math.PI / 2; top.position.y = LH / 2 + 0.002; lid.add(top)
+    // Свет из щели под крышкой — полоса по периметру фронта
+    const slit = new THREE.Mesh(new THREE.PlaneGeometry(W * 0.98, 0.06), new THREE.MeshBasicMaterial({ color: K.glow(), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }))
+    slit.position.set(0, H / 2 - 0.1, D / 2 + 0.05); tin.add(slit)
+    tin.rotation.x = 0.18
+    const tapEl = document.querySelector('.tap') || Object.assign(document.querySelector('.bs').appendChild(document.createElement('b')), { className: 'tap' })
+
+    let hits = 0, done = false, lock = false
+    const strike = async () => {
+      if (lock || done) return
+      hits++
+      tapEl.textContent = 4 - hits; tapEl.classList.remove('is-on'); void tapEl.offsetWidth; tapEl.classList.add('is-on')
+      if (hits >= 3) return K.open()
+      lock = true; K.hint(`Ещё ${3 - hits}`)
+      const p = hits / 3, sp = new THREE.Vector3(0, H / 2 + 0.1, D / 2)
+      K.sparks(sp, 0.3 + p * 0.4, 0.8)
+      // Банка приседает и подпрыгивает, крышку подбрасывает и она падает с перекосом
+      await K.tween(120, (k) => { tin.scale.set(1 + k * 0.06, 1 - k * 0.08, 1 + k * 0.06) })
+      K.tween(520, (k) => { lid.position.y = H / 2 + LH / 2 - 0.12 + Math.sin(k * Math.PI) * (0.18 + p * 0.3); lid.rotation.z = Math.sin(k * Math.PI) * (hits % 2 ? 0.12 : -0.14) }, (k) => k)
+      K.tween(400, (k) => { slit.material.opacity = Math.max(slit.material.opacity, Math.sin(k * Math.PI) * (0.5 + p)) ; K.lightAt(new THREE.Vector3(0, H / 2 + 0.1, 0.3), Math.sin(k * Math.PI) * p * 0.8, 1) }, (k) => k)
+      await K.tween(380, (k) => { tin.scale.set(1.06 - k * 0.06, 0.92 + k * 0.08, 1.06 - k * 0.06); tin.position.y = Math.sin(k * Math.PI) * 0.25 }, K.back)
+      slit.material.opacity = p * 0.5
+      lock = false
+    }
+    const go = async () => {
+      done = true; K.hint('')
+      const mouth = new THREE.Vector3(0, H / 2 + 0.2, 0.1)
+      await K.tween(110, (k) => { tin.scale.set(1 + k * 0.08, 1 - k * 0.12, 1 + k * 0.08) })
+      K.flash(0.8)
+      K.tween(220, (k) => tin.scale.set(1.08 - k * 0.08, 0.88 + k * 0.12, 1.08 - k * 0.08), K.back)
+      K.tween(1300, (k) => { lid.position.set(-k * 1.8, H / 2 + k * 3.8 - k * k * 1.4, k * 1.4); lid.rotation.set(-k * 5, k * 1.5, k * 3) })
+      K.shock(mouth, 9); K.sparks(mouth, 1.2, 4); K.confetti(mouth, 1.1, 4.4)
+      await K.tween(450, (k) => { K.lightAt(mouth, 0.5 + k * 0.5, 1.3); K.rays(mouth, k); slit.material.opacity = 1 - k })
+      K.reveal(40)
+      K.tween(900, (k) => { tin.position.y = -k * 3.8 }, (k) => k * k)
+      await K.tween(1600, (k) => { K.lightAt(mouth, 1 - k * 0.7, 1.3); K.rays(mouth, 1 - k * 0.6) })
+    }
+    return {
+      g, open: go,
+      down() { strike() },
+      async auto() { while (!done) { await strike(); await K.wait(220) } },
+      tick(dt, t) { if (!done && !lock) tin.position.y = Math.sin(t * 1.4) * 0.04 },
+    }
+  },
+})
+</script>
+</body></html>

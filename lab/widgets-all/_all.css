@@ -1,0 +1,88 @@
+/* Все виджеты на одной странице: панель сверху, ниже — компьютер (скелетон 2 колонки) или телефон 390. Токены — ../widget-tournament/_w.css */
+body{ margin:0; background:var(--w-page); color:var(--w-fg); font:400 14px/20px var(--w-font); }
+.a-bar{ position:sticky; top:0; z-index:10; display:flex; flex-wrap:wrap; align-items:center; gap:8px 20px; padding:12px 24px; background:#0f0f12; border-bottom:1px solid var(--w-border); }
+.a-t{ font-weight:600; margin-right:8px; }
+.a-bar label{ display:flex; align-items:center; gap:8px; font-size:12px; color:var(--w-muted-fg); }
+.a-seg{ display:flex; gap:2px; padding:2px; border-radius:8px; background:var(--w-mid-bg); }
+.a-seg button{ height:28px; padding:0 10px; border:0; border-radius:6px; background:none; font:500 12px var(--w-font); color:var(--w-muted-fg); cursor:pointer; white-space:nowrap; }
+.a-seg button:hover{ color:var(--w-fg); }
+.a-seg button.is-on{ background:var(--w-muted); color:var(--w-fg); }
+.a-seg [data-only]{ color:var(--w-muted-fg); }
+.a-stage{ padding:24px; }
+/* Компьютер 1360 */
+.a-desk{ width:1360px; margin:0 auto; display:flex; flex-direction:column; gap:16px; }
+.a-grid{ display:grid; grid-template-columns:1fr 320px; gap:24px; align-items:start; }
+.a-main{ display:flex; flex-direction:column; gap:16px; min-width:0; }
+.a-2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.a-side, .a-ph-in{ display:flex; flex-direction:column; gap:16px; }
+.a-nav{ padding:4px 16px !important; }
+/* Телефон 390 */
+.a-phone{ width:390px; margin:0 auto; border:1px solid var(--w-border); border-radius:34px; padding:24px 0 32px; background:#050506; }
+.a-ph-in{ align-items:center; } .a-ph-in > .pg-card{ width:358px; box-sizing:border-box; }
+.a-w{ width:320px; }
+.a-none{ padding:24px; font-size:13px; color:var(--w-muted-fg); text-align:center; }
+
+/* Узкий экран (телефон, < 760): кнопка «Настройки» снизу, панель — шторкой; вид всегда «Телефон», без рамки (дирижёр 21.10) */
+.a-fab, .a-shade, .a-x{ display:none; }
+.is-narrow .a-bar{ position:fixed; left:0; right:0; bottom:0; top:auto; z-index:30; flex-direction:column; align-items:stretch; gap:12px; max-height:80vh; overflow:auto; padding:16px 16px 24px; border:0; border-top:1px solid var(--w-border); border-radius:16px 16px 0 0; transform:translateY(105%); transition:transform .25s ease; }
+.is-narrow.is-sheet .a-bar{ transform:none; }
+.is-narrow .a-bar label{ flex-direction:column; align-items:flex-start; gap:6px; }
+.is-narrow .a-seg{ flex-wrap:wrap; }
+.is-narrow .a-x{ display:grid; place-items:center; position:absolute; right:12px; top:12px; width:32px; height:32px; border:0; border-radius:8px; background:var(--w-muted); color:var(--w-fg); font-size:14px; cursor:pointer; }
+.is-narrow .a-fab{ display:block; position:fixed; right:16px; bottom:16px; z-index:20; height:40px; padding:0 14px; border:1px solid var(--w-border); border-radius:999px; background:#18181b; color:var(--w-fg); font:600 13px var(--w-font); box-shadow:0 6px 20px rgba(0,0,0,.5); cursor:pointer; }
+.is-narrow.is-sheet .a-shade{ display:block; position:fixed; inset:0; z-index:25; background:rgba(0,0,0,.55); }
+.is-narrow .a-stage{ padding:12px 0 72px; }
+.is-narrow .a-phone{ width:auto; border:0; border-radius:0; padding:0; background:none; }
+.is-narrow .a-ph-in > .pg-card{ width:calc(100% - 32px); }
+/* Один виджет на телефоне — по центру экрана, без прокрутки (дирижёр 21.10) */
+.is-narrow .a-phone--one{ display:flex; align-items:center; justify-content:center; min-height:calc(100vh - 84px); }
+.is-narrow .a-stage:has(.a-phone--one){ padding-top:0; }
+
+/* Нет скриптов (просмотр файла в Telegram) — подсказка; скрипт её убирает при первом рисовании */
+.a-nojs{ max-width:360px; margin:48px auto; padding:16px; border:1px solid var(--w-border); border-radius:12px; font-size:14px; line-height:20px; color:var(--w-fg); }
+/* Нижняя плашка — настройки выбранного виджета, такая же, как верхняя */
+.a-bot{ display:none; position:fixed; left:0; right:0; bottom:0; z-index:15; flex-wrap:wrap; align-items:center; gap:8px 20px; padding:12px 24px; background:#0f0f12; border-top:1px solid var(--w-border); }
+.has-bot .a-bot{ display:flex; }
+.a-bot label{ display:flex; align-items:center; gap:8px; font-size:12px; color:var(--w-muted-fg); }
+.a-no{ font-size:12px; color:var(--w-muted-fg); }
+.has-bot .a-stage{ padding-bottom:80px; }
+/* Телефон: кнопка настроек — вверху справа, нижняя плашка — во всю ширину */
+.is-narrow .a-fab{ top:12px; bottom:auto; }
+.is-narrow .a-bot{ padding:10px 12px calc(10px + env(safe-area-inset-bottom)); gap:6px 12px; }
+.is-narrow .a-bot .a-seg{ flex-wrap:wrap; }
+.is-narrow.has-bot .a-stage{ padding-bottom:72px; }
+.is-narrow .a-phone--one{ min-height:calc(100vh - 140px); }
+.is-narrow .a-stage{ padding-top:56px; }
+/* «Все состояния» (дирижёр 23.10, настройка «Показ»): экраны каждого виджета подряд, не кликаются; компьютер — сеткой, телефон — лентой с пролистыванием */
+.a-states{ display:flex; flex-direction:column; gap:40px; }
+.a-ss{ display:flex; flex-direction:column; gap:12px; }
+.a-ss__t{ font-weight:600; font-size:14px; }
+.a-ss__row{ display:grid; grid-template-columns:repeat(auto-fill, 320px); gap:32px 24px; align-items:start; }
+.a-ss__it{ display:flex; flex-direction:column; gap:8px; } .a-ss__it > span{ font-size:12px; color:var(--w-muted-fg); }
+.a-ss__it > div{ pointer-events:none; }
+.is-narrow .a-states{ padding:56px 0 24px; }
+.is-narrow .a-ss__t{ padding:0 16px; }
+.is-narrow .a-ss__row{ display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; padding:0 16px 8px; scrollbar-width:none; }
+.is-narrow .a-ss__row::-webkit-scrollbar{ display:none; }
+.is-narrow .a-ss__it{ flex:none; scroll-snap-align:center; }
+/* Настройки понятнее (дирижёр 23.10: «название выглядит так же, как вариант»): название — мелкой подписью над вариантами, группы — через черту */
+.a-bar label, .a-bot label{ flex-direction:column; align-items:flex-start; gap:4px; font:500 11px/14px var(--w-font); color:#71717a; }
+.a-bar label + label, .a-bot label + label{ padding-left:20px; border-left:1px solid var(--w-border); }
+.a-bar{ align-items:flex-end; } .a-bar .a-t{ align-self:center; }
+.a-seg button{ color:#d4d4d8; } .a-seg button.is-on{ color:#fff; }
+.is-narrow .a-bar label + label{ padding-left:0; border-left:0; }
+/* Кнопка «Все состояния» — рядом с настройками, только при одном виджете */
+.a-stb{ align-self:flex-end; height:32px; padding:0 14px; border:1px solid var(--w-border); border-radius:8px; background:var(--w-mid-bg); font:500 12px var(--w-font); color:#fff; cursor:pointer; }
+.a-stb:hover{ background:var(--w-muted); } .a-stb.is-on{ background:#fff; color:#09090b; border-color:#fff; }
+/* Телефон: кнопка «Все состояния» — в нижней плашке во всю ширину; состояния — друг под другом, листаются сверху вниз */
+.is-narrow .a-bot .a-stb{ flex-basis:100%; width:100%; height:40px; font-size:13px; }
+.is-narrow .a-ss__row{ display:flex; flex-direction:column; align-items:center; overflow:visible; scroll-snap-type:none; padding:0 16px; gap:24px; }
+.is-narrow .a-ss__it{ scroll-snap-align:none; }
+.is-narrow .a-ss__t{ text-align:center; }
+.is-narrow.has-bot .a-states{ padding-bottom:140px; }
+.a-bot .a-stb{ margin-left:auto; align-self:center; } /* компьютер — справа в нижней плашке */
+.is-narrow .a-bot .a-stb{ margin-left:0; }
+.a-ss__it > span small{ display:block; color:var(--w-fg); opacity:.7; }
+/* «Ошибки»: плашка из-под низа — у пункта gap 8, заходит под виджет на 12 */
+.a-ss__it > .w + .o-dock{ margin-top:-20px; } .th-apple .a-ss__it > .w + .o-dock{ margin-top:0; }
+.a-ss__row + .a-ss__t{ margin-top:28px; } /* между «Состояния с данными» и «Пусто и ошибки» */

@@ -1,0 +1,20 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>v4 · Этап и случай</title><link rel="stylesheet" href="_p.css">
+<style>
+.row{ display:flex; align-items:center; gap:8px; margin-bottom:8px; } .row .k{ width:56px; flex:none; font-size:12px; color:#a3a3a3; }
+.seg{ flex:1; display:flex; padding:2px; border-radius:7px; background:#1f1f1f; }
+.seg button{ flex:1; height:24px; border-radius:5px; font-size:12px; color:#a3a3a3; white-space:nowrap; }
+.seg button.on{ background:#404040; color:#fff; } .seg button:disabled{ opacity:.3; cursor:default; }
+.seg.x button.on{ background:#f59e0b; color:#1a1a1a; }
+</style></head><body><script src="_p.js"></script><script>
+const ST = [['feed', 'Лента'], ['announce', 'Анонс'], ['pre', 'До'], ['live', 'Live'], ['post', 'После']];
+const EX = { pre: [['delayed', 'Перенос']], live: [['nodata', 'Нет данных'], ['offline', '+ трансл.']], post: [['cancel', 'Отмена']] };
+const BASE = { delayed: 'pre', nodata: 'live', offline: 'live', cancel: 'post' };
+P.mount(`<div class="lbl">Состояние матча</div><div id="w"></div>`, () => {
+  const k = P.cur, st = BASE[k] || k, ex = EX[st] || [];
+  document.querySelector('#w').innerHTML = `<div class="row"><span class="k">Этап</span><div class="seg">${ST.map(([s, n]) => `<button data-s="${s}" class="${s === st ? 'on' : ''}">${n}</button>`).join('')}</div></div>
+    <div class="row"><span class="k">Случай</span><div class="seg x"><button data-x="${st}" class="${k === st ? 'on' : ''}" style="${k === st ? 'background:#404040;color:#fff' : ''}">Обычный</button>${ex.map(([x, n]) => `<button data-x="${x}" class="${x === k ? 'on' : ''}">${n}</button>`).join('')}</div></div>`;
+  document.querySelectorAll('[data-s]').forEach((b) => b.onclick = () => P.set(b.dataset.s));
+  document.querySelectorAll('[data-x]').forEach((b) => b.onclick = () => P.set(b.dataset.x));
+}, `<p>Две строки-переключалки: <b>Этап</b> (Лента · Анонс · До · Live · После) и <b>Случай</b> — обычный или особый для этого этапа.</p>
+<ul><li>Место: 2 строки, ~60 px — всё видно без открытия.</li><li>Вторая строка меняется под этап: у «Анонса» и «Ленты» — только «Обычный».</li><li>Минус: подписи приходится сокращать («+ трансл.»).</li></ul>`);
+</script></body></html>

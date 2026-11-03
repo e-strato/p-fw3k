@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>v4 · Время обновления</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&family=Inter:wght@500;600&display=swap" />
+<link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="../widget-tournament-5/_t5.css" /><link rel="stylesheet" href="../widget-subs-2/_s2.css" /><link rel="stylesheet" href="../widget-subs-2/_s6v6.css" /><link rel="stylesheet" href="../widget-subs-2/_s8.css" />
+<link rel="stylesheet" href="../widget-transfers-2/_tr4.css" /><link rel="stylesheet" href="../widgets-unified/_type.css" /><link rel="stylesheet" href="../widgets-unified/_cons.css" />
+<link rel="stylesheet" href="../widget-tournament-6/_t6.css" /><link rel="stylesheet" href="../widget-subs-3/_s3.css" /><link rel="stylesheet" href="../widget-transfers-3/_tr5.css" /><link rel="stylesheet" href="../widget-mvp-3/_m5.css" /><link rel="stylesheet" href="../widgets-23/_uni.css" /><link rel="stylesheet" href="_off.css" />
+<style>
+  body{ margin:0; background:#000; color:#fafafa; font-family:'Google Sans Flex', system-ui, sans-serif; }
+  .row{ display:flex; flex-wrap:wrap; align-items:flex-start; gap:32px; padding:40px 48px; zoom:2; }
+  .slot{ display:flex; flex-direction:column; gap:10px; } .slot > b{ font:500 12px/16px 'Google Sans Flex', sans-serif; color:#a1a1aa; }
+</style></head>
+<!-- v4-stamp — В шапке серым «Обновлено в 14:32» со значком; связь вернулась — «Только что». Пусто — бледные пустые строки, текст поверх (дирижёр 23.10). Ошибка загрузки (данных нет) — одинаковая во всех вариантах. Код — _off.js -->
+<body class="uni"><div class="row" id="row"></div>
+<script src="../widget-tournament-4/_data.js"></script><script src="../widget-tournament-5/_logos.js"></script><script src="../widget-tournament-5/_demo.js"></script>
+<script src="../widget-subs-2/_data.js"></script><script src="../widget-subs-2/_games.js"></script><script src="../widget-subs-3/_s3data.js"></script>
+<script>window.TR5_BASE = '../widget-transfers-2/'; window.MVP2_BASE = '../widget-mvp-2/'; window.TR5_CFG = { gameDate: true }</script>
+<script src="../widget-transfers/_data.js"></script><script src="../widget-transfers-2/_paths.js"></script><script src="../widget-transfers-2/_mix.js"></script><script src="../widget-transfers-3/_free.js"></script>
+<script src="../widget-mvp/_data.js"></script><script src="../widget-mvp-2/_paths.js"></script>
+<script src="../widgets-unified/_cons.js"></script><script src="../widget-tournament-6/_t6.js"></script><script src="../widget-subs-3/_s3.js"></script><script src="../widget-transfers-3/_tr5.js"></script><script src="../widget-mvp-3/_m5.js"></script>
+<script>window.OFF_CFG = { kind: 'stamp', empty: 'ghost' }</script><script src="_off.js"></script>
+<script>
+  const ST = [{ id: 'off', name: 'Нет сети', why: 'Связь пропала — показываем последние данные и говорим, что они старые' },
+    { id: 'err', name: 'Не загрузилось', why: 'Данных нет совсем (первый вход без сети или ошибка сервера) — что случилось и «Повторить»' },
+    { id: 'empty', name: 'Пусто', why: 'Связь есть, но показывать нечего — у каждого варианта свой вид пустого (дирижёр 23.10: «хочу разные пустые увидеть»)' },
+    { id: 'back', name: 'Связь вернулась', why: 'Сеть снова есть — данные обновились, отметка на 2 с и пропадает' }]
+  const W = [
+    { name: 'Турнир', draw: el => T4.render(el, { opt: { v3: true, tier: 'fill', tierEn: true, final: 'merge', dt: 'mono' } }) },
+    { name: 'Замены', draw: el => S3.render(el, { game: 'when', big: true, plainHd: true, tint: true }) },
+    { name: 'Трансферы', draw: el => TR5.render(el, {}) },
+    { name: 'MVP', draw: el => MVPC.render(el, { up: true, depth: true, dock: 'split' }) },
+  ]
+  const row = document.getElementById('row'); let cur = 0, tm
+  const put = el => OFF.apply(el, ST[cur].id)
+  const draw = () => { clearTimeout(tm); row.innerHTML = W.map((w, i) => `<div class="slot"><b>${w.name}</b><div data-w="${i}"></div></div>`).join('')
+    row.querySelectorAll('[data-w]').forEach(el => { W[+el.dataset.w].draw(el); put(el)
+      new MutationObserver(() => { if (!el.querySelector('.o-x') && ST[cur].id !== 'back') put(el) }).observe(el, { childList: true }) }) // клик внутри перерисовывает — состояние возвращаем
+    if (ST[cur].id === 'back') tm = setTimeout(() => row.querySelectorAll('[data-w]').forEach(el => OFF.apply(el, null)), 2000) }
+  window.LAB = { view: 'toolbar', go: (f, i) => { cur = i; draw() }, cur: () => ({ f: 0, i: cur }),
+    flows: () => [{ name: 'Связь', steps: ST.map(x => ({ name: x.name, what: x.why })) }],
+    axes: () => [{ key: 'net', name: 'Связь', value: ST[cur].id, options: ST.map(x => ({ v: x.id, label: x.name })) }],
+    set: (k, v) => { cur = ST.findIndex(x => x.id === v); draw() },
+    caption: () => ST[cur].why }
+  draw()
+</script>
+</body></html>

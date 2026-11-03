@@ -1,0 +1,175 @@
+/* Лаба widget-mvp-4 — MVP матча (созвон 02.11 §1.8). Карточка .w, токены ../widgets-unified/_type.css, как остальные виджеты правой колонки. */
+.w.m4 { width: 100%; height: auto; overflow: hidden; display: block; }
+.m4-hd { display: flex; align-items: center; gap: 8px; height: var(--g-hd, 52px); padding: 0 var(--g-pad, 12px); }
+.m4-hd b { font: var(--t-title); color: var(--w-fg); }
+.m4-hd span { margin-left: auto; font: var(--t-hsub); color: var(--w-muted-fg); white-space: nowrap; }
+
+/* Фото игрока во всю ширину; вырезанное — стоит на «полу», обычное — кадрируется по лицу */
+.m4-card { position: relative; height: 200px; margin: 0 var(--g-pad, 12px); border-radius: var(--w-r-sm, 8px); overflow: hidden; background: var(--w-mid-bg, #18181b); }
+.m4-ph { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+.m4-ph.is-cut { object-fit: contain; object-position: 50% 100%; top: 8px; }
+.m4-fade { position: absolute; inset: 50% 0 0; background: linear-gradient(transparent, rgba(0,0,0,.85)); }
+.m4-who { position: absolute; left: 12px; bottom: 10px; right: 12px; }
+.m4-who b { display: block; font: 700 18px/22px var(--w-font, inherit); color: #fff; }
+.m4-who span { display: flex; align-items: center; gap: 6px; font: var(--t-sub); color: rgba(255,255,255,.75); }
+.m4-who img { width: 14px; height: 14px; object-fit: contain; }
+
+/* Генерация — заглушка: арт героя, тонированный, полосы глитча, метка */
+.m4-gen { position: absolute; inset: 0; background: var(--hero) center 30% / cover; filter: grayscale(.6) contrast(1.2) brightness(.8); }
+.m4-gen::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(138,92,240,.55), rgba(0,0,0,.2) 60%); mix-blend-mode: color; }
+.m4-gl i { position: absolute; left: 0; right: 0; height: 2px; background: rgba(255,255,255,.18); }
+.m4-gl i:nth-child(1) { top: 28%; } .m4-gl i:nth-child(2) { top: 31%; height: 1px; } .m4-gl i:nth-child(3) { top: 64%; }
+.m4-tagg { position: absolute; top: 8px; left: 8px; padding: 0 6px; border-radius: 4px; background: rgba(0,0,0,.6); font: var(--t-tag); font-style: normal; color: rgba(255,255,255,.8); }
+
+/* Герой */
+.m4-hero { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 var(--g-pad, 12px); }
+.m4-hero img { width: 24px; height: 24px; border-radius: 4px; }
+.m4-hero b { font: var(--t-title); color: var(--w-fg); }
+.m4-hero span { margin-left: auto; font: var(--t-sub); color: var(--w-muted-fg); white-space: nowrap; }
+
+/* 6 показателей в две колонки */
+.m4-g { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 0 var(--g-pad, 12px); }
+.m4-c { display: flex; align-items: baseline; justify-content: space-between; height: 32px; padding: 0 10px; border-radius: 6px; background: var(--w-mid-bg, #18181b); }
+.m4-c b { order: 2; font: var(--t-num-s); font-variant-numeric: tabular-nums; color: var(--w-fg); line-height: 32px; }
+.m4-c b.up { color: var(--w-up, #22c55e); } .m4-c b.dn { color: var(--w-down, #ef4444); }
+.m4-c span { font: var(--t-sub); color: var(--w-muted-fg); line-height: 32px; }
+
+.m4-dock { display: flex; align-items: center; gap: 8px; height: 44px; margin-top: 8px; padding: 0 var(--g-pad, 12px); border-top: 1px solid var(--w-border); font: var(--t-btn); color: var(--w-fg); text-decoration: none; }
+.m4-dock em { margin-left: auto; padding: 0 8px; border-radius: 10px; background: rgba(250,204,21,.14); color: #facc15; font: var(--t-num-s); font-style: normal; line-height: 20px; }
+
+/* ——— Подачи 6 показателей (дирижёр 02.11) ——— */
+/* v4 · K / D / A крупно */
+.m4-kda { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; padding: 4px var(--g-pad, 12px) 8px; }
+.m4-kda b { font: 700 22px/26px var(--w-font, inherit); font-variant-numeric: tabular-nums; color: var(--w-fg); }
+.m4-kda b.up { color: var(--w-up, #22c55e); } .m4-kda b.dn { color: var(--w-down, #ef4444); }
+.m4-kda i { font-style: normal; color: var(--w-muted-fg); font-size: 18px; }
+.m4-kda span { flex-basis: 100%; font: var(--t-sub); color: var(--w-muted-fg); }
+.m4-tri { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0 var(--g-pad, 12px); border-top: 1px solid var(--w-border); }
+.m4-tri div { padding: 8px 0; }
+.m4-tri div + div { padding-left: 12px; border-left: 1px solid var(--w-border); }
+.m4-tri b { display: block; font: var(--t-num); font-variant-numeric: tabular-nums; color: var(--w-fg); }
+.m4-tri span { font: var(--t-sub); color: var(--w-muted-fg); }
+
+/* v5 · плитки 3 × 2 */
+.m4-tl { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 0 var(--g-pad, 12px); }
+.m4-tl div { padding: 8px 10px; border-radius: 6px; background: var(--w-mid-bg, #18181b); }
+.m4-tl b { display: block; font: var(--t-num); font-variant-numeric: tabular-nums; color: var(--w-fg); }
+.m4-tl b.up { color: var(--w-up, #22c55e); } .m4-tl b.dn { color: var(--w-down, #ef4444); }
+.m4-tl span { font: var(--t-sub); color: var(--w-muted-fg); }
+
+/* v6 · против среднего по серии */
+.m4-bars { padding: 0 var(--g-pad, 12px); }
+.m4-bl { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font: var(--t-sub); color: var(--w-muted-fg); }
+.m4-bl i { width: 2px; height: 10px; background: var(--w-muted-fg); }
+.m4-bl::before { content: ''; width: 14px; height: 4px; border-radius: 2px; background: var(--w-fg); margin-right: -2px; }
+.m4-br { display: grid; grid-template-columns: 64px 44px 1fr; align-items: center; gap: 8px; height: 26px; }
+.m4-br span { font: var(--t-sub); color: var(--w-muted-fg); }
+.m4-br b { font: var(--t-num-s); font-variant-numeric: tabular-nums; color: var(--w-fg); text-align: right; }
+.m4-br i { position: relative; height: 4px; border-radius: 2px; background: var(--w-mid-bg, #18181b); }
+.m4-br s { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 2px; background: var(--w-fg); }
+.m4-br u { position: absolute; top: -3px; width: 2px; height: 10px; margin-left: -1px; background: var(--w-muted-fg); }
+
+/* v7 · числа на фото */
+.m4--over .m4-card { height: 240px; }
+.m4--over .m4-fade { inset: 35% 0 0; background: linear-gradient(transparent, rgba(0,0,0,.92)); }
+.m4--over .m4-who { bottom: 64px; }
+.m4-ov { position: absolute; z-index: 1; left: 12px; right: 12px; bottom: 10px; display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 8px; }
+.m4-ov b { display: block; font: var(--t-num-s); font-variant-numeric: tabular-nums; color: #fff; white-space: nowrap; }
+.m4-ov span { font: var(--t-sub); color: rgba(255,255,255,.65); }
+.m4-who { z-index: 1; }
+
+/* v8 · карточка оригинального виджета MVP (лого фоном, глитч, пол, наклон), показатели на фото снизу — как v7 */
+.m4-skin .m6-main { height: 388px; }
+.m4-skin .m6-c--bl { bottom: 54px; }
+.m4-ov--m6 { z-index: 2; }
+.m4-skin .m6-ph.m4-face { object-fit: cover; object-position: 50% 20%; }
+.m4-hero--m6 { position: relative; z-index: 1; }
+
+/* v9–v12 · показатели на переднем слое: тот же сдвиг при наклоне и тень, что у ника (.m6--depth .m6-c), без подложек */
+.m4-fg { position: absolute; z-index: 2; display: flex; text-shadow: 0 6px 14px rgba(0,0,0,.9), 0 1px 2px rgba(0,0,0,.8);
+  transform: translate(calc(var(--px, 0) * 18px), calc(var(--py, 0) * 14px)); transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+.is-tilt .m4-fg { transition: transform .12s ease-out; }
+.m4-fg b { display: block; font: 700 15px/18px var(--w-font); color: #fff; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.m4-fg span { display: block; font: var(--t-sub); color: rgba(255,255,255,.7); white-space: nowrap; }
+.m4-fg .up b { color: var(--w-up, #22c55e); } .m4-fg .dn b { color: var(--w-down, #ef4444); }
+
+/* v9 · строкой под ником */
+.m4-l-row { left: var(--g-pad, 12px); right: var(--g-pad, 12px); bottom: 6px; gap: 16px; }
+.m4-lay-row .m6-c--bl, .m4-lay-kda .m6-c--bl { bottom: 48px; }
+/* v10 · столбиком справа внизу */
+.m4-l-side { right: var(--g-pad, 12px); bottom: 6px; flex-direction: column; align-items: flex-end; gap: 4px; text-align: right; }
+.m4-l-side b { font-size: 14px; line-height: 16px; }
+.m4-l-side > div:first-child b { font: 700 20px/24px var(--w-font); }
+.m4-lay-side .m6-c--bl { bottom: 6px; }
+/* v11 · по краям от игрока */
+.m4-l-fl { top: 24px; flex-direction: column; gap: 10px; }
+.m4-l-fl--l { left: var(--g-pad, 12px); }
+.m4-l-fl--r { right: var(--g-pad, 12px); align-items: flex-end; text-align: right; }
+.m4-l-fl b { font: 700 20px/24px var(--w-font); }
+.m4-lay-flank .m6-c--bl { bottom: 6px; }
+/* v12 · K / D / A крупно справа, остальное строкой под ником */
+.m4-l-big { right: var(--g-pad, 12px); bottom: 48px; text-align: right; }
+.m4-l-big b { font: 700 24px/28px var(--w-font); }
+.m4-l-row--3 { right: auto; }
+
+/* v13–v16 · строка героя понятнее */
+.m4-hs { margin-left: 0 !important; font: var(--t-sub); color: var(--w-muted-fg); }
+.m4-h-map .m4-hero .m4-hs { margin-left: 2px !important; }
+.m4-hl { font: var(--t-sub); color: var(--w-muted-fg); margin-right: auto; }
+.m4-hero--all { gap: 12px; }
+.m4-hero--all .m4-hs { margin-left: auto !important; }
+.m4-hm { display: flex; align-items: center; gap: 6px; margin: 0 !important; }
+.m4-hm em { font: var(--t-sub); font-style: normal; color: var(--w-muted-fg); }
+.m4-cap { top: 6px; left: 50%; transform: translate(calc(-50% + var(--px, 0) * 18px), calc(var(--py, 0) * 14px)); font: var(--t-sub); color: rgba(255,255,255,.75); white-space: nowrap; }
+.m4-nh { width: 20px; height: 20px; border-radius: 4px; vertical-align: -3px; margin-left: 4px; }
+.m4-h-nick .m6-main { height: 344px; }
+
+/* v17 · иконки с номером карты */
+.m4-hero--ic { gap: 6px; }
+.m4-hi { position: relative; margin: 0 !important; width: 24px; height: 24px; }
+.m4-hi img { width: 24px; height: 24px; border-radius: 4px; display: block; }
+.m4-hi i { position: absolute; right: -3px; bottom: -3px; width: 12px; height: 12px; border-radius: 3px; background: #000; color: #fff; font: 600 9px/12px var(--w-font); font-style: normal; text-align: center; }
+/* v18 · три колонки */
+.m4-hero--cols { display: grid !important; grid-template-columns: repeat(3, 1fr); gap: 8px; height: 48px !important; }
+.m4-hc { display: flex; align-items: center; gap: 6px; min-width: 0; margin: 0 !important; }
+.m4-hc img { width: 24px; height: 24px; border-radius: 4px; flex: none; }
+.m4-hc > span { display: block; min-width: 0; margin: 0 !important; }
+.m4-hc b { display: block; font: var(--t-cell); font-weight: 500; color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.m4-hc em { display: block; font: var(--t-sub); font-style: normal; color: var(--w-muted-fg); white-space: nowrap; }
+
+/* v19 · Map N и победа / поражение */
+.m4-hw { position: relative; flex: none; width: 24px; height: 24px; margin: 0 !important; border-radius: 4px; background: var(--w-mid-bg, #18181b); }
+.m4-hw img { width: 24px; height: 24px; border-radius: 4px; display: block; }
+.m4-hw::after { content: ''; position: absolute; left: 2px; right: 2px; bottom: -4px; height: 2px; border-radius: 1px; }
+.m4-hw.is-w::after { background: var(--w-up, #22c55e); } .m4-hw.is-l::after { background: var(--w-down, #ef4444); }
+.m4-hc--wl em i { font-style: normal; } .m4-hc--wl em i.w { color: var(--w-up, #22c55e); } .m4-hc--wl em i.l { color: var(--w-down, #ef4444); }
+.m4-hc--no { opacity: .5; }
+
+/* v20–v21 · исход карты цветом: кольцо вокруг иконки и «Map N» */
+.m4-rg { flex: none; display: block; width: 28px; height: 28px; margin: 0 !important; padding: 2px; border-radius: 6px; box-shadow: inset 0 0 0 2px var(--w-border); }
+.m4-rg img { width: 24px; height: 24px; border-radius: 4px; display: block; }
+.m4-rg.is-w { box-shadow: inset 0 0 0 2px var(--w-up, #22c55e); } .m4-rg.is-l { box-shadow: inset 0 0 0 2px var(--w-down, #ef4444); }
+.m4-hc--ring { gap: 8px !important; }
+.m4-hero em.w { color: var(--w-up, #22c55e); } .m4-hero em.l { color: var(--w-down, #ef4444); }
+.m4-hero--stack { display: grid !important; grid-template-columns: repeat(3, 1fr); gap: 6px; height: auto !important; padding-top: 10px !important; padding-bottom: 6px !important; }
+.m4-hst { display: flex !important; flex-direction: column; align-items: center; gap: 3px; min-width: 0; margin: 0 !important; text-align: center; }
+.m4-hst b { max-width: 100%; font: var(--t-cell); font-weight: 500; color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.m4-hst em { font: var(--t-sub); font-style: normal; color: var(--w-muted-fg); }
+.m4-h-stack .m6-main { height: 412px; }
+
+/* v22 · полоса героев по картам — свои стили, общие .m4-hero не наследует */
+.m4-maps { position: relative; z-index: 1; flex: none; display: grid; grid-template-columns: repeat(3, 1fr); height: 64px; margin: 0 var(--g-pad, 12px); border-top: 1px solid var(--w-border); }
+.m4-mp { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+.m4-mp + .m4-mp { border-left: 1px solid var(--w-border); }
+.m4-mp img, .m4-mp i { display: block; width: 28px; height: 28px; border-radius: 6px; box-shadow: 0 0 0 2px var(--w-border); }
+.m4-mp.is-w img { box-shadow: 0 0 0 2px var(--w-up, #22c55e); }
+.m4-mp.is-l img { box-shadow: 0 0 0 2px var(--w-down, #ef4444); }
+.m4-mp span { font: var(--t-sub); color: var(--w-muted-fg); }
+.m4-mp.is-w span { color: var(--w-up, #22c55e); } .m4-mp.is-l span { color: var(--w-down, #ef4444); }
+.m4-mp.is-no { opacity: .5; }
+.m4-h-maps .m6-main { height: 408px; }
+
+/* v23 · лого команд в правом верхнем углу */
+.m4-ev { display: flex !important; align-items: center; gap: 6px; }
+.m4-tlg { width: 18px !important; height: 18px !important; object-fit: contain; }
+.m4-dash { font-style: normal; color: var(--w-muted-fg); }

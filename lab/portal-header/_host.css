@@ -1,0 +1,8 @@
+/* Лаба «Шапка портала»: страница варианта — полоска шапки образца и наша шапка под ней, десктоп 1440. */
+.p-page { padding: 40px 32px 80px; }
+.p-page > h1 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.01em; }
+.p-page > p { max-width: 100ch; margin: 8px 0 0; color: var(--c-muted); font-size: 15px; line-height: 1.5; }
+.p-cap { margin: 28px 0 10px; font-size: 13px; font-weight: 600; color: var(--c-caption); }
+.p-desk { width: 1440px; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px var(--c-ui-line), 0 30px 80px -30px var(--c-black); }
+.p-desk iframe { display: block; width: 1440px; height: 280px; border: 0; }
+.p-desk img { display: block; width: 1440px; }

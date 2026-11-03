@@ -1,0 +1,212 @@
+<!doctype html>
+<!--
+  FantasyWeb — каркас страницы.
+  ⚠️ *.html в корне website/ СГЕНЕРИРОВАНЫ: этот каркас + pages/<имя>.html + blocks/**/*.html → `node build.mjs`.
+  Правьте блоки, страницы и layout.html, не собранные файлы (гейт `node build.mjs --check` поймает ручную правку).
+  Витрина компонентов — ../storybook.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Онбординг — FantasyWeb</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..900;1,400..900&family=Archivo:ital,wdth,wght@0,62..125,700..900;1,62..125,700..900&family=Cinzel:wght@700;900&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..700&display=swap" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<main>
+<!-- Онбординг финала (дирижёр 05.10: «берём v1 — самое простое и понятное»): перенос лабы «онбординг-полный» v1 «Сначала сыграй, потом сохрани».
+     На десктопе — окно поверх главной (главная фоном, размыта, не кликается), на телефоне — на весь экран.
+     Сцены: хук → команда (свет сцены — её цвет) → стартовый бустер (3D, chest.html?form=booster&embed, сообщает «chest-opened») → карты по одной
+     → новые карты → пятёрка (якорь + «Собрать за меня») → разминка-прогноз на сыгранной карте → сохранить (вход в 1 клик) → подсказки на главной → «Ты в игре».
+     Карты — мини-форма «Жетон» (лаба card-mini v3). Поведение — app.js [Онбординг финала], стили — styles.css [=== Онбординг финала ===]. Данные условные. -->
+<iframe class="onb3__home" src="index.html" title="Главная сайта" tabindex="-1" aria-hidden="true"></iframe>
+<div class="onb3 hg" data-onb3>
+  <div class="onb3__bg"></div>
+  <div class="st" data-st data-scene="hook" role="dialog" aria-modal="true" aria-label="Первый вход">
+      <div class="st__top"><b class="st__brand">Fantasy · Dota 2</b><div class="st__prog"><i data-prog></i></div><button class="st__skip" type="button" data-skip>Пропустить</button></div>
+  
+      <!-- 1 · Хук -->
+      <section class="sc sc--hook" data-sc="hook">
+        <div>
+          <h1 class="h">Собери пятёрку про-игроков и угадай, как они сыграют</h1>
+          <p class="lead">Карты настоящих игроков Доты. Прогнозы на живые матчи — <b>за игровые монеты</b>, без денег.</p>
+          <div class="hook__act"><button class="btn btn--big" type="button" data-go="team">Начать — бесплатно</button><button class="link" type="button" data-login>Уже играю — войти</button></div>
+          <p class="cap hook__cap">Первая игра — за минуту. Регистрация потом, когда будет что сохранить.</p>
+        </div>
+        <div class="fan" data-fan><i class="fan__floor"></i></div>
+      </section>
+  
+      <!-- 2 · Команда -->
+      <section class="sc" data-sc="team" hidden>
+        <h2 class="h">За кого болеешь?</h2>
+        <p class="lead">Игрок этой команды будет в твоём стартовом сундуке. <b>Поменять можно в профиле.</b></p>
+        <div class="teams" role="radiogroup" aria-label="Любимая команда" data-teams></div>
+        <div class="foot"><button class="link" type="button" data-noteam>Ни за кого — дальше без команды</button><button class="btn btn--big" type="button" data-go="chest" data-team-next disabled>Дальше</button></div>
+      </section>
+  
+      <!-- 3 · Сундук -->
+      <section class="sc sc--chest" data-sc="chest" hidden>
+        <iframe class="chest__frame" data-chest title="Стартовый сундук"></iframe>
+        <div class="chest__info">
+          <h2 class="h">Твой стартовый сундук</h2>
+          <p class="lead">Нажми на сундук. Внутри 5 карт — по одной на каждую позицию.</p>
+          <div class="chips"><span class="chip"><b>5 карт</b></span><span class="chip">Гарантия: <b>Holo и выше</b></span><span class="chip chip--tc" data-chest-team>Игрок твоей команды</span></div>
+        </div>
+        <div class="chest__foot"><small class="cap">Шансы: Legend 1% · Prism 7% · Holo 22%</small><button class="btn btn--quiet" type="button" data-go="reveal">Без анимации — к картам</button></div>
+      </section>
+  
+      <!-- 3б · Карты по одной -->
+      <section class="sc sc--reveal" data-sc="reveal" hidden>
+        <div class="rv" data-rv>
+          <i class="rv__glow"></i>
+          <div class="rv__n"><b data-rv-n>1<span> / 5</span></b><span class="cap">новая карта</span></div>
+          <div class="rv__card" data-rv-card></div>
+          <div class="rv__about" data-rv-about></div>
+        </div>
+        <div class="foot"><button class="btn btn--quiet" type="button" data-go="grid">Пропустить — показать все</button><button class="btn btn--big" type="button" data-rv-next>Следующая</button></div>
+      </section>
+  
+      <!-- 3в · Новые карты -->
+      <section class="sc" data-sc="grid" hidden>
+        <h2 class="h">Новые карты в коллекции</h2>
+        <p class="lead">Сила — это рамка, редкость — блеск. <b>Чем реже карта, тем больше очков</b> она приносит за ту же игру.</p>
+        <div class="got" data-got></div>
+        <div class="foot"><small>Карты не продаются за деньги — только сундуки за монеты и награды</small><button class="btn btn--big" type="button" data-go="five">Собрать пятёрку</button></div>
+      </section>
+  
+      <!-- 4 · Пятёрка -->
+      <section class="sc" data-sc="five" hidden>
+        <h2 class="h">Твоя пятёрка на сегодня</h2>
+        <p class="lead" data-five-lead>Перетащи карту на её позицию или просто нажми на неё. Не хочешь сам — <b>соберём за тебя</b>.</p>
+        <div class="five" data-five></div>
+        <div class="bench" data-bench></div>
+        <div class="foot"><small>Состав можно менять до начала каждого матча</small><button class="btn btn--big" type="button" data-auto>Собрать за меня</button></div>
+      </section>
+  
+      <!-- 5 · Прогноз на прошедшей карте -->
+      <section class="sc" data-sc="pred" hidden>
+        <h2 class="h">Разминка: прогноз на сыгранную карту</h2>
+        <p class="lead">Карта уже прошла — <b>результат увидишь через 10 секунд</b>, ждать матч не нужно.</p>
+        <div class="pred" data-pred>
+          <div>
+            <div class="match">
+              <div><i class="team-logo team-logo--lg t-ts is-logo">TS</i>Team Spirit</div>
+              <div class="match__mid"><b data-score>? : ?</b><small>Карта 2 · сыграна вчера</small></div>
+              <div>Tundra Esports<i class="team-logo team-logo--lg t-tun is-logo">TUN</i></div>
+            </div>
+            <p class="q">Pure наберёт больше 8.5 очков за карту?<small>В среднем за 10 карт — 9.1 очка</small></p>
+            <div class="ml" data-ml>
+              <button class="btn btn--quiet" type="button" data-pick="over">▲ Больше <em>62% игроков</em></button>
+              <button class="btn btn--quiet" type="button" data-pick="under">▼ Меньше <em>38%</em></button>
+            </div>
+            <div class="replay">
+              <div class="rp__meter"><i class="rp__fill" data-rp-fill></i><i class="rp__line"><span>линия 8.5</span></i><b class="rp__pts" data-rp-pts>0.0</b></div>
+              <div class="rp__time"><span data-rp-t>0:00</span><span class="rp__bar"><i data-rp-bar></i></span><span>38:12</span></div>
+              <ul class="rp__feed" data-rp-feed></ul>
+              <div class="verdict" data-verdict></div>
+            </div>
+          </div>
+          <div data-pred-card></div>
+        </div>
+        <div class="foot"><small data-pred-cap>Разминка бесплатна и ни на что не влияет</small><button class="btn btn--big" type="button" data-go="save" data-pred-next disabled>Сохранить результат</button></div>
+      </section>
+  
+      <!-- 6 · Сохранить -->
+      <section class="sc" data-sc="save" hidden>
+        <h2 class="h">Сохрани 5 карт и 38 очков</h2>
+        <p class="lead">Один клик — и прогресс твой. <b>Без пароля и анкеты.</b></p>
+        <div class="save">
+          <div>
+            <div class="keep" data-keep></div>
+            <div class="keep__sum" data-keep-sum></div>
+          </div>
+          <div class="panel">
+            <div class="field"><label for="nick">Ник в таблице лидеров</label><input id="nick" maxlength="16" autocomplete="off" data-nick /></div>
+            <div class="lb" data-lb></div>
+            <div class="auth">
+              <button class="btn" type="button" data-auth="Steam">Войти через Steam</button>
+              <div class="auth__row"><button class="btn btn--quiet" type="button" data-auth="Google">Google</button><button class="btn btn--quiet" type="button" data-auth="Telegram">Telegram</button></div>
+              <button class="link auth__mail" type="button" data-auth="почту">или по почте — пришлём ссылку для входа</button>
+            </div>
+            <small class="cap">Монеты не покупаются и не выводятся</small>
+          </div>
+        </div>
+      </section>
+  
+      <!-- 7 · Главная + подсказки -->
+      <section class="sc sc--tour" data-sc="tour" hidden>
+        <div class="home" data-home>
+          <div class="hm-top">
+            <span class="hm-brand">Fantasy · Dota 2</span>
+            <span class="btn-row"><button class="btn btn--quiet btn--xs" type="button" aria-pressed="true">Dota</button><button class="btn btn--quiet btn--xs" type="button">LoL</button></span>
+            <span class="hm-coins" data-c="coins">Монеты <b data-coins>1 030</b><button class="btn btn--quiet btn--sm" type="button">Забрать +50</button></span>
+            <span class="hm-me"><i class="avatar" data-me-av></i><span data-me-nick></span></span>
+          </div>
+          <nav class="hm-tabs"><span class="is-on">Главная</span><span>Мои матчи</span><span>Сундуки</span><span>Коллекция</span><span>Квесты</span><span>Лидеры</span><span>История</span></nav>
+          <div class="hm-grid">
+            <div class="w w--match" data-c="match">
+              <div>
+                <p>Следующий матч · EPL World Series · Bo3</p>
+                <div class="t"><i class="team-logo t-yg is-logo">YG</i>Yangon Galacticos — Xipto Esports<i class="team-logo t-xip">XIP</i></div>
+                <p><span class="live">Карта 3 · live · 1 : 1</span> · izdu из твоей пятёрки в этом матче</p>
+              </div>
+              <div class="btn-row"><button class="btn" type="button">Собрать состав</button><button class="btn btn--quiet" type="button">Сделать прогноз</button></div>
+            </div>
+            <div class="w" data-c="five"><h4>Твоя пятёрка</h4><div class="w-five" data-w-five></div><p>Сегодня играют 2 из 5 · вчера — 38 очков</p></div>
+            <div class="w" data-c="quests"><h4>Квесты дня</h4><div class="w-big">0/6 <small>прогнозов</small></div><div class="w-bar"><i style="width: 0"></i></div><p>3 прогноза → +30 монет · 6 → ещё +30</p></div>
+            <div class="w" data-c="acc"><h4>Сундук точности</h4><div class="w-big">1/15 <small>верных</small></div><div class="w-bar"><i style="width: 7%"></i></div><p>Бесплатный сундук за верные прогнозы, раз в неделю</p></div>
+            <div class="w w--wide"><h4>Команда недели</h4><p>Лучшие очки за карту на этой неделе: керри — Yatoro (TS) · 24.5. Карты из неё дают +5% к очкам.</p></div>
+            <div class="w" data-c="lb"><h4>Лидеры</h4><div class="w-lb" data-w-lb></div></div>
+          </div>
+        </div>
+        <i class="spot" data-spot></i>
+        <div class="coach" data-coach role="dialog" aria-live="polite">
+          <b data-coach-t></b><p data-coach-p></p>
+          <div class="coach__row"><button class="btn" type="button" data-coach-ok>Ясно</button><small data-coach-n></small><button class="link" type="button" data-coach-skip>Без подсказок</button></div>
+        </div>
+      </section>
+  
+      <!-- 8 · Финал -->
+      <section class="sc" data-sc="final" hidden>
+        <h2 class="h" data-fin-h>Ты в игре</h2>
+        <p class="lead">Вот что дальше. <b>Всё бесплатно.</b></p>
+        <div class="ob-fin">
+          <div>
+            <h4>Первая неделя</h4><small class="cap">3 шага — и сезон пойдёт в полную силу</small>
+            <ol class="path">
+              <li class="is-now"><i>1</i><span>Живой прогноз<small>на ближайшую карту</small></span><em class="is-coin">+50 монет</em></li>
+              <li><i>2</i><span>3 прогноза за неделю<small>любые матчи</small></span><em>Сундук Holo</em></li>
+              <li><i>3</i><span>Пятёрка набрала 100 очков<small>вчера было 38</small></span><em>Карта Prism</em></li>
+            </ol>
+          </div>
+          <div>
+            <h4>Ближайший матч</h4><small class="cap">Yangon Galacticos — Xipto Esports · карта 3</small>
+            <div class="cd"><i class="team-logo team-logo--lg t-yg is-logo">YG</i><span class="cd__t" data-cd>14:32</span><i class="team-logo team-logo--lg t-xip">XIP</i></div>
+            <p class="cap" style="text-align: center; margin: 0 0 18px;">до начала · в матче твой izdu</p>
+            <button class="btn" type="button" data-go="home">Сделать живой прогноз</button>
+          </div>
+          <div>
+            <h4>Фан-лига</h4><small class="cap">Таблица только своих — болельщиков твоей команды</small>
+            <div class="fan-l" data-fan-l></div>
+            <button class="btn btn--quiet" type="button" data-join aria-pressed="false">Вступить</button>
+          </div>
+        </div>
+        <div class="ob-fin-bar">
+          <div class="coin-up"><b data-coin-up>1 030</b><span>монет · +50 за первый вход, дальше +50 каждый день</span></div>
+          <button class="btn btn--big" type="button" data-go="home">На главную</button>
+        </div>
+      </section>
+  
+      <div class="toast" data-toast></div>
+    </div>
+</div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<base href="../widget-tournament-4/" />
+<title>v2 · В странице</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="_t4.css" /><link rel="stylesheet" href="../widget-states/_s.css" /></head>
+<body><div class="lab-board">
+  <h1>Состояния виджета · v2 · В странице</h1>
+  <p class="lab-board__lead">Виджет в каркасе страницы (2 колонки). Сверху — три экрана, центр — заглушка того, что открыто. Подсказка — мягко светится то, что можно нажать.</p>
+  <div class="s-tabs" id="tabs"></div>
+  <div class="s-page"><div class="s-ctr" id="ctr"></div><div><div><div id="w"></div></div><div class="s-what" id="what"></div></div></div>
+</div>
+<script src="_data.js"></script><script src="_t4.js"></script><script src="../widget-states/_states.js"></script>
+<script>
+  const center = k => `<div class="s-ctr__h">${k.o.match ? `Матч: ${k.o.match.a} — ${k.o.match.b}` : k.o.team ? `Команда: ${k.o.team}` : 'Главная'}</div><div class="s-sk" style="height:220px"></div><div class="s-sk" style="height:120px"></div><div class="s-sk" style="height:160px"></div>`
+  const show = id => { const k = S.by(id)
+    document.getElementById('tabs').innerHTML = S.key.map(x => `<button class="${x === k ? 'is-on' : ''}" data-k="${x.id}">${x.name}</button>`).join('')
+    document.querySelectorAll('#tabs [data-k]').forEach(b => b.onclick = () => show(b.dataset.k))
+    document.getElementById('ctr').innerHTML = center(k); document.getElementById('what').textContent = k.why
+    S.mount(document.getElementById('w'), k, { hint: 'glow' }) }
+  show('match')
+</script>
+</body></html>

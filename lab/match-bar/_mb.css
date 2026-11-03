@@ -1,0 +1,49 @@
+/* Лаба match-bar (_mb.js) — строка матчей под шапкой. v1 — как CBS Sports: плитки на подложке, слева турнир ▾ и «Все матчи» */
+.mb{ position:relative; margin:0 -32px; padding:8px 32px; background:var(--w-page); border-bottom:1px solid var(--w-border); }
+body:not(.is-desk) .mb{ margin:0 -12px; padding:8px 12px; }
+.mb-in{ display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; overscroll-behavior-x:contain; }
+.mb-t{ position:relative; display:flex; flex-direction:column; justify-content:center; gap:3px; flex:none; width:168px; height:64px; padding:0 12px; border:0; border-radius:8px; background:#18181b; color:var(--w-fg); text-align:left; font:inherit; cursor:pointer; }
+.mb-t:hover{ background:#232327; }
+body:not(.is-desk) .mb-t:not(.mb-tour):not(.mb-all){ width:148px; }
+.mb-s{ display:flex; align-items:center; gap:5px; min-width:0; font:500 11px/14px var(--w-font); color:var(--w-muted-fg); white-space:nowrap; }
+.mb-s small{ margin-left:auto; overflow:hidden; text-overflow:ellipsis; font:inherit; color:#71717a; }
+.mb-t.is-live .mb-s{ color:#e5484d; } .mb-s i{ width:6px; height:6px; border-radius:50%; background:#e5484d; flex:none; }
+.mb-r{ display:flex; align-items:center; gap:7px; font:600 13px/17px var(--w-font); }
+.mb-r img, .mb-r i{ width:16px; height:16px; flex:none; object-fit:contain; }
+.mb-r i{ display:grid; place-items:center; border-radius:4px; background:var(--w-muted); color:var(--w-muted-fg); font:700 8px/1 var(--w-font); font-style:normal; }
+.mb-r b{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600; }
+.mb-r em{ font:600 13px/17px var(--w-font); font-style:normal; font-variant-numeric:tabular-nums; }
+.mb-r.is-l{ color:var(--w-muted-fg); } .mb-r.is-l img{ opacity:.6; }
+/* турнир ▾ и «Все матчи» */
+.mb-tw{ position:relative; flex:none; }
+.mb-tour{ width:76px; align-items:center; gap:4px; }
+.mb-tour img{ width:24px; height:24px; object-fit:contain; }
+.mb-tour span{ display:inline-flex; align-items:center; gap:3px; font:600 11px/14px var(--w-font); }
+.mb-all{ width:64px; font:600 12px/15px var(--w-font); }
+.mb-pop{ position:fixed; z-index:40; margin-top:4px; display:flex; flex-direction:column; gap:2px; min-width:200px; padding:6px; border:1px solid var(--w-border); border-radius:10px; background:var(--w-bg); box-shadow:0 12px 32px #0009; }
+.mb-pop button{ display:flex; align-items:center; gap:8px; height:32px; padding:0 8px; border:0; border-radius:6px; background:none; color:var(--w-fg); font:var(--t-cell); text-align:left; cursor:pointer; }
+.mb-pop button:hover, .mb-pop button.is-on{ background:var(--w-mid-bg); } .mb-pop img{ width:18px; height:18px; object-fit:contain; }
+.mb-none{ display:flex; align-items:center; padding:0 12px; font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; }
+/* страница-заглушка под строкой: показать, где строка стоит */
+.mb-ph{ display:grid; grid-template-columns:1fr; gap:12px; margin-top:20px; } .is-desk .mb-ph{ grid-template-columns:2fr 1fr; gap:20px; }
+.mb-ph i{ display:block; height:220px; border-radius:var(--w-r); background:var(--w-bg); border:1px solid var(--w-border); }
+.mb-ph i:nth-child(3){ height:140px; }
+
+/* v2 — лого турнира в правом верхнем углу плитки */
+.mb-tl{ position:absolute; top:6px; right:10px; width:auto; max-width:44px; height:16px; object-fit:contain; } /* лого широкое — по высоте, не квадратом */
+
+/* v5 tick — как 99damage: одна строка 40 px, бежит, элемент «лого Команда [счёт] Команда лого», между — черта */
+.mb--tick{ padding:0 !important; overflow:hidden; background:var(--w-page); -webkit-mask-image:linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 40px), transparent); mask-image:linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 40px), transparent); }
+@keyframes mbtick{ to{ transform:translateX(-50%); } }
+.mb-k__in{ display:flex; width:max-content; height:40px; animation:mbtick var(--d) linear infinite; }
+.mb--tick:hover .mb-k__in{ animation-play-state:paused; }
+.mb-k{ display:inline-flex; align-items:center; gap:8px; padding:0 18px; border-right:1px solid var(--w-border); color:var(--w-fg); font:500 13px/1 var(--w-font); white-space:nowrap; }
+.mb-k:hover{ background:#18181b; }
+.mb-k img, .mb-k > i{ width:18px; height:18px; object-fit:contain; flex:none; }
+.mb-k > i{ display:grid; place-items:center; border-radius:4px; background:var(--w-muted); color:var(--w-muted-fg); font:700 8px/1 var(--w-font); font-style:normal; }
+.mb-k b{ font-weight:600; }
+.mb-k__s{ display:inline-flex; align-items:center; gap:3px; min-width:44px; height:24px; justify-content:center; padding:0 7px; border-radius:5px; background:#18181b; color:var(--w-muted-fg); font:600 12px/1 var(--w-font); font-variant-numeric:tabular-nums; }
+.mb-k__s s{ text-decoration:none; color:#52525b; }
+.mb-k.is-live .mb-k__s{ color:var(--w-fg); }
+.mb-k__lv{ width:6px; height:6px; margin-right:3px; border-radius:50%; background:#e5484d; animation:mbpulse 1.4s ease-in-out infinite; }
+@keyframes mbpulse{ 50%{ opacity:.35; } }

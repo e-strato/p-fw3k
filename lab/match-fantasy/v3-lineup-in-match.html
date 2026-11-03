@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&family=Roboto+Condensed:wght@500..700&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_mf.css" />
+<style>
+/* Экран события как Live Event в EA FC: слева текст, таймеры и требования; в центре сборка; справа — награда */
+.lm { position: relative; isolation: isolate; display: grid; grid-template-columns: 290px minmax(0, 1fr) 260px; gap: 26px; padding: 26px; border-radius: 16px; overflow: hidden;
+  background: radial-gradient(40% 60% at 30% 0%, color-mix(in srgb, var(--c-team-ts) 9%, transparent), transparent 70%), radial-gradient(40% 60% at 75% 0%, color-mix(in srgb, var(--c-team-tun) 12%, transparent), transparent 70%), var(--c-ui-panel); }
+.lm-l { display: grid; align-content: start; gap: 20px; }
+.lm-teams { display: flex; align-items: center; gap: 10px; } .lm-teams i { color: var(--c-ui-dim); font-style: normal; font: 700 16px var(--font-c); }
+.lm-title { font-size: 40px; font-weight: 900; line-height: 1.02; letter-spacing: -.025em; }
+.lm-params { color: var(--c-accent); font-size: 15px; font-weight: 700; }
+.lm-desc { color: var(--c-muted); font-size: 14.5px; line-height: 1.5; }
+.lm-timers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.lm-timer { display: grid; gap: 4px; padding: 12px 14px; border-radius: 12px; background: var(--c-ui-item); }
+.lm-timer small { display: flex; align-items: center; gap: 6px; color: var(--c-caption); font-size: 12.5px; } .lm-timer small i { font-style: normal; }
+.lm-timer b { font: 700 26px/1 var(--font-c); font-variant-numeric: tabular-nums; }
+.lm-timer.is-lock b { color: var(--c-stat-mid); }
+.lm-req h4 { margin-bottom: 8px !important; color: var(--c-accent); font-size: 14px; font-weight: 700; }
+.lm-req p { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--c-ui-line); font-size: 14px; }
+.lm-req p span { flex: 1; } .lm-req p small { color: var(--c-caption); font: 600 13px var(--font-c); }
+.lm-req p i { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--c-ui-dim); font-size: 12px; font-style: normal; font-weight: 900; flex: none; }
+.lm-req p.is-ok i { background: var(--c-stat-high); box-shadow: none; color: var(--c-card-dark-text); }
+.lm-req p.is-bad i { background: var(--c-live); box-shadow: none; color: var(--c-white); } .lm-req p.is-bad small { color: var(--c-live); }
+.lm-cta { width: 100%; height: 54px; border-radius: 27px; font-size: 16px; }
+.lm-cta:not(:disabled) { background: linear-gradient(90deg, var(--c-accent), color-mix(in srgb, var(--c-accent) 55%, var(--c-glitch-b))); }
+/* Сцена сборки: пять подиумов дугой */
+.lm-c { display: grid; align-content: start; gap: 18px; min-width: 0; }
+.lm-field { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: end; gap: 10px; min-height: 330px; padding: 20px 10px 26px; border-radius: 16px;
+  background: radial-gradient(70% 55% at 50% 100%, color-mix(in srgb, var(--c-accent) 18%, transparent), transparent 70%), linear-gradient(180deg, transparent, color-mix(in srgb, var(--c-black) 35%, transparent)); }
+.lm-field::after { content: ''; position: absolute; left: 6%; right: 6%; bottom: 18px; height: 60px; border-radius: 50%; box-shadow: 0 0 0 1px color-mix(in srgb, var(--c-accent) 30%, transparent); pointer-events: none; }
+.lm-pod { position: relative; z-index: 1; display: grid; justify-items: center; gap: 8px; }
+.lm-pod:nth-child(1), .lm-pod:nth-child(5) { margin-bottom: 0; } .lm-pod:nth-child(2), .lm-pod:nth-child(4) { margin-bottom: 26px; } .lm-pod:nth-child(3) { margin-bottom: 44px; }
+.lm-pod__ph { display: grid; place-items: center; gap: 4px; width: 108px; height: 135px; border-radius: 12px; box-shadow: inset 0 0 0 2px var(--c-ui-hover); background: color-mix(in srgb, var(--c-ui-item) 60%, transparent); color: var(--c-ui-dim); text-align: center; font-size: 12.5px; }
+.lm-pod__ph b { font: 700 34px var(--font-c); }
+.lm-pod.is-target .lm-pod__ph { box-shadow: inset 0 0 0 2px var(--c-accent); color: var(--c-text); background: color-mix(in srgb, var(--c-accent) 14%, transparent); }
+.lm-pod__tag { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 12px; background: color-mix(in srgb, var(--c-black) 45%, transparent); color: var(--c-muted); font-size: 12px; font-weight: 600; }
+.lm-pod__tag.is-this { color: var(--c-text); background: color-mix(in srgb, var(--c-accent) 30%, transparent); }
+.lm-pod__act { display: flex; gap: 4px; } .lm-pod__act button { border: 0; height: 26px; padding: 0 9px; border-radius: 6px; background: var(--c-ui-hover); color: var(--c-muted); font-size: 12px; font-weight: 700; }
+.lm-pod__act button[aria-pressed='true'] { background: var(--c-coin); color: var(--c-card-dark-text); }
+/* Скамейка */
+.lm-bench__h { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.lm-bench__h h3 { font-size: 16px; font-weight: 700; }
+.lm-segs { display: flex; flex-wrap: wrap; gap: 8px; }
+.lm-seg { display: flex; gap: 2px; padding: 3px; border-radius: 8px; background: var(--c-ui-chip); }
+.lm-seg button { border: 0; padding: 6px 11px; border-radius: 6px; background: none; color: var(--c-ui-dim); font-size: 13px; font-weight: 600; }
+.lm-seg button[aria-pressed='true'] { background: var(--c-ui-item); color: var(--c-text); }
+.lm-bench { display: flex; gap: 12px; overflow-x: auto; padding: 8px 2px 12px; scrollbar-width: thin; }
+.lm-b { flex: none; display: grid; justify-items: center; gap: 6px; padding: 6px; border: 0; border-radius: 12px; background: none; }
+.lm-b:hover { background: var(--c-ui-item); }
+.lm-b.is-in { opacity: .35; }
+.lm-b small { display: flex; align-items: center; gap: 4px; color: var(--c-caption); font-size: 12px; } .lm-b small b { color: var(--c-text); font-family: var(--font-c); font-size: 13px; }
+.lm-b em { padding: 1px 6px; border-radius: 4px; background: color-mix(in srgb, var(--c-accent) 30%, transparent); color: var(--c-text); font-size: 10.5px; font-weight: 700; font-style: normal; }
+/* Награда — фиксированная карточка справа */
+.lm-r { position: sticky; top: 16px; align-self: start; display: grid; justify-items: center; gap: 14px; padding: 22px 18px; border-radius: 16px; text-align: center;
+  background: radial-gradient(80% 50% at 50% 30%, color-mix(in srgb, var(--c-coin) 14%, transparent), transparent 70%), color-mix(in srgb, var(--c-ui-item) 70%, var(--c-ui-panel)); box-shadow: inset 0 0 0 1px var(--c-ui-line); }
+.lm-r h3 { font-size: 22px; font-weight: 800; } .lm-r > small { margin-top: -10px; color: var(--c-caption); font-size: 13px; }
+.lm-r__prize { display: flex; align-items: end; justify-content: center; gap: 12px; }
+.lm-r__coin { display: grid; place-items: center; width: 74px; height: 74px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, var(--c-tier-gold-hi), var(--c-coin) 45%, var(--c-tier-gold-2)); color: var(--c-card-dark-text); font: 800 20px var(--font-c); box-shadow: 0 10px 30px -8px color-mix(in srgb, var(--c-coin) 60%, transparent); }
+.lm-r__name { font-size: 14px; font-weight: 600; }
+.lm-ring { position: relative; display: grid; place-items: center; width: 96px; height: 96px; border-radius: 50%; background: conic-gradient(var(--c-stat-high) calc(var(--p) * 1%), var(--c-ui-hover) 0); }
+.lm-ring::before { content: ''; position: absolute; inset: 8px; border-radius: 50%; background: var(--c-ui-item); }
+.lm-ring b { position: relative; font: 700 26px var(--font-c); } .lm-ring b small { color: var(--c-caption); font-size: 16px; }
+.lm-obj { display: grid; gap: 6px; width: 100%; text-align: left; }
+.lm-obj p { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 9px; background: color-mix(in srgb, var(--c-ui-bg) 40%, transparent); font-size: 13px; }
+.lm-obj p span { flex: 1; } .lm-obj p i { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--c-ui-dim); font-size: 11px; font-style: normal; font-weight: 900; flex: none; }
+.lm-obj p.is-ok i { background: var(--c-stat-high); box-shadow: none; color: var(--c-card-dark-text); } .lm-obj p small { color: var(--c-caption); font-size: 11.5px; }
+@container mf (max-width: 700px) {
+  .lm { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 14px; }
+  .lm-title { font-size: 28px; } .lm-timer b { font-size: 21px; } .lm-timers { gap: 8px; }
+  .lm-field { gap: 2px; min-height: 0; padding: 12px 2px 18px; } .lm-pod .kc { --w: 64px !important; } .lm-pod__ph { width: 62px; height: 78px; font-size: 10px; } .lm-pod__ph b { font-size: 18px; } .lm-pod__ph span { display: none; }
+  .lm-pod:nth-child(2), .lm-pod:nth-child(4) { margin-bottom: 12px; } .lm-pod:nth-child(3) { margin-bottom: 20px; }
+  .lm-pod__tag { padding: 2px 5px; font-size: 9.5px; } .lm-pod__act button { height: 22px; padding: 0 5px; font-size: 10.5px; }
+  .lm-b .kc { --w: 76px !important; }
+  .lm-r { position: static; grid-template-columns: auto minmax(0, 1fr); justify-items: start; text-align: left; }
+  .lm-r h3, .lm-r > small, .lm-r__name { grid-column: 1 / -1; } .lm-r__prize { grid-column: 1; } .lm-r__prize .kc { --w: 64px !important; } .lm-r__coin { width: 52px; height: 52px; font-size: 15px; }
+  .lm-ring { grid-column: 2; grid-row: 3; justify-self: end; width: 80px; height: 80px; } .lm-obj { grid-column: 1 / -1; }
+  .lm-l .lm-cta { position: sticky; bottom: 80px; z-index: 5; }
+}
+</style></head>
+<body><main class="mf-page">
+  <h1>v3 · Состав в матче</h1>
+  <p>Как Live Event в EA FC: матч — это «событие» со своим экраном. Слева название, параметры строкой, описание, два разных таймера (как у Destiny 2: когда начнётся матч и когда закроется состав) и требования чек-листом, которые отмечаются по ходу сборки. В центре — пять подиумов дугой, ниже скамейка: игроки этого матча и всех матчей дня (фильтр и позиции). Клик по карте на скамейке ставит её на свою позицию. Справа — неподвижная карточка «Награда» с прогрессом заданий 0/3. Кнопка «Сохранить» загорается, только когда все требования выполнены.</p>
+  <div class="mf-tools" data-tools></div>
+  <p class="mf-cap">Десктоп · 1440 (рамка уменьшена под ширину окна)</p><div class="mf-wrap"><div class="mf-frame mf-frame--desk" data-mf></div></div>
+  <p class="mf-cap">Телефон · 390 — листается внутри рамки</p><div class="mf-frame mf-frame--phone" data-mf></div>
+</main>
+<script>
+window.MF = {
+  нач: { demo: 'half', slots: ['yatoro', null, 'collapse', '9class', null], cap: null, src: 'this', pos: 0, saved: false },
+  инструменты: [['demo', 'Пример', [['empty', 'Пусто'], ['half', 'Собрано 3 из 5'], ['bad', 'Нарушено требование'], ['ready', 'Можно сохранить'], ['saved', 'Сохранён']]]],
+  сброс: (S, k) => {
+    if (k !== 'demo') return
+    const D = { empty: [[null, null, null, null, null], null, false], half: [['yatoro', null, 'collapse', '9class', null], null, false], bad: [['yatoro', 'larl', 'collapse', 'rue', null], 'yatoro', false],
+      ready: [['pure', 'larl', 'collapse', 'rue', 'whitemon'], 'pure', false], saved: [['pure', 'larl', 'collapse', 'rue', 'whitemon'], 'pure', true] }[S.demo]
+    S.slots = [...D[0]]; S.cap = D[1]; S.saved = D[2]; S.pos = 0
+  },
+  действия: {
+    put: (S, el, x) => { const id = el.dataset.v, i = x.п(id).pos - 1; S.slots[i] = S.slots[i] === id ? null : id; if (S.cap && !S.slots.includes(S.cap)) S.cap = null; S.saved = false },
+    out: (S, el) => { const i = +el.dataset.i; if (S.slots[i] === S.cap) S.cap = null; S.slots[i] = null; S.saved = false },
+    cap: (S, el) => { S.cap = S.cap === el.dataset.v ? null : el.dataset.v; S.saved = false },
+    src: (S, el) => { S.src = el.dataset.v }, pos: (S, el) => { S.pos = +el.dataset.v },
+    target: (S, el) => { S.pos = +el.dataset.i + 1 },
+    save: (S, el, x) => { S.saved = true; setTimeout(() => x.тост('Состав на матч сохранён · замены до 16:50'), 30) },
+  },
+}
+MF.вариант = (S, x) => {
+  const { имя, кор, лого, карта, п, часы, РОЛЬ, МАТЧ: m } = x
+  // Скамейка шире матча: ещё игроки других матчей дня (PARIVISION — BetBoom в 18:00, Falcons — Liquid в 20:00)
+  Object.assign(x.ИГРОКИ, { '9class': ['9Class', 4, 'pv', 95, 'legend', '9class', 18.9, 1], satanic: ['Satanic', 1, 'pv', 91, 'holo', '', 19.6, 1], noone: ['No[o]ne', 2, 'pv', 84, 'holo', '', 17.5, 1], malrine: ['Malr1ne', 2, 'flc', 86, 'base', '', 16.0, 1] })
+  const МАТЧ_ДНЯ = { pv: 'PV — BetBoom · 18:00', flc: 'Falcons — Liquid · 20:00' }
+  const этот = (id) => id && (п(id).к === m.a || п(id).к === m.b)
+  const в = S.slots.filter(Boolean), изМатча = в.filter(этот).length
+  const поКом = {}; в.forEach((id) => { const k = п(id).к; поКом[k] = (поКом[k] || 0) + 1 }); const макс = Math.max(0, ...Object.values(поКом))
+  const ТР = [[в.length === 5, 'Пятёрка: все позиции', `${в.length} / 5`], [изМатча >= 2, 'Минимум 2 игрока этого матча', `${изМатча} / 2`], [макс <= 3, 'Не больше 3 из одной команды', макс > 3 ? `${макс} — много` : `${макс} / 3`], [!!S.cap, 'Капитан выбран (×1.5)', S.cap ? п(S.cap).ник : '—']]
+  const ок = ТР.every((r) => r[0])
+  const очки = в.reduce((s, id) => s + п(id).очки * (id === S.cap ? 1.5 : 1), 0)
+  const тр = `<div class="lm-req"><h4>Требования к составу</h4>${ТР.map(([o, t, v], i) => `<p class="${o ? 'is-ok' : i === 2 ? 'is-bad' : ''}"><i>${o ? '✓' : i === 2 ? '!' : ''}</i><span>${t}</span><small>${v}</small></p>`).join('')}</div>`
+  const лево = `<div class="lm-l"><p class="lm-teams">${лого(m.a, 'lg')}<i>vs</i>${лого(m.b, 'lg')}</p><h2 class="lm-title">Spirit — Tundra</h2>
+    <p class="lm-params">Фэнтези-матч · Bo3 · очки ×1.2 за полуфинал</p><p class="lm-desc">Собери пятёрку на вечер: игроки этого матча дают очки за каждую карту серии, капитан — в полтора раза больше.</p>
+    <div class="lm-timers"><div class="lm-timer"><small><i>⏱</i>Матч через</small><b data-clock="start" data-fmt="hms">${x.чмс(x.до('start'))}</b></div><div class="lm-timer is-lock"><small><i>🔒</i>Состав закроется</small><b data-clock="lock" data-fmt="hms">${x.чмс(x.до('lock'))}</b></div></div>
+    ${тр}<button class="mf-btn mf-btn--main lm-cta" type="button" data-act="save" ${ок && !S.saved ? '' : 'disabled'}>${S.saved ? '✓ Состав сохранён' : ок ? `Сохранить состав · ${очки.toFixed(1)} очков` : 'Выполните требования'}</button></div>`
+
+  const подиум = (i) => { const id = S.slots[i]
+    if (!id) return `<div class="lm-pod ${S.pos === i + 1 ? 'is-target' : ''}"><button type="button" class="lm-pod__ph" data-act="target" data-i="${i}"><b>${i + 1}</b><span>${РОЛЬ[i + 1]}</span></button><span class="lm-pod__tag">P${i + 1}</span></div>`
+    return `<div class="lm-pod"><span class="mf-card">${id === S.cap ? '<span class="mf-cap-mark">×1.5</span>' : ''}${карта(id, 108)}</span><span class="lm-pod__tag ${этот(id) ? 'is-this' : ''}">${этот(id) ? 'этот матч' : МАТЧ_ДНЯ[п(id).к]?.split(' · ')[1] || ''} · ${(п(id).очки * (id === S.cap ? 1.5 : 1)).toFixed(1)}</span>
+      <span class="lm-pod__act"><button type="button" data-act="cap" data-v="${id}" aria-pressed="${id === S.cap}">×1.5</button><button type="button" data-act="out" data-i="${i}">Убрать</button></span></div>` }
+  const пул = Object.keys(x.ИГРОКИ).filter((id) => п(id).есть).filter((id) => S.src === 'all' || этот(id)).filter((id) => !S.pos || п(id).pos === S.pos).sort((a, b) => п(a).pos - п(b).pos || п(b).очки - п(a).очки)
+  const скамейка = `<div class="lm-bench__h"><h3>Скамейка<span class="mf-mut"> · ${пул.length} карт</span></h3><div class="lm-segs"><div class="lm-seg">${[['this', 'Этот матч'], ['all', 'Все матчи дня']].map(([v, t]) => `<button type="button" data-act="src" data-v="${v}" aria-pressed="${S.src === v}">${t}</button>`).join('')}</div>
+    <div class="lm-seg">${[0, 1, 2, 3, 4, 5].map((v) => `<button type="button" data-act="pos" data-v="${v}" aria-pressed="${S.pos === v}">${v ? 'P' + v : 'Все'}</button>`).join('')}</div></div></div>
+    <div class="lm-bench">${пул.map((id) => { const pl = п(id), in_ = S.slots.includes(id)
+      return `<button type="button" class="lm-b ${in_ ? 'is-in' : ''}" data-act="put" data-v="${id}"><span class="mf-card">${карта(id, 96)}</span><small>${этот(id) ? '' : '<em>' + кор(pl.к) + '</em>'}прогноз <b>${pl.очки.toFixed(1)}</b></small></button>` }).join('') || '<p class="mf-mut">Нет карт на эту позицию</p>'}</div>`
+  const центр = `<div class="lm-c"><div class="lm-field">${[0, 1, 2, 3, 4].map(подиум).join('')}</div>${скамейка}</div>`
+
+  const задания = [[S.saved, 'Сохранить состав до старта', ''], [false, '2 игрока матча наберут 10+ очков', 'после матча'], [false, 'Капитан — в топ-3 матча', 'после матча']]
+  const сделано = задания.filter((z) => z[0]).length
+  const право = `<aside class="lm-r"><h3>Награда</h3><small>фэнтези-матч Spirit — Tundra</small><div class="lm-r__prize"><span class="mf-card">${карта('pure', 96)}</span><span class="lm-r__coin">+150</span></div>
+    <p class="lm-r__name">Карта Pure · Prism и 150 монет</p><div class="lm-ring" style="--p:${сделано / 3 * 100}"><b>${сделано}<small> / 3</small></b></div>
+    <div class="lm-obj">${задания.map(([o, t, s]) => `<p class="${o ? 'is-ok' : ''}"><i>${o ? '✓' : ''}</i><span>${t}</span><small>${s}</small></p>`).join('')}</div></aside>`
+  return `<section class="lm">${лево}${центр}${право}</section>`
+}
+</script>
+<script src="_mf.js"></script>
+</body></html>

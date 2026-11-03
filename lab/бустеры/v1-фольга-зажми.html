@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="_бустер.css" />
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+</head>
+<body>
+<!-- v1 · Фольга: зажми и сорви верх. Как в референсе (фольгированный бустер), но лучше: держишь — пак дрожит сильнее и наливается
+     светом изнутри, свет пробивает швы; отпустил рано — гаснет. Полный заряд — верх срывается по рваной кромке и улетает,
+     из разрыва бьёт свет с лучами и волной, конфетти цветом редкости, пак падает вниз, карты взлетают из разрыва. -->
+<div class="bs"></div>
+<script type="module">
+import { start, THREE, packFace, foil, crimpMat, pillow } from './_бустер.js'
+const W = 1.55, H = 2.45, D = 0.16, CH = 0.11, TEAR = H / 2 - 0.3
+// Рваная кромка: зубцы разной высоты, одна функция на обе стороны разрыва
+const zig = (x) => (Math.sin(x * 37) * 0.018 + Math.sin(x * 91 + 1.3) * 0.012 + (Math.abs((x * 13) % 1) - 0.5) * 0.02)
+start({
+  name: 'Фольга: зажми и сорви',
+  note: 'Держи бустер — он дрожит и наливается светом, свет пробивает швы. Полный заряд — верх срывается по рваной кромке, из разрыва бьёт свет.',
+  hint: 'Зажми бустер',
+  build(K) {
+    const g = new THREE.Group(), pack = new THREE.Group(); g.add(pack)
+    const front = foil(K.rar, packFace(K.rar)), backM = foil(K.rar, packFace(K.rar, { back: true })), cm = crimpMat(K.rar)
+    const piece = (y0, y1, z0, z1) => {
+      const p = new THREE.Group()
+      p.add(new THREE.Mesh(pillow(W, H, D, { y0, y1, zig0: z0, zig1: z1 }), front))
+      const b = new THREE.Mesh(pillow(W, H, D, { y0, y1, zig0: z0, zig1: z1, back: true }), backM); b.rotation.y = Math.PI; p.add(b)
+      return p
+    }
+    const body = piece(-H / 2, TEAR, null, zig), top = piece(TEAR, H / 2, zig, null)
+    const crimp = (y) => { const m = new THREE.Mesh(new THREE.BoxGeometry(W * 1.01, CH, 0.025), cm); m.position.y = y; return m }
+    body.add(crimp(-H / 2 + CH / 2)); top.add(crimp(H / 2 - CH / 2))
+    // Верх крутится вокруг левого края разрыва — ставим опору туда
+    const topPivot = new THREE.Group(); topPivot.position.set(-W / 2, TEAR, 0); top.position.set(W / 2, -TEAR, 0); topPivot.add(top)
+    pack.add(body, topPivot)
+    // Светящаяся щель по линии разрыва: появляется с зарядом
+    const seam = new THREE.Mesh(new THREE.PlaneGeometry(W * 0.96, 0.025), new THREE.MeshBasicMaterial({ color: K.glow(), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }))
+    seam.position.set(0, TEAR, D * 0.55); pack.add(seam)
+
+    let charge = 0, holding = false, auto = false, done = false
+    const mouth = new THREE.Vector3(0, TEAR, 0.2)
+    const go = async () => {
+      done = true; K.hint('')
+      K.flash(0.7)
+      // Верх: рывок вверх-вправо, кувырок, улетает
+      K.tween(1100, (k) => { topPivot.rotation.z = -k * 2.6; topPivot.position.set(-W / 2 + k * 2.6, TEAR + k * 2.2 - k * k * 0.6, k * 1.2) })
+      K.shock(mouth, 8)
+      K.sparks(mouth, 1.1, 2.2); K.confetti(mouth, 1, 3.2)
+      await K.tween(500, (k) => { K.lightAt(mouth, 0.4 + k * 0.6, 1.2); K.rays(mouth, k) })
+      K.reveal(42)
+      // Пак падает вниз, свет уходит
+      K.tween(900, (k) => { pack.position.y = -k * 4.2; pack.rotation.z = k * 0.25 }, (k) => k * k)
+      await K.tween(1600, (k) => { K.lightAt(mouth, 1 - k * 0.7, 1.2); K.rays(mouth, 1 - k * 0.6); seam.material.opacity = 1 - k })
+    }
+    return {
+      g,
+      down() { if (!done) holding = true },
+      up() { holding = false },
+      auto() { auto = true },
+      open: go,
+      tick(dt, t) {
+        if (done) return
+        const on = holding || auto
+        charge = THREE.MathUtils.clamp(charge + (on ? dt / 1.25 : -dt * 1.6), 0, 1)
+        // Покой — парит; заряд — дрожь растёт, пак сжимается, швы светятся
+        const sh = charge * charge * 0.05
+        pack.position.set((Math.random() - 0.5) * sh, Math.sin(t * 1.6) * 0.06 + (Math.random() - 0.5) * sh, 0)
+        pack.rotation.z = Math.sin(t * 1.1) * 0.03 + (Math.random() - 0.5) * sh * 0.6
+        pack.scale.set(1 - charge * 0.03, 1 + charge * 0.02, 1 + charge * 0.4)
+        front.emissiveIntensity = backM.emissiveIntensity = charge * 0.55
+        seam.material.opacity = charge
+        K.lightAt(new THREE.Vector3(0, 0.1, -0.3), charge * 0.55, 1.4)
+        K.hint(charge > 0.02 ? (charge < 1 ? 'Держи…' : '') : 'Зажми бустер')
+        if (charge >= 1) K.open()
+      },
+    }
+  },
+})
+</script>
+</body></html>

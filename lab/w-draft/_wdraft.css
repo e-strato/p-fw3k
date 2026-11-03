@@ -1,0 +1,144 @@
+/* w-draft — виджет «Драфт» для страницы матча (_wdraft.js, лаба w-draft v9–v12). Токены — widget-tournament/_w.css. */
+.wdr{ font:13px/1.35 var(--w-font); color:var(--w-fg); }
+.wdr .num{ font-variant-numeric:tabular-nums; }
+.wdr-hd{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:10px; font-size:12px; color:var(--w-muted-fg); }
+.wdr-hd b{ color:var(--w-fg); font-weight:600; font-size:14px; }
+.wdr-tm{ display:inline-flex; align-items:center; gap:6px; font-size:12px; white-space:nowrap; } .wdr-tm img{ width:18px; height:18px; object-fit:contain; }
+.wdr-tm em{ font-style:normal; font-size:11px; color:#a78bfa; }
+.wdr-dot{ width:6px; height:6px; border-radius:50%; flex:none; } .wdr-dot--a{ background:var(--w-up); } .wdr-dot--b{ background:var(--w-down); }
+
+/* после драфта: строка команды — команда · пятёрка · баны */
+.wdr-row{ display:grid; grid-template-columns:96px 1fr auto; align-items:center; gap:12px; }
+.wdr-row + .wdr-row{ margin-top:10px; }
+.wdr-five{ display:grid; grid-template-columns:repeat(5,1fr); gap:6px; min-width:0; }
+.wdr-p{ display:flex; flex-direction:column; gap:3px; min-width:0; } .wdr-p img{ width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:4px; }
+.wdr-p small{ font-size:11px; color:var(--w-muted-fg); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.wdr-bans{ display:flex; gap:3px; } .wdr-ban{ width:28px; height:16px; object-fit:cover; border-radius:3px; filter:grayscale(1) brightness(.55); }
+.is-desk .wdr-row .wdr-five{ max-width:420px; }
+/* телефон: команда сверху, баны под пятёркой */
+body:not(.is-desk) .wdr-row{ grid-template-columns:1fr; gap:6px; }
+
+/* полоса одной команды (над графиком — Radiant, под — Dire): без карточки, ник не нужен */
+.wdr--half{ padding:8px 0; } .wdr--half .wdr-p small{ display:none; }
+.wdr--half .wdr-five{ max-width:300px; }
+body:not(.is-desk) .wdr--half .wdr-row{ grid-template-columns:auto 1fr; } body:not(.is-desk) .wdr--half .wdr-bans{ grid-column:1 / -1; }
+
+/* мелко в одну строку (внутри карточки графика) */
+.wdr--mini{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding-bottom:10px; }
+.wdr-mf{ display:flex; gap:2px; } .wdr-mf img{ width:32px; height:18px; object-fit:cover; border-radius:3px; }
+.wdr-vs{ color:var(--w-muted-fg); font-size:11px; }
+.wdr--mini > .wdr-tm:last-child{ margin-left:auto; }
+body:not(.is-desk) .wdr--mini{ display:grid; grid-template-columns:auto 1fr; row-gap:6px; } body:not(.is-desk) .wdr--mini .wdr-vs{ display:none; }
+body:not(.is-desk) .wdr--mini > .wdr-tm:last-child{ margin:0; grid-row:2; grid-column:1; } body:not(.is-desk) .wdr--mini .wdr-mf:last-of-type{ grid-row:2; grid-column:2; }
+
+/* драфт идёт: две половины, ходящая светлее, слоты шагов */
+.wdr-halves{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+body:not(.is-desk) .wdr-halves{ grid-template-columns:1fr; gap:14px; }
+.wdr-half{ display:flex; flex-direction:column; gap:8px; padding:8px; margin:-8px; border-radius:10px; transition:background .3s, opacity .3s; }
+.wdr-half.is-on{ background:#1c1b26; } .wdr-half.is-off{ opacity:.5; }
+.wdr-s{ display:grid; place-items:center; border-radius:4px; object-fit:cover; font-size:10px; }
+.wdr-five .wdr-s{ width:100%; aspect-ratio:16/9; } .wdr-bans .wdr-s{ width:28px; height:16px; font-size:0; }
+img.wdr-s--ban{ filter:grayscale(1) brightness(.55); }
+span.wdr-s{ background:#141417; } span.wdr-s.is-now{ border:1px dashed #a78bfa; color:#a78bfa; background:#1c1b26; }
+.wdr-clock{ color:#a78bfa; }
+.wdr-note{ margin:14px 0 0; font-size:12px; color:var(--w-muted-fg); text-align:center; }
+
+/* на странице: обёртка графика и драфта (.gm-gd) — одна ячейка главной колонки; карточка драфта — как остальные */
+.gm-gd{ display:flex; flex-direction:column; gap:16px; } .gm-gd > .cd{ margin:0; }
+.cd > [data-wd="draft"]{ padding:12px 16px; } .top-bd > [data-wd="draft"]{ padding:0; }
+
+/* v13 col — команда колонкой сбоку графика: логотип, 5 пиков сверху вниз, баны */
+.wdr--col{ display:flex; flex-direction:column; gap:6px; width:100%; } .wdr--col .wdr-tm{ justify-content:center; }
+.wdr--col .wdr-p small{ display:none; } .wdr--col .wdr-bans{ flex-wrap:wrap; justify-content:center; } .wdr--col .wdr-ban{ width:22px; height:13px; }
+.gm-dside{ display:grid; grid-template-columns:76px minmax(0,1fr) 76px; gap:12px; align-items:start; }
+body:not(.is-desk) .gm-dside{ grid-template-columns:1fr; }
+body:not(.is-desk) .gm-dside .wdr--col{ flex-direction:row; align-items:center; flex-wrap:wrap; }
+body:not(.is-desk) .gm-dside .wdr--col .wdr-p{ width:52px; } body:not(.is-desk) .gm-dside .wdr--col .wdr-p small{ display:none; }
+body:not(.is-desk) .gm-dside > :first-child{ order:-1; }
+
+/* v14 order — 24 хода полосой */
+.wdr-ord-t{ display:flex; justify-content:space-between; margin-bottom:8px; }
+.wdr-ord{ display:flex; gap:3px; overflow-x:auto; scrollbar-width:none; padding-bottom:2px; }
+.wdr-o{ flex:none; display:flex; flex-direction:column; align-items:center; gap:2px; padding-top:3px; border-top:2px solid; }
+.wdr-o--a{ border-color:var(--w-up); } .wdr-o--b{ border-color:var(--w-down); }
+.wdr-o img{ width:44px; height:25px; object-fit:cover; border-radius:3px; } .wdr-o.is-ban img{ width:30px; height:17px; margin-top:8px; filter:grayscale(1) brightness(.55); }
+.wdr-o small{ font-size:10px; color:var(--w-muted-fg); }
+
+/* v15 fold — свёрнуто строкой низом карточки графика */
+.wdr--fold{ border-top:1px solid var(--w-border); margin-top:12px; padding-top:10px; }
+.wdr-fl{ display:flex; align-items:center; gap:8px; width:100%; flex-wrap:wrap; font:inherit; color:inherit; border:0; background:none; padding:0; cursor:pointer; text-align:left; }
+.wdr-fl > b{ font-weight:600; } .wdr-fl em{ margin-left:auto; font-style:normal; font-size:12px; color:#a78bfa; }
+.wdr--fold .wdr-ord{ margin-top:10px; }
+body:not(.is-desk) .wdr-fl .wdr-vs, body:not(.is-desk) .wdr-fl > .wdr-tm{ display:none; }
+
+/* v16 cm — фаза драфта таймлайном сверху вниз */
+.wdr-cm-t{ display:grid; grid-template-columns:1fr 28px 1fr; gap:8px; margin-bottom:6px; } .wdr-cm-t .wdr-tm:last-child{ justify-content:flex-end; }
+.wdr-cm{ display:flex; flex-direction:column; gap:1px; }
+.wdr-cm-r{ display:grid; grid-template-columns:1fr 28px 1fr; align-items:center; gap:8px; min-height:30px; padding:1px 4px; border-radius:6px; }
+.wdr-cm-r > span{ text-align:center; font-size:11px; color:var(--w-muted-fg); }
+.wdr-cm-r > div:last-child .wdr-h{ flex-direction:row-reverse; text-align:right; }
+.wdr-cm-r.is-now{ background:#1c1b26; } .wdr-cm-r.is-now > span{ color:#a78bfa; font-weight:600; } .wdr-cm-r.is-wait{ opacity:.35; }
+.wdr-h{ display:flex; align-items:center; gap:8px; min-width:0; font-size:12px; white-space:nowrap; overflow:hidden; }
+.wdr-h img{ width:44px; height:25px; object-fit:cover; border-radius:3px; flex:none; } .wdr-h.is-ban img{ filter:grayscale(1) brightness(.55); } .wdr-h.is-ban > span{ color:var(--w-muted-fg); text-decoration:line-through; }
+.wdr-h .wdr-s{ width:44px; height:25px; flex:none; } .wdr-h.is-wait{ font-size:11px; color:var(--w-muted-fg); }
+
+/* v17 lanes — две дорожки: Radiant сверху, Dire снизу, номер хода между; одна сетка на три строки (--fr компьютер, --px телефон — листается) */
+.wdr-lns{ display:flex; gap:10px; } .wdr-lt{ display:flex; flex-direction:column; justify-content:space-between; padding:4px 0 2px; flex:none; }
+.wdr-lx{ flex:1; min-width:0; overflow-x:auto; scrollbar-width:none; display:flex; flex-direction:column; gap:3px; }
+.wdr-lr{ display:grid; grid-template-columns:var(--px); gap:3px; align-items:center; width:max-content; }
+.is-desk .wdr-lr{ grid-template-columns:var(--fr); width:100%; }
+.wdr-ln{ display:grid; place-items:center; min-width:0; } .wdr-lr--n .wdr-ln{ font-size:10px; color:var(--w-muted-fg); }
+.wdr-ln img{ width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:3px; display:block; } .wdr-ln.is-ban img{ filter:grayscale(1) brightness(.55); width:80%; }
+.wdr-lr--a .wdr-ln img{ border-bottom:2px solid var(--w-up); } .wdr-lr--b .wdr-ln img{ border-top:2px solid var(--w-down); }
+.wdr-lr--a, .wdr-lr--b{ min-height:22px; }
+
+/* v18 phases — группами по фазам */
+.wdr-phs{ display:flex; gap:10px; overflow-x:auto; scrollbar-width:none; }
+.wdr-ph{ flex:none; display:flex; flex-direction:column; gap:4px; } .wdr-ph > small{ font-size:11px; color:var(--w-muted-fg); }
+.wdr-ph > div{ display:flex; gap:3px; } .is-desk .wdr-phs{ flex-wrap:wrap; row-gap:10px; }
+
+/* v19 both — пятёрки, под ними порядок мелко */
+.wdr-sub{ margin:12px 0 6px; font-size:12px; color:var(--w-muted-fg); }
+.wdr--card .wdr-sub + .wdr-ord .wdr-o img{ width:34px; height:19px; } .wdr--card .wdr-sub + .wdr-ord .wdr-o.is-ban img{ width:24px; height:14px; margin-top:5px; }
+
+/* v20 fit — полоса во всю ширину без прокрутки: пик шире бана */
+.wdr-ord--fit{ overflow:visible; gap:2px; } .wdr-ord--fit .wdr-o{ flex:1 1 0; min-width:0; } .wdr-ord--fit .wdr-o.is-pick{ flex-grow:1.7; }
+.wdr-ord--fit .wdr-o img, .wdr-ord--fit .wdr-o.is-ban img{ width:100%; height:auto; aspect-ratio:16/9; margin-top:0; }
+.wdr-ord--fit .wdr-o.is-ban img{ width:80%; margin-top:auto; } .wdr-ord--fit .wdr-o{ justify-content:flex-end; }
+
+/* v21 cs — как Cyberscore: команды рядом, 5 героев с ником под ними, баны перечёркнутыми */
+.wcs{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.wcs-n{ display:flex; flex-direction:column; gap:2px; margin-bottom:8px; } .wcs-n small{ font-size:11px; } .wcs-n.a small{ color:var(--w-up); } .wcs-n.b small{ color:var(--w-down); }
+.wcs-t:last-child .wcs-n{ align-items:flex-end; }
+.wcs-p{ display:grid; grid-template-columns:repeat(5,1fr); gap:3px; } .wcs-p span{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.wcs-p img{ width:100%; aspect-ratio:1; object-fit:cover; border-radius:4px; } .wcs-p small{ font-size:10px; color:var(--w-muted-fg); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.wcs-b{ display:grid; grid-template-columns:repeat(7,1fr); gap:3px; margin-top:8px; }
+.wcs-b span{ position:relative; } .wcs-b img{ width:100%; aspect-ratio:1; object-fit:cover; border-radius:3px; filter:grayscale(1) brightness(.5); display:block; }
+.wcs-b span::after{ content:''; position:absolute; inset:0; border-radius:3px; border:1px solid var(--w-down); background:linear-gradient(to top right, transparent calc(50% - 1px), var(--w-down) 50%, transparent calc(50% + 1px)); opacity:.8; }
+
+/* v22 dltv — как DLTV: заголовок «Пики & баны», герои с никами строкой, баны — по кнопке */
+.wdl-hd{ font-size:13px; font-weight:700; text-align:center; margin-bottom:10px; } .wdl-hd span{ color:var(--w-down); }
+.wdl{ display:grid; grid-template-columns:1fr 1fr; gap:14px; } .wdl-t:last-child > .wdr-tm{ justify-content:flex-end; display:flex; }
+.wdl-p{ display:grid; grid-template-columns:repeat(5,1fr); gap:3px; margin-top:6px; } .wdl-p span{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.wdl-p img{ width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:3px; } .wdl-p small{ font-size:9px; color:var(--w-muted-fg); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-transform:uppercase; }
+.wdl-b{ display:grid; grid-template-columns:repeat(7,1fr); gap:3px; margin-top:6px; } .wdl-b img{ width:100%; aspect-ratio:1; object-fit:cover; border-radius:3px; filter:grayscale(1) brightness(.55); }
+.wdl-more{ display:block; margin:10px 0 0 auto; border:0; background:none; color:var(--w-down); font:600 11px var(--w-font); cursor:pointer; padding:0; }
+body:not(.is-desk) .wdl{ gap:10px; }
+
+/* v23 hawk — как Hawk: «Пики команд» двумя колонками сверху вниз */
+.whk-hd{ font-size:13px; font-weight:700; color:#f97316; margin-bottom:8px; }
+.whk-tm{ display:flex; justify-content:space-between; margin-bottom:8px; }
+.whk{ display:grid; grid-template-columns:1fr 1fr; gap:6px 16px; }
+.whk-r{ display:flex; align-items:center; gap:8px; min-width:0; } .whk-r.b{ flex-direction:row-reverse; text-align:right; }
+.whk-r img{ width:52px; height:30px; object-fit:cover; border-radius:4px; flex:none; } .whk-r span{ min-width:0; font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.whk-r small{ display:block; font-size:11px; color:var(--w-muted-fg); }
+
+/* v24 flap — как Flapscore: ходы списком в две колонки */
+.wfp-hd{ font-size:14px; font-weight:700; margin-bottom:8px; }
+.wfp{ display:grid; grid-template-columns:1fr 1fr; gap:0 24px; } .wfp ol{ list-style:none; margin:0; padding:0; }
+.wfp li{ font-size:12px; line-height:22px; color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.wfp li .num{ display:inline-block; width:22px; } .wfp li b{ font-weight:600; } .wfp li b.a{ color:var(--w-up); } .wfp li b.b{ color:var(--w-down); }
+body:not(.is-desk) .wfp{ grid-template-columns:1fr; }
+/* v21 на компьютере: плитки не растягиваются на всю колонку — 56 героя, 36 бана (дирижёр 27.10, страница v33) */
+.is-desk .wcs-p{ grid-template-columns:repeat(5,56px); } .is-desk .wcs-b{ grid-template-columns:repeat(7,36px); }
+.is-desk .wcs-t:last-child .wcs-p, .is-desk .wcs-t:last-child .wcs-b{ justify-content:end; }

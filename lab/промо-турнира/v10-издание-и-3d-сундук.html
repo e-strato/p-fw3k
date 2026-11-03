@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_промо.css" />
+<style>
+/* v10 · Издание TI + наш бустер (правка v4: «добавить наш сундук»; с 05.10 вечера — бустер, решение 15). Откуда: Sorare (International Edition с бонусом +30% к очкам на турнире),
+   наклейки CS2 Major (Normal / Foil / Holo / Gold с подписями игроков), капсулы Valve. Место — баннер во всю ширину главной.
+   Карты — настоящие F из сайта; бонус издания работает только на TI. */
+.w-ed { position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); align-items: center; gap: 24px; min-height: 400px; padding: 36px 40px;
+  background:
+    radial-gradient(50% 70% at 72% 50%, color-mix(in srgb, var(--c-coin) 22%, transparent), transparent 70%),
+    radial-gradient(40% 60% at 100% 100%, color-mix(in srgb, var(--c-live) 22%, transparent), transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--c-live) 8%, var(--c-ui-panel)), var(--c-ui-panel)); }
+.w-ed::before { content: ''; position: absolute; inset: 0; opacity: .06; mix-blend-mode: overlay; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.w-ed__l { position: relative; z-index: 1; }
+.w-ed h2 { margin: 14px 0 12px; font-size: 52px; }
+.w-ed h2 span { color: var(--c-coin); }
+.w-ed__lead { margin: 0 0 20px; max-width: 440px; font-size: var(--fs-app-md); color: var(--c-muted); }
+.w-ed__lead b { color: var(--c-text); font-weight: 600; }
+.ed-rows { display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 6px; margin: 0 0 22px; padding: 0; list-style: none; }
+.ed-rows li { display: grid; gap: 2px; padding: 8px 12px; border-radius: 10px; background: color-mix(in srgb, var(--c-ui-bg) 60%, transparent); font-size: var(--fs-app-xs); color: var(--c-caption); }
+.ed-rows b { font-size: var(--fs-app-md); color: var(--c-text); }
+.ed-rows li:last-child b { color: var(--c-coin); }
+.supply { display: grid; gap: 6px; max-width: 360px; margin-bottom: 22px; font-size: var(--fs-app-sm); color: var(--c-caption); }
+.supply div { height: 6px; border-radius: 3px; background: var(--c-ui-item); overflow: hidden; }
+.supply i { display: block; height: 100%; background: linear-gradient(90deg, var(--c-coin), var(--c-live)); }
+.supply b { color: var(--c-text); }
+.act { display: flex; align-items: center; gap: 16px; }
+.act small { font-size: var(--fs-app-sm); color: var(--c-caption); }
+.act .btn--gold { background: var(--c-coin); color: var(--c-card-dark-text); }
+
+/* Сцена справа: наш бустер со страницы «Бустер» (chest.html?form=booster&embed; решение 15 — бустер вместо сундука везде): разрез мышью или кнопка, карты Хайперглитч переворачиваются */
+.stage { position: relative; height: 440px; margin: -20px -20px -20px 0;
+  background: radial-gradient(45% 55% at 50% 58%, color-mix(in srgb, var(--c-coin) 16%, transparent), transparent 70%); }
+.stage iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.got { position: absolute; left: 50%; bottom: 6px; translate: -50% 0; padding: 6px 12px; border-radius: 999px; background: var(--c-coin); color: var(--c-card-dark-text); font-size: var(--fs-app-sm); font-weight: 600; white-space: nowrap;
+  opacity: 0; transition: opacity .4s; pointer-events: none; }
+.w-ed.is-open .got { opacity: 1; }
+@media (max-width: 1000px) { .w-ed { grid-template-columns: 1fr; padding: 28px; } .stage { margin: 0 -12px; } }
+</style></head>
+<body>
+<div class="lab-wrap">
+  <div class="lab-bar">
+    <div class="lab-bar__t"><b>v10 · Издание TI + наш бустер</b><small>v4 с бустером со страницы «Бустер» (вместо сундука) · баннер во всю ширину</small></div>
+    
+  </div>
+  <p class="home-cap">Настоящая главная: баннер издания — над всеми виджетами; остальное приглушено</p>
+  <div class="home" data-slot="before:.app-home__top">
+    <section class="card card--ui w-ed span-3" id="w" aria-label="Издание TI 2026">
+      <div class="w-ed__l">
+        <span class="ti-mark"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.3 8 11 4.6-1.7 8-6 8-11V5l-8-3Zm0 4.2 4 1.5V11c0 2.9-1.6 5.6-4 7-2.4-1.4-4-4.1-4-7V7.7l4-1.5Z"/></svg>The International 2026 · Шанхай</span>
+        <h2 class="disp">Издание <span>«Шанхай»</span></h2>
+        <p class="w-ed__lead">Карты 16 команд TI в рамке турнира. На TI дают <b>+10% к очкам</b>, после — остаются в коллекции с датой и номером.</p>
+        <ul class="ed-rows">
+          <li>Обычная<b>+10%</b></li><li>Фольга<b>+15%</b></li><li>Голо<b>+20%</b></li><li>Золото с подписью<b>+30%</b></li>
+        </ul>
+        <div class="supply"><span>Золото с подписью: <b>3 188 из 5 000</b> уже открыты</span><div><i style="width: 64%"></i></div></div>
+        <div class="act">
+          <button class="btn btn--gold" type="button" id="open">Открыть бустер · 500 ◈</button>
+          <small>Продажи закроются через <b class="num" data-cd="388800"><span data-d>4</span> д <span data-h>12</span>:<span data-m>00</span></b></small>
+        </div>
+      </div>
+      <div class="stage">
+        <iframe id="chest" src="/p-fw3k/site/chest.html?form=booster&amp;embed" title="Бустер «Шанхай»"></iframe>
+        <span class="got">3 карты «Шанхай» в коллекции</span>
+      </div>
+    </section>
+    <div class="ghost span-2"></div><div class="ghost"></div>
+  </div>
+</div>
+<script src="_промо.js"></script>
+<script>
+// Кнопка слева открывает бустер в сцене (как «Открыть» на странице — разрез сам); сцена шлёт 'chest-opened', когда карты раскрыты
+const w = document.getElementById('w'), fr = document.getElementById('chest')
+document.getElementById('open').addEventListener('click', () => fr.contentDocument?.querySelector('[data-act=open]')?.click())
+addEventListener('message', (e) => { if (e.data === 'chest-opened') w.classList.add('is-open') })
+</script>
+</body></html>

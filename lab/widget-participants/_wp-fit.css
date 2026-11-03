@@ -1,0 +1,18 @@
+/* «Участники» по ширине контейнера (WP.mount fit: true, лаба widget-participants-fit): число команд в ряд — по ширине виджета, не окна.
+   Главная колонка страницы турнира на 1440 ≈ 1016 → 5 в ряд (дирижёр 28.10: «пять команд в главной колонке, посмотреть, как сжимается»). */
+.pt--fit{ container-type:inline-size; container-name:wp; }
+.pt--fit .pt-grid{ grid-template-columns:repeat(1, 1fr); }
+@container wp (min-width:400px){ .pt--fit .pt-grid{ grid-template-columns:repeat(2, 1fr); } }
+@container wp (min-width:600px){ .pt--fit .pt-grid{ grid-template-columns:repeat(3, 1fr); } }
+@container wp (min-width:800px){ .pt--fit .pt-grid{ grid-template-columns:repeat(4, 1fr); } }
+@container wp (min-width:980px){ .pt--fit .pt-grid{ grid-template-columns:repeat(5, 1fr); } }
+/* узкая карточка (< ~230: 5 в ряд на 980–1150, 4 — на 800–920, 3 — на 600–690, 2 — на 400–460) — плотнее: поля 12, метки у ника прячем (остаются подсказкой) */
+@container wp (min-width:980px) and (max-width:1150px){ .pt--fit .pt-tm{ padding-left:12px; padding-right:12px; } .pt--fit .pt-mk, .pt--fit .pt-th .pt-reset{ display:none; } .pt--fit .pt-r{ gap:6px; } }
+@container wp (min-width:800px) and (max-width:920px){ .pt--fit .pt-tm{ padding-left:12px; padding-right:12px; } .pt--fit .pt-mk, .pt--fit .pt-th .pt-reset{ display:none; } .pt--fit .pt-r{ gap:6px; } }
+@container wp (min-width:600px) and (max-width:690px){ .pt--fit .pt-tm{ padding-left:12px; padding-right:12px; } .pt--fit .pt-mk, .pt--fit .pt-th .pt-reset{ display:none; } .pt--fit .pt-r{ gap:6px; } }
+@container wp (min-width:400px) and (max-width:460px){ .pt--fit .pt-tm{ padding-left:12px; padding-right:12px; } .pt--fit .pt-mk, .pt--fit .pt-th .pt-reset{ display:none; } .pt--fit .pt-r{ gap:6px; } }
+/* заголовок виджета: узко — подпись прячем */
+@container wp (max-width:700px){ .pt--fit .w-hd .sub{ display:none; } }
+/* fit 'w4' (дирижёр 28.10: «на 1440 пусть 4 помещается»): пять — только от 1200 (экран ≈1620+), на 1440 (колонка 1016) — четыре по ~250 */
+@container wp (min-width:980px){ .pt--fit4 .pt-grid{ grid-template-columns:repeat(4, 1fr); } .pt--fit4 .pt-tm{ padding-left:16px; padding-right:16px; } .pt--fit4 .pt-mk, .pt--fit4 .pt-th .pt-reset{ display:revert; } .pt--fit4 .pt-r{ gap:8px; } }
+@container wp (min-width:1200px){ .pt--fit4 .pt-grid{ grid-template-columns:repeat(5, 1fr); } }

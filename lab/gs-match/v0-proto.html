@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ru">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GoatScout · Матч v4.1</title>
+<style>
+:root{color-scheme:dark;--bg:#0e0e10;--panel:#17161c;--line:#302e39;--muted:#aaa6b8;--accent:#b296ff;--green:#64d8af;--red:#ff7186;--gold:#edc576}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#f5f3fa;font:14px/1.5 system-ui,sans-serif}
+button,select{font:inherit;color:inherit;background:#22202b;border:1px solid var(--line);border-radius:8px;padding:7px 11px}
+button,a,select{touch-action:manipulation}
+button{cursor:pointer}
+button:disabled{cursor:default;opacity:.42}
+button:hover:enabled{border-color:var(--accent)}
+button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+a{color:var(--accent);text-underline-offset:3px}
+h1,h2,h3,p{margin:0}
+h2{font-size:16px}
+h3{font-size:14px}
+small,.muted{color:var(--muted)}
+.demo{background:#252130;border-bottom:1px dashed #70627f;padding:12px 20px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.demo label{display:flex;gap:8px;align-items:center;font-size:12px}
+.demo strong{font-size:12px;letter-spacing:.08em}
+.demo input{accent-color:var(--accent)}
+.demo-note{flex-basis:100%;font-size:11px;color:#c2bacd}
+.site{max-width:1280px;margin:auto;padding:0 20px 32px}
+.brand{display:flex;justify-content:space-between;padding:18px 0;font-size:12px;color:var(--muted)}
+.brand b{color:#eee;font-size:17px}
+.match-header{position:sticky;top:0;z-index:10;background:#121116f5;border:1px solid var(--line);border-radius:12px;padding:14px 18px;backdrop-filter:blur(12px)}
+.score-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.team{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:750}
+.logo{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:#383044;color:var(--accent);font-size:14px}
+.team:last-of-type .logo{background:#203b34;color:var(--green)}
+.score{text-align:center;font-size:25px;font-weight:800}
+.score small{display:block;font-size:11px;font-weight:400}
+.header-meta{margin-top:8px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 12px;font-size:12px;color:var(--muted)}
+.bell{font-size:16px;padding:5px 9px}
+.announcement{padding:10px 16px;margin-top:8px;border:1px solid #6b5630;background:#302819;border-radius:8px;color:var(--gold);font-size:13px}
+.maps{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:12px 0}
+.maps button{font-size:12px}
+.selected,[aria-selected=true]{border-color:var(--accent);background:#34284c;color:#e4d7ff}
+.maps .future{color:var(--muted)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;margin-top:14px}
+.card{border:1px solid var(--line);border-radius:12px;background:var(--panel);overflow:hidden;min-width:0}
+.card-heading{padding:13px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.card-body{padding:16px}
+.tabs{display:flex;border-bottom:1px solid var(--line);overflow:auto}
+.tabs button{flex:1;white-space:nowrap;border:0;border-radius:0;padding:13px;background:transparent;color:var(--muted)}
+.tabs [aria-selected=true]{color:var(--accent);box-shadow:inset 0 -2px var(--accent)}
+.notice{padding:10px 16px;color:var(--gold);background:#292419;font-size:12px}
+.top-content{min-height:240px;padding:18px}
+.history-intro{max-width:600px;margin-bottom:18px}
+.forms{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.form-results{display:flex;gap:5px;margin-top:8px}
+.form-results span{padding:3px 9px;border-radius:5px;background:#203b34;color:var(--green)}
+.form-results .loss{background:#42262d;color:#ffa4b1}
+.history-bottom{border-top:1px solid var(--line);margin-top:18px;padding-top:12px;color:var(--muted);font-size:12px}
+.stream{aspect-ratio:16/9;background:#0c0c10;display:grid;place-content:center;text-align:center;gap:10px;border:1px solid var(--line);border-radius:8px}
+.stream strong{font-size:20px}
+.stream-controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.stream-controls label{font-size:12px;color:var(--muted)}
+.big-score{text-align:center;padding:35px 0;font-size:36px;font-weight:800}
+.chart{width:100%;height:180px;display:block}
+.chart text{fill:var(--muted);font-size:12px}
+.chart path{fill:none;stroke:var(--green);stroke-width:3}
+.chart line{stroke:var(--line)}
+.chart button{font-size:12px}
+.graph-label{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}
+.event-caption{min-height:24px;color:var(--gold);font-size:12px}
+.draft-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.draft-grid button{display:block;width:100%;margin-top:6px;text-align:left}
+.you .card-body{padding:12px 16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.text-action{padding:0;background:none;border:0;color:var(--accent);text-align:left}
+.next-personal{border-top:1px solid var(--line);padding:12px 16px;font-size:12px}
+.next-personal button{margin-top:7px}
+.facts ul{margin:0;padding-left:20px}
+.facts li+li{margin-top:8px}
+.question{font-size:19px;margin-bottom:7px}
+.answers{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.clock{margin-top:12px;font-size:12px;color:var(--muted)}
+progress{accent-color:var(--accent);width:100%;height:5px;display:block;margin-top:9px}
+.mvp-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px}
+.candidate{text-align:center;min-width:0}
+.avatar{margin:0 auto 8px;width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:#343044;color:var(--accent);font-size:20px}
+.candidate small{display:block;font-size:11px}
+.rosters{display:grid;grid-template-columns:1fr;gap:12px;padding:14px}
+.roster{min-width:0}
+.roster h3{padding:0 6px 10px;color:var(--accent)}
+.player{display:grid;grid-template-columns:minmax(75px,1fr) minmax(65px,1fr) auto auto;gap:8px;width:100%;border:0;border-top:1px solid var(--line);border-radius:0;background:none;padding:10px 6px;text-align:left;font-size:12px;align-items:center}
+.player small{font-size:11px}
+.player .points{color:var(--gold)}
+.substitute{padding:8px 6px;font-size:11px;color:var(--gold)}
+.guest-points{padding:0 16px 14px;font-size:12px}
+.subpages{display:flex;flex-wrap:wrap;gap:10px;padding:13px 16px;font-size:12px}
+.subpages button{border:0;padding:0;background:none;color:var(--accent)}
+.subpages button:disabled{color:var(--muted);opacity:1}
+.subpages small{display:block}
+.events .event{padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px}
+.event time{color:var(--muted);font-size:11px;margin-right:8px}
+.event small{display:block;margin-top:4px}
+.events details{padding:10px 16px;color:var(--muted);font-size:12px}
+.events details p{margin-top:8px}
+.more-matches{display:grid;grid-template-columns:1fr;gap:8px}
+.match-link{display:flex;justify-content:space-between;gap:12px;text-align:left;padding:13px}
+.match-link small{display:block}
+.live{color:var(--red)}
+.empty{padding:25px 10px;text-align:center;color:var(--muted)}
+.top-block{grid-area:top}
+.you{grid-area:you}
+.facts{grid-area:facts}
+.engagement{grid-area:engagement}
+.lineups{grid-area:lineups}
+.subpages{grid-area:links}
+.events{grid-area:events}
+.next{grid-area:next}
+.layout{grid-template-areas:'top' 'you' 'facts' 'engagement' 'lineups' 'links' 'events' 'next'}
+dialog{color:#f5f3fa;background:#1c1923;border:1px solid #51445f;border-radius:18px 18px 0 0;width:min(520px,100vw);max-height:80dvh;margin:auto auto 0;padding:22px}
+dialog::backdrop{background:#000b}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+dialog p{margin-top:14px}
+dialog .handle{width:40px;height:4px;background:#756b83;border-radius:5px;margin:-9px auto 18px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:30;background:#eee8fa;color:#21172f;padding:12px 18px;border-radius:10px;max-width:90vw;font-size:13px}
+.toast:empty{display:none}
+footer{font-size:11px;color:var(--muted);padding-top:18px}
+
+@media(min-width:700px){.rosters{grid-template-columns:1fr 1fr}
+.more-matches{grid-template-columns:1fr 1fr}
+}
+
+@media(min-width:1024px){.layout{grid-template-columns:minmax(0,1fr) 310px;grid-template-rows:auto auto auto auto auto 1fr;grid-template-areas:'top you' 'top events' 'facts events' 'engagement events' 'lineups events' 'links events' 'next events';align-items:start}
+.events{align-self:stretch}
+.team{font-size:23px}
+.top-content{min-height:280px}
+.you .card-body{display:block}
+.you .card-body>*{display:block;margin-bottom:6px}
+}
+
+.team-long{display:none}
+@media(min-width:700px){.team-long{display:inline}}
+@media(max-width:480px){.site{padding:0 10px 24px}
+.demo{padding:10px;gap:8px}
+.demo label{font-size:11px}
+.demo select{max-width:190px;padding:5px}
+.brand{padding:12px 0}
+.match-header{padding:10px}
+.team{font-size:15px;gap:6px}
+.logo{width:27px;height:29px;font-size:11px}
+.score{font-size:21px}
+.score-row{gap:6px}
+.header-meta{font-size:10px;gap:4px 8px}
+.bell{padding:4px}
+.top-content{padding:12px;min-height:220px}
+.mvp-list{gap:5px}
+.candidate{padding:9px 3px;font-size:12px}
+.forms{gap:8px}
+.form-results{gap:3px}
+.form-results span{padding:3px 6px}
+.rosters{padding:12px}
+.player{gap:6px}
+.question{font-size:17px}
+}
+
+</style>
+</head>
+<body>
+<div class="demo" aria-label="Настройки прототипа">
+<strong>ДЕМО · V4.1</strong>
+<label>Состояние <select id="state"><option value="announce">Анонс</option><option value="pre">До матча</option><option value="live" selected>Live</option><option value="post">После</option><option value="nodata">Нет данных</option><option value="offline">Нет данных и трансляции</option><option value="delayed">Перенос</option><option value="cancel">Отмена</option></select></label>
+<label><input type="checkbox" id="auth"> <span id="auth-label">Гость</span></label>
+<label><input type="checkbox" id="spoiler"> Анти-спойлер</label>
+<label>Игра <select id="game"><option>Dota</option><option>LoL</option><option>CS2</option><option>Valorant</option><option>MLBB</option></select></label>
+<label>Серия <select id="format"><option>Bo1</option><option selected>Bo3</option><option>Bo5</option></select></label>
+<label><input type="checkbox" id="other-live" checked> Другие матчи live</label>
+<span class="demo-note">Служебная полоса. Все команды, события и результаты условные. Трансляции и подстраницы показаны без подключения сервисов.</span>
+</div>
+<div class="site"><nav class="brand" aria-label="Портал"><b>GoatScout <span class="muted">/ Матч</span></b><span>North Cup · Осень 2026</span></nav><div id="match"></div><footer>Демо страницы матча · v4.1 · данные с задержкой</footer></div>
+<dialog id="sheet" aria-labelledby="sheet-title"></dialog><div class="toast" role="status" aria-live="polite" id="toast"></div>
+<script>
+'use strict';
+// Карточка раздела match.md §4–5. Один DOM для телефона и компьютера.
+const $=id=>document.getElementById(id);
+const S={state:'live',auth:false,spoiler:false,game:'Dota',format:'Bo3',otherLive:true,map:2,unlocked:1,revealed:false,eventsShown:false,tab:null,answer:null,vote:null,reminded:false,five:false,other:false,question:0,closed:false,paused:false,slow:false,source:'Twitch',lang:'RU'};
+const nicknames=[['Aster','Rune','Moss','Echo','Kite'],['Flint','Nova','Vale','Sora','Pine']];
+const heroes={Dota:['Luna','Puck','Mars','Rubick','Oracle'],LoL:['Jax','Vi','Ahri','Jinx','Nami'],Valorant:['Jett','Sova','Omen','Killjoy','Skye'],MLBB:['Fanny','Fredrinn','Lunox','Claude','Mathilda'],CS2:['AWP','Rifle','Entry','Support','IGL']};
+const teams=['North Owls','River Foxes'];
+let answerTimer=null,toastTimer=null,returnFocus=null;
+const isPre=()=>['announce','pre','delayed'].includes(S.state);
+const isPost=()=>S.state==='post';
+const isLive=()=>['live','nodata','offline'].includes(S.state);
+const noData=()=>['nodata','offline'].includes(S.state)||(['CS2','Valorant','MLBB'].includes(S.game)&&isLive());
+const fantasy=()=>!['Valorant','MLBB'].includes(S.game);
+const hidden=()=>S.spoiler&&!S.revealed;
+const maxMaps=()=>Number(S.format.slice(2));
+const mapPool=()=>S.game==='CS2'?['Mirage','Inferno','Nuke','Ancient','Anubis','Dust II','Vertigo']:['Haven','Ascent','Lotus','Bind','Split'];
+const playerPoints=(j,i)=>44-i*6-j*3;
+const mvpCandidates=()=>nicknames.flatMap((names,j)=>names.map((name,i)=>({name,j,i,points:playerPoints(j,i)}))).sort((a,b)=>b.points-a.points).slice(0,3);
+const currentMap=()=>S.format==='Bo1'?1:2;
+const mapName=()=>['CS2','Valorant'].includes(S.game)?mapPool()[S.map-1]:`Карта ${S.map}`;
+function toast(text){$('toast').textContent=text;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').textContent='',3400)}
+function score(){return S.state==='announce'?'—':hidden()?'Счёт скрыт':isPre()?'18:00':S.state==='cancel'?'—':S.format==='Bo1'?(isPost()?'1 : 0':'0 : 0'):(isPost()?`${Math.ceil(maxMaps()/2)} : ${Math.floor(maxMaps()/2)}`:'1 : 0')}
+function stage(){if(S.state==='announce')return 'Время уточняется — напомним, как только появится';if(hidden())return 'Смотреть с начала';if(S.state==='delayed')return 'Перенесён на 24 октября, 20:00';if(S.state==='cancel')return 'Матч отменён';if(isPre())return 'Сегодня, 18:00 · до старта 47 мин';if(isPost())return 'Серия завершена';if(S.paused)return 'Пауза · техническая';return ['CS2','Valorant'].includes(S.game)?'Раунд 14 · 8:5':S.game==='MLBB'?'Мид 12:18':'Линии 08:12'}
+function header(){let notice=S.state==='delayed'?'Перенесён на 24 октября, 20:00. Прогноз на победителя сохранён, вопросы драфта и карт начнутся заново':S.state==='cancel'?'Матч отменён: турнирный день снят. Прогнозы и ответы не считаются, очков нет.':S.paused?'Техническая пауза. Игровые часы и время ответов остановлены.':null;
+return `<header class="match-header"><div class="score-row"><div class="team"><span class="logo">NO</span><span title="North Owls">NO<span class="team-long"> · North Owls</span></span></div><div class="score">${S.state==='delayed'?'<small><s>22 октября, 18:00</s></small>':''}${score()}<small>${S.format} · ${S.game}</small></div><div class="team"><span title="River Foxes">RF<span class="team-long"> · River Foxes</span></span><span class="logo">RF</span></div><button class="bell" data-action="remind" aria-label="Напомнить о матче" aria-pressed="${S.reminded}">${S.reminded?'✓':'🔔'}</button></div><div class="header-meta"><a href="#" data-action="tournament">North Cup · Полуфинал ↗</a><span class="${isLive()?'live':''}">${stage()}</span>${isLive()?'<span>данные с задержкой</span>':''}${hidden()?'<button class="text-action" data-action="reveal">Показать счёт</button>':''}</div></header>${notice?`<div class="announcement" role="status">${notice}</div>`:''}`}
+function maps(){if(maxMaps()===1)return '';return `<nav class="maps" aria-label="Карты">${Array.from({length:maxMaps()},(_,i)=>i+1).map(n=>{const future=isPre()||(!isPost()&&n>currentMap());const disabled=S.spoiler?n>S.unlocked:future;const result=S.game==='CS2'||S.game==='Valorant'?(n%2===0?'9:13':'13:9'):(n%2===0?'0:1':'1:0');return `<button data-action="map" data-value="${n}" aria-pressed="${S.map===n}" ${disabled?'disabled':''} class="${S.map===n?'selected':''} ${future?'future':''}">К${n}${['CS2','Valorant'].includes(S.game)?` · ${mapPool()[n-1]}`:''}${!S.spoiler&&!isPre()&&!future?` · ${isPost()||n<currentMap()?result:'идёт'}`:''}</button>`}).join('')}${S.spoiler&&S.unlocked<maxMaps()?'<button data-action="next-map">Смотреть дальше →</button>':''}</nav>`}
+function tabList(){if(S.state==='cancel')return [];if(isPre())return ['История','Трансляция'];if(isPost())return ['График','Записи карт','Драфт'];if(S.state==='offline')return [];return noData()?['Трансляция','Драфт']:['График','Трансляция','Драфт']}
+function activeTab(){return S.tab||(noData()&&S.state!=='offline'?'Трансляция':tabList()[0])}
+function renderHistory(){return `<div class="history-intro"><b>Owls выиграли три последние серии. Foxes взяли две последние очные встречи.</b><p class="muted">Форма за пять матчей · очные за 12 месяцев</p></div><div class="forms">${teams.map((t,j)=>`<div><h3>${t}</h3><div class="form-results">${(j?['П','В','П','В','В']:['П','П','В','В','В']).map(x=>`<span class="${x==='П'?'loss':''}">${x}</span>`).join('')}</div><small>От старых к новым</small></div>`).join('')}</div><div class="history-bottom">Очные с 12 января 2026 · доступно 3 встречи: 12 янв — 2:1, 18 мая — 0:2, 6 сен — 1:2.<br>За предыдущие месяцы данных нет. <a href="#" data-action="subpage" data-value="История и очные">Все встречи →</a></div>`}
+function stream(recording=false){return `<div class="stream"><strong>▷ ${recording?'Запись':'Трансляция'} · ${mapName()}</strong><span class="muted">${S.source} · ${S.lang}</span><small>Демо плеера · видео не подключено</small></div><div class="stream-controls"><label>Источник <select id="source">${['Twitch','YouTube','Kick'].map(x=>`<option ${S.source===x?'selected':''}>${x}</option>`).join('')}</select></label><label>Язык <select id="lang">${['RU','ES','EN'].map(x=>`<option ${S.lang===x?'selected':''}>${x}</option>`).join('')}</select></label>${recording?'<button data-action="timestamp">12:18 · ключевой эпизод</button>':''}</div>`}
+function graph(){if(hidden())return '<div class="empty">График скрыт, чтобы не раскрывать результат.<br><button data-action="reveal">Показать счёт и график</button></div>';if(noData())return '<div class="empty">Подробные данные появятся после карты.</div>';if(['Valorant','MLBB'].includes(S.game))return '<div class="empty">Источник графика MLBB пока не подтверждён.<br>Доступны трансляция, составы и события.</div>';return `<div class="graph-label"><span>${['CS2','Valorant'].includes(S.game)?'Раунды':'Разница золота'} · ${mapName()}</span><span>NO / RF</span></div><svg class="chart" viewBox="0 0 600 180" role="img" aria-label="${S.game==='Valorant'||S.game==='CS2'?'Раунды':'Разница золота'}, карта ${S.map}"><line x1="0" y1="90" x2="600" y2="90"/><line x1="0" y1="40" x2="600" y2="40"/><line x1="0" y1="140" x2="600" y2="140"/><path d="${S.map===1?'M0 100 L70 120 L140 70 L210 85 L280 50 L350 60 L420 35 L500 55 L600 20':'M0 90 L70 60 L140 100 L210 120 L280 100 L350 50 L420 65 L500 30 L600 45'}"/><text x="5" y="175">0</text><text x="550" y="175">${S.game==='Valorant'?'14 раунд':'08:12'}</text></svg><button data-action="graph-event">◆ ${S.game==='Valorant'?'Ключевой раунд':'Первая башня'} · тап, чтобы прочитать</button><p id="graph-caption" class="event-caption" aria-live="polite"></p>`}
+function draft(){if(S.game==='CS2'){
+const pool=mapPool(),order=S.format==='Bo1'?[1,2,3,4,5,6,0]:S.format==='Bo3'?[3,4,0,1,5,6,2]:[5,6,0,1,2,3,4];
+const actions=S.format==='Bo1'?['Бан','Бан','Бан','Бан','Бан','Бан']:S.format==='Bo3'?['Бан','Бан','Пик','Пик','Бан','Бан']:['Бан','Бан','Пик','Пик','Пик','Пик'];
+return `<p class="muted">Вето карт · ${S.format}</p><ol>${actions.map((action,i)=>`<li>${teams[i%2]} · ${action}: ${pool[order[i]]}</li>`).join('')}<li>Десайдер: ${pool[order[6]]} · решающая карта</li></ol>`;
+}return `<p class="muted">${mapName()} · ${S.game==='CS2'?'Выбор карт (вето)':'Выбор героев и агентов'}</p><div class="draft-grid">${teams.map((t,j)=>`<div><h3>${t}</h3>${nicknames[j].map((n,i)=>`<button data-action="player" data-value="${j}|${i}">${n} · ${heroes[S.game][(i+S.map-1+j)%5]}</button>`).join('')}</div>`).join('')}</div>`}
+function renderTop(){const tabs=tabList(),tab=activeTab();return `<section class="card top-block" aria-label="Верх матча">${tabs.length?`<div class="tabs" role="tablist" aria-label="Просмотр матча">${tabs.map(t=>`<button role="tab" aria-selected="${t===tab}" data-action="tab" data-value="${t}">${t}</button>`).join('')}</div>`:''}${noData()?'<div class="notice">Подробные данные появятся после карты</div>':''}<div class="top-content" ${tabs.length?'role="tabpanel" tabindex="0"':''}>${S.state==='cancel'?'<div class="empty">Матч не состоится. Прогнозы аннулированы.</div>':S.state==='offline'?`<div class="big-score">${score()}</div><p class="muted">Счёт по картам · трансляция недоступна. Факты и обновления — в «Событиях».</p>`:tab==='История'?renderHistory():tab==='Трансляция'||tab==='Записи карт'?stream(tab==='Записи карт'):tab==='Драфт'?draft():graph()}</div></section>`}
+function you(){let body;if(S.state==='cancel')body='<span>Прогнозы аннулированы · очков нет</span>';else if(hidden())body='<span>Ты в матче · цифры скрыты до «Показать счёт»</span>';else if(!S.auth&&!S.answer)body=isPre()&&fantasy()&&!S.five?'<button class="text-action" data-action="five">Собери пятёрку на этот матч →</button>':isPost()?(fantasy()?'<span>Проголосуй за MVP → «Выбери MVP»</span>':'<span>Серия завершена · итоги в «Событиях»</span>'):'<span>Ответь на вопрос в «Угадай сейчас» →</span>';else body=`<span>${isPost()?'Угадал 4 из 6 · 40 очков':S.answer?`Мой ответ: ${S.answer}`:'Мой прогноз: North Owls'}</span>${fantasy()?`<span class="muted">${S.game==='CS2'?`очки после карты ${S.map}`:S.auth&&!isPre()?'Пятёрка 34 очка · место 412':''}</span>${isPre()&&!S.five?'<button class="text-action" data-action="five">Собери пятёрку на этот матч →</button>':''}`:''}`;
+return `<section class="card you"><div class="card-heading"><h2>Ты в матче</h2>${S.auth?'<button class="text-action" data-action="other" aria-label="Другой мой матч">⇄</button>':''}</div><div class="card-body">${S.other?'<span class="muted">Другой мой матч: Amber — Frost · 0:0</span>':''}${body}${isPre()?`<button class="text-action" data-action="remind">${S.reminded?'Напоминание включено ✓':'Напомнить о матче'}</button>`:''}</div>${isPost()&&!hidden()?'<div class="next-personal">Следующий матч North Owls / River Foxes · 24 октября, 18:00<br><button data-action="next-prediction">Прогноз в 1 тап → North Owls</button></div>':''}</section>`}
+const facts=['North Owls выиграли три последние серии.','River Foxes взяли две последние очные встречи.','Aster и Rune играют вместе второй сезон.'];
+function factBlock(){return isPre()?`<section class="card facts"><div class="card-heading"><h2>Факты к матчу</h2><small>${S.game}</small></div><div class="card-body"><ul>${facts.map(f=>`<li>${f}</li>`).join('')}</ul></div></section>`:''}
+function question(){if(isPre())return 'Кто выиграет серию?';if(S.question%2)return S.game==='MLBB'?'Кто выиграет серию?':['CS2','Valorant'].includes(S.game)?'Будет ли овертайм на карте?':'Кто возьмёт следующую башню?';return `Кто возьмёт карту ${S.map}?`}
+function engagement(){if(S.state==='cancel')return '';if(isPost()){if(!fantasy()||hidden())return '';return `<section class="card engagement"><div class="card-heading"><h2>Выбери MVP</h2><small>Голосование · 24 ч</small></div><div class="card-body"><p>До конца голосования <b id="mvp-clock">23:59:59</b></p><p class="muted">После закрытия итог фиксируется и идёт в MVP недели.</p><div class="mvp-list">${mvpCandidates().map(({name,j,i,points},candidate)=>`<button class="candidate ${S.vote===candidate?'selected':''}" data-action="vote" data-value="${candidate}" aria-pressed="${S.vote===candidate}"><span class="avatar" aria-label="Аватар ${name}">${name[0]}</span><b>${name}</b><small>${teams[j]} · ${heroes[S.game][i]}</small><small>${S.game==='CS2'?'K/D/ADR':'K/D/A'} · ${S.game==='CS2'?`${24-i*3}/12/96`:`${12-i*2}/3/16`}</small><small>${S.auth?`${points} очков`:'Войди, чтобы видеть очки'}</small>${S.vote===candidate?'<small>Твой голос ✓</small>':''}</button>`).join('')}</div></div></section>`}
+const options=question().includes('овертайм')?['Да','Нет']:teams;
+return `<section class="card engagement"><div class="card-heading"><h2>Угадай сейчас</h2><small>${isPre()?'До старта':`Карта ${S.map}`}</small></div><div class="card-body">${S.slow?'<p>Данные задерживаются больше двух минут. Новых вопросов пока нет.</p>':S.closed?'<p>Ответы закрыты — итог в Событиях</p><button data-action="next-question">Следующий вопрос (демо)</button>':`<h3 class="question">${question()}</h3><p class="muted">${S.answer?'Принято. Ответ сохранён на устройстве, итог — в Событиях.':'Ответ в один тап · вход не нужен'}</p><div class="answers">${options.map(x=>`<button data-action="answer" data-value="${x}" ${S.answer?'disabled':''} class="${S.answer===x?'selected':''}">${x}</button>`).join('')}</div><div class="clock">${isPre()?(S.state==='announce'?'Ответы до старта · время уточняется':'Ответы до старта, 18:00'):`Ответы до ${['CS2','Valorant'].includes(S.game)?'начала раунда 15':'09:00 игрового времени'}`}${S.paused?' · таймер на паузе':''}</div><progress max="60" value="${remaining}" aria-label="Время для ответа"></progress>`}<div class="answers"><button class="text-action" data-action="pause">${S.paused?'Продолжить':'Техпауза'} (демо)</button>${isLive()?`<button class="text-action" data-action="slow">${S.slow?'Данные догнали':'Задержка > 2 мин'} (демо)</button>`:''}${!S.closed&&!S.slow?'<button class="text-action" data-action="close-question">Закрыть вопрос (демо)</button>':''}</div></div></section>`}
+function availableStats(){return !['Valorant','MLBB'].includes(S.game)&&!isPre()&&S.state!=='cancel'&&!hidden()&&(!noData()||(S.game==='CS2'&&S.map<currentMap()))}
+function points(i,j=0){if(hidden())return 'скрыто';return isPre()?'—':S.game==='CS2'&&isLive()&&S.map>=currentMap()?`после карты ${S.map}`:noData()?'после карты':`${playerPoints(j,i)} очк.`}
+function lineups(){return `<section class="card lineups"><div class="card-heading"><h2>Составы${isPre()?' · ожидаемые':isPost()?' · итог':''}</h2><small>${mapName()}</small></div><div class="rosters">${teams.map((t,j)=>`<div class="roster"><h3>${t}</h3>${nicknames[j].map((n,i)=>`<button class="player" data-action="player" data-value="${j}|${i}" aria-label="Открыть игрока ${n}"><span>${n}${S.auth&&fantasy()&&i===0?' ★':''}${j===1&&i===4?' ⟳':''}</span><small>${isPre()?'':heroes[S.game][(i+S.map-1+j)%5]}</small><span>${availableStats()?S.game==='CS2'?`${18-i}/${10+i}/${96-i*7}`:`${8-i+S.map}/${2+i}/${12-i}`:''}</span>${S.auth&&fantasy()?`<span class="points">${points(i,j)}</span>`:'<span></span>'}</button>`).join('')}<div class="substitute">${j===1?'⟳ Pine · возможна замена, не подтверждена':'Echo · замена · до 25 октября · <a href="#" data-action="news">новость ↗</a>'}</div></div>`).join('')}</div>${!S.auth&&fantasy()?'<div class="guest-points"><button class="text-action" data-action="login">Войди, чтобы видеть очки</button></div>':''}${availableStats()?`<div class="guest-points muted">${S.game==='CS2'?'K/D/ADR · итог карты':'K/D/A'} · условные данные</div>`:''}</section>`}
+function links(){return `<nav class="card subpages" aria-label="Подстраницы матча">${['Статистика','Записи карт','История и очные'].map((t,i)=>`<button data-action="subpage" data-value="${t}" ${i<2&&!isPost()?'disabled':''}>${t}${i<2&&!isPost()?'<small>после матча</small>':''}</button>`).join('<span class="muted">·</span>')}</nav>`}
+function events(){if(hidden()&&!S.eventsShown)return '<section class="card events"><div class="card-heading"><h2>События</h2></div><div class="card-body"><p class="muted">Скрыты анти-спойлером</p><button data-action="events-show">Показать</button></div></section>';
+const list=isPre()?[['17:10','Наш материал','Ожидаемые составы опубликованы.'],['16:50','Факт',facts[0]]]:S.state==='cancel'?[['18:00','Турнир','Матч отменён. Прогнозы и ответы аннулированы.']]:[['08:12','Матч',`Карта ${S.map} · ${S.game==='CS2'||S.game==='Valorant'?'Завершён ключевой раунд.':'Команды выходят к центральной башне.'}`],['07:40','Twitch','Клип: Echo спасает союзника.'],['07:12','Reddit','Обсуждают выбор состава River Foxes.'],['06:20','Факт',facts[1]],['05:10','Наш материал','Разбор героев этой карты.']];
+return `<section class="card events"><div class="card-heading"><h2>События</h2><small>${isPre()?'До матча':mapName()}</small></div>${S.closed?`<div class="event"><time>09:00</time>✓ Итог вопроса: North Owls${S.answer?' · твой ответ: '+S.answer:''}</div>`:''}${list.map(([t,src,txt])=>`<div class="event"><time>${t}</time>${txt}<small>◆ ${src}</small></div>`).join('')}<details><summary>До тебя: 3 события</summary><p>Выбор карты завершён. Составы подтверждены. Начало карты ${S.map}.</p></details></section>`}
+function next(){return `<section class="card next"><div class="card-heading"><h2>Что дальше</h2><small>${S.otherLive?'Идут сейчас':'Ближайшие матчи'}</small></div><div class="card-body more-matches">${[['Amber','Frost'],['Comet','Harbor']].map(([a,b],i)=>`<button class="match-link" data-action="match" data-value="${a} — ${b}"><span>${a} — ${b}<small>${i?'LoL':'Dota'} · North Cup</small></span><span class="${S.otherLive?'live':'muted'}">${S.otherLive?(i?'0:0':'1:1'):(i?'Завтра, 15:00':'Сегодня, 21:00')}<small>${S.otherLive?'LIVE':'Скоро'} →</small></span></button>`).join('')}</div></section>`}
+function render(){const focused=document.activeElement,action=focused?.dataset.action,value=focused?.dataset.value;document.querySelectorAll('dialog[open]').forEach(d=>d.close());$('match').innerHTML=header()+maps()+`<main class="layout">${renderTop()}${you()}${factBlock()}${engagement()}${lineups()}${links()}${events()}${next()}</main>`;$('auth').checked=S.auth;$('auth-label').textContent=S.auth?'Вошёл':'Гость';if(action){const target=[...document.querySelectorAll('[data-action]')].find(e=>e.dataset.action===action&&e.dataset.value===value);target?.focus({preventScroll:true})}bindSwipes()}
+function login(reason){$('sheet').innerHTML=`<div class="handle"></div><div class="sheet-head"><h2 id="sheet-title">Вход через Telegram</h2><button data-action="sheet-close">Закрыть ×</button></div><p>${reason}</p><p><button data-action="login-confirm">Войти (демо)</button></p><p class="muted">Это демонстрация: Telegram не подключён.</p>`;returnFocus=document.activeElement;$('sheet').showModal()}
+function player(j,i){const name=nicknames[j][i];returnFocus=document.activeElement;$('sheet').innerHTML=`<div class="handle"></div><div class="sheet-head"><h2 id="sheet-title">${name}</h2><button data-action="sheet-close" autofocus>Закрыть ×</button></div><p>${teams[j]} · ${mapName()}</p><p>${S.game==='CS2'?'Специализация':'Герой / агент'}: ${isPre()?'ещё не выбран':heroes[S.game][(i+S.map-1+j)%5]}</p><p>Роль: ${S.game==='CS2'?heroes.CS2[i]:['Основной игрок','Центр','Передняя линия','Поддержка','Капитан'][i]}</p>${availableStats()?`<p>${S.game==='CS2'?'K/D/ADR':'K/D/A'}: ${S.game==='CS2'?`${18-i}/${10+i}/${96-i*7}`:`${8-i+S.map}/${2+i}/${12-i}`}</p>`:'<p class="muted">Подробная статистика пока недоступна.</p>'}${fantasy()?`<p>${S.auth?`Очки за матч: ${points(i,j)}`:'<button class="text-action" data-action="login">Войди, чтобы видеть очки</button>'}</p>`:''}<p><a href="#" data-action="subpage" data-value="Игрок ${name}">Вся страница игрока →</a></p>`;$('sheet').showModal()}
+let remaining=60,mvpDeadline=Date.now()+86400000,pendingVote=null,pendingRemind=false;
+function resetQuestion(){clearTimeout(answerTimer);S.answer=null;S.closed=false;remaining=60;try{S.answer=localStorage.getItem(`match-v4:${S.game}:${isPre()?'pre':S.state}:${S.map}:${S.question}`)}catch{}}
+function persistAnswer(){try{localStorage.setItem(`match-v4:${S.game}:${isPre()?'pre':S.state}:${S.map}:${S.question}`,S.answer)}catch{toast('Хранилище недоступно: ответ останется до обновления страницы')}}
+function closeQuestion(){if(S.closed)return;S.closed=true;render()}
+function remind(){if(S.state==='cancel'){toast('Матч отменён, напоминание недоступно');return}if(!S.auth){pendingRemind=true;login('Войди, чтобы сохранить напоминание.');return}S.reminded=!S.reminded;render();toast(S.reminded?'Напомним за 15 минут и при старте: TG-бот и пуш браузера (демо).':'Напоминание отключено')}
+document.addEventListener('change',e=>{const id=e.target.id;if(['state','game','format'].includes(id)){S[id]=e.target.value;S.map=S.spoiler?1:currentMap();if(isPre())S.map=1;S.tab=null;S.question=0;S.revealed=false;S.eventsShown=false;S.unlocked=1;S.paused=false;S.slow=false;S.vote=null;mvpDeadline=Date.now()+86400000;resetQuestion()}else if(id==='auth')S.auth=e.target.checked;else if(id==='spoiler'){S.spoiler=e.target.checked;S.revealed=false;S.eventsShown=false;S.unlocked=1;S.map=S.spoiler?1:isPre()?1:currentMap();resetQuestion()}else if(id==='other-live')S.otherLive=e.target.checked;else if(id==='source'||id==='lang')S[id]=e.target.value;else return;render()});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b||b.disabled)return;e.preventDefault();const a=b.dataset.action,v=b.dataset.value;
+if(a==='tab'){S.tab=v;render()}else if(a==='map'){S.map=+v;S.question=0;resetQuestion();render()}else if(a==='next-map'){S.unlocked=Math.min(maxMaps(),S.unlocked+1);S.map=S.unlocked;resetQuestion();render()}else if(a==='reveal'){S.revealed=true;render()}else if(a==='events-show'){S.eventsShown=true;render()}else if(a==='player'){player(...v.split('|').map(Number))}else if(a==='sheet-close'){$('sheet').close()}else if(a==='login'){login('Войди, чтобы видеть очки и сохранить действия.')}else if(a==='login-confirm'){const savedVote=pendingVote,savedRemind=pendingRemind;pendingVote=null;pendingRemind=false;S.auth=true;$('sheet').close();if(savedVote!==null){S.vote=savedVote}if(savedRemind){S.reminded=true;toast('Напомним за 15 минут и при старте: TG-бот и пуш браузера (демо).')}render()}else if(a==='remind')remind();else if(a==='answer'){S.answer=v;persistAnswer();render();toast('Ответ сохранён на устройстве')}else if(a==='close-question')closeQuestion();else if(a==='next-question'){S.question++;resetQuestion();render()}else if(a==='pause'){S.paused=!S.paused;render()}else if(a==='slow'){S.slow=!S.slow;render()}else if(a==='vote'){if(!S.auth){pendingVote=+v;login('Войди, чтобы сохранить голос за MVP.')}else{S.vote=+v;render();toast('Голос за MVP сохранён')}}else if(a==='five'){if(!isPre()||S.five)return;if(!S.auth)login('Войди, чтобы собрать пятёрку на матч.');else{S.five=true;render();toast('Пятёрка собрана (демо)')}}else if(a==='other'){S.other=!S.other;render()}else if(a==='graph-event'){$('graph-caption').textContent=`Карта ${S.map} · ${S.game==='Valorant'?'North Owls взяли ключевой раунд.':'North Owls забрали первую башню.'}`}else if(a==='next-prediction'){toast('Прогноз на следующий матч сохранён на устройстве (демо)')}else if(a==='timestamp')toast('Запись открывается с 12:18 (демо)');else if(a==='subpage'||a==='match'||a==='tournament'||a==='news')toast(`${v|| (a==='news'?'Новость о замене':'Страница турнира')} — отдельная страница, переход в демо не подключён`)});
+$('sheet').addEventListener('close',()=>{pendingVote=null;pendingRemind=false;if(returnFocus?.isConnected)returnFocus.focus({preventScroll:true})});
+// Свайп верха меняет вкладку; свайп составов на телефоне — прокрутка к другой команде.
+function bindSwipes(){for(const selector of ['.top-content','.rosters']){const el=document.querySelector(selector);if(!el)continue;let start=null;el.addEventListener('touchstart',e=>{if(e.target.closest('button,select,a'))return;start=[e.touches[0].clientX,e.touches[0].clientY]},{passive:true});el.addEventListener('touchend',e=>{if(!start)return;const dx=e.changedTouches[0].clientX-start[0],dy=e.changedTouches[0].clientY-start[1];start=null;if(Math.abs(dx)<60||Math.abs(dy)>Math.abs(dx))return;if(selector==='.top-content'){const tabs=tabList(),n=tabs.indexOf(activeTab()),next=tabs[n+(dx<0?1:-1)];if(next){S.tab=next;render()}}else if(innerWidth<700){el.querySelectorAll('.roster')[dx<0?1:0].scrollIntoView({block:'center',behavior:'smooth'})}},{passive:true})}}
+setInterval(()=>{if(isPost()){const seconds=Math.max(0,Math.ceil((mvpDeadline-Date.now())/1000)),clock=$('mvp-clock');if(clock)clock.textContent=[Math.floor(seconds/3600),Math.floor(seconds/60)%60,seconds%60].map(n=>String(n).padStart(2,'0')).join(':');if(seconds===0&&document.querySelector('.mvp-list')){document.querySelector('.engagement .card-body').innerHTML='<h3>MVP матча — Aster</h3><p>Итог зафиксирован · кандидат в MVP недели</p>'}}else if(S.state!=='announce'&&(isPre()||isLive())&&!S.paused&&!S.slow&&!S.closed){remaining--;const p=document.querySelector('progress');if(p)p.value=remaining;if(remaining<=0)closeQuestion()}},1000);
+resetQuestion();render();
+</script>
+</body>
+</html>

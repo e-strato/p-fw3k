@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>v6 · Кнопка сворачивания левее</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="../widgets-unified/_type.css" />
+<link rel="stylesheet" href="../widget-participants/_wp.css" /><link rel="stylesheet" href="../widget-participants/_wp-fit.css" />
+<!-- widget-participants-fit v6 — как v3, но кнопка сворачивания — левее, перед «Посев · Рейтинг · А–Я» (дирижёр 28.10: «V3 норм, только кнопку левее»). WP.mount colLeft: true.
+     v3 — как v2, но сворачивание (дирижёр 28.10: «кнопку, чтобы было сворачивание, как на Liquipedia»): кнопка в шапке виджета (две стрелки) сворачивает все команды до шапки — лого, название, статус, рейтинг; наведёшь на свёрнутую — её состав всплывает поверх соседей, как «Enable hover» на Liquipedia. WP.mount colMode: 'icon'.
+     v2 — как v1, но на 1440 (колонка 1016) — 4 в ряд, 5 — от колонки 1200 (экран ≈1620+) (дирижёр 28.10: «на 1440 пусть 4 помещается»). WP.mount fit: 'w4'.
+     v1 — «Участники» (widget-participants v30, _wp.js) в главной колонке страницы турнира; ручкой справа тянешь ширину ЭКРАНА (360–1920),
+     колонки — как на странице: поля 32, справа «Формат» 340, зазор 20; уже 800 — одна колонка, поля 16. Команд в ряд — по ширине виджета (_wp-fit.css):
+     ≥980 — 5, ≥800 — 4, ≥600 — 3, ≥400 — 2; на 1440 колонка 1016 → 5 в ряд (дирижёр 28.10: «пять команд в главной колонке, посмотреть, как изменяется при сжатии»). -->
+<style>
+  body{ margin:0; background:#18181b; color:var(--w-fg); font-family:var(--w-font); overflow-x:hidden; }
+  .bd{ padding:16px 24px 48px; }
+  .info{ font:var(--t-sub); color:var(--w-muted-fg); margin-bottom:10px; } .info b{ color:var(--w-fg); font-weight:600; }
+  .wrap{ transform-origin:0 0; }
+  .scr{ position:relative; background:var(--w-page); border-radius:10px; outline:1px solid #3f3f46; }
+  .pg{ padding:16px 32px 32px; } .scr.is-ph .pg{ padding:12px 16px 24px; }
+  .bar{ height:40px; border-radius:8px; background:#111113; margin-bottom:16px; display:flex; align-items:center; padding:0 16px; font:var(--t-title); }
+  .cols{ display:flex; gap:20px; align-items:flex-start; } .scr.is-ph .cols{ flex-direction:column; }
+  .main{ flex:1; min-width:0; display:flex; flex-direction:column; gap:20px; }
+  .ph{ border:1px dashed #3f3f46; border-radius:12px; display:grid; place-items:center; font:var(--t-sub); color:var(--w-ring); }
+  .aside{ width:340px; flex:none; height:200px; } .scr.is-ph .aside{ width:100%; height:80px; order:-1; }
+  .grip{ position:absolute; top:0; right:-14px; width:14px; height:100%; cursor:ew-resize; display:grid; place-items:center; touch-action:none; }
+  .grip::before{ content:''; width:4px; height:48px; border-radius:2px; background:#71717a; }
+  .grip:hover::before{ background:#fafafa; }
+</style></head>
+<body><div class="bd"><div class="info" id="info"></div><div class="wrap" id="wrap"><div class="scr" id="scr">
+  <div class="pg"><div class="bar">PARI Universe</div>
+    <div class="cols"><div class="main"><div class="ph" style="height:120px">Групповая стадия</div><div id="wp"></div></div><div class="aside ph">Формат · 340</div></div></div>
+  <div class="grip" id="grip" aria-label="Ширина экрана"></div></div></div></div>
+<script>window.WP_BASE = '../widget-participants/'</script><script src="../widget-participants/_data.js"></script><script src="../widget-participants/_wp.js"></script>
+<script>
+  const SIZES = [390, 600, 800, 1024, 1280, 1440, 1920]
+  let W = 1440, who = 'fan'
+  const $ = (id) => document.getElementById(id)
+  const cols = (c) => c >= 1200 ? 5 : c >= 800 ? 4 : c >= 600 ? 3 : c >= 400 ? 2 : 1
+  function draw() {
+    const ph = W < 800, scr = $('scr'); scr.style.width = W + 'px'; scr.classList.toggle('is-ph', ph)
+    const avail = document.querySelector('.bd').clientWidth - 16, k = Math.min(1, avail / W)
+    $('wrap').style.transform = `scale(${k})`; $('wrap').style.height = scr.offsetHeight * k + 'px'
+    WP.mount($('wp'), { who, phone: ph, fit: 'w4', colMode: 'icon', colLeft: true })
+    const c = $('wp').offsetWidth
+    $('info').innerHTML = `Экран <b>${W}</b> · колонка виджета <b>${c}</b> · в ряд <b>${cols(c)}</b>${k < 1 ? ` · показано ${Math.round(k * 100)}%` : ''}`
+    $('wrap').style.height = scr.offsetHeight * k + 'px'
+  }
+  // ручка: тянешь ширину экрана
+  $('grip').addEventListener('pointerdown', (e) => {
+    e.preventDefault(); const x0 = e.clientX, w0 = W, k = Math.min(1, (document.querySelector('.bd').clientWidth - 16) / W)
+    const mv = (ev) => { W = Math.max(360, Math.min(1920, Math.round(w0 + (ev.clientX - x0) / k))); draw() }
+    const up = () => { removeEventListener('pointermove', mv); removeEventListener('pointerup', up) }
+    addEventListener('pointermove', mv); addEventListener('pointerup', up)
+  })
+  addEventListener('resize', draw)
+  window.LAB = { view: 'toolbar', go: () => {}, cur: () => ({ f: 0, i: 0 }), flows: () => [],
+    axes: () => [{ key: 'w', name: 'Экран', value: String(SIZES.includes(W) ? W : ''), options: SIZES.map((s) => ({ v: String(s), label: String(s) })) },
+      { key: 'who', name: 'Кто смотрит', value: who, options: [{ v: 'fan', label: 'Зритель' }, { v: 'ed', label: 'Редактор' }] }],
+    set: (k, v) => { if (k === 'w') W = +v; else who = v; draw() },
+    caption: () => 'Тяни ручку справа от экрана — виджет в главной колонке, команд в ряд — по его ширине' }
+  draw()
+</script>
+</body></html>

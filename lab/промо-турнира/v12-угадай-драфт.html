@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Archivo:wdth,wght@62..125,700..900&display=swap" />
+<link rel="stylesheet" href="/p-fw3k/site/styles.css" /><link rel="stylesheet" href="../кадр.css" /><link rel="stylesheet" href="_промо.css" />
+<style>
+/* v12 · Угадай драфт (новый, дирижёр 05.10). Своё, под Доту: до каждого матча TI угадай 3 героя, которых возьмёт команда.
+   Начинается драфт — пики открываются по одному, совпадения вспыхивают, очки сразу. Каждый матч — новая попытка, повод зайти до игры.
+   Рядом — что выбрали остальные (% болельщиков), как голосование SofaScore. Место — колонка главной рядом с матчами дня. */
+.w-dr { overflow: hidden; }
+.w-dr .card__b { display: grid; gap: 14px; }
+.vs { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border-radius: 12px; background: var(--c-ui-item); font-size: var(--fs-app-sm); }
+.vs span { display: flex; align-items: center; gap: 8px; }
+.vs .team-logo { width: 28px; height: 28px; border-radius: 8px; }
+.vs small { color: var(--c-caption); }
+.task { margin: 0; font-size: var(--fs-app-sm); color: var(--c-muted); }
+.task b { color: var(--c-text); font-weight: 600; }
+
+/* Пул героев 3×3: выбор — рамка, совпадение с драфтом — золото, промах — гаснет */
+.pool { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.h { position: relative; aspect-ratio: 16 / 10; border: 0; padding: 0; border-radius: 10px; overflow: hidden; cursor: pointer; background: var(--c-ui-item); transition: opacity .3s, scale .2s; }
+.h img { width: 100%; height: 100%; object-fit: cover; }
+.h::after { content: attr(data-pct); position: absolute; right: 4px; bottom: 4px; padding: 1px 6px; border-radius: 6px; background: color-mix(in srgb, var(--c-black) 65%, transparent); color: var(--c-muted); font-size: 10px; }
+.h:hover { scale: 1.03; }
+.h[aria-pressed='true'] { box-shadow: inset 0 0 0 3px var(--c-tier-elite); }
+.h[aria-pressed='true']::before { content: ''; position: absolute; top: 6px; left: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--c-tier-elite); }
+.w-dr.is-draft .h { cursor: default; scale: 1; }
+.h.is-picked { box-shadow: inset 0 0 0 3px var(--c-team-ts); }
+.h.is-hit { box-shadow: inset 0 0 0 3px var(--c-coin), 0 0 22px color-mix(in srgb, var(--c-coin) 50%, transparent); }
+.h.is-hit::before { background: var(--c-coin); }
+.w-dr.is-done .h:not(.is-picked) { opacity: .3; }
+@media (prefers-reduced-motion: no-preference) { .h.is-picked { animation: pk .5s cubic-bezier(.3, 1.6, .5, 1); } }
+@keyframes pk { from { scale: 1.15; } }
+
+/* Драфт Spirit: 5 слотов пиков */
+.slots { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.slots span { aspect-ratio: 1; border-radius: 8px; border: 1px dashed var(--c-ui-line); overflow: hidden; display: grid; place-items: center; font-size: var(--fs-app-xs); color: var(--c-caption); }
+.slots img { width: 100%; height: 100%; object-fit: cover; }
+.slots .is-hit { border: 2px solid var(--c-coin); }
+.res { display: flex; align-items: center; justify-content: space-between; }
+.res b { font-size: 28px; color: var(--c-coin); }
+.res small { font-size: var(--fs-app-sm); color: var(--c-caption); }
+.w-dr .btn { justify-content: center; }
+.w-dr .btn:disabled { opacity: .35; pointer-events: none; }
+</style></head>
+<body>
+<div class="lab-wrap">
+  <div class="lab-bar">
+    <div class="lab-bar__t"><b>v12 · Угадай драфт</b><small>Новый: до матча угадай 3 пика команды, драфт открывается по одному · колонка у матчей дня</small></div>
+    <div class="lab-st"><button data-go="выбор">До матча</button><button data-go="драфт">Драфт идёт</button></div>
+  </div>
+  <p class="home-cap">Настоящая главная: «Угадай драфт» — сразу под витриной; остальное приглушено</p>
+  <div class="home" data-slot="into:.app-home__accuracy">
+    <div class="ghost ghost--tall"></div>
+    <section class="card card--ui w-dr" id="w" aria-label="Угадай драфт">
+      <div class="card__h"><h2>Угадай драфт Spirit</h2><small>TI · плей-офф</small></div>
+      <div class="card__b">
+        <div class="vs"><span><i class="team-logo t-ts is-logo"></i><b>Spirit</b></span><small data-st="выбор">драфт через <b class="num" data-cd="2520"><span data-m>42</span>:<span data-s>00</span></b></small><small data-st="драфт">драфт идёт</small><span><b>PARIVISION</b><i class="team-logo t-pv is-logo"></i></span></div>
+        <p class="task" data-st="выбор">Кого возьмёт Spirit? Выбери <b>3 героя</b> — <b>+50</b> за каждое попадание, все три — сундук TI.</p>
+        <div class="pool" id="pool"></div>
+        <div class="slots" id="slots"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+        <div class="res" data-st="драфт"><small id="rs">Пики открываются…</small><b class="disp num" id="rp">+0</b></div>
+        <button class="btn btn--ti" id="go" type="button" disabled data-st="выбор">Выбрано 0 из 3</button>
+      </div>
+    </section>
+    <div class="ghost ghost--tall"></div>
+    <div class="ghost span-2"></div>
+  </div>
+</div>
+<script src="_промо.js"></script>
+<script>
+// Пул 9 героев с % болельщиков; драфт Spirit — 5 пиков из пула
+const H = [['faceless_void', 61], ['morphling', 34], ['terrorblade', 22], ['mars', 47], ['tusk', 18], ['beastmaster', 29], ['hoodwink', 41], ['rubick', 38], ['lycan', 10]]
+const DRAFT = ['mars', 'hoodwink', 'faceless_void', 'tusk', 'rubick']
+const w = document.getElementById('w'), pool = document.getElementById('pool'), go = document.getElementById('go'), slots = [...document.querySelectorAll('#slots span')]
+pool.innerHTML = H.map(([k, p]) => `<button class="h" data-k="${k}" data-pct="${p}%" aria-pressed="false"><img src="/p-fw3k/site/img/heroes/${k}.webp" alt="" /></button>`).join('')
+const mine = () => [...pool.querySelectorAll('[aria-pressed=true]')].map((b) => b.dataset.k)
+pool.addEventListener('click', (e) => {
+  const b = e.target.closest('.h'); if (!b || w.classList.contains('is-draft')) return
+  const on = b.getAttribute('aria-pressed') === 'true'
+  if (!on && mine().length >= 3) return
+  b.setAttribute('aria-pressed', String(!on))
+  const n = mine().length
+  go.disabled = n < 3; go.textContent = n < 3 ? `Выбрано ${n} из 3` : 'Готово — ждём драфт'
+})
+let timers = []
+const reset = () => {
+  timers.forEach(clearTimeout); timers = []
+  w.classList.remove('is-draft', 'is-done')
+  pool.querySelectorAll('.h').forEach((b) => b.classList.remove('is-picked', 'is-hit'))
+  slots.forEach((s, i) => { s.className = ''; s.textContent = i + 1 })
+}
+const draft = () => {
+  reset()
+  if (mine().length < 3) ['faceless_void', 'mars', 'morphling'].forEach((k) => pool.querySelector(`[data-k=${k}]`).setAttribute('aria-pressed', 'true'))
+  w.classList.add('is-draft')
+  const my = mine(); let pts = 0, hits = 0
+  DRAFT.forEach((k, i) => timers.push(setTimeout(() => {
+    const hit = my.includes(k), b = pool.querySelector(`[data-k=${k}]`)
+    b.classList.add('is-picked'); if (hit) { b.classList.add('is-hit'); pts += 50; hits++ }
+    slots[i].innerHTML = `<img src="/p-fw3k/site/img/heroes/${k}.webp" alt="" />`; slots[i].classList.toggle('is-hit', hit)
+    document.getElementById('rp').textContent = '+' + pts
+    document.getElementById('rs').textContent = i < 4 ? `Пик ${i + 1} из 5 · попаданий ${hits}` : `Угадано ${hits} из 3${hits === 3 ? ' — сундук TI твой' : ' · следующий матч через 2 ч'}`
+    if (i === 4) w.classList.add('is-done')
+  }, 900 + i * 1300)))
+}
+go.addEventListener('click', () => ПРОМО.set('драфт'))
+document.addEventListener('промо:состояние', (e) => e.detail === 'драфт' ? draft() : reset())
+</script>
+</body></html>

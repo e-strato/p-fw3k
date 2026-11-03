@@ -1,0 +1,81 @@
+/* Лаба w-actions v4–v6 — аналитический инструмент вокруг трансляции (код — _act2.js). Вид наших виджетов, графики — тонкие линии без осей */
+.a2{ display:flex; flex-direction:column; gap:8px; padding:0 12px 12px; border:1px solid var(--w-border); border-radius:var(--w-r, 12px); background:var(--w-card, var(--w-page)); color:var(--w-fg); font:400 13px/18px var(--w-font); }
+.a2 button{ font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer; text-align:left; }
+.a2 .ac-min, .a2 .ac-full{ display:flex; flex-direction:column; gap:8px; } .wx.is-c .a2 .ac-full, .wx:not(.is-c) .a2 .ac-min{ display:none; }
+.a2-hd{ display:flex; align-items:center; justify-content:space-between; height:36px; } .a2-hd b{ font:var(--t-title); }
+.a2-on{ display:inline-flex; align-items:center; gap:6px; font:var(--t-sub); color:var(--w-muted-fg); } .a2-on i{ width:6px; height:6px; border-radius:50%; background:#dc2626; animation:a2b 1.4s infinite; } @keyframes a2b{ 50%{ opacity:.3; } }
+.a2-sp{ display:block; width:100%; } .a2-sp .ln{ fill:none; stroke:var(--c); stroke-width:1.5; vector-effect:non-scaling-stroke; } .a2-sp .fl{ fill:color-mix(in srgb, var(--c) 14%, transparent); stroke:none; }
+.a2-sp .mid{ stroke:var(--w-border); stroke-dasharray:3 3; vector-effect:non-scaling-stroke; } .a2-sp .ev{ stroke:var(--w-border); vector-effect:non-scaling-stroke; } .a2-sp .end{ fill:var(--c); }
+.a2-d{ font:600 11px/14px var(--w-font); font-variant-numeric:tabular-nums; white-space:nowrap; } .a2-d.up{ color:var(--w-up); } .a2-d.dn{ color:var(--w-down); }
+.a2-hint{ margin:0; font:var(--t-sub); color:var(--w-muted-fg); }
+.a2-evs{ position:relative; height:14px; } .a2-evs span{ position:absolute; top:0; transform:translateX(-50%); font:400 9px/12px var(--w-font); color:var(--w-muted-fg); white-space:nowrap; }
+.a2-evs span:last-child{ transform:translateX(-90%); }
+
+/* эфир */
+.a2-tv{ position:relative; aspect-ratio:16 / 9; border-radius:var(--w-r-sm, 8px); overflow:hidden; background:linear-gradient(to top, rgba(0,0,0,.65), transparent 45%), var(--art) center / cover #000; }
+.a2-live{ position:absolute; left:8px; top:8px; padding:1px 6px; border-radius:4px; background:#dc2626; color:#fff; font:700 10px/14px var(--w-font); }
+.a2-vw{ position:absolute; right:8px; top:8px; display:inline-flex; align-items:center; gap:4px; padding:1px 6px; border-radius:4px; background:rgba(0,0,0,.55); color:#fff; font:500 11px/14px var(--w-font); }
+.a2-tm{ position:absolute; left:8px; bottom:6px; color:rgba(255,255,255,.85); font:500 11px/14px 'JetBrains Mono', monospace; }
+.a2-play{ position:absolute !important; left:50%; top:50%; transform:translate(-50%, -50%); display:grid !important; place-items:center; width:40px; height:40px; border-radius:50% !important; background:rgba(0,0,0,.55) !important; color:#fff !important; backdrop-filter:blur(4px); }
+.a2-tv--pip{ aspect-ratio:auto; height:72px; } .a2-tv--pip .a2-play{ width:32px; height:32px; }
+
+/* v4 терминал */
+.a2-tiles{ display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.a2-t{ display:grid !important; grid-template-columns:1fr auto; grid-template-areas:'n n' 'v d' 's s'; align-items:baseline; gap:2px 6px; padding:8px !important; border-radius:var(--w-r-sm, 8px); background:var(--w-mid-bg, var(--w-muted)) !important; }
+.a2-t.on{ box-shadow:inset 0 0 0 1px var(--w-ring); } .a2-tn{ grid-area:n; font:var(--t-sub); color:var(--w-muted-fg); } .a2-t b{ grid-area:v; font:700 15px/20px var(--w-font); font-variant-numeric:tabular-nums; } .a2-t .a2-d{ grid-area:d; } .a2-t .a2-sp{ grid-area:s; height:24px; margin-top:2px; }
+.a2-big{ padding:8px; border-radius:var(--w-r-sm, 8px); background:var(--w-mid-bg, var(--w-muted)); } .a2-big .a2-sp{ height:90px; }
+.a2-bh{ display:flex; align-items:baseline; gap:8px; margin-bottom:4px; } .a2-bh b{ font:var(--t-title); } .a2-bh span.num{ margin-left:auto; font:700 15px/20px var(--w-font); } .a2-bh small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.a2-my{ display:flex; flex-direction:column; gap:8px; padding-top:8px; border-top:1px solid var(--w-border); } .a2-myh b{ display:block; font:var(--t-title); } .a2-myh small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.a2-sl{ display:flex; align-items:center; gap:8px; font:500 12px/16px var(--w-font); } .a2-sl > span:not(.a2-tr){ display:inline-flex; align-items:center; gap:4px; } .a2-sl img{ width:14px; height:14px; object-fit:contain; }
+.a2-tr{ position:relative; flex:1; height:28px; } .a2-tr input{ position:absolute; inset:0; width:100%; opacity:0; cursor:ew-resize; }
+.a2-tr::before{ content:''; position:absolute; left:0; right:0; top:13px; height:3px; border-radius:2px; background:linear-gradient(90deg, var(--w-down), var(--w-ring) 50%, var(--w-up)); opacity:.6; }
+.a2-tr i{ position:absolute; top:6px; width:16px; height:16px; margin-left:-8px; border-radius:50%; pointer-events:none; } .a2-tr i em{ position:absolute; top:-12px; left:50%; transform:translateX(-50%); font:500 9px/10px var(--w-font); font-style:normal; color:var(--w-muted-fg); white-space:nowrap; }
+.a2-tr i.crowd{ background:var(--w-page); box-shadow:inset 0 0 0 2px var(--w-muted-fg); } .a2-tr i.me{ background:var(--w-fg); box-shadow:0 0 0 3px color-mix(in srgb, var(--w-fg) 20%, transparent); } .a2-tr i.me em{ color:var(--w-fg); top:auto; bottom:-12px; }
+
+/* v5 пульс */
+.a2-pl{ padding:8px 8px 2px; border-radius:var(--w-r-sm, 8px); background:var(--w-mid-bg, var(--w-muted)); } .a2-plc{ display:block; width:100%; height:110px; }
+.a2-plc .z{ stroke:var(--w-border); vector-effect:non-scaling-stroke; } .a2-plc .ev{ stroke:var(--w-border); stroke-dasharray:2 3; vector-effect:non-scaling-stroke; }
+.a2-plc .g{ fill:color-mix(in srgb, var(--w-up) 22%, transparent); } .a2-plc .m{ fill:none; stroke:#38bdf8; stroke-width:2; vector-effect:non-scaling-stroke; } .a2-plc .end{ fill:#38bdf8; }
+.a2-plc .me.up{ fill:var(--w-up); stroke:var(--w-page); stroke-width:1.5; } .a2-plc .me.dn{ fill:var(--w-down); stroke:var(--w-page); stroke-width:1.5; }
+.a2-lg{ display:flex; flex-direction:column; gap:2px; font:var(--t-sub); color:var(--w-muted-fg); } .a2-lg span{ display:inline-flex; align-items:center; gap:6px; } .a2-lg i{ width:10px; height:3px; border-radius:2px; } .a2-lg i.g{ background:var(--w-up); opacity:.6; } .a2-lg i.m{ background:#38bdf8; }
+.a2-cor{ display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; } .a2-cor > div{ padding:6px 8px; border-radius:8px; background:var(--w-mid-bg, var(--w-muted)); } .a2-cor small{ display:block; font:400 10px/12px var(--w-font); color:var(--w-muted-fg); } .a2-cor b{ font:600 12px/16px var(--w-font); }
+.a2-act{ display:flex; align-items:center; gap:6px; } .a2-act span{ flex:1; font:var(--t-sub); color:var(--w-muted-fg); }
+.a2-pm{ display:grid !important; place-items:center; width:36px; height:30px; border-radius:8px; background:var(--w-mid-bg, var(--w-muted)) !important; } .a2-pm.up:hover{ color:var(--w-up) !important; } .a2-pm.dn:hover{ color:var(--w-down) !important; } .a2-pm:active{ transform:scale(.92); }
+
+/* v6 рынок */
+.a2-mks{ display:flex; flex-direction:column; }
+.a2-mk{ display:grid !important; grid-template-columns:1fr 64px 44px; grid-template-rows:auto auto; align-items:center; column-gap:8px; padding:8px 4px !important; border-radius:8px; } .a2-mk + .a2-mk{ border-top:1px solid var(--w-border); border-radius:0; }
+.a2-mk:hover, .a2-mk.on{ background:var(--w-mid-bg, var(--w-muted)) !important; border-radius:8px; }
+.a2-mq{ grid-row:1 / span 2; font:var(--t-title); } .a2-mq small{ display:block; font:var(--t-sub); color:var(--w-muted-fg); } .a2-mk .a2-sp{ grid-row:1 / span 2; height:24px; }
+.a2-mk b{ font:700 15px/18px var(--w-font); text-align:right; font-variant-numeric:tabular-nums; } .a2-mk .a2-d{ text-align:right; }
+.a2-trd{ display:flex; flex-direction:column; gap:8px; padding:8px; border-radius:var(--w-r-sm, 8px); background:var(--w-mid-bg, var(--w-muted)); } .a2-trd .a2-sp{ height:70px; }
+.a2-trh{ display:flex; justify-content:space-between; } .a2-trh b{ font:var(--t-title); } .a2-trh span{ font:700 15px/18px var(--w-font); color:var(--w-up); }
+.a2-stk{ display:flex; align-items:center; gap:8px; font:var(--t-sub); color:var(--w-muted-fg); } .a2-stk input{ flex:1; accent-color:var(--w-fg); } .a2-stk b{ min-width:32px; text-align:right; color:var(--w-fg); font:600 12px/16px var(--w-font); }
+.a2-yn{ display:grid; grid-template-columns:1fr 1fr; gap:6px; } .a2-yn button{ height:32px; border-radius:8px; text-align:center !important; font:600 12px/16px var(--w-font) !important; }
+.a2-yn .up{ background:color-mix(in srgb, var(--w-up) 18%, transparent) !important; color:var(--w-up) !important; } .a2-yn .dn{ background:color-mix(in srgb, var(--w-down) 18%, transparent) !important; color:var(--w-down) !important; }
+
+/* телефон: свёрнутый — док над нижним баром */
+body:not(.is-desk) .wx.ac-host{ position:fixed; left:8px; right:8px; bottom:76px; z-index:40; box-shadow:0 8px 24px rgba(0,0,0,.5); border-radius:var(--w-r, 12px); }
+body:not(.is-desk) .wx.ac-host.is-c .a2-tv{ display:none; } body:not(.is-desk) .wx.ac-host:not(.is-c) .wx-p{ max-height:78vh; overflow:auto; }
+
+/* v7 — циферблат: строка «осложнений» как на Apple Watch */
+.a2--watch{ gap:6px; } .a2--watch .a2-hd{ height:32px; }
+.w7-row{ display:flex; align-items:center; gap:8px; }
+.w7-th{ position:relative; width:56px; height:40px; flex:none; border-radius:6px !important; background:linear-gradient(to top, rgba(0,0,0,.5), transparent), var(--art) center / cover #000 !important; }
+.w7-th i{ position:absolute; left:3px; top:3px; padding:0 3px; border-radius:3px; background:#dc2626; color:#fff; font:700 8px/12px var(--w-font); font-style:normal; }
+.w7-dial{ flex:1; min-width:0; display:grid; grid-template-columns:repeat(4, 1fr); gap:2px; }
+.w7-c{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; min-width:0; } .w7-c > b{ font:700 13px/15px var(--w-font); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.w7-c small{ font:400 9px/11px var(--w-font); color:var(--w-muted-fg); white-space:nowrap; } .w7-c .a2-sp{ width:40px; height:12px; }
+.w7-ring{ position:relative; } .w7-ring svg{ transform:rotate(-90deg); } .w7-ring circle{ fill:none; stroke-width:3.5; } .w7-ring .bg{ stroke:var(--w-muted); } .w7-ring .fg{ stroke-linecap:round; transition:stroke-dashoffset .6s; }
+.w7-ring > b{ position:absolute; top:9px; left:0; right:0; text-align:center; font:700 9px/14px var(--w-font); } .w7-ring small{ margin-top:0; }
+.w7-pm{ display:flex; flex-direction:column; gap:2px; flex:none; } .w7-pm button{ display:grid !important; place-items:center; width:30px; height:19px; border-radius:5px; background:var(--w-mid-bg, var(--w-muted)) !important; color:var(--w-muted-fg) !important; }
+.w7-pm button svg{ width:12px; height:12px; } .w7-pm button:first-child:hover{ color:var(--w-up) !important; } .w7-pm button:last-child:hover{ color:var(--w-down) !important; } .w7-pm button:active{ transform:scale(.9); }
+.w7-row--big .w7-pm{ flex-direction:row; } .w7-row--big .w7-pm button{ width:34px; height:30px; }
+.w7-pl{ padding:6px 6px 4px; border-radius:var(--w-r-sm, 8px); background:var(--w-mid-bg, var(--w-muted)); } .w7-plc{ height:64px !important; }
+.w7-lg{ display:flex; gap:10px; margin-top:2px; font:400 10px/12px var(--w-font); color:var(--w-muted-fg); } .w7-lg span{ display:inline-flex; align-items:center; gap:4px; } .w7-lg i{ width:8px; height:3px; border-radius:2px; } .w7-lg i.g{ background:var(--w-up); opacity:.6; } .w7-lg i.m{ background:#38bdf8; } .w7-r{ margin-left:auto; }
+/* телефон: свёрнутый v7 — полоса 56 без шапки */
+body:not(.is-desk) .wx.ac-host.is-c .a2--watch{ padding:6px 8px; } body:not(.is-desk) .wx.ac-host.is-c .a2--watch .a2-hd{ display:none; }
+body:not(.is-desk) .wx.ac-host.is-c:has(.a2--watch) .wx-p{ padding-bottom:0 !important; } body:not(.is-desk) .wx.ac-host.is-c:has(.a2--watch) .w7-row{ padding-right:30px; }
+/* v8 (дирижёр 29.10, скрины v7): широкая мобилка — док не тянется на всю ширину (до 440, по центру); кнопка «Трансляция» внизу не нужна — эфир теперь в этом виджете */
+body.a2-v8:not(.is-desk) .wx.ac-host{ left:50%; right:auto; width:calc(100% - 16px); max-width:440px; transform:translateX(-50%); }
+body.a2-v8 [data-pip], body.a2-v8 .pip-fab, body.a2-v8 .pip{ display:none !important; } /* было только [data-pip] — кнопка «Трансляция» оставалась (.pip-fab) */

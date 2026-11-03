@@ -1,0 +1,72 @@
+/* w-bar — нижний бар, голосование (кнопка → панель), кнопки сообщества. Задачи созвона 26.10 §7–§8 (задачи-по-виджетам.md). Токены — widget-tournament/_w.css. */
+:root{ --gold:#eab308; --up:#22c55e; --dn:#ef4444; --ph:#18181b; }
+*{ box-sizing:border-box; }
+body{ margin:0; min-height:100vh; padding:16px; background:#050505; color:var(--w-fg); font:14px/1.35 var(--w-font); }
+button{ font:inherit; color:inherit; border:0; background:none; cursor:pointer; padding:0; }
+.num{ font-variant-numeric:tabular-nums; }
+
+/* телефон */
+.phone{ position:relative; width:390px; height:844px; margin:0 auto; border-radius:28px; overflow:hidden; background:var(--w-page); border:1px solid var(--w-border); }
+.scr{ position:absolute; inset:0; overflow-y:auto; padding:0 16px 96px; scrollbar-width:none; } .scr::-webkit-scrollbar{ display:none; }
+.ph{ border-radius:var(--w-r); background:var(--ph); border:1px solid var(--w-border); display:grid; place-items:center; color:#52525b; font-size:12px; }
+.mline{ display:flex; align-items:center; gap:8px; height:52px; font-size:13px; color:var(--w-muted-fg); } .mline b{ color:var(--w-fg); font-weight:600; }
+.mline .lv{ margin-left:auto; color:var(--dn); font-size:12px; } .mline .lv::before{ content:'● '; }
+.stack{ display:flex; flex-direction:column; gap:12px; }
+
+/* кнопки сообщества — строка под графиком */
+.comm{ display:flex; align-items:center; gap:4px; }
+.comm button{ display:inline-flex; align-items:center; gap:6px; height:34px; padding:0 12px; border-radius:999px; background:var(--w-muted); color:var(--w-fg); font-size:13px; }
+.comm button:hover{ background:#3f3f46; } .comm button.on{ color:var(--dn); }
+.comm .sp{ flex:1; } .comm svg{ width:16px; height:16px; }
+.comm .ic{ width:34px; padding:0; justify-content:center; }
+
+/* нижний бар */
+.bar{ position:absolute; left:0; right:0; bottom:0; height:76px; padding:6px 8px 18px; display:flex; align-items:center; background:#09090bf0; border-top:1px solid var(--w-border);
+  -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); transition:transform .25s; z-index:5; }
+.bar.off{ transform:translateY(100%); }
+.bar > button{ flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; font-size:11px; color:var(--w-muted-fg); }
+.bar > button.on{ color:var(--w-fg); } .bar svg{ width:22px; height:22px; }
+.bar .vote{ flex:none; width:64px; }
+.vbtn{ position:relative; width:48px; height:48px; border-radius:50%; display:grid; place-items:center; background:#a78bfa; color:#0b0b0f; }
+.vbtn svg{ width:24px; height:24px; }
+.vbtn .n{ position:absolute; top:-2px; right:-2px; min-width:18px; height:18px; padding:0 5px; border-radius:9px; background:var(--dn); color:#fff; font-size:11px; line-height:18px; text-align:center; }
+.is-new .vbtn{ background:var(--gold); animation:blink 1s ease-in-out infinite; }
+@keyframes blink{ 0%,100%{ box-shadow:0 0 0 0 rgba(234,179,8,.7); } 50%{ box-shadow:0 0 0 10px rgba(234,179,8,0); } }
+.fab{ position:absolute; right:16px; bottom:92px; z-index:6; transition:bottom .25s; } .fab.low{ bottom:20px; }
+.fab .vbtn{ width:56px; height:56px; box-shadow:0 8px 24px #000a; }
+
+/* панель голосования (шторка) */
+.dim{ position:absolute; inset:0; background:#000a; z-index:10; }
+.sheet{ position:absolute; left:0; right:0; bottom:0; z-index:11; max-height:78%; display:flex; flex-direction:column; border-radius:20px 20px 0 0; background:#111113; border-top:1px solid var(--w-border); }
+.sheet .grab{ width:36px; height:4px; border-radius:2px; background:#3f3f46; margin:8px auto 4px; }
+.vp{ display:flex; flex-direction:column; min-height:0; }
+.vp-hd{ display:flex; align-items:center; gap:8px; padding:8px 16px 0; } .vp-hd b{ font-size:16px; font-weight:600; flex:1; }
+.vp-hd .x{ width:32px; height:32px; border-radius:8px; background:var(--w-muted); }
+.tabs{ display:flex; gap:4px; margin:12px 16px 0; padding:3px; border-radius:10px; background:#1c1c1f; }
+.tabs button{ flex:1; height:30px; border-radius:7px; font-size:13px; color:var(--w-muted-fg); } .tabs button.on{ background:#3f3f46; color:var(--w-fg); }
+.vp-bd{ padding:16px; overflow-y:auto; }
+.prog{ display:flex; gap:4px; margin-bottom:12px; } .prog i{ flex:1; height:3px; border-radius:2px; background:#27272a; } .prog i.ok{ background:#a78bfa; } .prog i.cur{ background:var(--w-fg); }
+.q-meta{ font-size:12px; color:var(--w-muted-fg); margin-bottom:6px; display:flex; gap:8px; } .q-meta .new{ color:var(--gold); }
+.q{ font-size:17px; font-weight:600; margin:0 0 14px; }
+.opts{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.opts button{ min-height:48px; padding:8px 12px; border-radius:10px; background:var(--w-muted); text-align:left; font-size:14px; display:flex; flex-direction:column; gap:2px; }
+.opts button:hover{ background:#3f3f46; } .opts button small{ color:var(--w-muted-fg); font-size:12px; }
+.opts button.pick{ background:#4c3d7a; }
+.skip{ margin-top:12px; width:100%; height:40px; border-radius:10px; color:var(--w-muted-fg); font-size:13px; } .skip:hover{ color:var(--w-fg); }
+.done{ text-align:center; padding:24px 0; color:var(--w-muted-fg); } .done b{ display:block; color:var(--w-fg); font-size:16px; margin-bottom:6px; }
+.ex{ margin-top:14px; font-size:11px; color:#52525b; text-align:center; }
+.hi{ display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--w-border); }
+.hi:last-child{ border-bottom:0; }
+.hi .t{ flex:1; min-width:0; } .hi .t small{ display:block; color:var(--w-muted-fg); font-size:12px; }
+.st{ flex:none; height:24px; padding:0 10px; border-radius:12px; font-size:12px; line-height:24px; }
+.st.ok{ background:#14532d; color:#86efac; } .st.no{ background:#450a0a; color:#fca5a5; } .st.wait{ background:var(--w-muted); color:var(--w-muted-fg); }
+.score{ display:flex; gap:12px; margin-bottom:8px; font-size:13px; color:var(--w-muted-fg); } .score b{ color:var(--w-fg); }
+
+/* компьютер: главная колонка + правая 320 с полным голосованием */
+.desk{ display:flex; gap:24px; width:1392px; margin:0 auto; padding:0 0 32px; }
+.desk .main{ flex:1; min-width:0; } .desk .side{ width:320px; flex:none; }
+.card{ border-radius:var(--w-r); background:var(--w-bg); border:1px solid var(--w-border); overflow:hidden; }
+.card .vp-hd{ padding-top:14px; } .card .opts{ grid-template-columns:1fr; }
+.is-new .card .vp-hd b::after{ content:' · новый вопрос'; color:var(--gold); font-size:13px; font-weight:500; }
+.is-new .card{ border-color:var(--gold); animation:blinkc 1s ease-in-out infinite; }
+@keyframes blinkc{ 50%{ border-color:#713f12; } }

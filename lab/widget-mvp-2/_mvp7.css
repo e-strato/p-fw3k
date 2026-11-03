@@ -1,0 +1,113 @@
+/* Виджет MVP v7–v9 — смелые концепты на карте «Хайперглитч». Карта — _hg-card.css + ../карточка-v3/_v3.css, токены — _w.css */
+.m7{ --gold:#f1c24c; --gold-hi:#fff0b8; --ink:#0c0a07; position:relative; overflow:hidden;
+  background:radial-gradient(120% 55% at 50% 32%, rgba(241,194,76,.16), rgba(241,194,76,.03) 55%, transparent 75%), var(--w-bg); }
+.m7 .kc{ font-family:'Inter', sans-serif; }
+.m7 .g1__logo{ opacity:.6; }
+
+/* Подпись под картой и CTA — общие */
+.m7-foot{ position:relative; z-index:5; display:flex; flex-direction:column; gap:12px; padding:0 16px 16px; }
+.m7-foot.is-in{ animation:m7-up .45s cubic-bezier(.2,.9,.25,1) both; }
+@keyframes m7-up{ from{ opacity:0; translate:0 8px; } }
+.m7-cap{ display:flex; flex-direction:column; align-items:center; gap:2px; text-align:center; }
+.m7-cap b{ font-size:14px; line-height:20px; font-weight:600; color:var(--gold-hi); }
+.m7-cap span{ font-size:12px; line-height:16px; color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+.w .m7-cta{ display:flex; align-items:center; justify-content:space-between; gap:12px; height:44px; padding:0 16px 0 20px; white-space:nowrap; text-decoration:none;
+  font-size:14px; font-weight:600; color:var(--ink); background:linear-gradient(180deg, #ffd96b, var(--gold) 55%, #d9a530);
+  clip-path:polygon(10px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 10px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5); transition:filter .2s; }
+.w .m7-cta:hover{ filter:brightness(1.08); }
+.m7-price{ display:inline-flex; align-items:center; gap:6px; padding-left:12px; border-left:1px solid rgba(12,10,7,.22); font-variant-numeric:tabular-nums; font-weight:700; }
+.m7-price i{ width:12px; height:12px; border-radius:50%; background:radial-gradient(circle at 35% 35%, #fff3c4, #e0a92a 60%, #a8740d); box-shadow:0 0 0 1px rgba(0,0,0,.3); }
+.w .m7-cta.is-mine{ position:relative; isolation:isolate; justify-content:center; gap:8px; color:var(--w-up-fg); background:rgba(34,197,94,.45); box-shadow:none; }
+/* Рамка «В твоём составе» по всему контуру, и по скосам (дирижёр 22.10: «бордер не должен пропадать»): внешний слой — цвет рамки, внутренний — заливка на 1 px меньше */
+.w .m7-cta.is-mine::before{ content:''; position:absolute; inset:1px; z-index:-1; background:#0f1d14;
+  clip-path:polygon(9.6px 0, 100% 0, 100% calc(100% - 11.6px), calc(100% - 11.6px) 100%, 0 100%, 0 9.6px); }
+
+/* ——— v7 · Колода веером ——— */
+.m7-deck{ position:relative; height:318px; margin-top:8px; }
+.m7-slot{ --w:196px; position:absolute; left:50%; top:16px; margin-left:calc(var(--w) / -2); cursor:pointer;
+  transition:transform .55s cubic-bezier(.2,.9,.25,1.12), filter .45s; transform-origin:50% 90%; }
+.m7-slot .kc{ --w:196px; }
+.m7-slot[data-p="0"]{ z-index:3; transform:none; }
+.m7-slot[data-p="1"]{ z-index:2; transform:translateX(64px) rotate(9deg) scale(.84); filter:brightness(.5) saturate(.7); }
+.m7-slot[data-p="2"]{ z-index:1; transform:translateX(-64px) rotate(-9deg) scale(.84); filter:brightness(.5) saturate(.7); }
+.m7-slot[data-p="1"]:hover, .m7-slot[data-p="2"]:hover{ filter:brightness(.75); }
+.m7-slot[data-p="0"] .kc{ filter:drop-shadow(0 18px 24px rgba(0,0,0,.6)) drop-shadow(0 0 22px rgba(241,194,76,.25)); }
+/* Ярлык вида — у задних карт сверху, у передней спрятан */
+.m7-tag{ position:absolute; top:-12px; left:50%; translate:-50% 0; z-index:30; height:22px; padding:0 10px; border-radius:999px; white-space:nowrap;
+  font-size:12px; line-height:22px; font-weight:600; color:var(--ink); background:var(--gold); opacity:0; transition:opacity .3s; }
+.m7-slot:not([data-p="0"]) .m7-tag{ opacity:1; }
+.m7-slot[data-p="1"] .m7-tag{ rotate:-9deg; } .m7-slot[data-p="2"] .m7-tag{ rotate:9deg; }
+.m7--deck .m7-foot{ padding-top:4px; }
+
+/* ——— v8 · Пак ——— */
+.m7-stage8{ display:grid; place-items:center; height:318px; padding-top:8px; perspective:900px; }
+.m7-stage8 .kc{ --w:196px; filter:drop-shadow(0 18px 24px rgba(0,0,0,.6)) drop-shadow(0 0 22px rgba(241,194,76,.25)); }
+.w .m7-packbtn{ display:block; }
+.m7-pack{ position:relative; display:flex; flex-direction:column; align-items:center; width:196px; height:274px; overflow:hidden; color:var(--ink);
+  clip-path:polygon(16px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 16px);
+  background:linear-gradient(160deg, #fff0b8 0%, #f1c24c 28%, #a8740d 62%, #f1c24c 100%);
+  animation:m7-bob 3.2s ease-in-out infinite; }
+.m7-packbtn:hover .m7-pack{ animation:m7-shake .5s steps(2) infinite; }
+@keyframes m7-bob{ 50%{ translate:0 -6px; } }
+@keyframes m7-shake{ 0%{ rotate:-1.5deg; } 50%{ rotate:1.5deg; } }
+.m7-pack__foil{ position:absolute; inset:0; opacity:.35; background:repeating-linear-gradient(0deg, transparent 0 6px, rgba(12,10,7,.18) 6px 7px), repeating-linear-gradient(90deg, transparent 0 22px, rgba(255,255,255,.18) 22px 23px); }
+.m7-pack__shine{ position:absolute; inset:-40%; background:linear-gradient(115deg, transparent 40%, rgba(255,255,255,.75) 50%, transparent 60%); animation:m7-sweep 2.8s ease-in-out infinite; }
+@keyframes m7-sweep{ from{ translate:-60% 0; } to{ translate:60% 0; } }
+.m7-pack__top{ position:relative; display:flex; align-items:center; gap:6px; margin-top:20px; font-size:12px; font-weight:700; }
+.m7-pack__top img{ width:16px; height:16px; }
+.m7-pack__mvp{ position:relative; margin-top:44px; font-family:'Archivo', sans-serif; font-stretch:125%; font-weight:900; font-size:72px; line-height:.9; letter-spacing:-.03em;
+  text-shadow:2px 0 0 rgba(255,60,120,.45), -2px 0 0 rgba(60,200,255,.45); }
+.m7-pack__what{ position:relative; margin-top:6px; font-size:18px; font-weight:800; }
+.m7-pack__go{ position:relative; margin-top:auto; margin-bottom:24px; height:32px; padding:0 18px; border-radius:999px; font-size:13px; line-height:32px; font-weight:700; color:var(--gold-hi); background:var(--ink); }
+.m7-pack.is-sm{ width:36px; height:50px; flex:none; animation:none; clip-path:polygon(5px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 5px); }
+.m7-pack.is-sm > :not(.m7-pack__foil){ display:none; }
+/* Вскрытие: вспышка и карта вылетает из пака */
+.m7-reveal{ position:relative; }
+.m7-reveal.is-anim .kc{ animation:m7-pop .9s cubic-bezier(.2,.9,.25,1.2) both; }
+@keyframes m7-pop{ 0%{ opacity:0; transform:translateY(40px) scale(.6) rotateY(160deg); } 40%{ opacity:1; } 70%{ transform:translateY(-6px) scale(1.04) rotateY(0); } 100%{ transform:none; } }
+.m7-flash{ position:absolute; inset:-60px; pointer-events:none; opacity:0; background:radial-gradient(closest-side, #fff, rgba(255,240,184,.7) 30%, transparent 70%); }
+.m7-reveal.is-anim .m7-flash{ animation:m7-flash .7s ease-out both; }
+@keyframes m7-flash{ 0%{ opacity:1; } 100%{ opacity:0; scale:1.4; } }
+.m7-more{ display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:0 16px 16px; }
+.w .m7-mini{ display:flex; align-items:center; gap:10px; min-width:0; padding:8px; border-radius:var(--w-r-sm); box-shadow:inset 0 0 0 1px var(--w-border); text-align:left; }
+.w .m7-mini:hover{ background:var(--w-mid-bg); }
+.m7-mini > span:last-child{ display:flex; flex-direction:column; min-width:0; }
+.m7-mini b{ font-size:12px; line-height:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.m7-mini small{ font-size:11px; line-height:14px; color:var(--w-muted-fg); }
+.m7-mini__face{ width:36px; height:36px; flex:none; overflow:hidden; border-radius:50%; background:radial-gradient(circle at 50% 30%, rgba(241,194,76,.35), #1a160c); }
+.m7-mini__face img{ width:100%; height:100%; object-fit:cover; object-position:50% 10%; }
+
+/* ——— v9 · Виджет = карта ——— */
+.w.m7--full{ background:transparent; border:0; overflow:visible; }
+.m9-wrap{ display:flex; flex-direction:column; }
+.m9-card.kc{ --w:320px; cursor:pointer; filter:drop-shadow(0 20px 30px rgba(0,0,0,.6)) drop-shadow(0 0 30px rgba(241,194,76,.2)); }
+.m9-wrap.is-anim .m9-card .kc__face{ animation:m9-glitch .5s steps(1) both; }
+@keyframes m9-glitch{ 0%{ opacity:.2; translate:-6px 0; filter:hue-rotate(60deg); } 20%{ opacity:1; translate:5px 0; } 40%{ translate:-3px 0; filter:none; } 60%{ translate:2px 0; } 80%, 100%{ translate:0; } }
+/* Язычок: виды MVP вертикально, активный светится */
+.m9-tab.g1__tab{ gap:0; padding:0; justify-content:space-evenly; height:15.5em; }
+.w .m9-t{ display:grid; place-items:center; width:100%; flex:1; color:var(--c-muted, #a1a1aa); }
+.m9-t span{ writing-mode:vertical-rl; rotate:180deg; font-size:.8em; font-weight:700; letter-spacing:.02em; white-space:nowrap; }
+.w .m9-t.is-on{ color:var(--tier-hi); background:linear-gradient(90deg, transparent, color-mix(in srgb, var(--tier) 35%, transparent)); }
+.w .m9-t:not(.is-on):hover{ color:var(--c-white, #fff); }
+.m9-under{ margin-top:12px; }
+/* Поправки после скрина: логотип за игроком тише, без цветных копий; герой «в воздухе» не нужен; ярлыки задних карт — на выглядывающей стороне */
+.m7 .g1__logo{ opacity:.28; }
+.m7 .g1__logo--a, .m7 .g1__logo--b{ display:none; }
+.m7 .g1__heroes{ display:none; }
+.m7-slot[data-p="1"] .m7-tag{ left:auto; right:-6px; translate:0; }
+.m7-slot[data-p="2"] .m7-tag{ left:-6px; translate:0; }
+.m7-tag{ display:none; }
+.w .m7-side{ position:absolute; bottom:6px; z-index:6; height:24px; padding:0 10px; border-radius:999px; font-size:12px; line-height:24px; font-weight:600; color:var(--gold-hi);
+  background:rgba(12,10,7,.75); box-shadow:inset 0 0 0 1px rgba(241,194,76,.35); }
+.w .m7-side:hover{ background:rgba(241,194,76,.18); }
+.m7-side.is-l{ left:12px; } .m7-side.is-r{ right:12px; }
+.m7-deck{ height:330px; }
+.m7-pack__mvp{ font-stretch:100%; font-size:64px; }
+/* Починка 22.10 (дирижёр: «работают кривенько»): глитч-полосы и скан-луч поперёк лица убраны — на MVP-карте лицо чистое;
+   задние карты колоды не режутся краем виджета; оборот — без пустоты */
+.m7 .g1__slices, .m7 .g1__scan, .m10 .g1__slices, .m10 .g1__scan{ display:none; }
+.m7-slot[data-p="1"]{ transform:translateX(50px) rotate(7deg) scale(.82); }
+.m7-slot[data-p="2"]{ transform:translateX(-50px) rotate(-7deg) scale(.82); }
+.m7 .bk, .m10 .bk{ gap:.9em; }
+.m7 .bk__stats li, .m10 .bk__stats li{ font-size:.76em; }

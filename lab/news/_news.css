@@ -1,0 +1,86 @@
+/* news — лаба «Страница новостей» (_news.js). Токены — widget-tournament/_w.css (тёмная, Google Sans, отступы ×4); шапка — как .pt страницы матча. */
+*{ box-sizing:border-box; } html, body{ margin:0; }
+body{ background:var(--w-page); color:var(--w-fg); font:14px/20px var(--w-font); }
+a{ color:inherit; text-decoration:none; } button{ font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer; }
+.num{ font-variant-numeric:tabular-nums; } .up{ color:var(--w-up); } .dn{ color:var(--w-down); }
+.stage{ margin:0 auto; min-height:100vh; position:relative; } .stage.is-phone{ width:390px; } .stage.is-desk{ width:1440px; }
+
+/* шапка и путь — как на странице матча */
+.pt{ position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:16px; height:52px; padding:0 16px; background:var(--w-page); }
+.is-desk .pt{ padding:0 calc((1440px - 1120px) / 2); }
+.pt-brand{ display:flex; align-items:center; gap:8px; font:700 15px/20px var(--w-font); }
+.pt-logo{ display:grid; place-items:center; width:28px; height:28px; border-radius:8px; background:var(--w-fg); color:var(--w-primary-fg); font-size:13px; }
+.pt-in{ margin-left:auto; height:32px; padding:0 14px; border-radius:var(--w-r-sm); background:var(--w-fg); color:var(--w-primary-fg); font-weight:600; }
+.n-crumbs{ display:flex; align-items:center; gap:8px; height:36px; padding:0 16px; font-size:12px; color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; }
+.is-desk .n-crumbs{ padding:0 calc((1440px - 1120px) / 2); }
+.n-crumbs b{ color:var(--w-fg); font-weight:500; overflow:hidden; text-overflow:ellipsis; }
+.n-page{ padding:8px 16px 96px; } .is-desk .n-page{ width:1120px; margin:0 auto; padding:8px 0 64px; }
+.n-tabbar{ position:sticky; bottom:0; display:flex; justify-content:space-around; height:60px; align-items:center; background:#09090bee; border-top:1px solid var(--w-border); font-size:11px; color:var(--w-muted-fg); }
+
+/* две колонки на ПК: главное + 340 справа; телефон — одна */
+.n-cols{ display:flex; flex-direction:column; gap:16px; } .n-cols > main{ min-width:0; } .n-cols > aside{ display:flex; flex-direction:column; gap:12px; }
+.is-desk .n-cols{ display:grid; grid-template-columns:1fr 340px; gap:32px; align-items:start; } .is-desk .n-cols > aside{ position:sticky; top:64px; }
+.n-h1{ margin:4px 0 12px; font-size:28px; line-height:34px; font-weight:700; letter-spacing:-.01em; }
+.n-fil{ display:flex; gap:8px; margin-bottom:16px; overflow-x:auto; }
+.n-fil button{ height:32px; padding:0 14px; border-radius:16px; background:var(--w-muted); color:var(--w-muted-fg); white-space:nowrap; font-weight:500; }
+.n-fil button.on{ background:var(--w-fg); color:var(--w-primary-fg); }
+.n-card{ display:block; background:var(--w-bg); border:1px solid var(--w-border); border-radius:var(--w-r); }
+.n-side-h, .n-sec-h{ display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:var(--w-muted-fg); }
+.n-sec-h{ margin:24px 0 12px; font-size:16px; color:var(--w-fg); }
+.n-live{ display:inline-flex; align-items:center; height:18px; padding:0 6px; border-radius:4px; background:var(--w-down); color:#fff; font-size:10px; font-weight:700; letter-spacing:.02em; }
+.n-dot{ width:8px; height:8px; border-radius:50%; background:var(--w-down); animation:n-pl 1.4s infinite; } @keyframes n-pl{ 50%{ opacity:.3; } }
+.n-meta{ display:flex; align-items:center; gap:8px; font-size:12px; color:var(--w-muted-fg); }
+.n-tm{ display:inline-flex; align-items:center; gap:6px; height:24px; padding:0 8px 0 4px; border-radius:12px; background:var(--w-muted); font-size:12px; font-weight:500; white-space:nowrap; }
+.n-tm img{ width:16px; height:16px; object-fit:contain; } .n-tm i{ width:16px; height:16px; border-radius:50%; background:#3f3f46; }
+.n-empty{ padding:48px 0; text-align:center; color:var(--w-muted-fg); }
+
+/* карточка темы */
+.n-list{ display:flex; flex-direction:column; gap:12px; }
+.n-topic{ padding:16px; transition:border-color .15s; } .n-topic:hover{ border-color:var(--w-ring); }
+.n-topic h3{ margin:8px 0 6px; font-size:17px; line-height:23px; font-weight:600; } .n-topic p{ margin:0; color:var(--w-muted-fg); }
+.n-topic.is-big h3{ font-size:24px; line-height:30px; } .n-topic.is-big{ padding:20px; }
+.n-foot{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:12px; } .n-cnt{ margin-left:auto; font-size:12px; color:var(--w-muted-fg); }
+
+/* матч темы */
+.n-match{ padding:12px 16px; } .n-mh{ display:flex; justify-content:space-between; font-size:12px; color:var(--w-muted-fg); }
+.n-mrow{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin:10px 0 6px; } .n-mrow b{ font-size:20px; }
+.n-msub{ font-size:12px; color:var(--w-muted-fg); } .n-mgo{ display:block; margin-top:10px; font-size:13px; font-weight:600; }
+
+/* тема */
+.n-back{ margin:4px 0 12px; color:var(--w-muted-fg); font-weight:500; }
+.n-title{ margin:8px 0; font-size:26px; line-height:32px; font-weight:700; letter-spacing:-.01em; } .is-desk .n-title{ font-size:34px; line-height:40px; }
+.n-lede{ margin:0 0 16px; font-size:16px; line-height:24px; color:#d4d4d8; }
+.n-main{ margin:0; padding:0 0 0 18px; display:flex; flex-direction:column; gap:8px; } .n-main li::marker{ color:var(--w-muted-fg); }
+.n-tl{ list-style:none; margin:0; padding:0; border-left:2px solid var(--w-border); margin-left:4px; }
+.n-tl li{ position:relative; display:flex; gap:12px; padding:0 0 16px 16px; }
+.n-tl li::before{ content:''; position:absolute; left:-6px; top:5px; width:10px; height:10px; border-radius:50%; background:var(--w-bg); border:2px solid var(--w-ring); }
+.n-tl li.is-key::before{ background:var(--w-fg); border-color:var(--w-fg); } .n-tl li.is-key span{ font-weight:600; }
+.n-tl i{ font-style:normal; width:44px; flex:none; color:var(--w-muted-fg); font-size:12px; }
+.is-fresh{ animation:n-in .6s ease; } @keyframes n-in{ from{ background:rgba(250,250,250,.08); transform:translateY(-6px); opacity:0; } }
+.n-new{ display:block; margin:0 auto 12px; height:32px; padding:0 14px; border-radius:16px; background:var(--w-fg); color:var(--w-primary-fg); font-weight:600; box-shadow:0 6px 20px #0008; }
+.n-src a{ display:grid; grid-template-columns:auto 1fr auto; gap:4px 12px; padding:12px 16px; border-top:1px solid var(--w-border); } .n-src a:first-child{ border-top:0; }
+.n-src b{ font-size:12px; color:var(--w-muted-fg); font-weight:500; } .n-src span{ grid-column:1 / -1; grid-row:2; } .n-src small{ color:var(--w-muted-fg); }
+.n-teams{ display:flex; flex-wrap:wrap; gap:6px; padding:12px; }
+aside .n-topic h3{ font-size:15px; line-height:20px; } aside .n-topic p{ display:none; }
+
+/* swipe: по одной на экран, листать вверх */
+.v-swipe.s-feed .n-page{ padding:0; } .v-swipe.s-feed.is-desk .n-page{ width:560px; }
+.n-swipe{ height:calc(100vh - 88px - 60px); overflow-y:auto; scroll-snap-type:y mandatory; } .is-desk .n-swipe{ height:calc(100vh - 88px); }
+.n-slide{ height:100%; scroll-snap-align:start; padding:12px 16px; }
+.n-slide-in{ position:relative; height:100%; display:flex; flex-direction:column; gap:12px; padding:20px; border-radius:16px; background:var(--w-bg); border:1px solid var(--w-border); overflow:hidden; }
+.n-slide h2{ margin:0; font-size:24px; line-height:30px; } .n-slide p{ margin:0; color:#d4d4d8; font-size:15px; line-height:22px; }
+.n-slide .n-foot{ margin-top:auto; } .n-open{ height:40px; border-radius:var(--w-r-sm); background:var(--w-fg); color:var(--w-primary-fg); font-weight:600; }
+.n-pg{ position:absolute; top:20px; right:20px; font-size:12px; color:var(--w-muted-fg); }
+
+/* dense: по дням, кластеры, live-блог */
+.n-dense{ padding:4px 0; } .n-day{ padding:12px 16px 4px; font-size:12px; font-weight:600; color:var(--w-muted-fg); }
+.n-row{ display:flex; gap:12px; padding:10px 16px; border-top:1px solid #18181b; } .n-row:hover{ background:#111113; }
+.n-rt{ width:44px; flex:none; font-size:12px; color:var(--w-muted-fg); padding-top:2px; }
+.n-rb{ display:flex; flex-direction:column; gap:2px; min-width:0; } .n-rb b{ font-weight:600; } .n-rb small{ font-size:12px; color:var(--w-muted-fg); }
+.n-cl{ display:flex; flex-direction:column; gap:4px; margin-top:6px; padding-left:12px; border-left:2px solid var(--w-down); font-size:13px; color:#d4d4d8; }
+.n-cl i, .n-keys i{ font-style:normal; color:var(--w-muted-fg); margin-right:8px; font-size:12px; }
+.n-keys a{ display:block; padding:10px 16px; border-top:1px solid var(--w-border); } .n-keys a:first-child{ border-top:0; }
+.n-pin{ padding:16px; } .n-pin ul{ list-style:none; margin:8px 0 0; padding:0; display:flex; flex-direction:column; gap:8px; } .n-pin li{ display:flex; gap:12px; font-weight:500; }
+.n-pin i{ font-style:normal; width:44px; flex:none; color:var(--w-muted-fg); font-size:12px; }
+.n-blog{ display:flex; flex-direction:column; gap:8px; } .n-post{ display:flex; gap:16px; padding:14px 16px; } .n-post b{ width:44px; flex:none; font-size:13px; }
+.n-post p{ margin:0; } .n-post.is-key{ border-color:#52525b; } .n-post.is-key p{ font-weight:600; }

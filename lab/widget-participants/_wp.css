@@ -1,0 +1,353 @@
+/* Виджет «Участники» (лаба widget-participants, v30) — один CSS для лабы и страницы турнира. Токены — ../widget-tournament/_w.css + ../widgets-unified/_type.css.
+   Телефон — класс .is-phone на контейнере виджета (WP.mount). */
+  .pt{ width:auto; overflow:visible; }
+  .pt .w-hd{ height:var(--g-hd); }
+  .pt .w-hd__t{ font:var(--t-title); flex:none; display:flex; align-items:center; gap:6px; }
+  .pt-who{ font:var(--t-tag); border-radius:4px; padding:1px 6px; border:1px solid var(--w-border); color:var(--w-muted-fg); }
+  .pt-who--ed{ border-color:transparent; background:var(--w-a-bg); color:var(--w-a-fg); }
+  .pt .w-hd .sub{ font:var(--t-hsub); color:var(--w-muted-fg); flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pt-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); }
+  .is-phone .pt-grid{ grid-template-columns:1fr; }
+  .pt-tm{ padding:4px 16px 12px; border-right:1px solid var(--w-border); border-bottom:1px solid var(--w-border); margin:0 -1px -1px 0; min-width:0; }
+  .pt-tm.slot{ display:grid; place-items:center; min-height:120px; font:var(--t-sub); color:var(--w-ring); }
+  .pt-th{ display:flex; align-items:center; gap:8px; height:var(--g-row); }
+  .pt-th .nm{ flex:1; min-width:0; display:flex; flex-direction:column; }
+  .pt-th .nm small{ font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .pt-th .nm small i{ font:var(--t-tag); font-style:normal; color:var(--w-star); }
+  .w .pt-back{ display:grid; place-items:center; width:28px; height:28px; margin-left:-6px; border-radius:var(--w-r-sm); color:var(--w-muted-fg); flex:none; }
+  .w .pt-back:hover{ background:var(--w-muted); color:var(--w-fg); }
+  .pt-th .nm small img{ width:12px; height:12px; object-fit:contain; vertical-align:-2px; margin-right:4px; }
+  .pt-lst{ display:flex; flex-direction:column; }
+  .pt-li{ display:flex; align-items:center; gap:10px; height:52px; padding:0 16px; border-bottom:1px solid var(--w-border); background:var(--w-bg); }
+  .pt-li:last-child{ border-bottom:0; }
+  .pt-li .grip{ color:var(--w-ring); cursor:grab; display:grid; place-items:center; width:12px; } .pt-li .sd{ width:16px; font:var(--t-num-s); color:var(--w-muted-fg); text-align:right; }
+  .pt-li img{ width:20px; height:20px; object-fit:contain; } .pt-li .nm{ flex:1; min-width:0; display:flex; flex-direction:column; } .pt-li .nm b{ font:var(--t-title); }
+  .pt-li .nm small{ font:var(--t-sub); color:var(--w-muted-fg); } .pt-li .nm small i{ font:var(--t-tag); font-style:normal; color:var(--w-star); }
+  .pt-li .mt{ display:flex; gap:8px; font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; } .is-phone .pt-li .mt span:not(.pt-ty){ display:none; }
+  .pt-li .tr{ font:var(--t-num); width:28px; text-align:right; }
+  .w .w-hd .pt-ic + .pt-ic{ margin-left:4px; }
+  .is-phone .pt .w-hd .sub{ display:none; }
+  .pt-grip{ display:grid; place-items:center; width:16px; height:28px; margin-left:-8px; border-radius:4px; color:var(--w-muted-fg); cursor:grab; touch-action:none; flex:none; }
+  .pt-grip:hover{ color:var(--w-fg); background:var(--w-muted); }
+  .pt-li .pt-grip{ margin-left:-6px; }
+  .is-ph{ outline:1px dashed var(--w-ring); outline-offset:-4px; border-radius:12px; } .is-ph > *{ visibility:hidden; }
+  .pt-ghost{ position:fixed; z-index:20; pointer-events:none; margin:0; background:#111113; border:1px solid var(--w-ring); border-radius:12px; box-shadow:0 20px 48px #000c;
+    transform:rotate(-1deg) scale(1.02); transition:transform .12s; }
+  body.is-dragging, body.is-dragging *{ cursor:grabbing !important; user-select:none; }
+  .pt-th .pt-reset{ margin:0; font:var(--t-sub); white-space:nowrap; }
+  .pt-th img{ width:20px; height:20px; object-fit:contain; flex:none; }
+  .pt-th b{ font:var(--t-title); flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pt-th .st{ font:var(--t-sub); color:var(--w-muted-fg); }
+  .pt-th .tr{ font:var(--t-num); }
+  .pt-th .ch{ color:var(--w-ring); width:16px; display:grid; place-items:center; transition:transform .2s; }
+  .pt-tm.is-col .ch{ transform:rotate(-90deg); }
+  .pt-tm.is-col .pt-bd{ display:none; }
+  .pt-q{ display:flex; justify-content:space-between; font:var(--t-sub); color:var(--w-muted-fg); margin:-8px 0 8px; }
+  .pt-q b{ font:var(--t-tag); color:var(--w-star); }
+  .pt-q{ height:16px; align-items:center; } .pt-q .pt-reset{ margin:0; font:var(--t-sub); }
+  .pt-tm:not(.slot) .pt-r{ height:32px; min-height:0; padding-top:0; padding-bottom:0; }
+  .pt-list{ height:calc(6 * 32px + 5px); }
+  .w .pt-seg button:disabled{ opacity:.4; cursor:default; }
+  .pt-fm{ display:flex; align-items:center; gap:2px; margin:-8px 0 8px; font:var(--t-sub); color:var(--w-muted-fg); }
+  .pt-fm span{ margin-right:6px; }
+  .pt-fm i{ width:16px; height:16px; border-radius:4px; display:grid; place-items:center; font:var(--t-tag); font-style:normal; }
+  .pt-fm .W{ background:var(--w-up-bg); color:var(--w-up); } .pt-fm .L{ background:var(--w-down-bg); color:var(--w-down); }
+  .w .pt-seg{ display:flex; gap:2px; padding:2px; border-radius:var(--w-r-sm); background:var(--w-mid-bg); }
+  .w .pt-seg button{ flex:1; height:28px; padding:0 8px; border:0; border-radius:6px; background:none; font:var(--t-seg); color:var(--w-muted-fg); cursor:pointer; text-align:center; }
+  .w .pt-seg button.is-on{ background:var(--w-muted); color:var(--w-fg); }
+  .pt-bd > .pt-seg{ margin-bottom:4px; }
+  .w-hd .pt-seg{ flex:none; }
+  .pt-r{ display:flex; align-items:center; gap:8px; min-height:var(--g-cell); padding:4px 0; }
+  .pt-r + .pt-r{ border-top:1px solid var(--w-border); }
+  .pt-r.is-btn{ cursor:pointer; margin:0 -8px; padding:4px 8px; border-radius:6px; }
+  .pt-r.is-btn:hover{ background:var(--w-muted); }
+  .pt-r.is-btn + .pt-r, .pt-r + .pt-r.is-btn{ border-top-color:var(--w-border); }
+  .pt-r .p{ width:20px; height:20px; display:grid; place-items:center; flex:none; border-radius:4px; background:var(--w-muted); font:var(--t-tag); color:var(--w-fg); }
+  .pt-r .p.is-none{ background:none; }
+  .pt-r .cz{ flex:none; display:inline-flex; align-items:center; gap:3px; height:20px; font:var(--t-tag); color:var(--w-fg); background:var(--w-muted); border-radius:4px; padding:0 6px; }
+  .pt-r img.f{ width:16px; height:11px; object-fit:cover; border-radius:2px; flex:none; }
+  .pt-r .n{ flex:1; min-width:0; font:var(--t-cell); color:var(--w-fg); }
+  .pt-r .n > span{ display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pt-r .n small{ display:block; font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pt-r .x{ display:flex; align-items:center; gap:4px; font:var(--t-sub); color:var(--w-muted-fg); }
+  .pt-r .x img{ width:16px; height:16px; object-fit:contain; }
+  .pt-r.coach .n{ color:var(--w-muted-fg); }
+  .pt-rt{ font:600 11px/16px var(--w-font); font-variant-numeric:tabular-nums; white-space:nowrap; text-align:right; }
+  .pt-rt i{ font-style:normal; font-weight:400; font-size:9px; color:var(--w-ring); }
+  .pt-rt i::before{ content:'/'; margin:0 1px; font-weight:300; }
+  .pt-rt .hi{ color:var(--w-up); } .pt-rt .mid{ color:#c9b26a; } .pt-rt .lo{ color:#c98a8a; }
+  .pt-rt b{ font-weight:600; } .pt-rt .up{ color:var(--w-up); } .pt-rt .dn{ color:#c98a8a; }
+  .pt-was{ font:var(--t-sub); color:var(--w-muted-fg); margin-left:4px; }
+  .pt-nt{ display:flex; gap:8px; padding:6px 0; } .pt-nt + .pt-nt{ border-top:1px solid var(--w-border); }
+  .pt-nt .ico{ flex:none; width:16px; height:16px; display:grid; place-items:center; color:var(--w-muted-fg); } .pt-nt.ed .ico{ color:var(--w-star); font-size:11px; }
+  .pt-nt p{ margin:0; font:var(--t-cell); color:var(--w-fg); } .pt-nt p small{ display:block; font:var(--t-sub); color:var(--w-muted-fg); margin-top:2px; }
+  .pt-notes{ height:100%; overflow-y:auto; scrollbar-width:thin; }
+  .pt-foot{ display:flex; align-items:center; gap:8px; height:28px; margin-top:8px; } .pt-foot .sp{ flex:1; }
+  .pt-ty{ font:var(--t-tag); color:var(--w-a-fg); background:var(--w-a-bg); border-radius:4px; padding:0 4px; margin-left:4px; }
+  .pt-mk{ font:var(--t-tag); color:var(--w-muted-fg); border:1px solid var(--w-border); border-radius:4px; padding:0 4px; margin-left:4px; white-space:nowrap; }
+  /* метки истории — строками через линию, «авто» серым, «редакция» звездой */
+  .pt-st{ margin-top:8px; padding-top:8px; border-top:1px solid var(--w-border); display:flex; flex-direction:column; gap:4px; }
+  .pt-st div{ display:flex; gap:6px; font:var(--t-sub); color:var(--w-fg); }
+  .pt-st em{ flex:none; width:52px; font:var(--t-tag); font-style:normal; color:var(--w-muted-fg); }
+  .pt-st .ed em{ color:var(--w-star); }
+  .pt-reset{ font:var(--t-link); color:var(--w-muted-fg); margin-top:6px; }
+  .pt-reset:hover{ color:var(--w-fg); }
+  .w .pt-ic{ display:inline-flex; gap:2px; padding:2px; border-radius:7px; background:var(--w-mid-bg); flex:none; }
+  .w .pt-ic button{ position:relative; min-width:24px; height:20px; display:flex; align-items:center; justify-content:center; gap:4px; border-radius:5px; color:var(--w-muted-fg); }
+  .w .pt-ic button:not(.is-on):hover{ color:var(--w-fg); background:var(--w-muted); }
+  .w .pt-ic button.is-on{ background:var(--w-fg); color:var(--w-bg); }
+  .w .pt-ic button.is-only, .w .pt-ic button.is-only.is-on{ cursor:default; background:none; color:var(--w-muted-fg); box-shadow:inset 0 0 0 1px var(--w-border); }
+  .w .pt-ic button.is-only:hover{ background:none; color:var(--w-muted-fg); }
+  .w .pt-ic .pt-nb.is-off{ color:var(--w-ring); cursor:default; background:none; }
+  .w .pt-ic .pt-add{ width:24px; }
+  .pt-foot{ gap:4px; }
+  .w .pt-sq{ display:inline-flex; }
+  .w .pt-sq .pt-add{ width:24px; height:24px; display:grid; place-items:center; border-radius:7px; background:var(--w-mid-bg); color:var(--w-muted-fg); }
+  .w .pt-sq .pt-add:hover{ color:var(--w-fg); background:var(--w-muted); }
+  .pt-foot > .pt-sq [data-tip]:hover::after{ right:auto; left:0; }
+  .pt-foot > .pt-ic:first-child [data-tip]:hover::after{ right:auto; left:0; }
+  .w .pt-ic .pt-nc{ width:24px; padding:0; }
+  .w .pt-ic .pt-nc:disabled{ color:var(--w-hover); cursor:default; background:none; }
+  .w .pt-ic .pt-nc.is-ed sup, .w .pt-ic .pt-nc .st{ color:var(--w-star); }
+  .w .pt-ic .pt-nc.is-ed sup{ background:#3a3214; }
+
+  .w [data-tip]{ position:relative; }
+  .w [data-tip]:hover::after{ content:attr(data-tip); position:absolute; right:0; bottom:calc(100% + 6px); z-index:6; white-space:nowrap; padding:4px 8px; border-radius:6px;
+    background:#18181b; border:1px solid var(--w-border); box-shadow:0 8px 20px #000a; font:var(--t-sub); color:var(--w-fg); pointer-events:none; }
+  .w .pt-ic button sup{ position:absolute; top:-5px; right:-5px; min-width:12px; height:12px; padding:0 3px; border-radius:6px; background:var(--w-muted); color:var(--w-fg); font:600 8px/12px var(--w-font); text-align:center; }
+  .w .pt-ic .pt-nb{ padding:0 8px; font:var(--t-tag); white-space:nowrap; }
+
+  .w .pt-more{ display:block; width:100%; margin-top:8px; padding-top:8px; border-top:1px solid var(--w-border); font:var(--t-sub); color:var(--w-muted-fg); text-align:left; }
+  .pt-subl{ height:16px; margin-top:4px; font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pt-subl span{ color:var(--w-fg); } .pt-subl i{ font-style:normal; color:var(--w-muted-fg); } .pt-subl img.f{ width:12px; height:8px; margin-right:3px; vertical-align:0; border-radius:1px; }
+  .w .pt-more:not(:disabled):hover{ color:var(--w-fg); } .w .pt-more:disabled{ color:var(--w-ring); cursor:default; }
+  /* По позиции */
+  .pt-pos{ padding:8px 16px 12px; }
+  .pt-pos .pt-seg{ margin-bottom:8px; max-width:320px; }
+  .pt-pos .pt-r .k{ width:20px; font:var(--t-num-s); color:var(--w-muted-fg); flex:none; }
+  .pt-pos .pt-r .tm{ display:flex; align-items:center; gap:6px; width:150px; font:var(--t-sub); color:var(--w-muted-fg); }
+  .is-phone .pt-pos .pt-r .tm{ width:auto; } .is-phone .pt-pos .pt-r .tm span{ display:none; }
+  .pt-pos .pt-r .tm img{ width:16px; height:16px; object-fit:contain; }
+  .pt-pos .pt-r .bar{ width:80px; height:4px; border-radius:2px; background:var(--w-muted); overflow:hidden; }
+  .is-phone .pt-pos .pt-r .bar{ display:none; }
+  .pt-pos .pt-r .bar i{ display:block; height:100%; background:var(--w-fg); }
+  /* замена — всплывашка */
+  .pt-pop{ position:fixed; z-index:9; width:260px; padding:12px; border-radius:10px; background:#18181b; border:1px solid var(--w-border); box-shadow:0 12px 32px #000a; display:flex; flex-direction:column; gap:8px; font-family:var(--w-font); }
+  .pt-pop .lbl{ font:var(--t-label); color:var(--w-muted-fg); }
+  .pt-pop .t{ font:var(--t-title); }
+  .pt-pop .opt{ display:flex; align-items:center; gap:8px; width:100%; min-height:36px; padding:0 8px; border-radius:6px; font:var(--t-cell); color:var(--w-fg); background:none; border:0; cursor:pointer; text-align:left; }
+  .pt-pop .opt:hover{ background:var(--w-muted); }
+  .pt-pop .opt span{ flex:1; }
+/* Сворачивание (colMode): свёрнутая команда — только шапка (лого, название, статус, рейтинг) */
+.pt-tm.is-col{ padding-bottom:4px; }
+.pt-tm.is-tap .pt-th{ cursor:pointer; }
+.w .pt-chv{ display:grid; place-items:center; width:20px; height:20px; border-radius:4px; color:var(--w-muted-fg); opacity:0; transition:opacity .15s, transform .2s; flex:none; }
+.pt-tm:hover .pt-chv, .pt-tm.is-col .pt-chv{ opacity:1; } .w .pt-chv:hover{ background:var(--w-muted); color:var(--w-fg); }
+.pt-tm.is-col .pt-chv{ transform:rotate(-90deg); }
+/* 'icon': состав свёрнутой — при наведении, поверх соседей (как Enable hover на Liquipedia) */
+.pt--hov .pt-tm{ position:relative; }
+.pt--hov .pt-tm.is-col:hover .pt-bd{ display:block; position:absolute; z-index:5; left:-1px; right:-1px; top:100%; margin-top:-4px; padding:0 16px 12px; background:#111113; border:1px solid var(--w-ring); border-top:0; border-radius:0 0 12px 12px; box-shadow:0 16px 32px #000a; }
+.pt--hov .pt-tm.is-col:hover{ background:#111113; outline:1px solid var(--w-ring); z-index:5; }
+/* 'switch': тумблер «Составы» */
+.w .pt-swt{ display:inline-flex; align-items:center; gap:6px; font:var(--t-seg); color:var(--w-muted-fg); margin-left:4px; white-space:nowrap; }
+.pt-swt i{ position:relative; width:26px; height:16px; border-radius:8px; background:var(--w-muted); transition:background .15s; }
+.pt-swt i::after{ content:''; position:absolute; top:2px; left:2px; width:12px; height:12px; border-radius:50%; background:var(--w-muted-fg); transition:left .15s, background .15s; }
+.pt-swt.is-on{ color:var(--w-fg); } .pt-swt.is-on i{ background:var(--w-fg); } .pt-swt.is-on i::after{ left:12px; background:var(--w-bg); }
+
+/* v34 (WP.mount flt) — список колонками, форма тепловой картой, вид первым, на телефоне «Фильтры» → шторка (дирижёр 30.10) */
+.pt-lh{ display:flex; align-items:center; gap:10px; height:32px; padding:0 16px; border-bottom:1px solid var(--w-border); font:var(--t-sub); color:var(--w-muted-fg); }
+.pt-lh .nm{ flex:1; } .pt-lh .pd{ width:16px; flex:none; } .pt-lh .pd--lg{ width:20px; }
+.pt-c{ flex:none; text-align:center; font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; } .pt-c--sw{ width:72px; } .pt-c--sb{ width:44px; } .pt-c--nt{ width:60px; }
+.pt-c--fm{ width:158px; display:flex; gap:2px; justify-content:center; } .pt-lh .pt-c--tr, .pt-lst[class*="pt-lst--"] .pt-li .tr{ width:56px; text-align:right; }
+.pt-hf{ width:30px; height:28px; border-radius:6px; display:grid; place-items:center; font:var(--t-num-s); background:var(--tc); color:var(--tf); }
+.pt-hf.w2{ --tc:color-mix(in srgb, var(--w-up) 55%, transparent); --tf:#fff; } .pt-hf.w1{ --tc:color-mix(in srgb, var(--w-up) 22%, transparent); --tf:var(--w-up-fg); }
+.pt-hf.l2{ --tc:color-mix(in srgb, var(--w-down) 55%, transparent); --tf:#fff; } .pt-hf.l1{ --tc:color-mix(in srgb, var(--w-down) 22%, transparent); --tf:var(--w-down-fg); }
+.is-phone .pt-c--nt{ display:none; } .is-phone .pt-lst--info .pt-c--fm{ display:none; } .is-phone .pt-lst--form .pt-c--sw, .is-phone .pt-lst--form .pt-c--sb{ display:none; }
+.is-phone .pt-lst[class*="pt-lst--"] .pt-li .tr{ width:28px; } .is-phone .pt-lst[class*="pt-lst--"] .pt-li .nm b, .is-phone .pt-lst[class*="pt-lst--"] .pt-li .nm small{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pt-hx{ display:inline-grid; grid-template-columns:1fr; opacity:1; transition:grid-template-columns .32s cubic-bezier(.65,0,.35,1), opacity .24s ease; }
+.pt-hx.is-hide{ grid-template-columns:0fr; opacity:0; } .pt-hx > span{ min-width:0; overflow:hidden; display:flex; } .w .w-hd .pt-hx .pt-ic{ margin-left:4px; }
+.pt-flt{ display:none; margin-left:auto; align-items:center; gap:6px; height:28px; padding:0 10px; border-radius:var(--w-r-sm); border:1px solid var(--w-border); background:none; color:var(--w-fg); font:var(--t-tag); cursor:pointer; }
+.is-phone .pt-flt{ display:inline-flex; }
+.is-phone .w-hd .pt-ic[aria-label="Порядок"], .is-phone .w-hd .pt-ic[aria-label="Вид"]{ display:none; }
+.is-phone .pt:has(.pt-flt) .pt-pos > .pt-seg{ display:none; }
+.pt-shost{ position:fixed; inset:0; z-index:20; width:auto; height:auto; margin:0; pointer-events:none; background:none; border:0; border-radius:0; box-shadow:none; overflow:visible; }
+.pt-shost.is-open{ pointer-events:auto; }
+.pt-ov{ position:absolute; inset:0; background:#0009; opacity:0; transition:opacity .3s ease; }
+.pt-shost.is-open .pt-ov{ opacity:1; }
+.pt-sh{ position:absolute; left:50%; bottom:0; width:390px; max-width:100%; padding:8px 16px 16px; border-radius:16px 16px 0 0; background:#18181b; border-top:1px solid var(--w-border); box-shadow:0 -12px 32px #000a;
+  transform:translate(-50%, 100%); transition:transform .38s cubic-bezier(.32,.72,0,1); }
+.pt-shost.is-open .pt-sh{ transform:translate(-50%, 0); }
+.pt-sh .gr{ width:36px; height:4px; border-radius:2px; background:var(--w-ring); margin:0 auto 8px; }
+.pt-sh .hd{ font:var(--t-title); text-align:center; }
+.pt-sx{ display:grid; grid-template-rows:1fr; opacity:1; transition:grid-template-rows .32s cubic-bezier(.65,0,.35,1), opacity .24s ease; }
+.pt-sx.is-hide{ grid-template-rows:0fr; opacity:0; }
+.pt-sx > div{ min-height:0; overflow:hidden; } .pt-sx > div > div{ padding-top:14px; }
+.pt-sh .lbl{ font:var(--t-label); color:var(--w-muted-fg); margin-bottom:6px; }
+.pt-sh .t5-seg{ margin:0; } .w .pt-sh .t5-seg button{ height:36px; }
+.w .pt-sh .ok{ display:flex; align-items:center; justify-content:center; width:100%; height:40px; margin-top:16px; border:0; border-radius:var(--w-r-sm); background:var(--w-fg); color:var(--w-bg); font:var(--t-title); cursor:pointer; }
+.pt--flt .w-hd__t{ flex:1; min-width:0; } .is-phone .pt--flt .pt-flt{ margin-left:0; } /* без «Зритель» и подписи — заголовок тянется, кнопки справа */
+
+/* ——— v35 (pt--r4, созвон 02.11 §2.3) ——— */
+.pt-dh{ display:contents; }
+.pt--r4 .pt-dh{ display:flex; align-items:center; gap:8px; flex:1; min-width:0; cursor:default; }
+/* под названием: 5 точек формы и рейтинг команды со сдвигом; Invited / Qualified нет */
+.pt--r4 .pt-th .nm small{ display:flex; align-items:center; gap:6px; }
+.pt-dots{ display:inline-flex; gap:3px; }
+.pt-dots i{ width:6px; height:6px; border-radius:50%; background:var(--w-up); }
+.pt-dots i.L{ background:#e5484d; }
+.pt-tr4{ font:500 11px/1 var(--w-font); font-variant-numeric:tabular-nums; color:var(--w-fg); }
+.pt-tr4 em, .pt--r4 .pt-li .tr em{ margin-left:3px; font-style:normal; font-size:10px; }
+.pt--r4 em.up{ color:var(--w-up); } .pt--r4 em.dn{ color:#e5484d; }
+.pt--r4 .pt-lst[class*="pt-lst--"] .pt-li .tr, .pt--r4 .pt-lh .pt-c--tr{ width:76px; white-space:nowrap; }
+/* тренер — значок, имя при наведении */
+.pt-co{ display:grid; place-items:center; width:20px; height:20px; flex:none; border-radius:4px; color:var(--w-muted-fg); cursor:help; }
+.pt-co:hover{ color:var(--w-fg); background:var(--w-muted); }
+/* строка игрока: позиция первой и мелко; рейтинг — главный крупно белым, второй мелко серым, без слэша */
+.pt--r4 .pt-r .p{ width:14px; height:14px; border-radius:3px; font:600 9px/14px var(--w-font); color:var(--w-muted-fg); }
+.pt--r4 .pt-rt{ display:inline-flex; align-items:baseline; gap:4px; }
+.pt--r4 .pt-rt b{ font:600 13px/16px var(--w-font); color:var(--w-fg); }
+.pt--r4 .pt-rt i{ font-size:10px; color:var(--w-muted-fg); }
+.pt--r4 .pt-rt i::before{ content:none; }
+/* замена: заменённый и замена рядом, слева линия-скобка */
+.pt-sw{ position:relative; }
+.pt-sw::before{ content:''; position:absolute; left:-8px; top:9px; bottom:9px; width:4px; border:solid #a78bfa; border-width:1.5px 0 1.5px 1.5px; border-radius:3px 0 0 3px; }
+.pt-sw .pt-r.is-out .n, .pt-sw .pt-r.is-out .pt-rt{ opacity:.45; } .pt-sw .pt-r.is-out .n span{ text-decoration:line-through; text-decoration-color:#ffffff55; }
+.pt-sw .pt-r.is-in{ border-top:0; }
+.pt-r + .pt-sw .pt-r.is-out, .pt-sw + .pt-r{ border-top:1px solid var(--w-border); }
+/* драфты при наведении на команду */
+.pt-drp{ gap:6px; }
+.pt-drp .t{ display:flex; align-items:center; gap:6px; } .pt-drp .t img{ width:16px; height:16px; object-fit:contain; }
+.pt-drr{ display:flex; gap:6px; }
+.pt-drr span{ position:relative; }
+.pt-drr img{ display:block; width:40px; height:23px; border-radius:4px; object-fit:cover; background:var(--w-muted); }
+.pt-drr i{ position:absolute; right:2px; bottom:1px; font:600 9px/1 var(--w-font); font-style:normal; color:#fff; text-shadow:0 0 3px #000, 0 0 2px #000; }
+
+/* ——— v36 (r5): один рейтинг; тренер — строкой со значком вместо позиции; под командой Invited + рейтинг со стрелкой без числа ——— */
+.pt--r4 .pt-r .p.p--co{ background:none; color:var(--w-muted-fg); }
+.pt--r4 .pt-r .p.p--co svg{ width:12px; height:12px; }
+.pt-st5{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+.pt-st5 + .pt-tr4::before{ content:'·'; margin-right:6px; color:var(--w-muted-fg); }
+
+/* ——— v37 (r6): позиция — снова справа в конце строки, чуть меньше прежней (18 вместо 20); у тренера там же — свисток; рейтинг команды со стрелкой — справа в шапке ——— */
+.pt--r6 .pt-r .p{ width:18px; height:18px; border-radius:4px; font:var(--t-tag); color:var(--w-fg); background:var(--w-muted); }
+.pt--r6 .pt-r .p.p--co{ background:var(--w-muted); color:var(--w-fg); }
+.pt--r6 .pt-r .p.p--co svg{ width:11px; height:11px; }
+.pt--r6 .pt-th .pt-tr4{ font:var(--t-num); }
+.pt--r6 .pt-th .nm small{ display:block; }
+
+/* ——— v38 (r7): позиция — снова первой (плашка 18), у тренера там же значок; частые пики и баны — в заметках команды ——— */
+.pt--r7 .pt-r .p.p--co svg{ width:12px; height:12px; }
+.pt-nt.dr p{ display:flex; flex-direction:column; gap:6px; margin:0; }
+.pt-drh{ font:var(--t-label); color:var(--w-muted-fg); font-weight:500; }
+.pt-nt.dr .pt-drr img{ width:36px; height:20px; }
+
+/* ——— v39 (r8): линия-скобка слева — у пары, которая давно играет вместе; проходит через строки между ними ——— */
+.pt-r.pr-a, .pt-r.pr-m, .pt-r.pr-b{ position:relative; }
+.pt-r.pr-a::before, .pt-r.pr-m::before, .pt-r.pr-b::before{ content:''; position:absolute; left:-8px; width:4px; border:solid #a78bfa; border-width:0 0 0 1.5px; }
+.pt-r.pr-a::before{ top:50%; bottom:-1px; border-top-width:1.5px; border-top-left-radius:3px; }
+.pt-r.pr-m::before{ top:-1px; bottom:-1px; }
+.pt-r.pr-b::before{ top:-1px; bottom:50%; border-bottom-width:1.5px; border-bottom-left-radius:3px; }
+
+/* v40 (r9): подсказка «Тренер» у значка — вправо от него, внутри карточки */
+.pt-r .p.p--co[data-tip]{ cursor:help; }
+.w .pt-r .p.p--co[data-tip]:hover::after{ right:auto; left:0; }
+
+/* ——— v41 (r10): пары дорожками — каждая пара своей линией слева (вторая — левее и другим цветом), не накладываются; тренер — дотовский предмет ——— */
+.pt--r10 .pt-r{ position:relative; }
+.pt-r i.pr{ position:absolute; left:calc(-7px - var(--ln) * 5px); width:4px; border:solid var(--pc, #a78bfa); border-width:0 0 0 1.5px; pointer-events:none; }
+.pt-r i.pr[style*="--ln:1"]{ --pc:#38bdf8; }
+.pt-r i.pr.pr-a{ top:50%; bottom:-1px; border-top-width:1.5px; border-top-left-radius:3px; }
+.pt-r i.pr.pr-m{ top:-1px; bottom:-1px; }
+.pt-r i.pr.pr-b{ top:-1px; bottom:50%; border-bottom-width:1.5px; border-bottom-left-radius:3px; }
+.pt--r10 .pt-r .p.p--co{ padding:0; background:none; }
+.pt--r10 .pt-r .p.p--co img{ width:100%; height:100%; object-fit:cover; object-position:center; border-radius:4px; }
+
+/* ——— v42–v45: способы показать две пары в одной команде ——— */
+/* v42 dots — цветная точка перед флагом, у пары один цвет */
+.pt-r i.pdot{ width:6px; height:6px; margin-right:-4px; border-radius:50%; background:var(--pc); flex:none; box-shadow:0 0 6px color-mix(in srgb, var(--pc) 60%, transparent); }
+/* v43 sides — первая пара скобкой слева, вторая — справа */
+.pt-r i.pr.pr-r{ left:auto; right:-7px; border-width:0 1.5px 0 0; }
+.pt-r i.pr.pr-r.pr-a{ border-top-width:1.5px; border-radius:0 3px 0 0; }
+.pt-r i.pr.pr-r.pr-b{ border-bottom-width:1.5px; border-radius:0 0 3px 0; }
+/* v44 hover — скобок не видно, у ника значок связи; наведение на игрока пары — её скобка и подсветка строк */
+.pt-r i.pr.pr-h{ opacity:0; transition:opacity .15s; }
+.pt-tm[data-hp="0"] i.pr-h[data-ln="0"], .pt-tm[data-hp="1"] i.pr-h[data-ln="1"]{ opacity:1; }
+.plink{ display:inline-grid; place-items:center; margin-left:4px; color:var(--w-muted-fg); vertical-align:-1px; }
+.pt-r.is-pair{ background:linear-gradient(90deg, #a78bfa14, transparent 70%); }
+.pt-r.is-pair .plink{ color:#a78bfa; }
+/* v45 tag — буква пары цветом после ника */
+.ptag{ display:inline-grid; place-items:center; width:14px; height:14px; margin-left:5px; border-radius:3px; vertical-align:1px; font:700 9px/1 var(--w-font); color:var(--pc); background:color-mix(in srgb, var(--pc) 18%, transparent); }
+
+/* ——— v46+: число у стрелки — маленькое; частые пики и баны — разными способами ——— */
+.pt-tr4 em small, .pt--r4 .pt-li .tr em small{ margin-left:1px; font-size:9px; font-weight:500; }
+/* v47 strip — полоса под шапкой: 5 пиков и 3 бана мини-иконками */
+.pt-dst{ display:flex; align-items:center; gap:3px; height:22px; margin:2px 0 4px; overflow:hidden; }
+.pt-dst .l{ font:var(--t-tag); color:var(--w-muted-fg); margin-right:2px; } .pt-dst img + .l{ margin-left:8px; }
+.pt-dst img{ width:24px; height:14px; border-radius:3px; object-fit:cover; flex:none; }
+.pt-dst img.ban, .pt-dp img.ban{ filter:grayscale(1) brightness(.7); }
+/* v48 tab — кнопка «Драфты» внизу карточки: пики и баны списком на месте состава */
+.pt-dp{ display:flex; flex-direction:column; gap:2px; }
+.pt-dp .lbl{ font:var(--t-label); color:var(--w-muted-fg); margin:6px 0 2px; }
+.pt-dpr{ display:flex; align-items:center; gap:8px; height:24px; }
+.pt-dpr img{ width:32px; height:18px; border-radius:3px; object-fit:cover; flex:none; }
+.pt-dpr span{ flex:1; font:var(--t-cell); text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pt-dpr b{ font:var(--t-num-s); color:var(--w-muted-fg); }
+
+/* ——— v49: второй рейтинг мелко через слэш; тренер — человек в кепке; драфты — заметкой ——— */
+.pt--r4 .pt-rt i.r2{ font-size:10px; color:var(--w-muted-fg); }
+.pt--r4 .pt-rt i.r2::before{ content:'/'; margin:0 2px 0 0; color:var(--w-ring); font-weight:300; }
+.pt--r4 .pt-rt:has(i.r2){ gap:2px; }
+.pt--r10 .pt-r .p.p--co svg{ width:13px; height:13px; color:var(--w-fg); }
+.pt--r10 .pt-r .p.p--co:has(svg){ background:var(--w-muted); }
+.pt-nt.dr2 p{ display:flex; flex-direction:column; gap:4px; }
+.pt-dnh{ font:var(--t-cell); color:var(--w-fg); font-weight:500; }
+.pt-dnl{ font:var(--t-label); color:var(--w-muted-fg); margin-top:4px; }
+.pt-dn{ display:flex; gap:4px; }
+.pt-dn span{ display:flex; flex-direction:column; align-items:center; gap:2px; }
+.pt-dn img{ width:34px; height:19px; border-radius:3px; object-fit:cover; }
+.pt-dn i{ font:500 10px/1 var(--w-font); font-style:normal; color:var(--w-muted-fg); font-variant-numeric:tabular-nums; }
+.pt-dn span.ban img{ filter:grayscale(1) brightness(.75); }
+
+/* ——— v50–v53: драфты в заметках — разные виды; разметка блоками, без flex у текста ——— */
+.pt-nt.dr3 .db{ flex:1; min-width:0; }
+.pt-nt.dr3 .dh{ font:var(--t-cell); font-weight:500; color:var(--w-fg); }
+.pt-nt.dr3 .dl{ font:var(--t-label); color:var(--w-muted-fg); margin:6px 0 4px; }
+.pt-nt.dr3 small{ display:block; font:var(--t-sub); color:var(--w-muted-fg); margin-top:6px; }
+.pt-nt.dr3 img{ display:block; border-radius:3px; object-fit:cover; background:var(--w-muted); }
+.pt-nt.dr3 img.ban{ filter:grayscale(1) brightness(.75); }
+.pt-nt.dr3 i{ font:500 10px/1 var(--w-font); font-style:normal; color:var(--w-muted-fg); font-variant-numeric:tabular-nums; }
+/* v50 tiles — 5 плиток в ряд на всю ширину, число под плиткой */
+.dr3--tiles .dt{ display:grid; grid-template-columns:repeat(5, 1fr); gap:4px; }
+.dr3--tiles .dt > div{ display:grid; justify-items:center; gap:3px; min-width:0; }
+.dr3--tiles .dt img{ width:100%; aspect-ratio:16 / 9; height:auto; }
+/* v51 list — строками: иконка, герой, полоска частоты, число */
+.dr3--list .dr-l{ display:grid; grid-template-columns:28px 1fr 40px 14px; align-items:center; gap:6px; height:20px; }
+.dr3--list .dr-l img{ width:28px; height:16px; }
+.dr3--list .dr-l span{ font:var(--t-sub); color:var(--w-fg); text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dr3--list .dr-l u{ display:block; height:3px; border-radius:2px; background:var(--w-muted); text-decoration:none; overflow:hidden; } .dr3--list .dr-l u b{ display:block; height:100%; background:var(--w-muted-fg); }
+.dr3--list .dr-l i{ text-align:right; }
+/* v52 cols — пики и баны двумя колонками сверху вниз */
+.dr3--cols .dc{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.dr3--cols .dc-r{ display:grid; grid-template-columns:32px auto; align-items:center; gap:6px; height:22px; }
+.dr3--cols .dc-r img{ width:32px; height:18px; }
+/* v53 line — две строки мини-иконок: «Пики …», «Баны …» */
+.dr3--line .dline{ display:flex; align-items:center; gap:3px; margin-top:6px; }
+.dr3--line .dline .dl{ width:34px; margin:0; flex:none; }
+.dr3--line .dline img{ width:28px; height:16px; }
+/* второй рейтинг — ещё мельче */
+.pt--r4 .pt-rt i.r2.r2s{ font-size:9px; }
+
+/* v54 — откуда заметка: только значок (★ редакция · искра — авто), подпись — при наведении; подсказка вправо, внутри карточки */
+.pt-nt .ico[data-tip]{ cursor:help; }
+.w .pt-nt .ico[data-tip]:hover::after{ right:auto; left:0; }
+.pt-nt.ed .ico{ color:var(--w-star); }
+
+/* v55 — у заметки драфтов нет заголовка: значок мечей, подпись при наведении */
+.pt-nt.dr3--ic .ico[data-tip]{ cursor:help; color:var(--w-muted-fg); }
+.pt-nt.dr3--ic .dline:first-child{ margin-top:0; }
+
+/* подсказки у значков заметок: список заметок прокручивается и обрезает всё, что выше, — показываем под значком, в несколько строк */
+.w .pt-nt .ico[data-tip]:hover::after{ top:calc(100% + 4px); bottom:auto; left:0; right:auto; width:max-content; max-width:180px; white-space:normal; }
+
+/* v56 — второй рейтинг без слэша */
+.pt--r4 .pt-rt i.r2.r2ns::before{ content:none; }
+.pt--r4 .pt-rt:has(i.r2ns){ gap:3px; }

@@ -1,0 +1,93 @@
+/* Лаба widget-expand (код — _wx.js): свернуть / раскрыть виджет турнира. Высота — по содержимому, без внутреннего скролла */
+body:has(.wx-page){ margin:0; background:#09090b; color:#fafafa; font-family:var(--w-font); }
+.wx-page{ display:flex; gap:48px; justify-content:center; align-items:flex-start; padding:32px 16px 120px; }
+.wx-col{ display:flex; flex-direction:column; gap:16px; width:340px; }
+.wx-lbl{ font:500 12px/16px var(--w-font); color:#71717a; margin-bottom:-8px; }
+.wx-ph{ display:grid; place-items:center; border:1px solid var(--w-border); border-radius:var(--w-r); background:var(--w-bg); color:#52525b; font:500 13px/18px var(--w-font); }
+
+.wx{ position:relative; }
+.wx-p{ background:var(--w-bg); border:1px solid var(--w-border); border-radius:var(--w-r); overflow:hidden; }
+.wx .w{ width:100%; height:auto; border:0; border-radius:0; } .wx .w-scroll{ height:auto; max-height:none; overflow:visible; }
+.wx .t5-seg, .wx .t5-leg{ display:none; }
+.wx .wx-hid{ display:none; }
+.wx-more{ display:flex; align-items:center; justify-content:center; gap:6px; width:100%; padding:10px 12px; border:0; border-top:1px solid var(--w-border); background:none; color:var(--w-muted-fg); font:500 13px/18px var(--w-font); cursor:pointer; }
+.wx-more:hover{ color:var(--w-fg); background:var(--w-muted); }
+.wx-more svg, .wx-hb svg{ transition:transform .28s; } .wx.is-open .wx-more svg, .wx.is-open .wx-hb svg{ transform:rotate(180deg); }
+/* head */
+.wx-click{ cursor:pointer; } .wx-click:hover{ background:var(--w-muted); }
+.wx-hb{ display:inline-flex; align-items:center; gap:4px; margin-left:auto; padding:4px 6px; border:0; border-radius:6px; background:none; color:var(--w-muted-fg); font:500 12px/16px var(--w-font); cursor:pointer; white-space:nowrap; }
+/* gap */
+.wx-gap td{ padding:0 !important; }
+.wx-gap button{ width:100%; padding:4px 0; border:0; background:none; color:var(--w-muted-fg); font:500 12px/16px var(--w-font); cursor:pointer; text-align:center; letter-spacing:.02em; }
+.wx-gap button:hover{ color:var(--w-fg); background:var(--w-muted); }
+/* over */
+.wx--over .wx-p{ position:absolute; top:0; left:0; right:0; z-index:5; }
+.wx--over.is-open .wx-p{ box-shadow:0 24px 48px rgba(0,0,0,.6), 0 0 0 1px #3f3f46; }
+/* v5 more — как .cd-ft страницы матча («Вокруг матча»): 44 высотой, без стрелки */
+.wx-more--cd{ min-height:44px; padding:0 12px; }
+/* v6 icon — значок в шапке, как у «Участников»; подсказка — data-tip */
+.wx-ic{ position:relative; display:grid; place-items:center; width:28px; height:28px; margin-left:auto; border:0; border-radius:8px; background:var(--w-muted); color:var(--w-muted-fg); cursor:pointer; flex:none; }
+.wx-ic:hover{ color:var(--w-fg); }
+.wx-ic[data-tip]:hover::after{ content:attr(data-tip); position:absolute; top:calc(100% + 6px); right:0; padding:4px 8px; border-radius:6px; background:#27272a; color:#fafafa; font:500 12px/16px var(--w-font); white-space:nowrap; z-index:3; }
+/* v7 row — клик по таблице */
+.wx--row .wx-hb{ pointer-events:none; } .wx--row .t5-tbl.wx-click tbody tr:hover td{ background:var(--w-muted); }
+/* v8 fold — свёрнутая строка, как у драфта (w-draft .wdr-fl) */
+.wx--fold .wx-p > .w{ display:none; } .wx--fold.is-open .wx-p > .w{ display:flex; }
+.wx-fl{ display:flex; align-items:center; gap:8px; width:100%; padding:12px; border:0; background:none; color:inherit; font:500 13px/18px var(--w-font); cursor:pointer; text-align:left; }
+.wx--fold.is-open .wx-fl{ border-bottom:1px solid var(--w-border); }
+.wx-fl > b{ font-weight:600; } .wx-fn{ color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+.wx-fx{ display:inline-flex; align-items:center; gap:4px; flex:none; } .wx-fx .t5-lg{ width:16px; height:16px; }
+.wx-fl em{ margin-left:auto; flex:none; font-style:normal; font-size:12px; color:#a78bfa; }
+.wx--icb .wx-ic{ background:none; border:1px solid var(--w-border); } .wx--icb .wx-ic:hover{ border-color:var(--w-ring); background:var(--w-muted); }
+/* v10: MVP со значком — свёрнут полосой: без фото, сегмента и наклона */
+.wx--mvp .wx-p{ border:0; background:none; overflow:visible; } .wx--mvp .w{ width:100%; }
+.wx--mvp .m6-hd{ display:flex; align-items:center; } .wx--mvp .m6-hd .wx-ic{ margin-left:8px; }
+.wx--mvp.is-c .m6-main{ height:auto !important; } .wx--mvp.is-c .m6-card{ flex:none; height:56px !important; min-height:0 !important; }
+.wx--mvp.is-c .m6-ph, .wx--mvp.is-c .m6-floor, .wx--mvp.is-c .m6-fade, .wx--mvp.is-c .m6-gl, .wx--mvp.is-c .m6-seg{ display:none !important; }
+.wx--mvp.is-c .m6-main, .wx--mvp.is-c .m6-card, .wx--mvp.is-c .m6-c{ transform:none !important; }
+/* v11: любой виджет — свёрнут до шапки */
+.wx--any .wx-p > .w{ width:100%; border:0; border-radius:0; } /* карточка — у .wx-p, как у турнира */ /* виджет ставит свой класс на .wx-w — он и есть .w */
+.wx--any.is-c .wx-p > .w{ height:auto !important; min-height:0 !important; }
+.wx--any:not(.wx--key).is-c .wx-p > .w > :not(.wx-keep){ display:none !important; }
+.wx--any .wx-keep{ display:flex; align-items:center; } .wx--any .wx-keep .wx-ic{ margin-left:8px; }
+/* v12 (WXKey): свёрнут — самое важное, раскрыт — всё; высота по содержимому, без пустого места */
+.wx--key .wx-p > .w, .wx--key .w-scroll{ height:auto !important; max-height:none !important; }
+.wx--key.is-c .s6-none{ flex-direction:row; justify-content:flex-start; align-items:center; gap:8px; min-height:0 !important; height:auto !important; padding:0 12px 12px !important; text-align:left; }
+.wx--key.is-c .s6-none .s6-cap{ display:none; } .wx--key.is-c .s6-none svg{ width:14px; height:14px; color:var(--w-up); }
+.wx--key.is-c .s6-bd{ min-height:0 !important; height:auto !important; padding:0 !important; }
+.wx--key.is-c .t2-th, .wx--key.is-c .t2-r ~ .t2-r{ display:none !important; }
+.wx-col--n > .w{ width:100%; } /* v13: обычные виджеты — во всю колонку */
+/* v14–v16: турнир через wrap — свёрнут до двух команд матча */
+.wx--t4.is-c .t5-tbl tbody tr:not(.is-ctx){ display:none; }
+.wx--t4 .wx-p > .w{ display:flex; }
+/* bar — тонкая полоса со стрелкой внизу */
+.wx-bar{ display:grid; place-items:center; width:100%; height:24px; border:0; border-top:1px solid var(--w-border); background:none; color:var(--w-muted-fg); cursor:pointer; }
+.wx-bar:hover{ color:var(--w-fg); background:var(--w-muted); }
+.wx-bar svg{ transition:transform .28s; } .wx.is-open .wx-bar svg{ transform:rotate(180deg); }
+/* title — стрелка за названием */
+.wx-tl{ cursor:pointer; } .wx-tl:hover{ text-decoration:underline; text-underline-offset:3px; }
+.wx-tt{ display:inline-grid; place-items:center; width:20px; height:20px; margin-left:2px; border:0; border-radius:6px; background:none; color:var(--w-muted-fg); cursor:pointer; flex:none; }
+.wx-tt:hover{ color:var(--w-fg); background:var(--w-muted); }
+.wx-tt svg{ transition:transform .28s; } .wx:not(.is-c) .wx-tt svg{ transform:rotate(180deg); }
+/* v17 corner — нижняя полоса, значок с рамкой справа; подсказка — над значком */
+.wx-ft{ display:flex; justify-content:flex-end; padding:6px 8px; border-top:1px solid var(--w-border); }
+.wx-ft .wx-ic{ margin:0; width:26px; height:26px; } .wx-ft .wx-ic[data-tip]:hover::after{ top:auto; bottom:calc(100% + 6px); }
+/* v18 float — без нижней полосы: значок поверх содержимого справа внизу; свёрнут — полупрозрачный, развёрнут — залит */
+.wx--pos-float .wx-p{ position:relative; }
+.wx-fl2{ position:absolute; right:8px; bottom:8px; z-index:2; width:26px; height:26px; margin:0; transition:background .2s, opacity .2s, color .2s; }
+.wx--pos-float.is-c .wx-fl2{ opacity:.5; background:rgba(9,9,11,.6); backdrop-filter:blur(4px); } .wx--pos-float.is-c .wx-fl2:hover{ opacity:1; }
+.wx--pos-float:not(.is-c) .wx-fl2{ background:var(--w-fg); border-color:var(--w-fg); color:var(--w-bg); }
+.wx-fl2[data-tip]:hover::after{ top:auto; bottom:calc(100% + 6px); }
+/* v19 peek — как float, но снизу запас 14px: значок заходит на содержимое краем; полупрозрачность — фоном с размытием, не opacity (иначе размытия не видно) */
+.wx--pos-peek .wx-p{ position:relative; padding-bottom:14px; }
+.wx--pos-peek .wx-fl2{ bottom:6px; }
+.wx--pos-peek.is-c .wx-fl2{ background:rgba(24,24,27,.55); border-color:rgba(255,255,255,.12); color:var(--w-muted-fg); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
+.wx--pos-peek.is-c .wx-fl2:hover{ color:var(--w-fg); border-color:var(--w-ring); }
+.wx--pos-peek:not(.is-c) .wx-fl2{ background:var(--w-fg); border-color:var(--w-fg); color:var(--w-bg); }
+/* v20 peek2 — свёрнут как v19; раскрыт — снизу место под значок (6 + 26 + 6), значок не заходит на содержимое и обычный: с рамкой, без заливки */
+.wx--pos-peek2 .wx-p{ position:relative; padding-bottom:14px; transition:padding .28s; }
+.wx--pos-peek2:not(.is-c) .wx-p{ padding-bottom:38px; }
+.wx--pos-peek2 .wx-fl2{ bottom:6px; }
+.wx--pos-peek2.is-c .wx-fl2{ background:rgba(24,24,27,.55); border-color:rgba(255,255,255,.12); color:var(--w-muted-fg); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
+.wx--pos-peek2 .wx-fl2:hover{ color:var(--w-fg); border-color:var(--w-ring); }
+.wx--pos-peek2:not(.is-c) .wx-fl2{ background:none; border-color:var(--w-border); color:var(--w-muted-fg); }

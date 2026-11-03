@@ -1,0 +1,134 @@
+/* Шаг 2 лабы gs-match-2: шапка в одну строку + маленькие вкладки карт (код — _hd2.js). Без коробок: шапка — строка на фоне страницы, линия снизу.
+   Высота: строка 48 + вкладки 36 ≈ 84 (с верхним меню ~140); при прокрутке прилипают только вкладки (.h2-stick), верхнее меню уезжает само (pt-off). */
+.h2{ margin:0 0 12px; }
+.h2-row{ display:flex; align-items:center; gap:12px; min-height:48px; }
+.h2-ib{ display:grid; place-items:center; width:32px; height:32px; flex:none; border-radius:var(--w-r-sm); color:var(--w-muted-fg); font-size:20px; }
+.h2-ib:hover{ background:var(--w-muted); color:var(--w-fg); }
+.h2-teams{ display:flex; align-items:center; gap:10px; min-width:0; }
+.h2-tm{ display:inline-flex; align-items:center; gap:8px; min-width:0; font:600 15px/20px var(--w-font); white-space:nowrap; }
+.h2-tm span{ overflow:hidden; text-overflow:ellipsis; }
+.h2-lg{ width:24px; height:24px; flex:none; object-fit:contain; }
+.h2-lg--t{ display:inline-grid; place-items:center; border-radius:6px; background:var(--w-muted); font:600 9px/1 var(--w-font); }
+.h2-lg--s{ width:14px; height:14px; }
+.h2-sc{ display:inline-flex; gap:4px; padding:0 4px; font:700 18px/24px var(--w-font); font-variant-numeric:tabular-nums; }
+.h2-sc i{ font-style:normal; color:var(--w-muted-fg); }
+.h2-meta{ margin-left:auto; font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+
+/* Прилипающие вкладки */
+.h2-stick{ position:sticky; top:0; z-index:6; display:flex; align-items:center; gap:12px; margin:0 -4px; padding:4px; background:color-mix(in srgb, var(--w-page) 92%, transparent);
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid var(--w-border); }
+.h2-tabs{ display:flex; gap:2px; min-width:0; overflow-x:auto; scrollbar-width:none; }
+.h2-tabs::-webkit-scrollbar{ display:none; }
+.h2-t{ display:inline-flex; align-items:center; gap:6px; height:28px; padding:0 10px; border-radius:7px; font:var(--t-seg); color:var(--w-muted-fg); white-space:nowrap; }
+.h2-t b{ font:600 12px/16px var(--w-font); }
+.h2-t:hover:not(:disabled){ color:var(--w-fg); background:var(--w-mid-bg); }
+.h2-t.on{ color:var(--w-fg); background:var(--w-muted); }
+.h2-t:disabled{ opacity:.35; cursor:default; }
+.h2-s{ display:inline-flex; align-items:center; gap:4px; font:var(--t-sub); }
+.h2-live{ display:inline-flex; align-items:center; gap:4px; color:var(--w-down); font:var(--t-live); }
+.h2-live::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--w-down); }
+.h2-dot{ display:inline-block; width:8px; height:8px; border-radius:50%; }
+.h2-dot.is-a{ background:var(--w-up); } .h2-dot.is-b{ background:var(--w-down); }
+.h2-leg{ display:inline-flex; align-items:center; gap:6px; margin-left:auto; font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; }
+.h2-leg .h2-dot + *{ margin-right:6px; }
+
+/* b — всё одной строкой: вкладки справа, строка прилипает целиком */
+.h2--b .h2-stick{ padding:0 4px; }
+.h2--b .h2-meta{ margin-left:0; flex:1; }
+.h2--b .h2-tabs{ margin-left:auto; }
+
+/* d — турнир мелко сверху, ниже одной строкой команды и вкладки */
+.h2-crumb{ display:flex; align-items:center; gap:8px; height:32px; font:var(--t-sub); color:var(--w-muted-fg); }
+.h2-crumb .h2-ib{ width:24px; height:24px; font-size:16px; margin-left:-4px; }
+.h2--d .h2-stick .h2-row{ width:100%; min-height:44px; }
+.h2--d .h2-tabs{ margin-left:auto; }
+
+/* Телефон: турнир — второй строкой, вкладки под командами */
+body:not(.is-desk) .h2-row{ flex-wrap:wrap; gap:8px; }
+body:not(.is-desk) .h2-meta{ order:3; flex-basis:100%; margin:-6px 0 4px 44px; }
+body:not(.is-desk) .h2--b .h2-tabs, body:not(.is-desk) .h2--d .h2-tabs{ flex-basis:100%; margin:0 0 4px; }
+body:not(.is-desk) .h2-leg{ display:none; }
+
+/* e–h: вкладки как в браузере / редакторе — активная вкладка «сливается» с линией под полосой */
+.h2-bts{ display:flex; align-items:flex-end; gap:2px; min-width:0; overflow-x:auto; scrollbar-width:none; border-bottom:1px solid var(--w-border); }
+.h2-bts::-webkit-scrollbar{ display:none; }
+.h2-bt{ position:relative; display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 14px; margin-bottom:-1px; border:1px solid transparent; border-bottom:0;
+  border-radius:8px 8px 0 0; font:var(--t-seg); color:var(--w-muted-fg); white-space:nowrap; }
+.h2-bt span{ font:600 13px/18px var(--w-font); }
+.h2-bt small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.h2-bt:hover:not(:disabled){ color:var(--w-fg); background:var(--w-mid-bg); }
+.h2-bt.on{ color:var(--w-fg); background:var(--w-page); border-color:var(--w-border); }
+.h2-bt.on::after{ content:''; position:absolute; left:0; right:0; bottom:-1px; height:2px; background:var(--w-page); }
+.h2-bt:disabled{ opacity:.35; cursor:default; }
+.h2-bt + .h2-bt:not(.on)::before{ content:''; position:absolute; left:-1px; top:10px; bottom:10px; width:1px; background:var(--w-border); }
+.h2-bt.on + .h2-bt::before{ display:none; }
+.h2-bdot{ width:8px; height:8px; border-radius:50%; background:var(--w-down); box-shadow:0 0 0 3px color-mix(in srgb, var(--w-down) 25%, transparent); }
+.h2-bic{ font-style:normal; color:var(--w-muted-fg); width:14px; text-align:center; }
+.h2-live2{ color:var(--w-down) !important; font:var(--t-live) !important; }
+.h2-cr{ display:flex; align-items:center; gap:8px; min-height:40px; font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; }
+.h2-cr > i{ font-style:normal; opacity:.6; }
+.h2-cr b{ display:inline-flex; color:var(--w-fg); }
+.h2-cr .h2-tm{ font:600 13px/18px var(--w-font); } .h2-cr .h2-lg{ width:18px; height:18px; } .h2-cr .h2-sc{ font:700 14px/18px var(--w-font); }
+.h2-cr .h2-ib{ width:24px; height:24px; font-size:16px; margin-left:-4px; }
+.h2-bo{ padding:0 6px; border-radius:4px; background:var(--w-muted); color:var(--w-fg); font:var(--t-tag); }
+.h2--e .h2-stick, .h2--f .h2-stick, .h2--g .h2-stick, .h2--h .h2-stick{ padding:6px 4px 0; border-bottom:0; }
+/* g — Chrome: полоса вкладок темнее, страница под ней — со строкой пути, как адресная строка */
+.h2--g .h2-stick{ background:color-mix(in srgb, var(--w-muted) 70%, var(--w-page)); border-radius:var(--w-r) var(--w-r) 0 0; margin:0; padding:6px 6px 0; }
+.h2--g .h2-bts{ border-bottom:0; } .h2--g .h2-bt.on{ background:var(--w-bg); border-color:transparent; } .h2--g .h2-bt.on::after{ background:var(--w-bg); }
+.h2-page{ padding:0 12px; background:var(--w-bg); border-radius:0 0 var(--w-r) var(--w-r); border:1px solid var(--w-border); border-top:0; }
+.h2--g .h2-cr{ min-height:44px; }
+/* h — закреплённая первая вкладка: матч и счёт */
+.h2-pin{ display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 14px 0 4px; margin-right:6px; border-right:1px solid var(--w-border); flex:none; }
+.h2-pin .h2-tm{ font:600 14px/18px var(--w-font); } .h2-pin .h2-lg{ width:20px; height:20px; }
+.h2-sub{ padding:8px 4px 0; font:var(--t-sub); color:var(--w-muted-fg); }
+body:not(.is-desk) .h2-bt{ padding:0 10px; height:34px; } body:not(.is-desk) .h2-bt small{ display:none; }
+body:not(.is-desk) .h2-cr .h2-bo, body:not(.is-desk) .h2-cr > span:nth-of-type(2), body:not(.is-desk) .h2-cr > i:nth-of-type(2){ display:none; }
+body:not(.is-desk) .h2-pin .h2-tm span{ display:none; }
+
+/* i: серая полоса турнира сверху; в главной колонке — окно браузера: полоса вкладок карт и «страница», внутри — график и драфт без своих рамок */
+.h2--i .h2-bar{ padding:0 12px; border-radius:var(--w-r); background:color-mix(in srgb, var(--w-muted) 70%, var(--w-page)); }
+.h2--i .h2-cr{ min-height:48px; }
+.bw{ border-radius:var(--w-r); overflow:hidden; border:1px solid var(--w-border); }
+.bw > .h2-bts{ position:sticky; top:0; z-index:6; padding:6px 6px 0; border-bottom:0; background:color-mix(in srgb, var(--w-muted) 70%, var(--w-page)); }
+.bw > .h2-bts .h2-bt.on{ background:var(--w-bg); border-color:transparent; } .bw > .h2-bts .h2-bt.on::after{ background:var(--w-bg); }
+.bw-page{ display:flex; flex-direction:column; background:var(--w-bg); }
+.bw-page > *{ margin:0 !important; }
+.bw-page > * + *{ border-top:1px solid var(--w-border) !important; }
+.bw-page .cd, .bw-page .gw{ border:0 !important; border-radius:0 !important; background:none !important; box-shadow:none !important; }
+.gm-main:has(> .bw){ overflow:visible; }
+
+/* j: шапки во всю ширину нет — серая полоса с путём наверху окна в главной колонке, над вкладками; правая колонка начинается вровень */
+.bw-bar{ padding:0 12px; background:color-mix(in srgb, var(--w-muted) 70%, var(--w-page)); }
+.bw-bar .h2-cr{ min-height:44px; }
+.bw-bar + .h2-bts{ padding-top:0 !important; }
+
+/* v14–v16: серая полоса в две строки — турнир сверху мелко, матч ниже; «назад» и «поделиться» — заметными кнопками */
+.bj{ display:flex; align-items:center; gap:12px; min-height:60px; padding:8px 12px !important; }
+.bj-t{ display:flex; flex-direction:column; gap:2px; min-width:0; flex:1; }
+.bj-t small{ font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.bj-t b{ display:flex; }
+.bj-t .h2-tm{ font:600 16px/22px var(--w-font); } .bj-t .h2-lg{ width:22px; height:22px; } .bj-t .h2-sc{ font:700 18px/22px var(--w-font); }
+.bj-b{ display:inline-grid; place-items:center; width:36px; height:36px; flex:none; border-radius:10px; background:var(--w-bg); border:1px solid var(--w-border); color:var(--w-fg); font-size:20px; line-height:1; }
+.bj-b:hover{ background:var(--w-muted); }
+.bj-b--pill{ display:inline-flex; align-items:center; gap:6px; width:auto; padding:0 14px; font:var(--t-btn); }
+.bj-b--pill span{ font-size:18px; margin-top:-2px; }
+.bj--center .bj-t{ align-items:center; text-align:center; }
+.bj--center .bj-b:first-child{ margin-right:auto; }
+.bj--center .bj-t b{ justify-content:center; }
+body:not(.is-desk) .bj-b--pill{ width:36px; padding:0; justify-content:center; font-size:0; } body:not(.is-desk) .bj-b--pill span{ font-size:20px; }
+body:not(.is-desk) .bj-t .h2-tm{ font-size:14px; }
+
+/* v17–v18: вкладки на всю ширину поровну; nosep — без разделителей между вкладками */
+.h2-bts--fill .h2-bt{ flex:1; justify-content:center; min-width:0; }
+.h2-bts--fill .h2-bt span, .h2-bts--fill .h2-bt small{ overflow:hidden; text-overflow:ellipsis; }
+.h2-bts--nosep .h2-bt::before{ display:none !important; }
+
+/* v19: вкладки от края до края окна — без боковых отступов полосы; у крайних вкладок внешний угол прямой */
+.bw > .h2-bts.h2-bts--flush{ padding-left:0; padding-right:0; gap:0; }
+.h2-bts--flush .h2-bt:first-child{ border-top-left-radius:0; border-left:0; }
+.h2-bts--flush .h2-bt:last-child{ border-top-right-radius:0; border-right:0; }
+
+/* v20: кнопки «назад» и «поделиться» — меньше (30) и тише: без рамки, лёгкий фон, иконка серая; значок ровно по центру (SVG, блоком) */
+.bj--soft .bj-b{ width:30px; height:30px; border:0; border-radius:8px; background:rgba(255,255,255,.05); color:var(--w-muted-fg); padding:0; }
+.bj--soft .bj-b:hover{ background:rgba(255,255,255,.1); color:var(--w-fg); }
+.bj--soft .bj-b svg{ display:block; }

@@ -1,0 +1,79 @@
+/* Страница новостей (лаба news-page, v18+). Каркас и шапка портала — ../gs-tournament/_ours.css (как страница турнира); поповеры — ../widget-news/_feed.css.
+   Строго (дирижёр 30.10): линии вместо карточек, заголовки одного размера, без подсветки — цветом только буква ранга (как виджет v36). */
+.np-h{ display:flex; align-items:baseline; gap:12px; margin:8px 0 16px; }
+.np-h h1{ margin:0; font:700 24px/32px var(--w-font); }
+.np-h small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.is-desk .np-h{ margin:16px 0 24px; } .is-desk .np-h h1{ font-size:32px; line-height:40px; }
+.w.np-card{ width:auto; }
+.np-hd-s{ margin-left:8px; font:var(--t-sub); color:var(--w-muted-fg); }
+
+/* значки: ранг светящейся буквой, точка темы, «слух», читают и время — моно */
+.np-rk{ display:inline-block; flex:none; margin-right:6px; font:900 15px/1 var(--w-font); font-style:normal; cursor:help; }
+.np-rk.t-S{ color:#fde047; text-shadow:0 0 6px #facc15, 0 0 14px #f59e0bcc; }
+.np-rk.t-A{ color:#f0abfc; text-shadow:0 0 6px #e879f9, 0 0 12px #a855f7aa; }
+.np-rk.t-B{ color:#93c5fd; text-shadow:0 0 6px #3b82f6cc; }
+.np-rk.t-C{ color:#71717a; }
+.np-td{ display:inline-block; flex:none; width:6px; height:6px; border-radius:50%; background:var(--tc); cursor:help; }
+.np-mm{ display:inline-flex; align-items:center; gap:8px; font:500 11px/1 ui-monospace, "SF Mono", Menlo, monospace; color:var(--w-muted-fg); white-space:nowrap; }
+.np-mm .f-heat{ display:inline-flex; align-items:center; gap:2px; cursor:help; }
+.np-rum{ display:inline-grid; place-items:center; width:14px; height:14px; border-radius:50%; background:#f59e0b26; color:#fbbf24; font:700 10px/1 var(--w-font); font-style:normal; cursor:help; }
+.np-tn{ font:500 12px/1 var(--w-font); color:var(--w-muted-fg); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.np-lede{ font:400 13px/19px var(--w-font); color:var(--w-muted-fg); display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+
+/* бегущая строка — одна, сверху: слабые (C) и не вошедшие в блоки */
+@keyframes nptape{ to{ transform:translateX(-50%); } }
+.np-tk{ position:relative; overflow:hidden; height:36px; margin-bottom:12px; border:1px solid var(--w-border); border-radius:var(--w-r-sm); background:var(--w-bg);
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 32px, #000 calc(100% - 32px), transparent); }
+.is-desk .np-tk{ margin-bottom:16px; }
+.np-tk__in{ display:flex; width:max-content; height:100%; animation:nptape var(--d) linear infinite; } .np-tk:hover .np-tk__in{ animation-play-state:paused; }
+.np-tk a{ display:inline-flex; align-items:center; gap:8px; padding:0 18px; font:500 12px/1 var(--w-font); color:var(--w-fg); white-space:nowrap; } .np-tk a:hover{ color:var(--w-muted-fg); }
+.np-tk a + a{ border-left:1px solid #ffffff10; }
+.np-tk time{ font:500 10px/1 ui-monospace, "SF Mono", Menlo, monospace; color:#71717a; }
+.np-tk .np-rk{ margin:0; font-size:12px; }
+
+/* панель: вид + ранг (прилипает) */
+.np-fb{ position:sticky; top:0; z-index:6; display:flex; gap:8px; margin:0 0 12px; padding:8px 0; background:color-mix(in srgb, var(--w-page) 90%, transparent); backdrop-filter:blur(12px); }
+.is-desk .np-fb{ margin-bottom:16px; gap:16px; }
+.np-sg{ margin:0; flex:1; } .is-desk .np-sg{ flex:none; width:300px; }
+.np-sg button{ height:28px; border-radius:6px; font:500 12px/1 var(--w-font); color:var(--w-muted-fg); } .np-sg button.is-on{ background:var(--w-muted); color:var(--w-fg); }
+
+/* группа: шапка (тема / ранг / день) + блок */
+.np-lay .top-r{ order:1; } .is-desk .np-lay .top-r{ order:0; }
+.np-sec{ margin-bottom:12px; overflow:hidden; border-radius:var(--w-r); border:1px solid var(--w-border); background:var(--w-bg); } .is-desk .np-sec{ margin-bottom:20px; }
+.np-tc__h, .np-rs__h, .np-ds__h{ display:flex; align-items:baseline; gap:8px; padding:12px 16px; }
+.np-tc__h .np-td{ align-self:center; } .np-tc__h b, .np-ds__h b{ font:700 15px/20px var(--w-font); white-space:nowrap; }
+.np-tc__h small{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:var(--t-sub); color:var(--w-muted-fg); }
+.np-tc__n, .np-rs__h small{ margin-left:auto; font:500 11px/1 ui-monospace, "SF Mono", Menlo, monospace; color:var(--w-muted-fg); }
+.np-tc__n{ cursor:help; }
+.np-ds__h small{ font:500 11px/1 ui-monospace, "SF Mono", Menlo, monospace; color:var(--w-muted-fg); }
+.np-rs__h{ align-items:center; } .np-rs__h .np-rk{ margin:0; font-size:22px; } .np-rs__h b:not(.np-rk){ font:600 14px/1 var(--w-font); }
+
+/* блок: колонки «4 мелких | большая | 2 средние»; линии — зазор 1px на фоне рамки */
+.np-g{ border-top:1px solid var(--w-border); background:var(--w-border); }
+.np-g--1{ display:grid; grid-template-columns:1fr; gap:1px; }
+.np-cols{ display:grid; gap:1px; }
+.np-col{ display:flex; flex-direction:column; gap:1px; min-width:0; }
+.np-col > .np-c{ flex:1 1 auto; }
+.np-c{ display:flex; flex-direction:column; gap:10px; min-width:0; padding:12px 16px; color:inherit; background:var(--w-bg); }
+.np-c:hover{ background:var(--w-mid-bg); }
+.np-c__b{ display:flex; flex-direction:column; gap:6px; flex:1; min-width:0; }
+.np-c__t{ font:600 15px/21px var(--w-font); }
+.np-it__m{ display:flex; align-items:center; gap:8px; margin-top:auto; min-width:0; }
+/* главная: фото на всю ячейку, снизу затемнение, текст на фото */
+.np-lead{ position:relative; overflow:hidden; justify-content:flex-end; }
+.np-lead > img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform .4s ease; }
+.np-lead.has-img::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, transparent 30%, #000000b3 62%, #000000f2); }
+.np-lead.has-img:hover > img{ transform:scale(1.03); }
+.np-lead .np-c__b{ position:relative; z-index:1; flex:none; margin-top:auto; padding-top:8px; }
+.np-lead.has-img .np-c__t{ text-shadow:0 1px 8px #0009; }
+.np-lead.has-img .np-lede{ color:#e4e4e7cc; }
+.np-lead.has-img .np-mm, .np-lead.has-img .np-tn{ color:#d4d4d8; }
+.np-col--lead .np-lead{ min-height:360px; }
+.np-cols.is-1 .np-lead{ min-height:0; aspect-ratio:21/9; } /* одна новость в блоке — на всю ширину, не выше 21:9 */
+.np-g--1 .np-lead{ min-height:0; aspect-ratio:4/3; }
+/* средняя: фото сверху 16:9 */
+.np-mid > img{ width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:6px; background:var(--w-muted); }
+
+/* правая колонка: турниры, трансферы */
+.np-side{ display:flex; flex-direction:column; gap:12px; } .is-desk .np-side{ gap:20px; position:static; }
+.np-side > .w, .np-side #np-t4, .np-side #np-tr{ width:100%; }

@@ -1,0 +1,48 @@
+/* w-gold — виджет «Перевес по золоту» (_wgold.js): один CSS для лабы w-gold и страницы матча. Цвета — токены виджетов (widget-tournament/_w.css). */
+.gw, .wg-pip{ --up:#22c55e; --dn:#ef4444; --up-f:rgba(34,197,94,.22); --dn-f:rgba(239,68,68,.22); --grid:#1f1f23; --axis:#71717a; }
+.gw .num, .wg-pip .num{ font-variant-numeric:tabular-nums; }
+.gw{ font:13px/1.35 var(--w-font); color:var(--w-fg); display:flex; gap:8px; padding:8px; background:var(--w-bg); border:1px solid var(--w-border); border-radius:var(--w-r); position:relative; }
+/* колонка кнопок слева, как в образце: золото · события · трансляция */
+.gw-rail{ display:flex; flex-direction:column; gap:4px; padding:4px; border-radius:10px; background:#111114; align-self:flex-start; }
+.gw-rail button{ width:32px; height:32px; display:grid; place-items:center; border:0; border-radius:8px; background:none; color:var(--w-muted-fg); cursor:pointer; }
+.gw-rail button:hover{ background:var(--w-muted); color:var(--w-fg); }
+.gw-rail button.on{ color:#a78bfa; background:#1c1b26; }
+.gw-rail svg{ width:18px; height:18px; }
+.gw-plot{ flex:1; min-width:0; position:relative; }
+.gw-plot svg{ display:block; width:100%; overflow:visible; }
+.gw-plot text{ font:11px var(--w-font); fill:var(--axis); }
+.gw-plot .tx-now{ fill:var(--w-fg); font-weight:600; }
+
+/* команды у графика: сверху Radiant, снизу Dire */
+.tm{ position:absolute; left:40px; display:flex; align-items:center; gap:6px; font-size:12px; color:var(--w-fg); pointer-events:none; }
+.tm img{ width:16px; height:16px; object-fit:contain; } .tm i{ width:6px; height:6px; border-radius:50%; }
+.tm--a{ top:4px; } .tm--a i{ background:var(--up); } .tm--b i{ background:var(--dn); }
+.cap{ position:absolute; right:0; top:4px; font-size:11px; color:var(--axis); pointer-events:none; }
+
+/* метка на конце линии: время + перевес */
+.end{ position:absolute; display:flex; gap:8px; align-items:center; height:22px; padding:0 8px; border-radius:6px; background:#000c; border:1px solid var(--w-border);
+  font-size:12px; white-space:nowrap; transform:translate(-100%,-50%); margin-left:-10px; pointer-events:none; }
+.end .up{ color:var(--up); } .end .dn{ color:var(--dn); }
+.dot-live{ animation:pl 1.4s ease-in-out infinite; } @keyframes pl{ 50%{ opacity:.35; } }
+
+/* ромб убийств → список смертей */
+.dm{ cursor:pointer; } .dm:hover rect, .dm.on rect{ stroke:var(--w-fg); }
+.pop{ position:absolute; z-index:5; width:240px; padding:8px 0; border-radius:10px; background:#18181b; border:1px solid var(--w-border); box-shadow:0 12px 32px #000a; }
+.pop b{ display:block; padding:0 12px 6px; font-weight:500; }
+.pop .r{ display:flex; align-items:center; gap:10px; padding:3px 12px; border-left:3px solid transparent; }
+.pop .r.a{ border-color:var(--up); } .pop .r.b{ border-color:var(--dn); }
+.pop .r img{ width:22px; height:22px; border-radius:4px; } .pop .r small{ color:var(--w-muted-fg); width:38px; }
+
+.empty{ position:absolute; inset:0; display:grid; place-items:center; color:var(--w-muted-fg); font-size:13px; pointer-events:none; }
+
+/* трансляция — мини-окно в углу без звука */
+.wg-pip{ position:fixed; right:16px; bottom:16px; z-index:20; width:256px; aspect-ratio:16/9; border-radius:10px; overflow:hidden; border:1px solid var(--w-border);
+  background:linear-gradient(135deg,#1e293b,#0f172a); box-shadow:0 16px 40px #000c; }
+.wg-pip span{ position:absolute; left:8px; bottom:8px; font-size:11px; color:#cbd5e1; } .wg-pip span::before{ content:'● '; color:var(--dn); }
+.wg-pip button{ position:absolute; right:6px; top:6px; width:24px; height:24px; border:0; border-radius:6px; background:#0008; color:#fff; cursor:pointer; }
+@media (max-width:799px){ .wg-pip{ width:180px; } }
+
+/* gs-match-2 шаг 3 (o.rail = top): кнопки — маленькой группой справа сверху, график на всю ширину; подпись «Золото · карта» — левее группы */
+.gw--top .gw-rail{ position:absolute; top:6px; right:6px; z-index:2; flex-direction:row; gap:2px; padding:2px; background:rgba(17,17,20,.85); }
+.gw--top .gw-rail button{ width:26px; height:26px; } .gw--top .gw-rail svg{ width:15px; height:15px; }
+.gw--top .gw-plot{ flex:1; } .gw--top .cap{ right:96px; top:10px; }

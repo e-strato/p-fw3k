@@ -1,0 +1,193 @@
+/* Лаба «Шапка портала» — стили кадра (_frame.html). Цвета — токены сайта; цвет игры — от токенов сайта, своих литералов нет.
+   Десктоп — .ph-desk (шапка варианта); телефон (до 860px) — .ph-m сверху и .ph-tab снизу, как у сайта. */
+.ph-body { --g-cs: var(--c-stat-mid); --g-dota: var(--c-live); --g-lol: var(--c-tier-elite); --g-val: var(--c-glitch-a); --g-mlbb: var(--c-team-tl);
+  margin: 0; background: var(--c-ui-bg); color: var(--c-text); font-family: var(--font); }
+.ph-body [hidden] { display: none !important; }
+.ph-body a { color: inherit; text-decoration: none; }
+.ph-body button { font-family: inherit; color: inherit; cursor: pointer; }
+.ph-in { max-width: 1480px; margin: 0 auto; padding: 0 var(--gutter); }
+
+/* Знак игры — цветной монограммный квадрат */
+.ph-g { display: inline-grid; place-items: center; flex: none; width: 22px; height: 22px; border-radius: 6px; font-style: normal; font-size: 9.5px; font-weight: 800; letter-spacing: -.02em;
+  color: var(--c-card-dark-text); background: var(--g, var(--c-ui-item)); }
+.ph-g--cs { --g: var(--g-cs); } .ph-g--dota { --g: var(--g-dota); color: var(--c-white); } .ph-g--lol { --g: var(--g-lol); }
+.ph-g--val { --g: var(--g-val); color: var(--c-white); } .ph-g--mlbb { --g: var(--g-mlbb); color: var(--c-white); } .ph-g--all { --g: var(--c-ui-hover); color: var(--c-text); }
+.ph-g--sm { width: 18px; height: 18px; border-radius: 5px; font-size: 8px; }
+.ph-g--xs { width: 14px; height: 14px; border-radius: 4px; font-size: 6.5px; }
+
+/* Бренд, пользователь, разделы */
+.ph-brand { display: inline-flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; letter-spacing: -.03em; white-space: nowrap; }
+.ph-brand__mark { width: 22px; height: 22px; border-radius: 6px; background: conic-gradient(from 210deg, var(--c-accent), var(--c-tier-elite), var(--c-accent)); rotate: 45deg; scale: .8; }
+.ph-user { display: flex; align-items: center; gap: 12px; }
+.ph-coins { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: var(--fs-app-md); color: var(--c-coin); }
+.ph-coins i { width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, var(--c-tier-gold-hi), var(--c-coin) 55%, var(--c-tier-gold-2)); }
+.ph-ava { width: 34px; height: 34px; border: 0; border-radius: 50%; background: linear-gradient(135deg, var(--c-accent), var(--c-accent-disabled)); font-size: 12px; font-weight: 700; }
+.ph-ico { width: 36px; height: 36px; flex: none; border: 0; border-radius: 8px; background: var(--c-ui-item); font-size: 17px; }
+.ph-nav { display: flex; gap: 2px; }
+.ph-nav a { padding: 8px 14px; border-radius: 6px; font-size: var(--fs-app-md); font-weight: 500; color: var(--c-ui-dim); white-space: nowrap; }
+.ph-nav a:hover { color: var(--c-text); }
+.ph-nav a[aria-current] { color: var(--c-text); background: var(--c-ui-item); font-weight: 600; }
+.ph-search { display: flex; align-items: center; gap: 10px; flex: 0 1 420px; height: 38px; padding: 0 14px; border-radius: 8px; background: var(--c-ui-panel); color: var(--c-ui-dim); }
+.ph-search input { flex: 1; min-width: 0; border: 0; background: none; color: var(--c-text); font: inherit; font-size: var(--fs-app-md); outline: 0; }
+
+/* Игры чипами */
+.ph-games { display: flex; gap: 6px; }
+.ph-games button { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px 0 8px; border: 0; border-radius: 8px; background: var(--c-ui-panel);
+  font-size: var(--fs-app-sm); font-weight: 600; color: var(--c-muted); white-space: nowrap; }
+.ph-games button:first-child { padding-left: 12px; }
+.ph-games button:hover { background: var(--c-ui-item); color: var(--c-text); }
+.ph-games button[aria-pressed="true"] { background: var(--c-ui-hover); color: var(--c-text); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-accent) 60%, transparent); }
+.ph-games small { min-width: 18px; padding: 1px 5px; border-radius: 9px; background: color-mix(in srgb, var(--c-live) 22%, transparent); color: var(--c-live); font-size: 11px; font-weight: 700; text-align: center; }
+.ph-games--scroll { overflow-x: auto; scrollbar-width: none; padding: 0 16px 12px; }
+
+/* Вход в фэнтези: раскрытая панель */
+.ph-fan-wrap { position: relative; margin-left: auto; }
+.ph-fan-panel { position: absolute; right: 0; top: calc(100% + 10px); z-index: 30; display: grid; grid-template-columns: 280px 240px; gap: 8px; padding: 8px; border-radius: 14px;
+  background: var(--c-ui-panel); box-shadow: 0 0 0 1px var(--c-ui-line), 0 30px 60px -20px var(--c-black); }
+.ph-fan-day { display: grid; align-content: start; gap: 8px; padding: 18px; border-radius: 10px;
+  background: radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--c-accent) 45%, transparent), transparent 70%), var(--c-ui-item); }
+.ph-fan-day b { font-size: var(--fs-app-md); } .ph-fan-day > span { color: var(--c-muted); font-size: var(--fs-app-sm); line-height: 1.45; }
+.ph-fan-day .btn { justify-self: start; margin-top: 6px; }
+.ph-fan-ava, .ph-pill__ava { display: flex; align-items: center; }
+.ph-fan-ava i, .ph-pill__ava i { display: grid; place-items: center; width: 26px; height: 26px; margin-right: -6px; border-radius: 50%; border: 2px solid var(--c-ui-item);
+  background: linear-gradient(160deg, var(--c-card-from), var(--c-card-to)); font-size: 10px; font-style: normal; font-weight: 800; }
+.ph-fan-ava em { margin-left: 14px; font-style: normal; font-size: var(--fs-app-sm); color: var(--c-text); }
+.ph-fan-list { margin: 0; padding: 0; list-style: none; display: grid; }
+.ph-fan-list a { display: flex; justify-content: space-between; gap: 10px; padding: 9px 12px; border-radius: 8px; font-size: var(--fs-app-md); font-weight: 500; }
+.ph-fan-list a:hover { background: var(--c-ui-item); }
+.ph-fan-list small { color: var(--c-ui-dim); font-size: var(--fs-app-sm); }
+
+/* ——— v1 · Три строки ——— */
+.ph--v1 { padding-top: 18px; background: var(--c-ui-bg); }
+.ph-row { display: flex; align-items: center; gap: 20px; }
+.ph--v1 .ph-row--top { margin-bottom: 16px; } .ph--v1 .ph-row--top .ph-search { margin-left: 24px; } .ph--v1 .ph-user { margin-left: auto; }
+.ph--v1 .ph-row--nav { padding-bottom: 12px; border-bottom: 1px solid var(--c-ui-line); }
+.ph--v1 .ph-row--games { padding-top: 12px; padding-bottom: 12px; }
+.ph-fan-btn { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px 0 16px; border: 0; border-radius: 8px;
+  background: linear-gradient(135deg, var(--c-accent), color-mix(in srgb, var(--c-accent) 55%, var(--c-tier-elite))); color: var(--c-on-accent); font-size: var(--fs-app-md); font-weight: 700; }
+.ph-fan-btn small { padding: 1px 6px; border-radius: 9px; background: color-mix(in srgb, var(--c-black) 30%, transparent); font-size: 11px; }
+.ph-fan-btn b { font-size: 10px; opacity: .8; transition: rotate .2s; } .ph-fan-btn[aria-expanded="true"] b { rotate: 180deg; }
+
+/* ——— v2 · Полоса игр сверху + режим ——— */
+.ph-rail { background: var(--c-ui-chip); border-bottom: 1px solid var(--c-ui-line); }
+.ph-rail__in { display: flex; align-items: center; gap: 4px; height: 40px; }
+.ph-rail button { display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 12px; border: 0; border-bottom: 2px solid transparent; background: none;
+  font-size: var(--fs-app-sm); font-weight: 600; color: var(--c-ui-dim); }
+.ph-rail button:hover { color: var(--c-text); }
+.ph-rail button[aria-pressed="true"] { color: var(--c-text); border-bottom-color: var(--c-accent); }
+.ph-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c-live); }
+.ph-rail__note { margin-left: auto; color: var(--c-ui-dim); font-size: var(--fs-app-sm); }
+.ph--v2 .ph-row--main { height: 68px; } .ph--v2 .ph-nav { margin-left: 16px; } .ph--v2 .ph-mode { margin-left: auto; }
+.ph-mode { display: inline-flex; gap: 2px; padding: 3px; border-radius: 9px; background: var(--c-ui-chip); }
+.ph-mode button { height: 32px; padding: 0 14px; border: 0; border-radius: 7px; background: none; font-size: var(--fs-app-sm); font-weight: 600; color: var(--c-ui-dim); }
+.ph-mode button[aria-pressed="true"] { background: var(--c-ui-hover); color: var(--c-text); }
+.ph-mode button[data-mode="fantasy"][aria-pressed="true"] { background: var(--c-accent); color: var(--c-on-accent); }
+.ph--v2 { transition: background .4s; }
+.ph--v2.is-fantasy, .ph-m--v2.is-fantasy { background: linear-gradient(180deg, color-mix(in srgb, var(--c-accent) 18%, var(--c-ui-bg)), var(--c-ui-bg)); }
+.ph--v2.is-fantasy .ph-rail { background: color-mix(in srgb, var(--c-accent) 10%, var(--c-ui-chip)); }
+.ph--v2.is-fantasy .ph-nav a[aria-current] { background: color-mix(in srgb, var(--c-accent) 30%, var(--c-ui-item)); }
+
+/* ——— v3 · Одна строка ——— */
+.ph--v3 { border-bottom: 1px solid var(--c-ui-line); }
+.ph--v3 .ph-row--one { height: 72px; gap: 14px; }
+.ph-pick-wrap { position: relative; }
+.ph-pick { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px 0 9px; border: 0; border-radius: 8px; background: var(--c-ui-item); font-size: var(--fs-app-md); font-weight: 600; white-space: nowrap; }
+.ph-pick b { font-size: 10px; color: var(--c-ui-dim); }
+.ph-pop { position: absolute; left: 0; top: calc(100% + 8px); z-index: 30; display: grid; width: 260px; padding: 6px; border-radius: 12px; background: var(--c-ui-panel); box-shadow: 0 0 0 1px var(--c-ui-line), 0 30px 60px -20px var(--c-black); }
+.ph-pop button { display: grid; grid-template-columns: 22px 1fr auto; align-items: center; gap: 10px; padding: 9px 10px; border: 0; border-radius: 8px; background: none; font-size: var(--fs-app-md); font-weight: 600; text-align: left; }
+.ph-pop button:hover { background: var(--c-ui-item); } .ph-pop button[aria-pressed="true"] { background: var(--c-ui-hover); }
+.ph-pop small { color: var(--c-ui-dim); font-size: 12px; font-weight: 500; }
+.ph--v3 .ph-nav { margin-left: 8px; }
+.ph-pill { display: inline-flex; align-items: center; gap: 10px; height: 40px; padding: 0 16px 0 8px; border: 0; border-radius: 999px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--c-accent) 32%, var(--c-ui-item)), var(--c-ui-item)); font-size: var(--fs-app-md); font-weight: 700; white-space: nowrap; }
+.ph-pill small { color: var(--c-muted); font-size: 12px; font-weight: 500; }
+.ph-pill__ava i { width: 26px; height: 26px; border-color: var(--c-ui-item); }
+.ph-pill__star { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--c-accent); color: var(--c-on-accent); font-size: 13px; }
+.ph-pill[aria-expanded="true"] { box-shadow: inset 0 0 0 1px var(--c-accent); }
+
+/* ——— v4 · Шапка + лента матчей ——— */
+.ph--v4 .ph-row--main { height: 72px; } .ph--v4 .ph-nav { margin-left: 16px; }
+.ph-card { display: inline-flex; align-items: center; gap: 12px; height: 48px; padding: 0 16px 0 10px; border: 0; border-radius: 12px; text-align: left;
+  background: radial-gradient(110% 140% at 0% 0%, color-mix(in srgb, var(--c-accent) 40%, transparent), transparent 70%), var(--c-ui-panel); box-shadow: inset 0 0 0 1px var(--c-ui-line); }
+.ph-card > span:last-child { display: grid; gap: 2px; } .ph-card b { font-size: var(--fs-app-md); } .ph-card small { color: var(--c-muted); font-size: 12px; }
+.ph-card .ph-pill__ava i { border-color: var(--c-ui-panel); }
+.ph-ticker { background: var(--c-ui-band); border-block: 1px solid var(--c-ui-line); }
+.ph-ticker__in { display: flex; align-items: center; gap: 14px; height: 52px; }
+.ph-tfilter { display: flex; gap: 2px; flex: none; padding: 3px; border-radius: 8px; background: var(--c-ui-chip); }
+.ph-tfilter button { display: grid; place-items: center; min-width: 30px; height: 28px; padding: 0 6px; border: 0; border-radius: 6px; background: none; font-size: 12px; font-weight: 600; color: var(--c-ui-dim); }
+.ph-tfilter button[aria-pressed="true"] { background: var(--c-ui-hover); color: var(--c-text); }
+.ph-tfilter button:not([aria-pressed="true"]) .ph-g { filter: saturate(.25) brightness(.7); }
+.ph-ticker__row { display: flex; gap: 6px; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; mask: linear-gradient(90deg, var(--c-black) 92%, transparent); }
+.ph-tick { display: inline-flex; align-items: center; gap: 7px; flex: none; height: 34px; padding: 0 12px 0 8px; border-radius: 8px; background: var(--c-ui-panel); font-size: var(--fs-app-sm); white-space: nowrap; }
+.ph-tick:hover { background: var(--c-ui-item); }
+.ph-tick__t { font-family: var(--font-c); font-weight: 600; color: var(--c-ui-clock); }
+.ph-tick.is-live .ph-tick__t { color: var(--c-live); }
+.ph-tick b { font-family: var(--font-c); font-weight: 700; }
+.ph-ticker__all { flex: none; color: var(--c-accent); font-size: var(--fs-app-sm); font-weight: 600; }
+
+/* Условная страница — Match Center */
+.ph-page { padding: 28px 0 120px; }
+.ph-page h1 { margin: 0 0 14px; font-size: var(--fs-app-xl); font-weight: 700; letter-spacing: -.02em; }
+.ph-sub { color: var(--c-muted); font-size: var(--fs-app-md); }
+.ph-days { display: flex; gap: 6px; margin-bottom: 14px; overflow-x: auto; scrollbar-width: none; }
+.ph-days span { flex: none; padding: 7px 12px; border-radius: 8px; background: var(--c-ui-panel); color: var(--c-ui-dim); font-size: var(--fs-app-sm); font-weight: 600; }
+.ph-days .is-on { background: var(--c-ui-hover); color: var(--c-text); }
+.ph-list { display: grid; gap: 2px; max-width: 980px; border-radius: 12px; overflow: hidden; }
+.ph-mrow { display: grid; grid-template-columns: 18px 56px 1fr 60px 1fr 220px 110px; align-items: center; gap: 12px; height: 52px; padding: 0 16px; background: var(--c-ui-panel); font-size: var(--fs-app-md); }
+.ph-mrow__t { font-family: var(--font-c); font-weight: 600; color: var(--c-ui-clock); } .ph-mrow__t.is-live { color: var(--c-live); }
+.ph-mrow__a { text-align: right; } .ph-mrow b { text-align: center; font-family: var(--font-c); }
+.ph-mrow small { color: var(--c-ui-dim); font-size: var(--fs-app-sm); }
+.ph-mrow em { font-style: normal; color: var(--c-accent); font-size: 12px; font-weight: 600; text-align: right; }
+.ph-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 980px; }
+.ph-box { display: grid; gap: 12px; padding: 20px; border-radius: 12px; background: var(--c-ui-panel); }
+.ph-box span { height: 10px; border-radius: 5px; background: var(--c-ui-item); } .ph-box span:last-child { width: 60%; }
+
+/* Телефонные куски на десктопе скрыты */
+.ph-m, .ph-tab, .ph-sheet { display: none; }
+
+/* ———————— Телефон ———————— */
+@media (max-width: 860px) {
+  .ph-desk { display: none; }
+  .ph-m { display: block; position: sticky; top: 0; z-index: 20; background: var(--c-ui-bg); }
+  .ph-m__bar { display: flex; align-items: center; gap: 10px; height: 56px; padding: 0 16px; }
+  .ph-m__bar .ph-brand { font-size: 18px; margin-right: auto; }
+  .ph-m .ph-ava { width: 32px; height: 32px; } .ph-m .ph-coins { display: none; }
+  .ph-page { padding: 12px 0 100px; } .ph-page h1 { font-size: var(--fs-app-lg); }
+  .ph-mrow { grid-template-columns: 18px 44px 1fr 40px 1fr; height: auto; min-height: 52px; padding: 8px 12px; font-size: var(--fs-app-sm); }
+  .ph-mrow small, .ph-mrow em { grid-column: 3 / -1; text-align: left; margin-top: -4px; }
+  .ph-mrow em { margin-top: -8px; }
+  .ph-grid { grid-template-columns: 1fr; }
+
+  /* Таб-бар */
+  .ph-tab { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; height: 64px; padding-bottom: 4px;
+    background: color-mix(in srgb, var(--c-ui-panel) 92%, transparent); backdrop-filter: blur(12px); border-top: 1px solid var(--c-ui-line); }
+  .ph-tab a { display: grid; place-items: center; align-content: center; gap: 3px; font-size: var(--fs-app-xs); font-weight: 500; color: var(--c-caption); }
+  .ph-tab a i { position: relative; font-size: 18px; font-style: normal; line-height: 1; }
+  .ph-tab a[aria-current] { color: var(--c-text); } .ph-tab a[aria-current] i { color: var(--c-accent); }
+  /* v1 — фэнтези центральной круглой кнопкой */
+  .ph-tab__fan i { display: grid; place-items: center; width: 46px; height: 46px; margin-top: -22px; border-radius: 50%; box-shadow: 0 0 0 4px var(--c-ui-bg);
+    background: linear-gradient(135deg, var(--c-accent), color-mix(in srgb, var(--c-accent) 55%, var(--c-tier-elite))); color: var(--c-on-accent); }
+  .ph-tab__fan { color: var(--c-text) !important; }
+  /* v2 — четыре вкладки, фэнтези переключает режим; в режиме таб-бар фиолетовый */
+  .ph-tab__fan2 i { color: var(--c-accent); }
+  .ph-tab--v2.is-fantasy { background: color-mix(in srgb, var(--c-accent) 22%, var(--c-ui-panel)); }
+  .ph-m--v2 .ph-m__bar .ph-mode button { height: 28px; padding: 0 10px; font-size: 12px; }
+  .ph-m__icons { display: grid; grid-template-columns: repeat(5, 1fr); padding: 2px 8px 10px; }
+  .ph-m__icons button { display: grid; justify-items: center; gap: 4px; padding: 6px 0; border: 0; border-radius: 10px; background: none; font-size: 10.5px; font-weight: 600; color: var(--c-ui-dim); }
+  .ph-m__icons .ph-g { width: 34px; height: 34px; border-radius: 10px; font-size: 11px; opacity: .55; }
+  .ph-m__icons button[aria-pressed="true"] { color: var(--c-text); background: var(--c-ui-panel); } .ph-m__icons button[aria-pressed="true"] .ph-g { opacity: 1; }
+  /* v3 — бейдж у фэнтези */
+  .ph-tab a i em { position: absolute; top: -6px; right: -12px; min-width: 16px; padding: 1px 4px; border-radius: 8px; background: var(--c-accent); color: var(--c-on-accent); font-size: 10px; font-style: normal; font-weight: 700; }
+  .ph-m--v3 { border-bottom: 1px solid var(--c-ui-line); } .ph-m--v3 .ph-pop { left: auto; right: 0; }
+  /* v4 — три широкие вкладки, лента матчей под шапкой */
+  .ph-tab--v4 a { grid-auto-flow: column; gap: 8px; font-size: var(--fs-app-sm); font-weight: 600; }
+  .ph-m--v4 .ph-ticker__in { gap: 8px; height: 48px; padding-left: 12px; }
+  .ph-m--v4 .ph-tfilter button { min-width: 26px; padding: 0 4px; }
+
+  /* Шторка */
+  .ph-sheet { display: block; position: fixed; inset: 0; z-index: 35; }
+  .ph-sheet__bg { position: absolute; inset: 0; border: 0; background: color-mix(in srgb, var(--c-black) 55%, transparent); }
+  .ph-sheet__in { position: absolute; left: 0; right: 0; bottom: 64px; max-height: 75%; overflow: auto; padding: 8px 8px 12px; border-radius: 18px 18px 0 0; background: var(--c-ui-panel); }
+  .ph-sheet__grip { display: block; width: 40px; height: 4px; margin: 2px auto 10px; border-radius: 2px; background: var(--c-ui-hover); }
+  .ph-sheet .ph-fan-panel { position: static; display: grid; grid-template-columns: 1fr; padding: 0; box-shadow: none; background: none; }
+}
