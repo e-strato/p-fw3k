@@ -1,0 +1,121 @@
+/* Лаба w-bottom — форма команды в нижней строке (код — _wb.js). Строка под названием: «Radiant» и форма рядом */
+.wb .ws-tn small { display: inline-flex; align-items: center; gap: 6px; }
+.wb .d3-five.b .ws-tn small { flex-direction: row-reverse; }
+.wb-f { display: inline-flex; align-items: center; font-style: normal; }
+.wb-f--none { font: 400 11px/14px var(--w-font); color: var(--w-muted-fg); opacity: .6; }
+/* dots */
+.wb-dots { gap: 3px; } .wb-dots i { width: 6px; height: 6px; border-radius: 50%; } .wb-dots .w { background: var(--w-up, #22c55e); } .wb-dots .l { background: var(--w-down, #ef4444); }
+/* letters */
+.wb-let { gap: 2px; } .wb-let b { font: 600 10px/12px var(--w-font); } .wb-let .w { color: var(--w-up, #22c55e); } .wb-let .l { color: var(--w-down, #ef4444); }
+/* streak */
+.wb-st { height: 16px; padding: 0 5px; border-radius: 4px; font: 600 10px/1 var(--w-font); } .wb-st.w { color: var(--w-up, #22c55e); background: color-mix(in srgb, var(--w-up, #22c55e) 15%, transparent); } .wb-st.l { color: var(--w-down, #ef4444); background: color-mix(in srgb, var(--w-down, #ef4444) 15%, transparent); }
+/* bars */
+.wb-bars { gap: 2px; height: 12px; align-items: flex-end; } .wb-bars i { width: 4px; border-radius: 1px; } .wb-bars .w { background: var(--w-up, #22c55e); } .wb-bars .l { background: var(--w-down, #ef4444); }
+/* v6–v9 · форма точками сразу за названием; сторона — цветом (Radiant — зелёный, Dire — красный) */
+.wb-nm { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.wb-lay .d3-five.b .wb-nm { flex-direction: row-reverse; }
+.wb-lay .wb-rad { --wb-c: var(--w-up, #22c55e); } .wb-lay .wb-dire { --wb-c: var(--w-down, #ef4444); }
+.wb-lay--inline .wb-side, .wb-lay--ring .wb-side { color: var(--wb-c); }
+.wb-lay--pill .wb-side { display: inline-flex; align-items: center; height: 16px; padding: 0 6px; border-radius: 4px; color: var(--wb-c); background: color-mix(in srgb, var(--wb-c) 15%, transparent); font: 500 10px/1 var(--w-font); }
+.wb-lay--pill .ws-tn { gap: 3px; } .wb-lay--pill .d3-five.b .ws-tn small { justify-content: flex-end; }
+.wb-lay--ring .d3-tm.ws-tm img { border-radius: 50%; padding: 2px; box-shadow: 0 0 0 1.5px var(--wb-c); box-sizing: border-box; }
+.wb-lay--dot .wb-side { display: inline-flex; align-items: center; gap: 4px; } .wb-sd { width: 6px; height: 6px; border-radius: 50%; background: var(--wb-c); }
+.wb-lay--dot .d3-five.b .wb-side { flex-direction: row-reverse; }
+/* v10 · без подписей команд на графике */
+html.wb-nolbl .g2-r2, html.wb-nolbl .g2-tb { display: none !important; }
+/* v11 · график во всю ширину окна: поля 4 по бокам, сверху 0 (от табов 12 — отступ шапки) */
+html.wb-wide .bw-page .g2 { padding: 0 4px 4px; }
+/* v11 · обёртка графика и пиков (.top-bd) давала 12 сверху и 16 по бокам: сверху 0, графику — во всю ширину (поля 4 от края окна), пикам — 12 по бокам */
+html.wb-wide .bw-page .top-bd:has(.g2) { padding: 0 12px 12px; }
+html.wb-wide .bw-page .top-bd .g2 { margin: 0 -8px; }
+/* v12–v13 · центр: счёт крупно, без «убийства»; перевес по золоту — жёлтым с той стороны, чья команда ведёт; без лого и «золото» */
+html.wb-r3 .d3-mid { flex-direction: row; align-items: center; justify-content: center; gap: 8px; }
+html.wb-r3 .d3-mid small { display: none; }
+html.wb-r3 .d3-sc { font: 700 28px/32px var(--w-font); }
+html.wb-r3 .d3-gd { margin: 0; color: #facc15 !important; font: 600 12px/16px var(--w-font); } html.wb-r3 .d3-gd img { display: none; }
+html.wb-r3 .d3-gd.a { order: -1; } html.wb-r3 .d3-gd.b { order: 1; }
+/* номер позиции — в самом углу иконки (снизу справа, скругление как у угла), серым */
+html.wb-r3 .d3-i b { right: 0; bottom: 0; min-width: 14px; height: 14px; padding: 0 3px; border-radius: 5px 0 8px 0; background: rgba(0,0,0,.85); color: #a1a1aa; font: 600 9px/1 var(--w-font); }
+/* линия героя */
+.wb-ln { display: block; margin-top: 2px; font: 500 10px/12px var(--w-font); white-space: nowrap; } .wb-ln.up { color: var(--w-up, #22c55e); } .wb-ln.dn { color: var(--w-down, #ef4444); }
+html.wb-ln--chip .wb-ln { display: inline-block; margin: 4px 0 0; padding: 1px 5px; border-radius: 4px; background: color-mix(in srgb, currentColor 14%, transparent); }
+/* линия героя мельче: не наезжает на соседа */
+.wb-ln { font: 500 9px/12px var(--w-font); letter-spacing: -.01em; max-width: 100%; overflow: hidden; text-overflow: clip; }
+html.wb-ln--chip .wb-ln { padding: 1px 3px; }
+html.wb-ln--chip .wb-ln { overflow: visible; max-width: none; }
+/* v14–v16 · форма не в строке с названием */
+html.wb-lay .ws-tn small { display: inline-flex; align-items: center; gap: 6px; }
+html.wb-lay .d3-five.b .ws-tn small { flex-direction: row-reverse; }
+.wb-lg { position: relative; display: inline-flex; flex-direction: column; align-items: center; gap: 3px; }
+.wb-lg .wb-dots { gap: 2px; } .wb-lg .wb-dots i { width: 4px; height: 4px; }
+.ws-tn > .wb-dots { margin-bottom: 3px; } .d3-five.b .ws-tn > .wb-dots { align-self: flex-end; }
+/* v15 · точки — под лого по центру, лого не растягиваем */
+.wb-lg { display: inline-block; flex: none; } .wb-lg img { display: block; width: 24px; height: 24px; }
+.wb-lg .wb-dots { position: absolute; top: 100%; left: 50%; margin-top: 4px; transform: translateX(-50%); }
+.d3-five.a .wb-lg { margin-right: 4px; } .d3-five.b .wb-lg { margin-left: 4px; }
+.wb-lg .wb-dots { margin-top: 7px; }
+/* v17 icons · ✓ мятный (не зелёный стороны), ✕ серый */
+.wb-ic { gap: 1px; } .wb-ic i { display: grid; place-items: center; width: 10px; height: 10px; } .wb-ic .w { color: #5eead4; } .wb-ic .l { color: #71717a; }
+/* v18 mono · мини-блоки без цвета */
+.wb-mono { gap: 2px; } .wb-mono i { width: 5px; height: 9px; border-radius: 1.5px; } .wb-mono .w { background: #e4e4e7; } .wb-mono .l { box-shadow: inset 0 0 0 1px #52525b; }
+/* v19 tiles · плитки 14 с ✓ / ✕, нейтральная подложка */
+.wb-tl { gap: 2px; } .wb-tl i { display: grid; place-items: center; width: 14px; height: 14px; border-radius: 3px; background: rgba(255,255,255,.07); } .wb-tl .w { color: #5eead4; } .wb-tl .l { color: #71717a; }
+/* v20 ratio · «4–1» и деления без цвета */
+.wb-rt { gap: 5px; } .wb-rt b { font: 600 11px/14px var(--w-font); color: var(--w-fg); } .wb-rt span { display: inline-flex; gap: 1px; } .wb-rt i { width: 3px; height: 8px; border-radius: 1px; } .wb-rt .w { background: #d4d4d8; } .wb-rt .l { background: #3f3f46; }
+.wb-tl--bare { gap: 0; } .wb-tl--bare i { width: 11px; background: none; }
+.wb-tl i svg { display: block; width: 10px; height: 10px; }
+.wb-tl--bare i, .wb-tl--bare i.w, .wb-tl--bare i.l { background: none !important; box-shadow: none !important; }
+.wb-f i { border: 0 !important; }
+html.wb-green .wb-tl .w { color: var(--w-up, #22c55e); }
+html.wb-sm .wb-tl--bare i { width: 9px; height: 10px; } html.wb-sm .wb-tl i svg { width: 8px; height: 8px; }
+/* v23 · блок команды столбиком: лого сверху, под ним название, ниже сторона и форма; у Dire — по правому краю */
+html.wb-stack .d3-tm.ws-tm, html.wb-stack .d3-five.b .d3-tm.ws-tm { flex-direction: column; align-items: flex-start; gap: 4px; }
+html.wb-stack .d3-five.b .d3-tm.ws-tm { align-items: flex-end; }
+html.wb-stack .d3-five.a .wb-lg, html.wb-stack .d3-five.b .wb-lg { margin: 0; }
+/* v24 · лого 32 в рамке-квадрате со скруглением 8 цвета стороны */
+html.wb-sq .wb-lay--ring .d3-tm.ws-tm img, html.wb-sq.wb-lay--ring .d3-tm.ws-tm img { width: 32px; height: 32px; padding: 2px; border-radius: 8px; }
+html.wb-sq .wb-lg img { width: 32px !important; height: 32px !important; }
+/* v25 · перевес по золоту — жёлтый тег рядом с лого ведущей команды; в центре у счёта золота нет */
+html.wb-gtag .d3-mid .d3-gd { display: none; }
+.wb-lr { display: inline-flex; align-items: center; gap: 6px; } .d3-five.b .wb-lr { flex-direction: row-reverse; }
+.wb-gt { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; border-radius: 5px; background: rgba(250,204,21,.14); color: #facc15; font: 600 11px/1 var(--w-font); font-style: normal; }
+.wb-gt[hidden] { display: none; }
+html.wb-lg28.wb-sq .d3-tm.ws-tm img { width: 28px !important; height: 28px !important; border-radius: 7px; }
+html.wb-gt28 .wb-gt { height: 28px; padding: 0 8px; border-radius: 7px; font: 600 12px/1 var(--w-font); box-sizing: border-box; }
+/* v28 · наведение: пик и команда — одинаково (подложка, скругление 8, поля 6) */
+html.wb-hov .d3-h.is-pl { padding: 6px; border-radius: 8px; box-sizing: border-box; }
+html.wb-hov .d3-tm.ws-tm { padding: 6px; border-radius: 8px; cursor: pointer; transition: background .15s; }
+html.wb-hov .d3-tm.ws-tm:hover, html.wb-hov .d3-h.is-pl:hover { background: var(--w-muted); }
+html.wb-leadbd .d3-tm.ws-tm:not(.wb-lead) img { box-shadow: 0 0 0 1.5px #3f3f46 !important; }
+html.wb-eqh .d3-tm.ws-tm { box-sizing: border-box; justify-content: center; }
+html.wb-ptfix body.pt-off .pt { transform: none !important; }
+/* v32 · без прокрутки страницы на компьютере: правая колонка прокручивается сама, в высоту окна */
+html.wb-lock, html.wb-lock body { overflow: hidden; }
+html.wb-lock .gm-side { max-height: calc(100vh - var(--wb-top, 64px) - 16px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+html.wb-lock .gm-side::-webkit-scrollbar { display: none; }
+/* v33 · у лого столбик: тег золота сверху (если ведёт), форма снизу; у Dire — зеркально */
+.wb-lc { display: inline-flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 4px; min-height: 28px; }
+.d3-five.b .wb-lc { align-items: flex-end; }
+html.wb-gt28 .wb-lc .wb-gt { height: 18px; padding: 0 6px; border-radius: 5px; font: 600 11px/1 var(--w-font); }
+/* v34 · график от краёв окна по 4: обёртка даёт 12, график залезает на них */
+html.wb-ph .bw-page .top-bd .g2 { margin: 0 -12px; padding: 0 4px 4px; }
+/* телефон: табы — лента вбок без полосы прокрутки; строка шапки: «назад» · табы (сколько влезет) · кнопки */
+html.wb-ph body:not(.is-desk) .bw-bar.ws-h { grid-template-columns: auto minmax(0, 1fr) auto; }
+html.wb-ph body:not(.is-desk) .ws-h .ws-tabs { justify-self: stretch; max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; scroll-padding: 0 12px; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 12px), transparent); mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 12px), transparent); }
+html.wb-ph body:not(.is-desk) .ws-h .ws-tabs::-webkit-scrollbar { display: none; }
+/* телефон: Dire — как Radiant, всё к левому краю */
+html.wb-ph body:not(.is-desk) .d3-five.b .d3-tm.ws-tm { align-items: flex-start; text-align: left; }
+html.wb-ph body:not(.is-desk) .d3-five.b .ws-tn, html.wb-ph body:not(.is-desk) .d3-five.b .wb-lc { align-items: flex-start; }
+html.wb-ph body:not(.is-desk) .d3-five.b .wb-lr, html.wb-ph body:not(.is-desk) .d3-five.b .ws-tn small, html.wb-ph body:not(.is-desk) .d3-five.b .wb-nm { flex-direction: row; }
+/* v35 · ромбы драк серые, цвет — при наведении и у выбранной */
+html.wb-rh .g2-plot .dm > :not(.dm-pt):not(.dm-st), html.wb-rh .g2-plot .dm2 > :not(.dm-pt):not(.dm-st) { filter: grayscale(1) brightness(.8); transition: filter .15s; }
+html.wb-rh .g2-plot .dm:hover > *, html.wb-rh .g2-plot .dm.on > * { filter: none; }
+/* v36: WB_RH2 — ромбы драк залиты серым, число белым; наведение их не меняет (подсказка — как была) */
+html.wb-rh2 .g2-plot .dm > path, html.wb-rh2 .g2-plot .dm > rect { fill: #3f3f46 !important; stroke: none !important; filter: none !important; }
+html.wb-rh2 .g2-plot .dm > path[fill="none"] { display: none; }
+html.wb-rh2 .g2-plot .dm .dm-n2, html.wb-rh2 .g2-plot .dm .dm-n { fill: #fff !important; filter: none !important; }
+/* v36: WB_PHBTN — на телефоне кнопки графика строкой под табами, справа */
+html.wb-phbtn body:not(.is-desk) .bw-bar.ws-h { grid-template-columns: auto minmax(0, 1fr); row-gap: 4px; }
+html.wb-phbtn body:not(.is-desk) .ws-h .ws-ic { grid-column: 1 / -1; justify-self: end; }
+/* баг (дирижёр 04.11, скрин w-lane на широком телефоне): на телефоне пики Dire прижимались вправо (justify flex-end), Radiant — влево; теперь у обеих — сразу за блоком команды */
+html.wb-ph body:not(.is-desk) .d3-five.b .d3-hs { justify-content: flex-start; }

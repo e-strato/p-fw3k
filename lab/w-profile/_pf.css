@@ -1,0 +1,170 @@
+/* w-profile — профиль в шапке сайта: вошёл + кошелёк баллов (созвон 05.11, задача 9.1). Виды — PF в _pf.js */
+.pf { --pf-gold: #f5c542; margin-left: auto; display: flex; align-items: center; gap: 8px; position: relative; }
+.is-desk .pt-nav + .pf { margin-left: 0; } .pt-ics + .pf { margin-left: 6px; }
+.pf button { all: unset; cursor: pointer; box-sizing: border-box; }
+.pf-av { flex: none; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--w-muted); color: var(--w-fg); font: 600 13px/1 var(--w-font, system-ui); }
+.pf-coin { flex: none; width: 14px; height: 14px; fill: none; stroke: var(--pf-gold); stroke-width: 1.6; }
+.pf-coin circle + circle { fill: var(--pf-gold); fill-opacity: .25; stroke-width: 1.2; }
+.pf .num { font-variant-numeric: tabular-nums; }
+
+/* chip — кошелёк кнопкой + аватар */
+.pf-w { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: var(--w-r-sm, 8px); background: var(--w-mid-bg); color: var(--w-fg); font: 600 13px/1 var(--w-font, system-ui); }
+.pf-btn:hover .pf-w, .pf-btn[aria-expanded="true"] .pf-w { background: var(--w-muted); }
+.pf-me:hover .pf-av { box-shadow: 0 0 0 2px var(--w-border); }
+
+/* pill — одна капсула: аватар, ник, баллы */
+.pf--pill { gap: 8px; height: 36px; padding: 2px 12px 2px 2px; border-radius: 18px; background: var(--w-mid-bg); }
+.pf--pill:hover { background: var(--w-muted); }
+.pf-tx { display: flex; flex-direction: column; gap: 2px; }
+.pf-tx b { color: var(--w-fg); font: 600 13px/16px var(--w-font, system-ui); }
+.pf-tx small { display: inline-flex; align-items: center; gap: 4px; color: var(--w-muted-fg); font: 500 11px/14px var(--w-font, system-ui); }
+.pf-tx small .pf-coin { width: 11px; height: 11px; }
+.pf-tx small .num { color: var(--w-fg); }
+
+/* pm — как Polymarket: две колонки цифр + аватар */
+.pf--pm { gap: 4px; }
+.pf-st { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; height: 36px; padding: 0 10px; border-radius: var(--w-r-sm, 8px); }
+.pf-st:hover { background: var(--w-mid-bg); }
+.pf-st small { color: var(--w-muted-fg); font: 500 11px/14px var(--w-font, system-ui); }
+.pf-st b { color: var(--w-fg); font: 600 14px/18px var(--w-font, system-ui); }
+.pf-st:first-child b { color: var(--pf-gold); }
+.pf--pm .pf-me { margin-left: 4px; }
+
+/* pop — карточка кошелька по клику */
+.pf--pop .pf-btn { display: flex; align-items: center; gap: 8px; }
+.pf-card { position: absolute; z-index: 30; top: calc(100% + 10px); right: 0; width: 300px; padding: 16px; border-radius: 16px; background: var(--w-bg); box-shadow: 0 0 0 1px var(--w-border), 0 16px 40px #000c;
+  display: flex; flex-direction: column; gap: 12px; opacity: 0; transform: translateY(-4px); pointer-events: none; transition: opacity .15s, transform .15s; }
+.pf--pop.on .pf-card { opacity: 1; transform: none; pointer-events: auto; }
+.pf-hd { display: flex; align-items: center; gap: 10px; } .pf-hd span { display: flex; flex-direction: column; gap: 2px; }
+.pf-hd b { color: var(--w-fg); font: 600 14px/18px var(--w-font, system-ui); } .pf-hd small { color: var(--w-muted-fg); font: 500 12px/16px var(--w-font, system-ui); }
+.pf-bal { display: flex; flex-direction: column; gap: 4px; padding: 12px 0; border-top: 1px solid var(--w-border); border-bottom: 1px solid var(--w-border); }
+.pf-bal small { color: var(--w-muted-fg); font: 500 12px/16px var(--w-font, system-ui); }
+.pf-bal b { display: flex; align-items: center; gap: 8px; color: var(--w-fg); font: 700 28px/32px var(--w-font, system-ui); }
+.pf-bal .pf-coin { width: 22px; height: 22px; }
+.pf-row, .pf-ls li { display: flex; justify-content: space-between; gap: 12px; color: var(--w-muted-fg); font: 500 13px/18px var(--w-font, system-ui); }
+.pf-row b, .pf-ls b { color: var(--w-fg); font-weight: 600; white-space: nowrap; }
+.pf-ls { list-style: none; margin: 0; padding: 12px 0 0; display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--w-border); }
+.pf-ls li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pf .pf-up { color: #2fbf71; } .pf .pf-wait { color: var(--w-muted-fg); font-weight: 500; }
+.pf-ft { display: flex; gap: 8px; } .pf-ft button { flex: 1; height: 36px; text-align: center; line-height: 36px; border-radius: var(--w-r-sm, 8px); background: var(--w-mid-bg); color: var(--w-fg); font: 500 13px/36px var(--w-font, system-ui); }
+.pf-ft button:hover { background: var(--w-muted); } .pf-ft button + button { flex: none; padding: 0 14px; color: var(--w-muted-fg); }
+
+/* телефон — компактнее: без ника и подписей */
+body:not(.is-desk) .pf--pill { padding-right: 10px; } body:not(.is-desk) .pf-tx b { display: none; }
+body:not(.is-desk) .pf-st { height: 32px; padding: 0 6px; } body:not(.is-desk) .pf-st b { font-size: 13px; }
+body:not(.is-desk) .pf-card { position: fixed; top: 60px; left: 12px; right: 12px; width: auto; }
+
+/* ── v5 bet — поиск полем + «Мои прогнозы» */
+.pf-q { all: unset; cursor: pointer; box-sizing: border-box; flex: 1; max-width: 420px; margin-left: auto; display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 10px; background: var(--w-mid-bg); color: var(--w-muted-fg); font: 500 13px/1 var(--w-font, system-ui); }
+.pf-q:hover { box-shadow: inset 0 0 0 1px var(--w-border); }
+.pf-q svg { flex: none; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.pf-q span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pf-q kbd { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 5px; box-shadow: inset 0 0 0 1px var(--w-border); font: 500 11px/1 var(--w-font, system-ui); }
+.pt-nav + .pf-q { margin-left: 8px; } .pf-q + .pf { margin-left: 8px; }
+.pf-my { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: var(--w-r-sm, 8px); color: var(--w-fg); font: 500 13px/1 var(--w-font, system-ui); }
+.pf-my:hover { background: var(--w-mid-bg); }
+.pf-my em { display: grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 9px; background: var(--w-fg); color: var(--w-bg); font: 600 11px/1 var(--w-font, system-ui); font-style: normal; }
+body:not(.is-desk) .pf-q { max-width: none; } body:not(.is-desk) .pf-q span { display: none; } body:not(.is-desk) .pf-q { flex: none; width: 36px; justify-content: center; padding: 0; }
+body:not(.is-desk) .pf-my { padding: 0 6px; font-size: 0; gap: 0; } body:not(.is-desk) .pf-my em { font-size: 11px; }
+body:not(.is-desk) .pf-my::before { content: ''; width: 16px; height: 16px; margin-right: 4px; border-radius: 4px; box-shadow: inset 0 0 0 1.6px var(--w-fg); }
+
+/* ── v6 fly — живой кошелёк */
+.pf--fly .pf-w { transition: background .3s, box-shadow .3s; }
+.pf--fly .pf-w.is-up { box-shadow: inset 0 0 0 1px #2fbf7166; background: #2fbf711a; }
+.pf--fly .pf-w.is-up .pf-n { color: #2fbf71; }
+.pf-in { max-width: 0; overflow: hidden; white-space: nowrap; color: var(--pf-gold); font: 500 11px/1 var(--w-font, system-ui); transition: max-width .3s, margin .3s; }
+.pf-in.on { max-width: 100px; margin-left: 2px; }
+.pf-fl { --pf-gold: #f5c542; position: fixed; z-index: 100; display: inline-flex; align-items: center; gap: 4px; margin: -12px 0 0 -24px; padding: 4px 8px; border-radius: 12px; background: #f5c5421f; color: var(--pf-gold);
+  font: 700 14px/16px var(--w-font, system-ui); pointer-events: none; transition: transform .7s cubic-bezier(.5,0,.3,1), opacity .7s ease-in; }
+.pf-fl .pf-coin { width: 14px; height: 14px; fill: none; stroke: var(--pf-gold); stroke-width: 1.6; }
+
+/* ── v7 lvl — кольцо уровня и серия */
+.pf--lvl { gap: 6px; }
+.pf-str, .pf--lvl > .pf-me { position: relative; outline: none; }
+.pf-str { display: inline-flex; align-items: center; gap: 4px; height: 32px; padding: 0 10px; border-radius: var(--w-r-sm, 8px); color: #ff8a3d; font: 600 13px/1 var(--w-font, system-ui); cursor: default; }
+.pf-str svg { width: 14px; height: 14px; fill: currentColor; } .pf-str b { color: var(--w-fg); }
+.pf-lv { position: relative; display: grid; place-items: center; width: 40px; height: 40px; cursor: pointer; }
+.pf-lv svg { position: absolute; inset: 0; width: 40px; height: 40px; transform: rotate(-90deg); fill: none; stroke-width: 2.5; }
+.pf-lv svg circle { stroke: var(--w-muted); } .pf-lv svg circle + circle { stroke: var(--pf-gold); stroke-linecap: round; }
+.pf-lv em { position: absolute; right: -2px; bottom: -2px; display: grid; place-items: center; min-width: 16px; height: 16px; padding: 0 3px; box-sizing: border-box; border-radius: 8px; background: var(--pf-gold); color: #1a1400; box-shadow: 0 0 0 2px var(--w-page); font: 700 10px/1 var(--w-font, system-ui); font-style: normal; }
+.pf-tip { position: absolute; z-index: 30; top: calc(100% + 8px); right: 0; width: max-content; max-width: 220px; padding: 8px 10px; border-radius: 10px; background: var(--w-bg); box-shadow: 0 0 0 1px var(--w-border), 0 8px 24px #000a;
+  color: var(--w-muted-fg); font: 500 12px/16px var(--w-font, system-ui); white-space: normal; opacity: 0; transform: translateY(-4px); pointer-events: none; transition: opacity .15s, transform .15s; }
+.pf-tip b { display: block; margin-bottom: 2px; color: var(--w-fg); font-weight: 600; }
+.pf-str:hover .pf-tip, .pf-str:focus .pf-tip, .pf--lvl > .pf-me:hover .pf-tip, .pf--lvl > .pf-me:focus .pf-tip { opacity: 1; transform: none; }
+body:not(.is-desk) .pf-str { padding: 0 4px; }
+
+/* ── v8 tick — строка матчей над шапкой */
+.pf-tk { display: flex; align-items: stretch; gap: 1px; height: 44px; overflow-x: auto; scrollbar-width: none; background: var(--w-border); border-bottom: 1px solid var(--w-border); }
+.pf-tk::-webkit-scrollbar { display: none; }
+.pf-tkh { flex: none; display: grid; place-items: center; padding: 0 14px; background: var(--w-page); color: var(--w-muted-fg); font: 600 11px/1 var(--w-font, system-ui); }
+.pf-tkm { flex: none; display: grid; grid-template-columns: auto auto; grid-template-rows: 1fr 1fr; column-gap: 12px; align-items: center; min-width: 150px; padding: 4px 12px; background: var(--w-page); color: var(--w-fg); text-decoration: none; }
+.pf-tkm:hover { background: var(--w-bg); } .pf-tkm.on { background: var(--w-mid-bg); }
+.pf-tks { grid-row: 1 / 3; grid-column: 2; order: 2; display: flex; align-items: center; gap: 4px; color: var(--w-muted-fg); font: 500 11px/1 var(--w-font, system-ui); white-space: nowrap; }
+.pf-tkr { display: flex; align-items: center; gap: 6px; font: 500 12px/1 var(--w-font, system-ui); white-space: nowrap; }
+.pf-tkr img { width: 14px; height: 14px; object-fit: contain; } .pf-tkr b { margin-left: auto; padding-left: 8px; font-weight: 600; }
+.pf-dot { width: 6px; height: 6px; border-radius: 50%; background: #e5484d; }
+
+/* ── v9 fly2 — ровная карточка кошелька: одна ширина, отступы 16, черты во всю ширину, строки одной высоты */
+.pf-c2 { position: absolute; z-index: 30; top: calc(100% + 8px); right: 0; width: 320px; border-radius: 14px; background: var(--w-bg); box-shadow: 0 0 0 1px var(--w-border), 0 16px 40px #000c; overflow: hidden;
+  opacity: 0; transform: translateY(-4px); pointer-events: none; transition: opacity .15s, transform .15s; }
+.pf--c2.on .pf-c2 { opacity: 1; transform: none; pointer-events: auto; }
+.pf-c2 small { display: block; color: var(--w-muted-fg); font: 500 12px/16px var(--w-font, system-ui); }
+.pf-c2-top { padding: 16px; }
+.pf-c2-top b { display: flex; align-items: center; gap: 8px; margin-top: 4px; color: var(--w-fg); font: 700 28px/32px var(--w-font, system-ui); }
+.pf-c2-top .pf-coin { width: 20px; height: 20px; }
+.pf-c2-sum { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--w-border); }
+.pf-c2-sum span { padding: 12px 16px; } .pf-c2-sum span + span { border-left: 1px solid var(--w-border); }
+.pf-c2-sum b { display: block; margin-top: 2px; color: var(--w-fg); font: 600 16px/20px var(--w-font, system-ui); }
+.pf-c2-hd { padding: 12px 16px 4px; border-top: 1px solid var(--w-border); color: var(--w-muted-fg); font: 500 12px/16px var(--w-font, system-ui); }
+.pf-c2-ls { list-style: none; margin: 0; padding: 0 0 4px; }
+.pf-c2-ls li { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 36px; padding: 0 16px; color: var(--w-fg); font: 500 13px/18px var(--w-font, system-ui); }
+.pf-c2-ls li span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pf-c2-ls b { flex: none; font-weight: 600; }
+.pf-c2 .pf-c2-ft { display: flex; align-items: center; justify-content: space-between; width: 100%; height: 44px; padding: 0 16px; border-top: 1px solid var(--w-border); color: var(--w-fg); font: 500 13px/1 var(--w-font, system-ui); }
+.pf-c2 .pf-c2-ft:hover { background: var(--w-mid-bg); } .pf-c2-ft i { color: var(--w-muted-fg); font-style: normal; font-size: 16px; }
+body:not(.is-desk) .pf-c2 { position: fixed; top: 60px; left: 12px; right: 12px; width: auto; }
+
+/* ── v10–v13 PF_IN — зарезервированные баллы мелко */
+.pf-ic { flex: none; width: 10px; height: 10px; fill: currentColor; }
+.pf-c2 small .pf-ic { display: inline-block; vertical-align: -1px; margin-right: 4px; }
+.pf[class*="pf-in--"] .pf-in { display: inline-flex; align-items: center; gap: 3px; color: var(--w-muted-fg); font: 500 12px/1 var(--w-font, system-ui); }
+.pf[class*="pf-in--"] .pf-in.on { max-width: 120px; }
+/* slash — «1 240 / 150» */
+.pf-in--slash .pf-in i { font-style: normal; color: var(--w-border); margin: 0 1px; }
+/* play — ▶ 150 после тонкой черты */
+.pf-in--play .pf-in.on { margin-left: 4px; padding-left: 8px; box-shadow: inset 1px 0 0 var(--w-border); }
+/* box — отдельный бокс рядом с кошельком */
+.pf-in--box .pf-btn { display: flex; align-items: center; gap: 4px; }
+.pf-in--box .pf-in.on { height: 32px; padding: 0 10px; margin-left: 0; border-radius: var(--w-r-sm, 8px); box-shadow: inset 0 0 0 1px var(--w-border); }
+/* lock — бейдж в углу кошелька */
+.pf-in--lock .pf-w { position: relative; }
+.pf-in--lock .pf-in.on { position: absolute; top: -7px; right: -8px; height: 16px; padding: 0 5px; margin: 0; border-radius: 8px; background: var(--w-muted); color: var(--w-fg); box-shadow: 0 0 0 2px var(--w-page); font-size: 10px; }
+.pf-in--lock .pf-in .pf-ic { width: 8px; height: 8px; }
+
+/* ── v14–v17 — зарезервированное радостнее: золото, обводка, замок */
+.pf-in--box2 .pf-btn, .pf-in--box3 .pf-btn { display: flex; align-items: center; gap: 6px; }
+.pf-in--box2 .pf-in.on, .pf-in--box3 .pf-in.on { height: 32px; padding: 0 10px; margin-left: 0; border-radius: var(--w-r-sm, 8px); color: var(--pf-gold); font-weight: 600; }
+.pf-in--box2 .pf-in.on { background: #f5c54214; box-shadow: inset 0 0 0 1px #f5c54266; }
+.pf-in--box2 .pf-btn:hover .pf-in.on { background: #f5c54224; }
+.pf-in--box3 .pf-in.on { position: relative; background: #f5c54210; }
+.pf-in--box3 .pf-in.on::before { content: ''; position: absolute; inset: 0; padding: 1px; border-radius: inherit; background: linear-gradient(120deg, #f5c542, #ff8a3d 45%, #f5c54233);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+.pf-in--in2 .pf-w, .pf-in--in3 .pf-w { overflow: hidden; }
+.pf-in--in2 .pf-in.on, .pf-in--in3 .pf-in.on { align-self: stretch; margin: 0 -12px 0 6px; padding: 0 10px; color: var(--pf-gold); font-weight: 600; }
+.pf-in--in2 .pf-in.on { background: #f5c54214; box-shadow: inset 1px 0 0 #f5c54255; }
+.pf-in--in2 .pf-w { box-shadow: inset 0 0 0 1px #f5c54240; }
+.pf-in--in3 .pf-in.on { background: linear-gradient(90deg, #f5c54200, #f5c54222); }
+.pf-in--in3 .pf-in .pf-ic { width: 12px; height: 12px; }
+.pf .pf-in .pf-ic { width: 11px; height: 11px; }
+.pf-in.is-bump { animation: pf-bump .5s cubic-bezier(.3,1.6,.5,1); }
+@keyframes pf-bump { 0% { transform: scale(1); } 40% { transform: scale(1.15); } 100% { transform: scale(1); } }
+.pf-c2 small .pf-ic { color: var(--pf-gold); }
+
+/* ── v18 PF_MONO — цифры моноширинные: ширина меняется только при новом разряде (99 → 100) */
+.pf-mono .num, .pf-mono .pf-in { font-family: 'JetBrains Mono', ui-monospace, monospace !important; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.pf-mono .pf-w .num { font-size: 13px; font-weight: 600; }
+.pf-mono .pf-in.on { font-size: 12px; }
+.pf-mono .pf-c2-top b { font-size: 26px; letter-spacing: -.03em; }
+.pf-mono .pf-c2-sum b { font-size: 15px; }
+.pf-mono .pf-c2-ls b { font-size: 12px; }
+.pf-fl.num { font-family: 'JetBrains Mono', ui-monospace, monospace; }

@@ -1,0 +1,71 @@
+/* w-tabs-s — табы серии (созвон 05.11 §4) */
+html { --wts-violet: #8b5cf6; --wts-violet-fg: #a78bfa; }
+/* live — фиолетовым: красный у нас — сторона Dire / проигрыш */
+html.wts-live .ws-tabs .h3-tab.is-live .h3-dot { background: var(--wts-violet); }
+html.wts-live .ws-tabs .h3-tab.is-live small { color: var(--wts-violet-fg) !important; }
+/* «Новости»: вместо числа — точка, что новости есть */
+html.wts-dot .ws-tabs .ws-t--news .ws-cnt { font-size: 0; width: 6px; height: 6px; min-width: 0; padding: 0; border-radius: 50%; background: var(--wts-violet-fg); margin-left: 2px; align-self: flex-start; margin-top: 6px; }
+/* телефон: табы влезают в ширину — делятся поровну */
+html.wts-ph body:not(.is-desk) .ws-h nav.ws-tabs { width: 100%; max-width: 100%; overflow: hidden; }
+html.wts-ph body:not(.is-desk) .ws-h .ws-tabs .h3-tab { flex: 1 1 auto; min-width: 0; padding: 0 6px; gap: 4px; }
+html.wts-ph body:not(.is-desk) .ws-h .ws-tabs .h3-tab > span { white-space: nowrap; }
+/* карты — цифрой: прячем «Map N», ставим номер карты (data-v) */
+html.wts-ph body:not(.is-desk) .ws-tabs .h3-tab[data-a="mseg"]:not([data-v="0"]) > span { display: none; }
+html.wts-ph body:not(.is-desk) .ws-tabs .h3-tab[data-a="mseg"]:not([data-v="0"])::before { content: attr(data-v); font-weight: 600; }
+html.wts-ph body:not(.is-desk) .ws-tabs .h3-tab.is-live small { font-size: 11px; }
+/* short: «Лента» вместо «Новости», «Стат.» вместо «Статистика» */
+html.wts-ph--short body:not(.is-desk) .ws-tabs .ws-t--news > span, html.wts-ph--short body:not(.is-desk) .ws-tabs .h3-tab[data-v="0"] > span { display: none; }
+html.wts-ph--short body:not(.is-desk) .ws-tabs .ws-t--news::before { content: 'Лента'; }
+html.wts-ph--short body:not(.is-desk) .ws-tabs .h3-tab[data-v="0"]::before { content: 'Стат.'; }
+/* подписи из ::before — тем же шрифтом, что подписи табов */
+html.wts-ph body:not(.is-desk) .ws-tabs .h3-tab::before { font-size: 12px; font-weight: 600; white-space: nowrap; }
+
+/* v3: точка live мигает, время — моноширинным (как время в других местах), чуть мельче */
+@keyframes wts-blink { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+html.wts-blink .ws-tabs .h3-tab.is-live .h3-dot { animation: wts-blink 1.4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { html.wts-blink .ws-tabs .h3-tab.is-live .h3-dot { animation: none; } }
+html.wts-mono .ws-tabs .h3-tab.is-live small { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; font-weight: 500; letter-spacing: -.02em; }
+html.wts-mono body:not(.is-desk) .ws-tabs .h3-tab.is-live small { font-size: 10px; }
+
+/* v4: не влезают — «Статистика» → «Стат.» */
+html.wts-fit.wts-tight body:not(.is-desk) .ws-tabs .h3-tab[data-v="0"] > span { display: none; }
+html.wts-fit.wts-tight body:not(.is-desk) .ws-tabs .h3-tab[data-v="0"]::before { content: 'Стат.'; }
+
+/* v6: телефон — табы равной ширины; «Новости» → «Нов.», «Статистика» → «Стат.» */
+html.wts-eq body:not(.is-desk) .ws-h .ws-tabs .h3-tab { flex: 1 1 0; padding: 0 2px; }
+html.wts-eq body:not(.is-desk) .ws-tabs .ws-t--news > span, html.wts-eq body:not(.is-desk) .ws-tabs .h3-tab[data-v="0"] > span { display: none; }
+html.wts-eq body:not(.is-desk) .ws-tabs .ws-t--news::before { content: 'Нов.'; }
+html.wts-eq body:not(.is-desk) .ws-tabs .h3-tab[data-v="0"]::before { content: 'Стат.'; }
+
+/* v7: телефон — табы равной ширины; подписи полные, «Нов.» и «Стат.» — только когда не влезают в свой таб */
+html.wts-eqfit body:not(.is-desk) .ws-h .ws-tabs .h3-tab { flex: 1 1 0; padding: 0 2px; overflow: hidden; }
+html.wts-eqfit.wts-tight body:not(.is-desk) .ws-tabs .ws-t--news > span, html.wts-eqfit.wts-tight body:not(.is-desk) .ws-tabs .h3-tab[data-v="0"] > span { display: none; }
+html.wts-eqfit.wts-tight body:not(.is-desk) .ws-tabs .ws-t--news::before { content: 'Нов.'; }
+
+/* v8: не влезает — по-английски «News» и «Stat», без точек сокращения */
+html.wts-t--en.wts-tight body:not(.is-desk) .ws-tabs .ws-t--news::before { content: 'News'; }
+html.wts-t--en.wts-tight body:not(.is-desk) .ws-tabs .h3-tab[data-v="0"]::before { content: 'Stat'; }
+/* v9: у «Новостей» и «Статистики» — белые иконки; не влезает — остаются только иконки */
+html.wts-t--ic .ws-tabs .ws-t--news > span::before, html.wts-t--ic .ws-tabs .h3-tab[data-v="0"] > span::before { content: ''; display: inline-block; width: 14px; height: 14px; margin-right: 5px; vertical-align: -2px; background: center / contain no-repeat; }
+html.wts-t--ic .ws-tabs .ws-t--news > span::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 5h13v14H6a2 2 0 0 1-2-2z'/%3E%3Cpath d='M17 9h3v8a2 2 0 0 1-2 2'/%3E%3Cpath d='M8 9h5M8 13h5M8 16h3'/%3E%3C/svg%3E"); }
+html.wts-t--ic .ws-tabs .h3-tab[data-v="0"] > span::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M5 20V11M12 20V5M19 20v-6'/%3E%3C/svg%3E"); }
+html.wts-t--ic.wts-tight body:not(.is-desk) .ws-tabs .ws-t--news > span, html.wts-t--ic.wts-tight body:not(.is-desk) .ws-tabs .h3-tab[data-v="0"] > span { display: inline-block !important; font-size: 0; }
+html.wts-t--ic.wts-tight body:not(.is-desk) .ws-tabs .ws-t--news > span::before, html.wts-t--ic.wts-tight body:not(.is-desk) .ws-tabs .h3-tab[data-v="0"] > span::before { width: 18px; height: 18px; margin: 0; }
+html.wts-t--ic.wts-tight body:not(.is-desk) .ws-tabs .ws-t--news::before, html.wts-t--ic.wts-tight body:not(.is-desk) .ws-tabs .h3-tab[data-v="0"]::before { content: none; }
+
+/* v10: карты — тоже с белой иконкой; влезает — «Map 1», не влезает — иконка и номер */
+html.wts-mapic .ws-tabs .h3-tab[data-a="mseg"]:not([data-v="0"]) > span::before { content: ''; display: inline-block; width: 14px; height: 14px; margin-right: 5px; vertical-align: -2px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linejoin='round'%3E%3Cpath d='M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z'/%3E%3Cpath d='M9 4v14M15 6v14'/%3E%3C/svg%3E") center / contain no-repeat; }
+html.wts-mapic.wts-tight body:not(.is-desk) .ws-tabs .h3-tab[data-a="mseg"]:not([data-v="0"]) > span { display: none; }
+html.wts-mapic.wts-tight body:not(.is-desk) .ws-tabs .h3-tab[data-a="mseg"]:not([data-v="0"])::before { content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linejoin='round'%3E%3Cpath d='M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z'/%3E%3Cpath d='M9 4v14M15 6v14'/%3E%3C/svg%3E") " " attr(data-v); font-size: 12px; font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; }
+
+/* v11: карты без иконки — влезает «Map 1», не влезает — номер; иконки «Новостей» / «Статистики» мельче, лого у карт крупнее; черта между ними и картами */
+html.wts-mapnum.wts-tight body:not(.is-desk) .ws-tabs .h3-tab[data-a="mseg"]:not([data-v="0"]) > span { display: none; }
+html.wts-mapnum.wts-tight body:not(.is-desk) .ws-tabs .h3-tab[data-a="mseg"]:not([data-v="0"])::before { content: attr(data-v); font-size: 12px; font-weight: 600; }
+html.wts-v11.wts-t--ic.wts-tight body:not(.is-desk) .ws-tabs .ws-t--news > span::before, html.wts-v11.wts-t--ic.wts-tight body:not(.is-desk) .ws-tabs .h3-tab[data-v="0"] > span::before { width: 15px; height: 15px; }
+html.wts-v11 body:not(.is-desk) .ws-tabs .h3-tab img { width: 16px; height: 16px; }
+html.wts-v11 .ws-tabs .h3-tab[data-v="0"] { position: relative; overflow: visible; }
+html.wts-v11 .ws-tabs .h3-tab[data-v="0"]::after { content: ""; position: absolute; right: 0; top: 28%; bottom: 28%; width: 1px; background: #ffffff33; pointer-events: none; }
+/* иконки «Новостей» / «Статистики» — ровно по центру по высоте (были чуть выше) */
+html.wts-t--ic .ws-tabs .ws-t--news > span, html.wts-t--ic .ws-tabs .h3-tab[data-v="0"] > span { display: inline-flex; align-items: center; }
+html.wts-t--ic .ws-tabs .ws-t--news > span::before, html.wts-t--ic .ws-tabs .h3-tab[data-v="0"] > span::before { vertical-align: middle; flex: none; }
+html.wts-t--ic.wts-tight body:not(.is-desk) .ws-tabs .ws-t--news > span, html.wts-t--ic.wts-tight body:not(.is-desk) .ws-tabs .h3-tab[data-v="0"] > span { display: inline-flex !important; line-height: 0; }

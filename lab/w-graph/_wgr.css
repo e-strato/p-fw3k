@@ -1,0 +1,56 @@
+/* w-graph — кнопки графика + / − / сброс (дирижёр 04.11: «несколько идей, как висят; зума колесом не будет; размеры адекватные — на телефоне мелкие, ближе к картам»)
+   WGR_ZC: 'map-r' — столбик как на карте, справа внизу графика · 'map-l' — то же слева внизу · 'pill' — строкой сверху справа · 'head' — в шапке, крупнее, одной группой */
+html.wgr .g2-zc button { width: 36px; height: 36px; font-size: 20px; }
+html.wgr .g2-zc button svg { width: 16px; height: 16px; }
+html.wgr body:not(.is-desk) .g2-zc button { width: 44px; height: 44px; font-size: 22px; }
+html.wgr body:not(.is-desk) .g2-zc button svg { width: 18px; height: 18px; }
+html.wgr .g2-zc { border-radius: 12px; }
+html.wgr-map-r .g2-zc { top: auto !important; bottom: 56px; }
+html.wgr-map-l .g2-zc { top: auto !important; bottom: 56px; right: auto !important; left: 8px; }
+html.wgr-pill .g2-zc { top: 8px !important; flex-direction: row; }
+html.wgr-pill .g2-zc button + button { border-top: 0; border-left: 1px solid #ffffff14; }
+/* head: в шапке окна — одна группа с рамкой, кнопки 32 (компьютер) / 40 (телефон); «поделиться» — отдельно */
+html.wgr-head .ws-h .ws-ic { gap: 0; }
+html.wgr-head .ws-h .ws-ib[data-src="z"] { background: #ffffff0d; border-radius: 0; }
+html.wgr-head .ws-h .ws-ib[data-src="share"] + .ws-ib[data-src="z"] { margin-left: 8px; border-radius: 10px 0 0 10px; }
+html.wgr-head .ws-h .ws-ib[data-src="z"]:has(+ .ws-ib:not([data-src="z"])), html.wgr-head .ws-h .ws-ib[data-src="z"]:last-child { border-radius: 0 10px 10px 0; }
+html.wgr-head .ws-h .ws-ib[data-src="z"]:hover:not([disabled]) { background: #ffffff1f; }
+html.wgr-head .ws-h .ws-ib { width: 32px; height: 32px; font-size: 18px; }
+html.wgr-head .ws-h .ws-ib svg { width: 16px; height: 16px; }
+html.wgr-head body:not(.is-desk) .ws-h .ws-ib { width: 40px; height: 40px; font-size: 22px; }
+html.wgr-head body:not(.is-desk) .ws-h .ws-ib svg { width: 18px; height: 18px; }
+/* v12 (дирижёр 04.11: «на телефоне выносить, чтобы не мешало таббару; кнопку назад на мобиле убираем»): WGR_PH — на телефоне «назад» нет, табы — во всю ширину, кнопки графика — строкой под табами справа */
+html.wgr-ph body:not(.is-desk) .ws-h .ws-b { display: none; }
+html.wgr-ph body:not(.is-desk) .bw-bar.ws-h { grid-template-columns: minmax(0, 1fr); row-gap: 8px; }
+html.wgr-ph body:not(.is-desk) .ws-h .ws-tabs { justify-self: stretch; }
+html.wgr-ph body:not(.is-desk) .ws-h .ws-ic { justify-self: end; }
+/* v13 (дирижёр 04.11: «слева снизу; на компе горизонтально, на телефоне вертикально; иконку сброса — на „полный экран“»): WGR_ZC = 'lb' */
+html.wgr-lb .g2-zc { top: auto !important; bottom: 56px; right: auto !important; left: 8px; flex-direction: row; }
+html.wgr-lb .g2-zc button + button { border-top: 0; border-left: 1px solid #ffffff14; }
+html.wgr-lb body:not(.is-desk) .g2-zc { flex-direction: column; }
+html.wgr-lb body:not(.is-desk) .g2-zc button + button { border-left: 0; border-top: 1px solid #ffffff14; }
+html.wgr-lb .g2-zc [data-zc="reset"] svg { display: none; }
+html.wgr-lb .g2-zc [data-zc="reset"]::after { content: ''; width: 16px; height: 16px; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5'/%3E%3C/svg%3E") center / contain no-repeat; }
+html.wgr-lb body:not(.is-desk) .g2-zc [data-zc="reset"]::after { width: 18px; height: 18px; }
+/* WGR_NOBACK — на телефоне кнопки «назад» нет (дирижёр 04.11) */
+html.wgr-noback body:not(.is-desk) .ws-h .ws-b { display: none; }
+html.wgr-noback body:not(.is-desk) .bw-bar.ws-h { grid-template-columns: minmax(0, 1fr) auto; }
+/* v14 (дирижёр 04.11: «кнопки чуть меньше; если на них не наводимся — 44% прозрачности»): WGR_SM — 32 (телефон 40); в покое группа прозрачная на 44%, при наведении / нажатии — целиком */
+html.wgr-sm .g2-zc button { width: 32px; height: 32px; font-size: 18px; }
+html.wgr-sm .g2-zc [data-zc="reset"]::after { width: 14px; height: 14px; }
+html.wgr-sm body:not(.is-desk) .g2-zc button { width: 40px; height: 40px; font-size: 20px; }
+html.wgr-sm body:not(.is-desk) .g2-zc [data-zc="reset"]::after { width: 16px; height: 16px; }
+html.wgr-sm .g2-zc { opacity: .56; transition: opacity .15s; }
+html.wgr-sm .g2-zc:hover, html.wgr-sm .g2-zc:focus-within, html.wgr-sm .g2-zc:active { opacity: 1; }
+/* v15 (дирижёр 04.11: «таббар на телефоне — табы fill по всему таббару, а если меньше какого-то значения — прокрутка»): WGR_TFILL — на телефоне табы растягиваются на всю строку поровну от своей ширины; не влезают — листаются вбок (как было) */
+html.wgr-tfill body:not(.is-desk) .ws-h .ws-tabs { display: flex; width: 100%; }
+html.wgr-tfill body:not(.is-desk) .ws-h .ws-tabs .h3-tab { flex: 1 0 auto; justify-content: center; }
+/* v16 (дирижёр 04.11: «градиент остался»; «снизу отступ больше, чем сверху»): WGR_EDGE — затухание края у табов только с той стороны, где есть что листать; под табами отступ как над ними */
+html.wgr-edge body:not(.is-desk) .ws-h .ws-tabs { -webkit-mask-image: none; mask-image: none; }
+html.wgr-edge body:not(.is-desk) .ws-h .ws-tabs.wgr-ml { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 16px); mask-image: linear-gradient(90deg, transparent 0, #000 16px); }
+html.wgr-edge body:not(.is-desk) .ws-h .ws-tabs.wgr-mr { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 16px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 16px), transparent); }
+html.wgr-edge body:not(.is-desk) .ws-h .ws-tabs.wgr-ml.wgr-mr { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 16px, #000 calc(100% - 16px), transparent); mask-image: linear-gradient(90deg, transparent 0, #000 16px, #000 calc(100% - 16px), transparent); }
+html.wgr-edge .bw-bar.ws-h { padding-bottom: 8px !important; }
+/* v17 (дирижёр 04.11: «отступы не поправил» — у выбранного таба на телефоне снизу больше, чем сверху): табы листаются только вбок, по высоте не сдвигаются; таб — ровно по плашке, текст по центру */
+html.wgr-tc body:not(.is-desk) .ws-h .ws-tabs { overflow-y: hidden; align-items: center; }
+html.wgr-tc body:not(.is-desk) .ws-h .ws-tabs .h3-tab { height: 28px; margin: 0; align-self: center; }

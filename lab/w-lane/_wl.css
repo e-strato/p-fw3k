@@ -1,0 +1,51 @@
+/* w-lane — плашка «Линии» у линии 12′ и блок «Линии» (задача 9) */
+.g2-lchip { position: absolute; z-index: 4; transform: translateX(calc(-100% - 6px)); height: 24px; padding: 0 10px; border: 0; border-radius: 999px; background: #18181bdd; box-shadow: 0 0 0 1px #ffffff1a; color: #e4e4e7; font: 500 12px/24px var(--w-font, system-ui); white-space: nowrap; cursor: pointer; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.g2-lchip:hover { background: #27272aee; color: #fff; }
+.g2-lanes { position: absolute; z-index: 5; width: 380px; max-width: calc(100% - 16px); }
+.wl { padding: 12px 14px 10px; border-radius: 12px; background: #111113f2; box-shadow: 0 0 0 1px #ffffff1a, 0 12px 32px #000a; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); color: #e4e4e7; font: 400 12px/1.35 var(--w-font, system-ui); }
+.wl-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.wl-hd b { font-weight: 600; font-size: 13px; color: #fafafa; }
+.wl-hd button { width: 24px; height: 24px; border: 0; border-radius: 6px; background: none; color: #a1a1aa; font-size: 18px; line-height: 1; cursor: pointer; }
+.wl-hd button:hover { background: #ffffff14; color: #fff; }
+.wl-sum { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; background: #ffffff0a; }
+.wl-sum img { width: 20px; height: 20px; object-fit: contain; }
+.wl-sum span { flex: 1; color: #a1a1aa; } .wl-sum b { color: #fafafa; font-weight: 600; }
+.wl-sum em { font-style: normal; font-weight: 700; font-size: 15px; color: #facc15; }
+.wl-who { margin: 8px 0 2px; color: #71717a; font-size: 11px; }
+.wl-r { display: grid; grid-template-columns: 52px 1fr 48px; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px solid #ffffff0d; }
+.wl-ln b { display: block; font-weight: 600; color: #fafafa; } .wl-ln small { font-size: 11px; }
+.wl .up { color: var(--up, #22c55e); } .wl .dn { color: var(--dn, #ef4444); }
+.wl-hs { display: flex; align-items: center; gap: 6px; } .wl-hs span { display: flex; gap: 3px; } .wl-hs i { font-style: normal; color: #71717a; font-size: 11px; }
+.wl-hs img { width: 26px; height: 26px; border-radius: 6px; object-fit: cover; }
+.wl-bar { display: flex; height: 4px; margin: 6px 0 4px; border-radius: 2px; overflow: hidden; gap: 2px; }
+.wl-bar .w { background: var(--up, #22c55e); } .wl-bar .d { background: #3f3f46; } .wl-bar .l { background: var(--dn, #ef4444); }
+.wl-p { color: #71717a; font-size: 11px; }
+.wl-g { text-align: right; font-weight: 600; font-size: 13px; } .wl-g small { display: block; font-weight: 400; font-size: 10px; color: #71717a; }
+.wl-ft { margin-top: 6px; color: #52525b; font-size: 10px; text-align: right; }
+/* v5 — до матча: вместо «Статистики» — график Map 1 */
+.bw-page.wl-hide > :not(.wl-pre) { display: none !important; }
+/* v6 — до матча: пустые места под пики */
+.wl-slot .d3-i > i { display: block; width: 100%; height: 100%; border-radius: 8px; background: #ffffff08; box-shadow: inset 0 0 0 1px #ffffff1a; }
+.wl-slot .d3-n { color: #71717a; }
+.wl-tm .ws-tn small { color: #71717a; }
+.wl-pt:focus { outline: none; }
+.wl-tm .wb-side, .wl-tm .ws-tn small { color: #71717a !important; }
+/* v8: пустой пик — с теми же полями, что настоящий (.d3-h.is-pl), чтобы строка была той же высоты */
+html.wb-hov .d3-h.wl-slot { padding: 6px; border-radius: 8px; box-sizing: border-box; }
+/* v13 — точка 12′ — кнопка «Линии»: свёрнуто — светлое кольцо с пульсом, раскрыто — залитая */
+.g2-l12 { position: absolute; z-index: 4; width: 14px; height: 14px; margin: -7px 0 0 -7px; padding: 0; border: 2px solid #e4e4e7; border-radius: 50%; background: #09090b; cursor: pointer; box-shadow: 0 0 0 0 #e4e4e766; animation: wl-pulse 2s ease-out infinite; }
+.g2-l12:hover { transform: scale(1.25); }
+.g2-l12.on { background: #e4e4e7; animation: none; }
+@keyframes wl-pulse { 0% { box-shadow: 0 0 0 0 #e4e4e766; } 70%, 100% { box-shadow: 0 0 0 10px #e4e4e700; } }
+.wl-min { display: grid; place-items: center; }
+.g2-lanes--12 { animation: wl-in .18s ease-out; transform-origin: right center; }
+@keyframes wl-in { from { opacity: 0; transform: scale(.9); } }
+.wl-noln { visibility: hidden; }
+.wl-lndef { color: #71717a !important; }
+/* v17 (дирижёр 04.11: «карточка не должна показывать LIVE — матч ещё не начался»): WL_NOLIVE — до матча у эфира нет плашки «Эфир матча · LIVE · зрителей · Смотреть» */
+html.wl-nolive.wl-is-pre .dc2-led--live { display: none !important; }
+/* v18 — телефон до матча: «Линии» списком вместо графика */
+.wl-inl { padding: 12px 12px 0; }
+.wl-inl .wl { padding: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.wl-inl .wl-hd button { display: none; }
+.wl-inl .wl-r { grid-template-columns: 44px 1fr 44px; gap: 8px; }

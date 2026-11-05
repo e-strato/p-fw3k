@@ -1,0 +1,125 @@
+/* w-top — строка над табами серии (созвон 05.11 §1) */
+html.wt .wt-row { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; border-bottom: 1px solid var(--w-border, #ffffff14); color: var(--w-muted-fg, #a1a1aa); font: 500 13px/1 var(--w-font, inherit); white-space: nowrap; min-width: 0; }
+html.wt .wt-g { display: inline-flex; width: 16px; height: 16px; flex: none; color: var(--w-fg, #fff); }
+html.wt .wt-g svg { width: 100%; height: 100%; fill: currentColor; }
+html.wt .wt-i { flex: none; }
+html.wt .wt-lg { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--w-fg, #fff); }
+html.wt .wt-s { flex: none; width: 3px; height: 3px; border-radius: 50%; background: currentColor; opacity: .6; }
+html.wt .wt-b { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; margin-left: -6px; padding: 0; border: 0; border-radius: 6px; background: none; color: var(--w-muted-fg, #a1a1aa); cursor: pointer; }
+html.wt .wt-b:hover { color: var(--w-fg, #fff); background: var(--w-muted, #ffffff14); }
+html.wt .wt-b svg { width: 16px; height: 16px; }
+html.wt .wt-sh { margin: 0 -6px 0 auto; }
+/* исходные кнопки в табах — спрятаны, их нажимает строка */
+html.wt .bw-bar.ws-h .ws-b, html.wt .bw-bar.ws-h .ws-ib[data-src="share"] { display: none !important; }
+/* одна строка: инфо слева, табы справа, «Поделиться» — на своём месте справа */
+html.wt-row1 .bw-bar.ws-h .ws-ib[data-src="share"] { display: inline-flex !important; }
+html.wt-row1 .bw-bar.ws-h { display: flex; align-items: center; }
+html.wt-row1 .bw-bar.ws-h > .wt-row { height: auto; padding: 0 0 0 12px; border: 0; flex: 0 1 auto; }
+html.wt-row1 .bw-bar.ws-h--center .ws-tabs { position: relative; left: auto; transform: none; margin-left: auto; }
+/* v1: табы ровно по центру своей строки (кнопки из неё ушли в строку выше) */
+html.wt:not(.wt-row1) .bw-bar.ws-h { display: flex; justify-content: center; align-items: center; }
+html.wt:not(.wt-row1) .bw-bar.ws-h--center .ws-tabs { position: relative; left: auto; transform: none; }
+html.wt:not(.wt-row1) .bw-bar.ws-h .ws-ic { position: absolute; right: 12px; }
+/* v3: «Поделиться» — в строке инфо, сразу после Bo3; в табах его нет */
+html.wt-row1.wt-shin .bw-bar.ws-h .ws-ib[data-src="share"] { display: none !important; }
+html.wt-shin .wt-sh { margin: 0 0 0 2px; }
+/* v3: строка инфо мельче */
+html.wt-sm .wt-row { gap: 6px; font-size: 12px; }
+html.wt-sm .wt-g { width: 14px; height: 14px; }
+html.wt-sm .wt-b { width: 22px; height: 22px; }
+html.wt-sm .wt-b svg { width: 14px; height: 14px; }
+/* v4: на телефонной раскладке страницы (body без .is-desk — её ставит и песочница «Телефон 390», и узкое окно) — инфо и табы друг под другом: строка инфо сверху на всю ширину, табы под ней */
+html.wt-stk.wt-row1 body:not(.is-desk) .bw-bar.ws-h { flex-wrap: wrap; row-gap: 0; padding-top: 0 !important; }
+html.wt-stk.wt-row1 body:not(.is-desk) .bw-bar.ws-h > .wt-row { flex: 1 0 100%; height: 32px; padding: 0 12px; margin: 0 -12px 8px; border-bottom: 1px solid var(--w-border, #ffffff14); box-sizing: content-box; }
+html.wt-stk.wt-row1 body:not(.is-desk) .bw-bar.ws-h--center .ws-tabs { margin: 0 auto; }
+/* v5: телефон — между строкой инфо и табами нет черты, кнопки «назад» нет */
+html.wt-ph5.wt-stk.wt-row1 body:not(.is-desk) .bw-bar.ws-h > .wt-row { border-bottom: 0; margin-bottom: 4px; }
+html.wt-ph5 body:not(.is-desk) .wt-row .wt-b[data-wt="back"] { display: none; }
+html.wt .wt-shl { display: none; }
+/* v6–v8: телефон — «Поделиться» с зоной нажатия 44 × 44 */
+/* v6: на вид как v5, зона нажатия 44 невидимая (строка 44 высотой) */
+html[class*="wt-sh44--"] body:not(.is-desk) .bw-bar.ws-h > .wt-row { height: 44px; }
+html.wt-sh44--hit body:not(.is-desk) .wt-sh { position: relative; }
+html.wt-sh44--hit body:not(.is-desk) .wt-sh::after { content: ''; position: absolute; inset: -11px; }
+/* v7: в конце строки, круглая кнопка 44 */
+html.wt-sh44--end body:not(.is-desk) .wt-sh { width: 44px; height: 44px; margin: 0 0 0 auto; border-radius: 50%; background: var(--w-muted, #ffffff14); color: var(--w-fg, #fff); }
+html.wt-sh44--end body:not(.is-desk) .wt-sh svg { width: 18px; height: 18px; }
+/* v8: в конце строки, кнопка с подписью «Поделиться», высота 44 */
+html.wt-sh44--pill body:not(.is-desk) .wt-sh { width: auto; height: 44px; gap: 6px; padding: 0 14px; margin: 0 0 0 auto; border-radius: 22px; background: var(--w-muted, #ffffff14); color: var(--w-fg, #fff); font: 600 13px/1 var(--w-font, inherit); }
+html.wt-sh44--pill body:not(.is-desk) .wt-shl { display: inline; }
+
+/* ===== v9–v11: разный вид всей строки; компьютер — тонкая, телефон — выше (≥ 44), «Поделиться» 44 ===== */
+html[class*="wt-look--"] body:not(.is-desk) .bw-bar.ws-h > .wt-row { height: auto; min-height: 44px; padding-top: 4px; padding-bottom: 4px; font-size: 14px; gap: 8px; }
+html[class*="wt-look--"] body:not(.is-desk) .wt-g { width: 18px; height: 18px; }
+html[class*="wt-look--"] body:not(.is-desk) .wt-sh { width: 44px; height: 44px; margin: 0 0 0 auto; border-radius: 50%; }
+html[class*="wt-look--"] body:not(.is-desk) .wt-sh svg { width: 18px; height: 18px; }
+
+/* v9 · чипсы: время, турнир, Bo3 — плашками */
+html.wt-look--chips .wt-row .wt-s { display: none; }
+html.wt-look--chips .wt-row .wt-i { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 6px; background: var(--w-muted, #ffffff14); }
+html.wt-look--chips .wt-row .wt-lg { color: var(--w-fg, #fff); }
+html.wt-look--chips body:not(.is-desk) .wt-row .wt-i { height: 32px; padding: 0 10px; border-radius: 8px; }
+html.wt-look--chips body:not(.is-desk) .wt-row .wt-sh { background: var(--w-muted, #ffffff14); color: var(--w-fg, #fff); }
+
+/* v10 · две строки на телефоне: крупно турнир, под ним время · Bo3; на компьютере — в строку */
+html.wt-look--2l .wt-tx { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+html.wt-look--2l .wt-sub { display: inline-flex; align-items: center; gap: 8px; }
+html.wt-look--2l .wt-lg { font-weight: 600; }
+html.wt-look--2l body:not(.is-desk) .wt-tx { flex-direction: column; align-items: flex-start; gap: 2px; }
+html.wt-look--2l body:not(.is-desk) .wt-lg { font-size: 15px; max-width: 100%; }
+html.wt-look--2l body:not(.is-desk) .wt-sub { font-size: 13px; }
+html.wt-look--2l body:not(.is-desk) .wt-g { width: 28px; height: 28px; }
+html.wt-look--2l body:not(.is-desk) .bw-bar.ws-h > .wt-row { min-height: 52px; }
+html.wt-look--2l body:not(.is-desk) .wt-sh { border: 1px solid var(--w-border, #ffffff24); }
+
+/* v11 · турнир первым: лого · турнир · Bo3-метка · время с часами справа */
+html.wt-look--tour .wt-lg { font-weight: 600; }
+html.wt-look--tour .wt-bo { padding: 2px 6px; border-radius: 5px; border: 1px solid var(--w-border, #ffffff24); font-size: 11px; line-height: 1; }
+html.wt-look--tour .wt-tm { display: inline-flex; align-items: center; gap: 5px; }
+html.wt-look--tour .wt-tm svg { width: 13px; height: 13px; }
+html.wt-look--tour body:not(.is-desk) .wt-bo { font-size: 12px; padding: 4px 8px; }
+html.wt-look--tour body:not(.is-desk) .wt-sh { background: var(--w-fg, #fff); color: var(--w-bg, #000); }
+html.wt-look--chips .wt-row .wt-lg { display: inline-block; line-height: 22px; }
+html.wt-look--chips body:not(.is-desk) .wt-row .wt-lg { line-height: 32px; }
+
+/* v12–v13: лого Dota — цветное (как в списке турниров) */
+html.wt .wt-g--c img { width: 100%; height: 100%; object-fit: contain; display: block; }
+/* турнир — тегом, как в новостях (.np3-e): значок + название на подложке */
+html.wt-ttag .wt-row .wt-lg { display: inline-flex; align-items: center; height: 17px; padding: 0 5px 0 3px; border-radius: 4px; background: #ffffff1a; color: var(--w-fg, #fff); line-height: 17px; }
+html.wt-ttag .wt-row .wt-lg img { width: 13px; height: 13px; margin-right: 3px; object-fit: contain; flex: none; }
+html.wt-ttag body:not(.is-desk) .wt-row .wt-lg { height: 24px; line-height: 24px; padding: 0 7px 0 5px; border-radius: 6px; }
+html.wt-ttag body:not(.is-desk) .wt-row .wt-lg img { width: 16px; height: 16px; margin-right: 5px; }
+html.wt-ttag.wt-look--chips .wt-row .wt-lg { height: 22px; line-height: 22px; }
+html.wt-ttag.wt-look--chips body:not(.is-desk) .wt-row .wt-lg { height: 32px; line-height: 32px; border-radius: 8px; }
+html.wt-ttag.wt-look--2l body:not(.is-desk) .wt-tx { gap: 4px; }
+
+/* v14: телефон — таббар серии высотой 40 (по гайдлайнам): таб 34 + отступы 3 */
+html.wt-tb40 body:not(.is-desk) .ws-h .ws-tabs .h3-tab { height: 34px; }
+html.wt-tb40 body:not(.is-desk) .ws-h nav.ws-tabs { height: 40px; box-sizing: border-box; padding-top: 3px; padding-bottom: 3px; }
+
+/* v15: телефон — шапка сайта не липнет, строка инфо стоит над полосой табов и уезжает при прокрутке; липнут только табы (сверху, 0) */
+html.wt-scr body:not(.is-desk) header.pt { position: relative !important; }
+html.wt-scr body:not(.is-desk) .bw-bar.ws-h { top: 0 !important; }
+html.wt-scr body:not(.is-desk) .bw > .wt-row { height: auto; min-height: 52px; padding: 4px 12px; border-bottom: 0; font-size: 14px; gap: 8px; }
+html.wt-scr body:not(.is-desk) .bw > .wt-row .wt-b[data-wt="back"] { display: none; }
+
+/* v16: телефон — у прилипших табов сверху отступ 8 (полоса табов с фоном, табы не у самого края) */
+html.wt-top8.wt-stk.wt-row1 body:not(.is-desk) .bw-bar.ws-h { padding-top: 8px !important; background: var(--w-bg, #0a0a0a); }
+html.wt-top8 body:not(.is-desk) .bw > .wt-row { padding-bottom: 0; }
+
+/* v17: телефон — после блока матча табы закреплены сверху над всей страницей */
+html.wt-pin body:not(.is-desk) .bw-bar.ws-h.wt-fixed { position: fixed !important; top: 0 !important; margin: 0 !important; z-index: 30; border-radius: 0 0 12px 12px; box-shadow: 0 6px 16px #0008; }
+
+/* v18: телефон — блок матча и колонка виджетов одним потоком страницы (как разные части одной вкладки, а не две колонки).
+   Обёртки блока матча (.gm-main, .bw) не рисуют свою коробку — полоса табов липнет ко всей странице, без переключения в JS.
+   Вид карточки матча собран заново: строка инфо — верх карточки, табы — середина, содержимое вкладки — низ. */
+html.wt-flow body:not(.is-desk) section.gm { gap: 0; }
+html.wt-flow body:not(.is-desk) .gm-main, html.wt-flow body:not(.is-desk) .gm-main > .bw { display: contents; }
+html.wt-flow body:not(.is-desk) .bw > .wt-row { background: rgb(9, 9, 11); border-radius: 12px 12px 0 0; }
+html.wt-flow body:not(.is-desk) .bw > .bw-bar.ws-h { background: rgb(9, 9, 11); z-index: 20; }
+html.wt-flow body:not(.is-desk) .bw > .bw-page { border-radius: 0 0 12px 12px; overflow: clip; }
+html.wt-flow body:not(.is-desk) section.gm > .gm-side { margin-top: 12px; }
+
+/* v19: телефон — виджеты под блоком матча на всю ширину (порядок и вид на телефоне — отдельная задача 05.11 · 11) */
+html.wt-sidew body:not(.is-desk) section.gm > .gm-side { align-self: stretch !important; width: auto !important; max-width: none !important; flex: none; }
+html.wt-sidew body:not(.is-desk) section.gm > .gm-side > * { width: auto !important; max-width: none !important; align-self: stretch; }

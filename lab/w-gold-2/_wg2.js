@@ -8,7 +8,8 @@
   const hero = key => HERO[key.replace('npc_dota_hero_', '')] || { name: key, img: '' };
   // названия команд — из общей базы страницы GS_NAMES (gs-match/_wfit.js: NAME — как пишет команда, SHORT — коротко), не сырые OpenDota (там «TEAM VISION» капсом); решение дирижёра 30.10
   const team = id => { const t = D.teams[id] || { name: '—', tag: '—', logo: '' }, N = window.GS_NAMES; return N && N.NAME[id] ? { ...t, name: N.NAME[id], tag: N.SHORT[id] || t.tag } : t; };
-  const k = v => (v < 0 ? '−' : '+') + (Math.abs(v) / 1000).toFixed(1) + 'k';
+  let ABS = false; // o.absY (w-bottom v25, дирижёр 04.11: «на графике без минусовой оси — всё обычное, без минуса»): подписи оси и значения — без знака
+  const k = v => (ABS ? '' : v < 0 ? '−' : '+') + (Math.abs(v) / 1000).toFixed(1) + 'k';
   const kk = v => (Math.abs(v) / 1000).toFixed(1) + 'k';
   const mmss = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -58,13 +59,20 @@
     box.style.height = '';
     const H = (o.h ? o.h(W) : W >= 600 ? 480 : 320) + (o.out ? 80 : 0), now = o.state === 'post' ? m.duration : Math.min(o.t, m.duration), live = o.state === 'live', IMG = o.base || ''; // o.out: +80 под две строки команд — поле графика не меньше, чем было
     // o.out (v15+, дирижёр 30.10: «названия не внутри графика, а снаружи»): строка Radiant — над графиком, строка Dire — под осью времени
-    const TB = o.out ? 40 : 0, L = 8, R = Lk.R, top = Lk.hd + TB, evH = S.ev ? 26 : 0, plotB = H - 20 - evH - TB, xl = H - 5 - TB;
+    const TB = o.out ? 40 : 0, L = o.tight ? 0 : 8; let R = typeof o.R === 'number' ? o.R : Lk.R; const /* o.R (w-bottom v36, дирижёр 04.11: «отступ справа сильно большой») — поле под шкалу справа своё */ /* o.tight (w-bottom v11, дирижёр 04.11: «график шире, отступы минимальные, прижат к табам»): слева без поля, сверху и снизу запас по значениям меньше */ top = (o.hd0 ? 0 : Lk.hd) + TB, /* o.hd0 (w-series v10, дирижёр 04.11: «отступы ровные»): кнопки графика ушли в шапку окна — полосу под них сверху не держим */ evH = S.ev ? 26 : 0, plotB = H - 20 - evH - TB, xl = H - 5 - TB;
     // окно: o.win = { span, end } (end null — живой край); без o.win — вся карта
     const wn = o.win, bE = wn && wn.end != null ? Math.min(now, Math.max(wn.span, wn.end)) : now, a0 = wn ? Math.max(0, bE - wn.span) : 0, edge = bE === now;
-    const X = s => L + ((s - a0) / (bE - a0)) * (W - L - R);
+    // o.lane (w-lane v2, задача 9 «Лайнинг», дирижёр 04.11: «график, который появляется до начала матча на основе данных»): пока не прошло 12′ — ось времени до 12′, дальше линии — пунктир прогноза по драфту
+    const FC = !!(o.lane && !wn && now < 720), bX = FC ? (o.laneTail ? 720 + o.laneTail : 720) : bE; // o.laneTail (w-lane v9, дирижёр 04.11: «где линия 12 мин?» — стояла на самом краю): ось чуть дальше 12′, чтобы линия и подпись 12′ были видны
+    const X = s => L + ((s - a0) / (bX - a0)) * (W - L - R);
     const secs = [a0]; for (let s = Math.floor(a0 / 60) * 60 + 60; s < bE; s += 60) secs.push(s); secs.push(bE);
-    const vals = secs.map(s => at(m, s)); let hi = Math.max(0, ...vals), lo = Math.min(0, ...vals); const pad = Math.max(800, (hi - lo) * .12); hi += pad; lo -= pad;
+    const fr = t => (o.lane ? o.lane.g12 : 0) * Math.pow(t / 720, 1.3), v0 = now > 0 ? at(m, now) : 0, fcP = []; if (FC) for (let t = o.fcAll ? 0 : now; ; t = Math.min(720, t + 20)) { fcP.push([t, o.fcAll ? fr(t) : v0 + fr(t) - fr(now)]); if (t >= 720) break; } // o.fcAll (w-lane-2, созвон 05.11 §8.4: «поверх будет идти»): прогноз — весь 0–12′ от нуля, реальный график идёт поверх
+    const vals = secs.map(s => at(m, s)).concat(fcP.map(q => q[1])); let hi = Math.max(0, ...vals), lo = Math.min(0, ...vals); const pad = o.tight ? Math.max(200, (hi - lo) * .04) : Math.max(800, (hi - lo) * .12); hi += pad; lo -= pad;
     const step = [500, 1000, 2000, 5000, 10000, 20000].find(s => (hi - lo) / s <= (H > 400 ? 6 : 4)) || 20000;
+    // o.R = 'auto' (w-bottom v37, дирижёр 04.11: «отступ справа всё равно большой — подумать о результате»): поле справа — по самой широкой подписи
+    // этой карты (метка значения или число шкалы), а не с запасом под 35k; растёт, только когда растут числа
+    if (o.R === 'auto') { const tw = s => [...s].reduce((a, c) => a + (c === '.' ? 3 : c === 'k' ? 6 : 6.6), 0), top1 = Math.max(...vals.map(Math.abs)), lab = Math.floor(Math.max(hi, -lo) / step) * step;
+      R = Math.ceil(Math.max(tw(k(top1)) + 12 + 2, tw(k(lab)) + 8)) + 4; }
     const Y = v => top + (hi - v) / (hi - lo) * (plotB - top), z = Y(0), id = 'g2' + S.id;
     const sc = S.sc != null && S.sc <= now ? S.sc : null;
     let g = ''; const GR = o.pmGrid ? 'dots' : Lk.grid; // v27: как на Polymarket — горизонтали редкими точками, вертикальных линий минут нет
@@ -73,11 +81,19 @@
       if (v && GR === 'dots') g += `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}" stroke="#27272a" stroke-dasharray="1 5" stroke-linecap="round"/>`;
       if (v && GR === 'lines') g += `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}" stroke="#1c1c20"/>`;
       if (GR !== 'zero' || !v) g += `<text x="${W - R + 8}" y="${y + 4}">${v ? k(v) : '0'}</text>`; }
-    g += o.v23 ? `<line x1="${L}" x2="${W - R}" y1="${z}" y2="${z}" stroke="#71717a" stroke-width="1.2"/>` : `<line x1="${L}" x2="${W - R}" y1="${z}" y2="${z}" stroke="#3f3f46" stroke-dasharray="4 4"/>`; // v23: ось 0 — сплошная, ярче сетки (созвон 02.11 §1.5.6)
-    const tk = [10, 5, 2, 1].find(t => (bE - a0) / (t * 60) <= (W >= 600 ? 9 : 5)) || 1;
-    for (let mi = Math.floor(a0 / 60 / tk) * tk + tk; mi * 60 < bE; mi += tk) { const x = X(mi * 60);
+    const PHC = '#27272a'; // цвет линий фаз и оси 0 при o.phLong (w-graph v6)
+    // o.phSame (w-graph v5, дирижёр 04.11: «сделай 0 горизонтальный и 12 и 30 одинаковыми»): ось 0 — тем же цветом и толщиной, что линии фаз
+    g += o.v23 ? `<line x1="${L}" x2="${W - R}" y1="${z}" y2="${z}" stroke="${o.phSame ? (o.phLong ? PHC : '#3f3f46') : '#71717a'}" stroke-width="${o.phSame ? 1 : 1.2}"/>` : `<line x1="${L}" x2="${W - R}" y1="${z}" y2="${z}" stroke="#3f3f46" stroke-dasharray="4 4"/>`; // v23: ось 0 — сплошная, ярче сетки (созвон 02.11 §1.5.6)
+    // o.phLong (w-graph v6, дирижёр 04.11: «линии почти до цифр, не такие яркие, отделялись от линий ромбов и наведения» — те пунктирные): фазы — сплошные, тусклее, вниз почти до подписей минут; ось 0 при phSame — тем же цветом
+    // o.phases (w-graph v2, созвон 04.11 §2.4: «отметки фаз — тонкие линии, без выделения»; чат 04.11: «всё-таки 12 минута»): секунды, где кончается стадия — тонкая вертикаль на всю высоту поля
+    (o.phases || []).forEach(t => { if (t <= a0 || t > bX || (t >= bE && !FC)) return; const x = X(t); g += `<line class="g2-ph" x1="${x}" x2="${x}" y1="${top}" y2="${o.phLong ? xl - 14 : plotB}" stroke="${o.phLong ? PHC : '#3f3f46'}" stroke-width="1"/>`; });
+    const tk = [10, 5, 2, 1].find(t => (bX - a0) / (t * 60) <= (W >= 600 ? 9 : 5)) || 1;
+    for (let mi = Math.floor(a0 / 60 / tk) * tk + tk; mi * 60 < bX; mi += tk) { const x = X(mi * 60);
       if (GR === 'lines') g += `<line x1="${x}" x2="${x}" y1="${top}" y2="${plotB}" stroke="#1c1c20"/>`;
-      if (W - R - x > 40 && x - L > 12) g += `<text${o.v23 ? ' class="g2-tx"' : ''} x="${x}" y="${xl}" text-anchor="middle">${mi}'</text>`; } // v23: минуты контрастнее (§1.5.4)
+      if (W - R - x > 40 && x - L > 12 && !(o.phOnly && (o.phases || []).length) && !(o.phLbl && (o.phases || []).some(t => t !== mi * 60 && t > a0 && t < bE && Math.abs(X(t) - x) < 28))) g += `<text${o.v23 ? ' class="g2-tx"' : ''} x="${x}" y="${xl}" text-anchor="middle">${mi}'</text>`; }
+    // o.phLbl (w-graph v3, дирижёр 04.11: «вместе с линиями на 12 и 30 должны быть подписи»): у отметки фазы — своя минута в строке времени; обычная подпись ближе 28px к ней не ставится
+    // o.phOnly (w-graph v4, дирижёр 04.11: «другие убери»): в строке времени — только подписи фаз (12′, 30′), обычных минут нет
+    if (o.phLbl) (o.phases || []).forEach(t => { if (t <= a0 || t > bX || (t >= bE && !FC) || (!o.phOnly && (t / 60) % tk === 0)) return; const x = X(t); if (W - R - x > 20 && x - L > 12) g += `<text${o.v23 ? ' class="g2-tx"' : ''} x="${x}" y="${xl}" text-anchor="middle">${Math.round(t / 60)}'</text>`; }); // v23: минуты контрастнее (§1.5.4)
     // линия: выше нуля — зелёная, ниже — красная; заливка тает к нулю
     const pts = secs.map(s => [+X(s).toFixed(1), +Y(at(m, s)).toFixed(1)]), d = (Lk.smooth || o.smooth) ? curve(pts) : 'M' + pts.map(q => q.join(',')).join('L');
     const area = `${d}L${X(bE)},${z}L${X(a0)},${z}Z`;
@@ -87,9 +103,32 @@
       ${Lk.fill ? `<path d="${area}" fill="url(#gu${id})" clip-path="url(#u${id})"/><path d="${area}" fill="url(#gd${id})" clip-path="url(#d${id})"/>` : ''}
       <g class="${sc != null ? 'g2-dim' : ''}"><path d="${d}" fill="none" stroke="var(--up)" stroke-width="${Lk.lw}" stroke-linejoin="round" stroke-linecap="round" clip-path="url(#u${id})"/>
       <path d="${d}" fill="none" stroke="var(--dn)" stroke-width="${Lk.lw}" stroke-linejoin="round" stroke-linecap="round" clip-path="url(#d${id})"/></g>`;
+    // o.pmHov (w-graph v7, дирижёр 04.11 + скрин Polymarket: «при наведении такой эффект»): справа от курсора график гаснет — заливка и всё поле темнее, линия серая; слева — как была
+    if (o.pmHov && sc != null) { const sx = X(sc);
+      g += `<defs><clipPath id="r${id}"><rect x="${sx}" y="0" width="${W}" height="${H}"/></clipPath></defs><rect x="${sx}" y="${top - 4}" width="${Math.max(0, W - R - sx)}" height="${plotB - top + 4}" fill="#09090b" opacity=".72"/>
+        <path d="${d}" fill="none" stroke="#3f3f46" stroke-width="${Lk.lw}" stroke-linejoin="round" stroke-linecap="round" clip-path="url(#r${id})"/>`; }
+    // o.lane: прогноз линий — пунктир от текущей точки до 12′ (до начала матча — от нуля); у линии 12′ сверху — плашка «Линии», по ней и по полю 0–12′ — блок «Линии» (o.lanePanel)
+    let lov = '';
+    if (o.lane && o.laneOpen && S.lane === undefined && (o.laneOpen !== 'pre' || o.state === 'pre')) S.lane = true; // laneOpen: 'pre' (страница матча v58) — сразу открыт только до матча // o.laneOpen (w-lane v12, дирижёр 04.11: «или сразу открытым держать»): блок «Линии» открыт с самого начала, закрыть — ×
+    if (o.lane) { const A0 = team(m.radiant_team_id), B0 = team(m.dire_team_id), x12 = X(720);
+      if (FC && fcP.length > 1) { const fd = fcP.map(q => `${X(q[0]).toFixed(1)},${Y(q[1]).toFixed(1)}`).join('L'), ve = fcP[fcP.length - 1][1];
+        { const fcS = `<path class="g2-fc" d="M${fd}" fill="none" stroke="#a1a1aa" stroke-width="1.6" stroke-dasharray="5 5" stroke-linecap="round"/><circle cx="${x12}" cy="${Y(ve)}" r="3.5" fill="#09090b" stroke="#a1a1aa" stroke-width="1.6"/>`; g = o.fcAll ? fcS + g : g + fcS; }
+        // плашка — прогноз по драфту (o.lane.g12), а не где кончится пунктир; имя команды — как в нижней строке страницы (база имён), иначе тег
+        const g12 = o.lane.g12 || 0, nm = side => (o.laneTeam && o.laneTeam(el, side)) || (el.closest('.bw')?.querySelector(`.d3-five.${side} .d3-tm`) || {}).title || (side === 'a' ? A0 : B0).tag; // o.laneTeam (w-lane v5) — до матча команды берём из «Составов»
+        if (!o.laneDot) lov = `<button class="g2-lchip" style="left:${x12}px;top:${top + 6}px">Линии · ждут ${nm(g12 >= 0 ? 'a' : 'b')} +${kk(g12)} к 12′</button>`; }
+      else if (!o.laneDot && a0 < 720 && x12 > L + 60) lov = `<button class="g2-lchip" style="left:${x12}px;top:${top + 6}px">Линии 0–12′</button>`;
+      // o.lane12 (w-lane v10, дирижёр 04.11: «открывать его именно на точке 12 минут»): блок встаёт у точки 12′ — слева от неё, по высоте у точки; после 12′ на линии в этом месте — кольцо-метка
+      const v12 = FC ? (fcP.length ? fcP[fcP.length - 1][1] : 0) : at(m, 720), y12 = Y(v12);
+      if (o.lane12 && !o.laneDot && !FC && a0 < 720 && 720 < bE) g += `<circle cx="${x12}" cy="${y12}" r="5" fill="#09090b" stroke="#e4e4e7" stroke-width="1.6"/>`;
+      const pl = o.lane12 ? Math.max(L + 8, x12 - 380 - 14) : L + 8, pt = o.lane12 ? Math.max(top + 8, Math.min(y12 - 170, plotB - 350)) : top + 8;
+      // o.laneDot (w-lane v13, дирижёр 04.11: «плашку уберём; блок можно свернуть в точку, точка активна»): плашки нет; точка 12′ — кнопка: свёрнут — по ней блок раскрывается, раскрыт — сворачивается в неё
+      if (o.laneDot && a0 <= 720 && 720 <= bX) lov += `<button class="g2-l12${S.lane ? ' on' : ''}" style="left:${x12}px;top:${y12}px" title="${S.lane ? 'Свернуть «Линии»' : 'Линии: что ждут на 0–12′'}"></button>`;
+      if (S.lane && o.lanePanel) lov += `<div class="g2-lanes${o.lane12 ? ' g2-lanes--12' : ''}" style="left:${pl}px;top:${pt}px">${o.lanePanel(el, o.laneDot ? { ...o.lane, dot: true } : o.lane)}</div>`; }
     // tv: пунктир на текущем значении через весь график
     const vNow = at(m, now), yNow = Y(vNow), TVL = o.look === 'tv' || o.look === 'mx';
-    if (TVL && edge) g += `<line x1="${L}" x2="${W - R}" y1="${yNow}" y2="${yNow}" stroke="${vNow >= 0 ? 'var(--up)' : 'var(--dn)'}" stroke-dasharray="2 3" opacity=".7"/>`;
+    // o.laneGrey (w-lane v17, дирижёр 04.11: «метка — да, серой»): до матча линия и метка текущего значения (0) — серые, не цвет стороны
+    const NC = o.laneGrey && o.state === 'pre' ? '#71717a' : null;
+    if (TVL && edge) g += `<line x1="${L}" x2="${W - R}" y1="${yNow}" y2="${yNow}" stroke="${NC || (vNow >= 0 ? 'var(--up)' : 'var(--dn)')}" stroke-dasharray="2 3" opacity=".7"/>`;
     // события: башни и Рошан — тонкой засечкой у низа графика; драки — ромбами (pm — кружками) в полосе под графиком
     if (S.ev) {
       for (const ob of objs(m, now).filter(ob => ob.time >= a0 && ob.time <= bE)) { const x = X(ob.time), r = ob.type !== 'building_kill';
@@ -102,11 +141,11 @@
           const kR = f.ds.filter(q => !q.rad).length, sh = kR / n, r = n === 1 ? 4.5 : 7 + Math.min(n, 6) * 0.9, gid = `fr${id}_${i}`, yl = Y(at(m, t0));
           if (o.ring && n > 1) { // v25: по краям — рамка из долей (как кольцевая диаграмма, только ромбом), внутри — число на чёрном ромбе
             const R2 = r + 2, P = 4 * Math.SQRT2 * R2, gl = sh * P, dia = `M${x},${y - R2}L${x + R2},${y}L${x},${y + R2}L${x - R2},${y}Z`, ri = R2 - 3.2;
-            g += `<g class="dm dm2${S.pop === i ? ' on' : ''}" data-f="${i}"><line class="dm-st" x1="${x}" x2="${x}" y1="${y - R2 - 2}" y2="${yl + 3}"/><circle class="dm-pt" cx="${x}" cy="${yl}" r="2.6" fill="${at(m, t0) >= 0 ? 'var(--up)' : 'var(--dn)'}"/>
+            g += `<g class="dm dm2${S.pop === i ? ' on' : ''}" data-f="${i}"><line class="dm-st" x1="${x}" x2="${x}" y1="${y - R2 - 2}" y2="${yl + 3}"/><circle class="dm-pt" cx="${x}" cy="${yl}" r="2.6" fill="${o.pmHov && sc != null && t0 > sc ? '#3f3f46' : at(m, t0) >= 0 ? 'var(--up)' : 'var(--dn)'}"/>
               <circle cx="${x}" cy="${y}" r="16" fill="transparent"/><path d="${dia}" fill="#09090b"/>
               ${sh > 0 ? `<path d="${dia}" fill="none" stroke="var(--up)" stroke-width="3.2" stroke-linejoin="miter" stroke-dasharray="${gl.toFixed(2)} ${P.toFixed(2)}"/>` : ''}${sh < 1 ? `<path d="${dia}" fill="none" stroke="var(--dn)" stroke-width="3.2" stroke-linejoin="miter" stroke-dasharray="0 ${gl.toFixed(2)} ${(P - gl).toFixed(2)} ${P.toFixed(2)}"/>` : ''}
               <path d="M${x},${y - ri}L${x + ri},${y}L${x},${y + ri}L${x - ri},${y}Z" fill="#09090b"/><text class="dm-n2" x="${x}" y="${y + 3.4}" text-anchor="middle">${n}</text></g>`; return; }
-          g += `<g class="dm dm2${S.pop === i ? ' on' : ''}" data-f="${i}"><line class="dm-st" x1="${x}" x2="${x}" y1="${y - r - 1}" y2="${yl + 3}"/><circle class="dm-pt" cx="${x}" cy="${yl}" r="2.6" fill="${at(m, t0) >= 0 ? 'var(--up)' : 'var(--dn)'}"/>
+          g += `<g class="dm dm2${S.pop === i ? ' on' : ''}" data-f="${i}"><line class="dm-st" x1="${x}" x2="${x}" y1="${y - r - 1}" y2="${yl + 3}"/><circle class="dm-pt" cx="${x}" cy="${yl}" r="2.6" fill="${o.pmHov && sc != null && t0 > sc ? '#3f3f46' : at(m, t0) >= 0 ? 'var(--up)' : 'var(--dn)'}"/>
             <defs><linearGradient id="${gid}" gradientUnits="userSpaceOnUse" x1="${x - r}" y1="0" x2="${x + r}" y2="0"><stop offset="${sh}" stop-color="var(--up)"/><stop offset="${sh}" stop-color="var(--dn)"/></linearGradient></defs>
             <circle cx="${x}" cy="${y}" r="16" fill="transparent"/><path d="M${x},${y - r}L${x + r},${y}L${x},${y + r}L${x - r},${y}Z" fill="url(#${gid})" stroke="#09090b" stroke-width="1.2" stroke-linejoin="round"/>
             ${n > 1 ? `<text class="dm-n2" x="${x}" y="${y + 3.4}" text-anchor="middle">${n}</text>` : ''}</g>`; return; }
@@ -115,7 +154,7 @@
     // палец на графике: линия, точка (и для tv — горизонталь)
     let ov = '';
     if (sc != null) { const x = X(sc), v = at(m, sc), y = Y(v), c = v >= 0 ? 'var(--up)' : 'var(--dn)';
-      g += `<line x1="${x}" x2="${x}" y1="${top - 4}" y2="${plotB}" stroke="#71717a" ${TVL ? 'stroke-dasharray="3 3"' : ''}/>`;
+      g += `<line x1="${x}" x2="${x}" y1="${top - 4}" y2="${plotB}" stroke="${o.pmHov ? '#a1a1aa' : '#71717a'}" ${TVL && !o.pmHov ? 'stroke-dasharray="3 3"' : ''}/>`; // o.pmHov: вертикаль сплошная, как у Polymarket
       if (TVL) g += `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}" stroke="#71717a" stroke-dasharray="3 3"/>`;
       g += `<circle cx="${x}" cy="${y}" r="5" fill="${c}" stroke="#09090b" stroke-width="2"/>`;
       if (TVL) ov += `<div class="g2-tag g2-tag--n num" style="top:${y}px;left:${W - R + 2}px">${k(v)}</div><div class="g2-xb num" style="left:${x}px;top:${xl - 13}px">${mmss(sc)}</div>`;
@@ -123,8 +162,8 @@
       ov += near(S, sc, x, W, R, plotB, IMG);
     }
     // живой край: точка с пульсом; tv — метка значения на шкале
-    if (edge) { ov += `<div class="g2-end${live ? ' is-live' : ''}" style="left:${X(now)}px;top:${yNow}px;--c:${vNow >= 0 ? 'var(--up)' : 'var(--dn)'}"></div>`;
-      if (TVL) ov += `<div class="g2-tag num" style="top:${yNow}px;left:${W - R + 2}px;background:${vNow >= 0 ? 'var(--up)' : 'var(--dn)'}">${k(vNow)}</div>`; }
+    if (edge) { ov += `<div class="g2-end${live ? ' is-live' : ''}" style="left:${X(now)}px;top:${yNow}px;--c:${NC || (vNow >= 0 ? 'var(--up)' : 'var(--dn)')}"></div>`;
+      if (TVL) ov += `<div class="g2-tag num" style="top:${yNow}px;left:${W - R + 2}px;background:${NC || (vNow >= 0 ? 'var(--up)' : 'var(--dn)')}">${k(vNow)}</div>`; }
     // команды у графика: сверху Radiant, снизу Dire (tv — в строке сверху)
     const A = team(m.radiant_team_id), B = team(m.dire_team_id);
     // o.big (v13+, дирижёр 30.10: «явнее показать команду, побольше»): плашки команд крупнее — лого 24, полное имя, тон стороны; и в tv тоже
@@ -146,30 +185,34 @@
     else if (o.big) ov += `<div class="g2-tb a" style="top:${top + 4}px"><img src="${IMG + A.logo}" alt=""><span>${A.name}</span></div><div class="g2-tb b" style="top:${plotB - 40}px"><img src="${IMG + B.logo}" alt=""><span>${B.name}</span></div>`;
     else if (o.look !== 'tv') ov += `<div class="g2-tm" style="top:${top + 2}px"><img src="${IMG + A.logo}" alt="">${A.tag}</div><div class="g2-tm" style="top:${plotB - 22}px"><img src="${IMG + B.logo}" alt="">${B.tag}</div>`;
     // «к текущему» — только когда приближено: не у края — к краю, у края — вся карта
-    const zcHtml = () => { const span = bE - a0; return `<button data-zc="in" title="Приблизить"${span <= MIN + 1 ? ' disabled' : ''}>+</button><button data-zc="out" title="Отдалить"${!wn ? ' disabled' : ''}>−</button><button data-zc="reset" title="Вернуть как было"${!wn ? ' disabled' : ''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5"/></svg></button>` };
+    const zOff = o.laneGrey && o.state === 'pre'; // w-lane v17 (дирижёр 04.11: «кнопки просто disabled»): до матча приближать нечего
+    const zcHtml = () => { const span = bE - a0; return `<button data-zc="in" title="Приблизить"${span <= MIN + 1 || zOff ? ' disabled' : ''}>+</button><button data-zc="out" title="Отдалить"${!wn ? ' disabled' : ''}>−</button><button data-zc="reset" title="Вернуть как было"${!wn ? ' disabled' : ''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5"/></svg></button>` };
     if (o.ctl && o.ztop) { const ic = el.querySelector('.g2-ic'); let zt = ic && ic.querySelector('.g2-zt'); if (ic && !zt) { zt = document.createElement('span'); zt.className = 'g2-zt'; ic.prepend(zt) } if (zt) zt.innerHTML = zcHtml() }
-    else if (o.ctl) { const span = bE - a0; ov += `<div class="g2-zc" style="top:${plotB - 104 - (S.ev ? 0 : 0)}px;right:${R + 6}px"><button data-zc="in" title="Приблизить"${span <= MIN + 1 ? ' disabled' : ''}>+</button><button data-zc="out" title="Отдалить"${!wn ? ' disabled' : ''}>−</button><button data-zc="reset" title="Вернуть как было"${!wn ? ' disabled' : ''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5"/></svg></button></div>`; }
+    else if (o.ctl) { const span = bE - a0; ov += `<div class="g2-zc" style="top:${plotB - 104 - (S.ev ? 0 : 0)}px;right:${R + 6}px"><button data-zc="in" title="Приблизить"${span <= MIN + 1 || zOff ? ' disabled' : ''}>+</button><button data-zc="out" title="Отдалить"${!wn ? ' disabled' : ''}>−</button><button data-zc="reset" title="Вернуть как было"${!wn ? ' disabled' : ''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5"/></svg></button></div>`; }
     else if (wn) ov += `<button class="g2-fab" data-z="${edge ? 'all' : 'now'}" style="top:${plotB - 40}px;right:${R + 6}px" title="${edge ? 'Вся карта' : live ? 'К текущему' : 'К концу'}">${edge ? ICON.all : ICON.now}</button>`;
     // Claude-A 03.11 (дирижёр: «лого под графиком мигают, наведение на них не работает»): в live поле рисуется 30 раз в секунду —
     // раньше каждый кадр пересоздавались и подписи команд с лого. Теперь линия (svg) — заменяется, а надписи поверх — сверяются по узлам: картинки не пересоздаются
-    const ovh = ov + (S.pop != null ? pop(S, X, W, now, IMG, Y) : '');
+    // lov — первым (w-lane, дирижёр 04.11: «при движении мыши то пропадает, то появляется»): надписи поверх сверяются по порядку — подсказки наведения перед блоком «Линии» сдвигали его, и он пересоздавался
+    const ovh = lov + ov + (S.pop != null ? pop(S, X, W, now, IMG, Y) : '');
     let sv = box.querySelector(':scope > svg'), ow = box.querySelector(':scope > .g2-ovw');
     if (!sv || !ow) { box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" height="${H}">${g}</svg><div class="g2-ovw" style="display:contents">${ovh}</div>`; box.querySelector('.g2-ovw')._h = ovh; }
     else { sv.setAttribute('viewBox', `0 0 ${W} ${H}`); sv.setAttribute('height', H); sv.innerHTML = g; if (ow._h !== ovh) { morph(ow, ovh); ow._h = ovh; } }
     head(el, S, sc, now, A, B);
-    S.geo = { L, R, W, a: a0, b: bE, now };
+    S.geo = { L, R, W, a: a0, b: bX, now };
     el.querySelectorAll('[data-zc]').forEach(b => { b.onpointerdown = e => e.stopPropagation(); b.onclick = e => { e.stopPropagation(); const z = b.dataset.zc, span = bE - a0, nowT = now;
       let A1, B1; if (z === 'reset') { A1 = 0; B1 = nowT } else { const ns = Math.min(nowT, z === 'in' ? Math.max(MIN, span / 1.6) : span * 1.6), c = edge ? nowT : (a0 + bE) / 2; B1 = edge ? nowT : Math.min(nowT, c + ns / 2); A1 = Math.max(0, B1 - ns); B1 = A1 + ns }
       const fin = (a, b) => { const sp = b - a; S.o.win = sp >= S.geo.now - 1 ? null : { span: sp, end: b >= S.geo.now - 2 ? null : b } };
       if (!o.smoothZ) { fin(A1, B1); return draw(el); }
       // v25: плавно — окно переезжает за 260 мс
       cancelAnimationFrame(S.zAnim); const A0 = a0, B0 = bE, t0 = performance.now(), ease = q => 1 - Math.pow(1 - q, 3);
-      const step = tm => { const q = Math.min(1, (tm - t0) / 260), e = ease(q); fin(A0 + (A1 - A0) * e, B0 + (B1 - B0) * e); draw(el); S.zAnim = q < 1 ? requestAnimationFrame(step) : 0 };
+      const step = tm => { const q = Math.min(1, (tm - t0) / 260), e = ease(q); fin(A0 + (A1 - A0) * e, B0 + (B1 - B0) * e); if (q >= 1 && B1 - A1 >= nowT - 1) S.o.win = null; /* дирижёр 05.11: вернули всю карту — кнопки «вся карта» и «−» неактивны (на live, пока окно ехало, now успевал вырасти) */ draw(el); S.zAnim = q < 1 ? requestAnimationFrame(step) : 0 };
       S.zAnim = requestAnimationFrame(step); }; });
     const fab = box.querySelector('.g2-fab'); if (fab) fab.onclick = e => { e.stopPropagation(); S.o.win = fab.dataset.z === 'all' ? null : { span: wn.span, end: null }; draw(el); };
     if (o.v23) { box.onpointerover = e => { if (e.pointerType !== 'mouse') return; const dm = e.target.closest('.dm'); if (dm && S.pop !== +dm.dataset.f) { S.pop = +dm.dataset.f; draw(el); } };
       box.onpointerout = e => { if (e.pointerType !== 'mouse') return; const dm = e.target.closest('.dm'); if (dm && !e.relatedTarget?.closest?.('.dm, .g2-pop') && S.pop != null) { S.pop = null; draw(el); } }; }
-    box.onclick = e => { if (e.target.closest('.g2-pop, .g2-fab, .g2-zc')) return;
+    box.onclick = e => { if (e.target.closest('[data-wl-x]')) { S.lane = false; return draw(el); } if (e.target.closest('.g2-lchip, .g2-l12')) { S.lane = !S.lane; S.pop = null; return draw(el); } if (e.target.closest('.g2-pop, .g2-fab, .g2-zc, .g2-lanes')) return;
+      // o.lane: клик по полю 0–12′ (не по ромбу) — блок «Линии»
+      if (o.lane && !e.target.closest('.dm') && S.geo) { const r = box.getBoundingClientRect(), G = S.geo, t = G.a + (e.clientX - r.left - G.L) / (G.W - G.L - G.R) * (G.b - G.a); if (t >= 0 && t <= 720) { S.lane = !S.lane; S.pop = null; return draw(el); } }
       const dm = e.target.closest('.dm') || document.elementFromPoint(e.clientX, e.clientY)?.closest('.dm'), i = dm ? +dm.dataset.f : null;
       const nx = i == null ? null : S.pop === i ? null : i; if (nx !== S.pop) { S.pop = nx; draw(el); } };
   }
@@ -248,11 +291,15 @@
     const frac = x => clamp((x - G().L) / (G().W - G().L - G().R), 0, 1), tOf = x => clamp(G().a + frac(x) * (G().b - G().a), 0, G().now);
     const setWin = (a, span) => { const now = G().now; span = clamp(span, MIN, now);
       if (span >= now - 1) S().o.win = null; else { a = clamp(a, 0, now - span); const end = a + span; S().o.win = { span, end: end >= now - 2 ? null : end }; } draw(el); };
-    const sc = x => { S().sc = x == null ? null : tOf(x); draw(el); };
+    // o.snap (w-bottom v36, дирижёр 04.11: «в точку надо попадать гораздо раньше, а то пиксель в пиксель»): курсор ближе o.snap px к точке драки — прилипает к ней
+    const snap = x => { const g = G(), n = S().o.snap; if (x == null || !n) return null; let best = null, bd = n;
+      fights(S().ds, g.now).forEach(f => { const t = f.ds[0].t; if (t < g.a || t > g.b) return; const d = Math.abs(g.L + (t - g.a) / (g.b - g.a) * (g.W - g.L - g.R) - x); if (d < bd) { bd = d; best = t; } }); return best; };
+    // o.laneStill (w-lane v14, дирижёр 04.11: «линия времени тоже не должна двигаться — это другой тип графика, предугадывать не можем»): до начала матча наведение не водит линию времени
+    const sc = x => { if (S().o.laneStill && S().o.state === 'pre') { if (S().sc != null) { S().sc = null; draw(el); } return; } const t = snap(x); S().sc = x == null ? null : t ?? tOf(x); draw(el); };
     const dbl = x => { if (S().o.win) { S().o.win = null; return draw(el); } const span = Math.max(MIN, G().now / 3); setWin(tOf(x) - frac(x) * span, span); };
     let pan = null;
     box.addEventListener('pointerdown', e => {
-      if (e.target.closest('.dm, .g2-pop, .g2-fab, .g2-zc') || (e.pointerType === 'mouse' && e.button)) return;
+      if (e.target.closest('.dm, .g2-pop, .g2-fab, .g2-zc, .g2-lanes, .g2-lchip, .g2-l12') || (e.pointerType === 'mouse' && e.button)) return;
       // v23: мышью — тащить, когда приближено (как карту); наведение — минута под курсором
       if (S().o.ctl && e.pointerType === 'mouse') { if (S().o.win) { pan = { x: xIn(e), a: G().a, span: G().b - G().a }; box.setPointerCapture(e.pointerId); box.classList.add('is-pan'); } return; }
       P.set(e.pointerId, xIn(e)); kind = e.pointerType; box.setPointerCapture(e.pointerId); const xs = [...P.values()];
@@ -260,7 +307,7 @@
       else if (P.size === 1) { one = xs[0]; moved = false; sc(xs[0]); }
     });
     box.addEventListener('pointermove', e => {
-      if (S().o.ctl && e.pointerType === 'mouse') { if (pan) { const dx = xIn(e) - pan.x; setWin(pan.a - dx / (G().W - G().L - G().R) * pan.span, pan.span); } else if (!e.target.closest('.g2-zc, .dm, .g2-pop')) sc(xIn(e)); return; }
+      if (S().o.ctl && e.pointerType === 'mouse') { if (pan) { const dx = xIn(e) - pan.x; setWin(pan.a - dx / (G().W - G().L - G().R) * pan.span, pan.span); } else if (!e.target.closest('.g2-zc, .dm, .g2-pop, .g2-lanes, .g2-lchip, .g2-l12')) sc(xIn(e)); else if (S().sc != null) sc(null); return; }
       if (!P.has(e.pointerId)) return; P.set(e.pointerId, xIn(e)); const xs = [...P.values()];
       if (two && P.size === 2) { const cx = (xs[0] + xs[1]) / 2, span = two.span * two.d / (Math.abs(xs[0] - xs[1]) || 1); setWin(two.t - frac(cx) * span, span); }
       else if (one != null && P.size === 1) { if (Math.abs(xs[0] - one) > 6) moved = true; sc(xs[0]); }
@@ -295,7 +342,7 @@
   }
 
   window.WG2 = {
-    render(el, o) {
+    render(el, o) { ABS = !!o.absY;
       const S = el._g2 || (el._g2 = { id: ++uid, ev: true, pip: false, pop: null, sc: null }); if (o.noTv) S.pip = false;
       S.o = o; S.ds = deathsOf(o.m); S.pop = null; S.sc = null;
       // v27 (o.glide): live — линия дорисовывается плавно, без скачков от тика к тику (как на Polymarket): время матча течёт непрерывно, кадр — 30 в секунду. ‼️ В лабе — ×6 к реальному, чтобы было видно

@@ -1,0 +1,312 @@
+/* Лаба w-sidebar — «Разбор» сайдбаром вместо колонки (_sd.js). Высота — окно минус отступы колонки, внутри прокрутка. */
+.gm-side .sd{ display:none; }
+.gm-side .sd.is-on{ display:block; }
+.gm-side.sd-hid > .gm-wd{ display:none; }
+/* over — шторка поверх колонки: колонка остаётся под ней, затемнена */
+.gm-side.sd-dim{ position:relative; }
+.gm-side.sd-dim > .gm-wd{ opacity:.25; filter:blur(1px); pointer-events:none; transition:opacity .2s; }
+.gm-side .sd--over.is-on{ position:absolute; inset:0 0 auto 0; z-index:6; box-shadow:-24px 0 48px -12px rgba(0,0,0,.8); }
+
+.sd-in{ display:flex; flex-direction:column; height:calc(100vh - 40px); max-height:820px; border-radius:16px; border:1px solid var(--w-border); background:var(--w-bg); overflow:hidden;
+  animation:sd-in .22s ease-out; }
+@keyframes sd-in{ from{ opacity:0; transform:translateX(24px); } }
+.sd-hd{ display:flex; align-items:center; gap:8px; padding:10px 10px 10px 12px; border-bottom:1px solid var(--w-border); }
+.sd-ib{ all:unset; cursor:pointer; display:grid; place-items:center; width:30px; height:30px; flex:none; border-radius:8px; background:var(--w-mid-bg); color:var(--w-fg); font:500 16px/1 var(--w-font); }
+.sd-ib:hover{ background:color-mix(in srgb, var(--w-fg) 12%, var(--w-mid-bg)); }
+.sd-t{ display:flex; flex-direction:column; margin-right:auto; min-width:0; }
+.sd-t small{ font:500 11px/14px var(--w-font); color:var(--w-muted-fg); } .sd-t b{ font:600 15px/20px var(--w-font); color:var(--w-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sd-crumbs{ display:flex; align-items:center; gap:4px; margin-right:auto; min-width:0; overflow:hidden; }
+.sd-crumbs button{ all:unset; cursor:pointer; font:500 13px/18px var(--w-font); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:110px; }
+.sd-crumbs button:hover{ color:var(--w-fg); } .sd-crumbs button.is-cur{ color:var(--w-fg); font-weight:600; } .sd-crumbs i{ font-style:normal; color:var(--w-muted-fg); opacity:.6; }
+.sd-bd{ flex:1; overflow:auto; padding:14px 14px 16px; display:flex; flex-direction:column; gap:12px; }
+.sd-bd h4{ margin:4px 0 -4px; font:600 12px/16px var(--w-font); color:var(--w-muted-fg); }
+
+.sd-id{ display:flex; align-items:center; gap:12px; }
+.sd-id b{ display:block; font:700 18px/22px var(--w-font); color:var(--w-fg); }
+.sd-id small{ display:flex; align-items:center; gap:5px; font:500 12px/16px var(--w-font); color:var(--w-muted-fg); } .sd-id small img{ width:14px; height:14px; object-fit:contain; }
+.sd-tl{ width:48px; height:48px; object-fit:contain; }
+.sd-ph{ width:56px; height:56px; border-radius:12px; object-fit:cover; background:var(--w-mid-bg); }
+.sd-form{ display:flex; align-items:center; gap:4px; }
+.sd-form i{ display:grid; place-items:center; width:22px; height:22px; border-radius:6px; font:700 11px/1 var(--w-font); font-style:normal; }
+.sd-form i.w{ background:color-mix(in srgb, var(--w-up) 22%, transparent); color:var(--w-up); } .sd-form i.l{ background:color-mix(in srgb, var(--w-down) 22%, transparent); color:var(--w-down); }
+.sd-form small{ margin-left:6px; font:500 11px/14px var(--w-font); color:var(--w-muted-fg); }
+
+/* «к этой минуте» (4a.10) */
+.sd-now{ display:flex; flex-direction:column; gap:6px; padding:12px; border-radius:12px; background:var(--w-mid-bg); }
+.sd-now h4{ margin:0 0 2px; color:var(--w-fg); }
+.sd-kv{ display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-rows:auto auto; column-gap:8px; align-items:baseline; }
+.sd-kv span{ font:500 12px/16px var(--w-font); color:var(--w-muted-fg); } .sd-kv b{ font:700 18px/22px var(--w-font); color:var(--w-fg); justify-self:end; }
+.sd-kv small{ font:500 11px/14px var(--w-font); color:var(--w-muted-fg); }
+.sd-cmp{ justify-self:end; font:600 11px/14px var(--w-font); color:var(--w-muted-fg); } .sd-cmp.bad{ color:var(--w-down); } .sd-cmp.good{ color:var(--w-up); }
+
+/* фокус на герое этого матча (4a.8) */
+.sd-focus{ all:unset; cursor:pointer; display:grid; grid-template-columns:72px minmax(0,1fr) auto 12px; gap:10px; align-items:center; padding:8px; border-radius:12px;
+  background:linear-gradient(90deg, color-mix(in srgb, var(--w-fg) 8%, transparent), transparent); border:1px solid var(--w-border); }
+.sd-focus img{ width:72px; height:40px; border-radius:6px; object-fit:cover; }
+.sd-focus small{ display:block; font:500 11px/14px var(--w-font); color:var(--w-muted-fg); } .sd-focus b{ font:600 14px/18px var(--w-font); color:var(--w-fg); }
+.sd-focus em{ font:600 13px/16px var(--w-font); font-style:normal; color:var(--w-fg); }
+
+.sd-list{ display:flex; flex-direction:column; }
+.sd-li{ all:unset; cursor:pointer; display:grid; grid-template-columns:32px minmax(0,1fr) auto 12px; gap:10px; align-items:center; padding:7px 4px; border-bottom:1px solid var(--w-border); border-radius:6px; }
+.sd-li:hover{ background:var(--w-mid-bg); }
+.sd-li b{ display:block; font:500 13px/17px var(--w-font); color:var(--w-fg); } .sd-li small{ font:500 11px/14px var(--w-font); color:var(--w-muted-fg); }
+.sd-li em{ font:500 12px/16px var(--w-font); font-style:normal; color:var(--w-muted-fg); }
+.sd-av{ width:32px; height:32px; border-radius:8px; object-fit:cover; background:var(--w-mid-bg); }
+.sd-hi{ width:32px; height:18px; border-radius:4px; object-fit:cover; }
+.sd-go{ font-style:normal; color:var(--w-muted-fg); font:500 16px/1 var(--w-font); }
+.sd-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; }
+.sd-hc{ all:unset; cursor:pointer; display:flex; flex-direction:column; gap:3px; padding:6px; border-radius:8px; background:var(--w-mid-bg); }
+.sd-hc:hover{ background:color-mix(in srgb, var(--w-fg) 10%, var(--w-mid-bg)); }
+.sd-hc img{ width:100%; aspect-ratio:16/9; border-radius:4px; object-fit:cover; } .sd-hc b{ font:500 11px/14px var(--w-font); color:var(--w-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sd-hc small{ font:500 10px/12px var(--w-font); color:var(--w-muted-fg); }
+
+.sd-hero{ position:relative; border-radius:12px; overflow:hidden; } .sd-hero img{ display:block; width:100%; aspect-ratio:16/9; object-fit:cover; }
+.sd-hero b{ position:absolute; left:12px; bottom:10px; font:700 20px/24px var(--w-font); color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.7); }
+.sd-stats{ display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; }
+.sd-stats div{ display:flex; flex-direction:column; align-items:center; padding:8px 4px; border-radius:10px; background:var(--w-mid-bg); }
+.sd-stats b{ font:700 16px/20px var(--w-font); color:var(--w-fg); } .sd-stats small{ font:500 10px/12px var(--w-font); color:var(--w-muted-fg); text-align:center; }
+.sd-page{ margin-top:auto; padding:10px; border-radius:10px; text-align:center; font:600 13px/18px var(--w-font); color:var(--w-fg); text-decoration:none; background:var(--w-mid-bg); }
+.sd-page:hover{ background:color-mix(in srgb, var(--w-fg) 10%, var(--w-mid-bg)); }
+/* в нижней строке — видно, что команда и игрок нажимаются */
+#feed .d3-tm, #feed .d3-h[data-hc]{ cursor:pointer; }
+
+/* ── v4 apple — как карточка места в Apple Картах, справа, поверх колонки виджетов */
+.gm-side .sd--apple .sd-in{ border-radius:18px; border-color:transparent; background:color-mix(in srgb, var(--w-bg) 97%, #fff 3%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.06), -18px 0 40px -18px rgba(0,0,0,.9); animation:none; }
+.gm-side .sd--apple .sd-in--in .sd-bd{ animation:sd-push .26s cubic-bezier(.2,.8,.2,1); }
+.gm-side .sd--apple .sd-in--out .sd-bd{ animation:sd-pop .26s cubic-bezier(.2,.8,.2,1); }
+@keyframes sd-push{ from{ opacity:.2; transform:translateX(40px); } }
+@keyframes sd-pop{ from{ opacity:.2; transform:translateX(-40px); } }
+.gm-side .sd--apple .sd-hd{ border:0; padding:12px 12px 0; justify-content:space-between; }
+.gm-side .sd--apple .sd-ib{ border-radius:50%; width:30px; height:30px; font-size:13px; }
+.sd-back{ all:unset; cursor:pointer; display:flex; align-items:center; gap:6px; max-width:200px; height:30px; padding:0 12px 0 8px; border-radius:15px; background:var(--w-mid-bg);
+  font:500 13px/1 var(--w-font); color:var(--w-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sd-back i{ font-style:normal; font-size:18px; line-height:1; margin-top:-2px; }
+.sd-back:hover{ background:color-mix(in srgb, var(--w-fg) 12%, var(--w-mid-bg)); }
+.sd-big{ display:flex; flex-direction:column; gap:2px; margin-top:-2px; }
+.sd-big b{ font:700 24px/28px var(--w-font); color:var(--w-fg); letter-spacing:-.01em; } .sd-big small{ font:500 13px/18px var(--w-font); color:var(--w-muted-fg); }
+/* имя уже крупно сверху — в шапке карточки только картинка и подпись */
+.sd--apple .sd-id > div > b{ display:none; }
+.sd--apple .sd-bd{ gap:16px; }
+.sd--apple .sd-bd h4{ font:700 16px/20px var(--w-font); color:var(--w-fg); margin:6px 0 -6px; }
+.sd--apple .sd-now{ background:var(--w-mid-bg); border-radius:14px; }
+.sd--apple .sd-list{ background:var(--w-mid-bg); border-radius:14px; padding:2px 10px; }
+.sd--apple .sd-li:last-child{ border-bottom:0; }
+.sd--apple .sd-hc{ border-radius:12px; }
+.sd--apple .sd-page{ border-radius:14px; background:#0a84ff; color:#fff; }
+
+/* ── v5 — поверх колонки (SD_OVER): виджеты остаются под панелью; панель выезжает справа, крестик — уезжает вправо */
+.gm-side.sd-host{ position:relative; }
+.gm-side .sd--over2.is-on{ position:absolute; top:0; left:0; right:0; z-index:8; }
+.gm-side .sd--over2.is-on .sd-in{ animation:sd-slide .3s cubic-bezier(.2,.8,.2,1); box-shadow:0 0 0 1px rgba(255,255,255,.08), -24px 0 60px -10px rgba(0,0,0,.95); }
+.gm-side .sd--over2.is-out .sd-in{ animation:sd-slide-out .26s cubic-bezier(.4,0,1,1) forwards; }
+@keyframes sd-slide{ from{ transform:translateX(calc(100% + 48px)); } }
+@keyframes sd-slide-out{ to{ transform:translateX(calc(100% + 48px)); } }
+/* колонка уходит за край окна справа — не показывать горизонтальную прокрутку на время выезда */
+body:has(.sd--over2.is-on){ overflow-x:hidden; }
+
+/* ── v6 полуостров (SD_PEN): прибит к правому краю окна, от верха колонки до низа окна, наезжает на главную колонку на 28, тень слева */
+.sd-pen{ position:fixed; right:0; bottom:0; z-index:60; display:block; transform:translateX(105%); visibility:hidden;
+  transition:transform .34s cubic-bezier(.2,.8,.2,1), visibility 0s linear .34s; }
+.sd-pen.is-on:not(.is-mini){ transform:none; visibility:visible; transition:transform .34s cubic-bezier(.2,.8,.2,1), visibility 0s; }
+.sd-pen .sd-in{ height:100%; max-height:none; border-radius:20px 0 0 0; border:0; border-left:1px solid rgba(255,255,255,.08); border-top:1px solid rgba(255,255,255,.08);
+  background:color-mix(in srgb, var(--w-bg) 97%, #fff 3%); box-shadow:-30px 0 60px -10px rgba(0,0,0,.85), -2px 0 0 rgba(0,0,0,.4); animation:none; }
+.sd-pen .sd-in--in .sd-bd{ animation:sd-push .26s cubic-bezier(.2,.8,.2,1); } .sd-pen .sd-in--out .sd-bd{ animation:sd-pop .26s cubic-bezier(.2,.8,.2,1); }
+.sd-pen .sd-hd{ border:0; padding:14px 16px 0; justify-content:space-between; }
+.sd-pen .sd-bd{ padding:14px 32px 24px 18px; }
+.sd-pen .sd-min{ border-radius:50%; }
+/* свёрнутая — пилюля у правого края, как свёрнутое видео на айфоне: серая, полупрозрачная, ‹ внутри; нажал — панель выезжает обратно */
+.sd-pill{ all:unset; cursor:pointer; position:fixed; right:0; top:50%; z-index:61; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+  width:30px; height:104px; margin-top:-52px; border-radius:16px 0 0 16px; background:rgba(110,110,104,.72); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  box-shadow:-10px 0 40px rgba(0,0,0,.55); color:#fff; transform:translateX(110%); transition:transform .3s cubic-bezier(.2,.8,.2,1) .12s; }
+.sd-pill.is-on{ transform:none; }
+.sd-pill:hover{ background:rgba(130,130,124,.8); }
+.sd-pill img{ width:20px; height:20px; border-radius:50%; object-fit:cover; background:rgba(0,0,0,.3); }
+.sd-pill i{ font-style:normal; font:500 20px/1 var(--w-font); }
+
+/* v9: «свернуть» — слева, в нашем стиле (как «назад» окна матча .bj--soft): квадрат 30, мягкий фон, серая иконка */
+.sd-pen .sd-hd--l{ justify-content:flex-start; gap:8px; }
+.sd-sq{ all:unset; cursor:pointer; display:grid; place-items:center; width:30px; height:30px; flex:none; border-radius:8px; background:rgba(255,255,255,.05); color:var(--w-muted-fg); }
+.sd-sq:hover{ background:rgba(255,255,255,.1); color:var(--w-fg); }
+.sd-sq svg{ display:block; }
+
+/* ── v10 «в нашем стиле» (SD_OURS) — как наши виджеты: тёмная карточка, шапка строкой, строки 44 с разделителями, без плашек и синего */
+.sd-pen.sd--ours .sd-in{ background:var(--w-bg); border-color:var(--w-border); border-radius:16px 0 0 0; box-shadow:-24px 0 48px -12px rgba(0,0,0,.85); }
+.sd-pen.sd--ours .sd-hd{ padding:12px 16px; gap:8px; border-bottom:1px solid var(--w-border); align-items:center; }
+.sd--ours .sd-ttl{ display:flex; flex-direction:column; min-width:0; margin-left:4px; }
+.sd--ours .sd-ttl b{ font:600 15px/20px var(--w-font); color:var(--w-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sd--ours .sd-ttl small{ font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sd-pen.sd--ours .sd-bd{ padding:4px 16px 16px; gap:0; }
+.sd--ours .sd-bd > *{ padding:12px 0; border-bottom:1px solid var(--w-border); }
+.sd--ours .sd-bd > h4{ padding:14px 0 2px; border:0; margin:0; font:var(--t-title); color:var(--w-muted-fg); }
+.sd--ours .sd-bd > h4 + *{ padding-top:2px; }
+.sd--ours .sd-id{ gap:10px; } .sd--ours .sd-id small{ font:var(--t-cell); color:var(--w-muted-fg); }
+.sd--ours .sd-ph, .sd--ours .sd-tl{ width:40px; height:40px; border-radius:8px; }
+.sd--ours .sd-id > div > b{ display:none; }
+.sd--ours .sd-focus{ grid-template-columns:56px minmax(0,1fr) auto 12px; padding:12px 0; border:0; border-bottom:1px solid var(--w-border); border-radius:0; background:none; }
+.sd--ours .sd-focus img{ width:56px; height:32px; border-radius:4px; }
+.sd--ours .sd-focus small{ font:var(--t-sub); } .sd--ours .sd-focus b{ font:var(--t-title); } .sd--ours .sd-focus em{ font:var(--t-num); }
+.sd--ours .sd-now{ background:none; border-radius:0; padding:12px 0; gap:0; }
+.sd--ours .sd-now h4{ font:var(--t-title); color:var(--w-muted-fg); margin:0 0 4px; }
+.sd--ours .sd-kv{ min-height:44px; align-content:center; border-top:1px solid var(--w-border); }
+.sd--ours .sd-kv > span:first-child{ font:var(--t-cell); color:var(--w-fg); } .sd--ours .sd-kv b{ font:var(--t-num); } .sd--ours .sd-kv small{ font:var(--t-sub); } .sd--ours .sd-cmp{ font:var(--t-sub); }
+.sd--ours .sd-list{ background:none; border-radius:0; padding:0; }
+.sd--ours .sd-li{ min-height:44px; padding:0; border-radius:0; } .sd--ours .sd-li:hover{ background:none; } .sd--ours .sd-li:hover b{ color:var(--w-fg); text-decoration:underline; text-underline-offset:3px; }
+.sd--ours .sd-li b{ font:var(--t-title); } .sd--ours .sd-li small{ font:var(--t-sub); } .sd--ours .sd-li em{ font:var(--t-num-s); }
+.sd--ours .sd-av{ width:28px; height:28px; border-radius:6px; } .sd--ours .sd-hi{ width:32px; height:18px; }
+.sd--ours .sd-li{ grid-template-columns:32px minmax(0,1fr) auto 12px; }
+.sd--ours .sd-grid{ gap:6px; } .sd--ours .sd-hc{ border-radius:8px; background:var(--w-mid-bg); }
+.sd--ours .sd-hero{ border-radius:8px; } .sd--ours .sd-hero img{ aspect-ratio:2/1; } .sd--ours .sd-hero b{ font:var(--t-big); }
+.sd--ours .sd-stats div{ border-radius:8px; } .sd--ours .sd-stats b{ font:var(--t-num); } .sd--ours .sd-stats small{ font:var(--t-sub); }
+.sd--ours .sd-form i{ border-radius:4px; width:20px; height:20px; font:var(--t-tag); }
+.sd--ours .sd-page{ margin-top:16px; padding:0; height:36px; display:grid; place-items:center; border:0; border-radius:8px; background:var(--w-mid-bg); color:var(--w-fg); font:var(--t-btn); }
+.sd--ours .sd-page:hover{ background:color-mix(in srgb, var(--w-fg) 10%, var(--w-mid-bg)); }
+
+/* ── v12–v14: блоки прошлого «Разбора» (SD_RICH) — заголовок блока, таблица «подпись — значение», динамика, предметы; вкладки (SD_LAY tabs) */
+.sd--ours .sd-bd > .sd-b{ padding:12px 0; }
+.sd-bh{ display:flex; align-items:baseline; justify-content:space-between; gap:8px; margin-bottom:4px; }
+.sd-bh b{ font:var(--t-title); color:var(--w-muted-fg); } .sd-bh small, .sd-bh .sd-src{ font:var(--t-sub); color:var(--w-muted-fg); text-decoration:none; } .sd-bh .sd-src:hover{ color:var(--w-fg); }
+.sd-tb > div{ display:flex; align-items:center; justify-content:space-between; gap:10px; min-height:32px; border-top:1px solid var(--w-border); }
+.sd-tb > div:first-child{ border-top:0; }
+.sd-tb span{ font:var(--t-cell); color:var(--w-fg); min-width:0; } .sd-tb b{ font:var(--t-num-s); color:var(--w-fg); white-space:nowrap; } .sd-tb b small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.sd-tb i{ font-style:normal; } .sd-tb i.up, .sd-b .up{ color:var(--w-up); } .sd-tb i.dn, .sd-b .dn{ color:var(--w-down); }
+.sd-hn{ display:flex; align-items:center; gap:8px; } .sd-hn img{ width:28px; height:16px; border-radius:3px; object-fit:cover; flex:none; }
+.sd-items{ display:flex; flex-wrap:wrap; gap:4px; padding-top:8px; } .sd-items img{ width:30px; height:22px; border-radius:3px; object-fit:cover; }
+.sd-dy{ display:flex; align-items:baseline; gap:8px; } .sd-dy b{ font:var(--t-big); color:var(--w-fg); } .sd-dy small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.sd-sp{ display:block; width:100%; height:46px; margin-top:6px; } .sd-sp polyline{ fill:none; stroke:var(--w-muted-fg); stroke-width:1.5; vector-effect:non-scaling-stroke; }
+.sd-sp.up polyline{ stroke:var(--w-up); } .sd-sp.dn polyline{ stroke:var(--w-down); } .sd-sp line{ stroke:var(--w-border); stroke-dasharray:3 3; vector-effect:non-scaling-stroke; }
+.sd-none{ margin:4px 0 0; font:var(--t-sub); color:var(--w-muted-fg); }
+.sd-seg{ display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:2px; padding:2px; margin:12px 0 0; border-radius:8px; background:var(--w-mid-bg); }
+.sd-seg button{ all:unset; cursor:pointer; text-align:center; padding:5px 0; border-radius:6px; font:var(--t-seg); color:var(--w-muted-fg); }
+.sd-seg button.is-on{ background:var(--w-bg); color:var(--w-fg); }
+.sd--ours .sd-bd > .sd-seg{ padding:2px; border:0; }
+
+/* ── v15 коротко (SD_SHORT): кнопка страницы — прибита к низу панели, вне прокрутки; блоки плотнее, чтобы влезало без прокрутки при 1440×900 */
+.sd-ft{ flex:none; padding:12px 16px 16px; border-top:1px solid var(--w-border); background:inherit; }
+.sd-ft .sd-page{ margin:0; }
+.sd--ours .sd-ft .sd-page{ margin-top:0; }
+.sd-items--s img{ width:26px; height:19px; }
+.sd--ours .sd-bd > .sd-list .sd-li, .sd--ours .sd-bd > .sd-list{ border-bottom-color:var(--w-border); }
+.sd--short .sd-li{ min-height:40px; } .sd--short .sd-bd > *{ padding:10px 0; } .sd--short .sd-bd > h4{ padding:12px 0 2px; }
+.sd--short .sd-tb > div{ min-height:30px; } .sd--short .sd-kv{ min-height:40px; } .sd--short .sd-hero img{ aspect-ratio:5/2; }
+
+/* ── v16 плитки сравнения наверху (SD_TILES) — вид «О матче» из «Статистики» (.ws49-c из w-preview-2) */
+.sd-tiles{ display:flex; flex-direction:column; gap:8px; }
+.sd--ours .sd-bd > .sd-tiles{ padding:12px 0; }
+.sd-tile{ padding:10px 12px; gap:8px; }
+.sd-tile .ws43-v b{ font:600 15px/18px var(--w-font); }
+.sd-chip{ display:inline-flex; align-items:center; gap:5px; padding:3px 8px 3px 3px; border-radius:7px; background:var(--w-bg); box-shadow:inset 0 0 0 1px var(--w-border); font-style:normal; }
+.sd-chip img{ width:20px; height:20px; border-radius:5px; object-fit:cover; } .sd-chip b{ font:var(--t-num-s) !important; color:var(--w-fg); }
+.sd--short .sd-tiles{ gap:6px; } .sd--short .sd-tile{ padding:9px 12px; gap:7px; }
+
+/* ── v17 строками, как «Участники» (SD_PT): без плашек и плиток; разделитель — только тонкая линия между строками, как в .pt-r */
+.sd--pt .sd-bd > *{ padding:0; border:0; }
+.sd--pt .sd-id{ padding:8px 0 4px; }
+.sd--pt .sd-id .sd-ph, .sd--pt .sd-id .sd-tl{ width:36px; height:36px; border-radius:6px; object-fit:cover; }
+.sd--pt .sd-id .sd-tl{ object-fit:contain; } .sd--pt .sd-id .sd-ph--h{ width:56px; height:32px; }
+.sd--pt .sd-id small{ font:var(--t-sub); }
+.sd-sh{ display:flex; align-items:baseline; justify-content:space-between; gap:8px; padding:16px 0 4px !important; }
+.sd-sh b{ font:var(--t-title); color:var(--w-fg); } .sd-sh small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.sd-r{ all:unset; box-sizing:border-box; display:flex; align-items:center; gap:8px; min-height:36px; padding:4px 0 !important; }
+.sd-r + .sd-r{ border-top:1px solid var(--w-border) !important; }
+.sd-r.is-btn{ cursor:pointer; } .sd-r.is-btn:hover .n > span{ text-decoration:underline; text-underline-offset:3px; }
+.sd-r .p{ width:20px; height:20px; display:grid; place-items:center; flex:none; border-radius:4px; background:var(--w-muted); font:var(--t-tag); color:var(--w-fg); }
+.sd-r img.h{ width:28px; height:16px; border-radius:3px; object-fit:cover; flex:none; }
+.sd-r .n{ flex:1; min-width:0; font:var(--t-cell); color:var(--w-fg); }
+.sd-r .n > span{ display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sd-r .n small{ display:block; font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sd-r .v{ display:flex; align-items:baseline; gap:4px; white-space:nowrap; }
+.sd-r .v b{ font:var(--t-num-s); color:var(--w-fg); font-variant-numeric:tabular-nums; } .sd-r .v b.up{ color:var(--w-up); } .sd-r .v b.dn{ color:var(--w-down); }
+.sd-r .v i{ font-style:normal; font:var(--t-sub); color:var(--w-muted-fg); }
+/* ── v18 без проваливания (SD_FLAT): сегмент «игрок · его герой» под шапкой карточки */
+.sd--pt .sd-bd > .sd-seg--pt{ padding:2px; margin:8px 0 0; }
+/* ── v19 (SD_PLUS): «Состояние по минутам» и «Рейтинг за период» из прошлого «Разбора» (w-drill, вид sb--v9) */
+.sd-1{ display:flex; flex-direction:column; gap:2px; } .sd-1 b{ font:600 22px/26px var(--w-font); color:var(--w-fg); } .sd-1 span{ font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; }
+.sd-dyn{ display:grid; grid-template-columns:auto minmax(0,1fr); align-items:end; gap:16px; padding:4px 0 8px !important; }
+.sd-dyn .sd-sp{ height:40px; margin:0; }
+.sd-rt{ display:grid; grid-template-columns:56px 1fr; gap:8px; align-items:center; padding:4px 0 8px !important; }
+.sd-rt .sd-1 b{ font-size:26px; line-height:30px; }
+.sd-r6{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:4px 12px; }
+.sd-r6 > div{ display:flex; align-items:center; gap:6px; height:24px; min-width:0; }
+.sd-r6 b{ display:grid; place-items:center; min-width:26px; height:20px; padding:0 4px; border-radius:4px; background:var(--w-muted); font:var(--t-tag); color:var(--w-fg); }
+.sd-r6 b.up{ color:var(--w-up); } .sd-r6 b.dn{ color:var(--w-down); }
+.sd-r6 span{ font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* ── v21 (SD_LIFT): сайдбар чуть выделен — фон на 5% светлее, рамка светлее, скругление 16 слева сверху и снизу (снизу — отступ 8 от края окна, иначе скругления не видно) */
+.sd-pen.sd--lift{ bottom:8px; }
+.sd-pen.sd--ours.sd--lift .sd-in{ background:color-mix(in srgb, var(--w-bg) 95%, #fff 5%); border:1px solid rgba(255,255,255,.12); border-right:0; border-radius:16px 0 0 16px; overflow:hidden; }
+/* ── v22 (SD_SQ0): как v21, но без скругления и до низа окна */
+.sd-pen.sd--lift.sd--sq0{ bottom:0; }
+.sd-pen.sd--ours.sd--lift.sd--sq0 .sd-in{ border-radius:0; border-bottom:0; }
+/* ── v23 (SD_NOTOP): без верхней рамки — сайдбар встаёт ровно под линию шапки страницы (.pt), двойной линии нет */
+.sd-pen.sd--ours.sd--notop .sd-in{ border-top:0; }
+/* ── v24 (SD_HDID): фото / лого / герой и подпись — в шапке, строки под шапкой нет */
+.sd--hdid .sd-hd img[data-hdid]{ width:36px; height:36px; border-radius:6px; object-fit:cover; flex:none; margin-left:4px; }
+.sd--hdid .sd-hd img.sd-tl[data-hdid]{ object-fit:contain; } .sd--hdid .sd-hd img.sd-ph--h[data-hdid]{ width:56px; height:32px; }
+.sd--hdid .sd-ttl{ margin-left:2px; } .sd--hdid .sd-ttl small{ display:flex; align-items:center; gap:5px; } .sd--hdid .sd-ttl small img{ width:14px; height:14px; object-fit:contain; flex:none; }
+.sd--hdid .sd-bd > .sd-seg--pt{ margin-top:12px; }
+/* ── v25–v28 (SD_PILL): свёрнутый сайдбар в нашем стиле — цвет панели, рамка как у сайдбара, углы 8, шеврон как у кнопок шапки (.sd-sq) */
+.sd-pill2{ width:auto; height:auto; margin-top:0; gap:6px; padding:0; border-radius:8px 0 0 8px; background:color-mix(in srgb, var(--w-bg) 95%, #fff 5%); border:1px solid rgba(255,255,255,.12); border-right:0;
+  backdrop-filter:none; -webkit-backdrop-filter:none; box-shadow:-12px 0 32px -8px rgba(0,0,0,.7); color:var(--w-muted-fg); }
+.sd-pill2:hover{ background:color-mix(in srgb, var(--w-bg) 90%, #fff 10%); color:var(--w-fg); }
+.sd-pill2 i{ display:grid; place-items:center; font:inherit; } .sd-pill2 svg{ display:block; }
+.sd-pill2 img{ border-radius:6px; background:var(--w-muted); width:28px; height:28px; }
+/* a — язычок: узкий, фото сверху, шеврон снизу */
+.sd-pill2--a{ flex-direction:column; width:40px; padding:6px 0 8px; gap:8px; }
+/* b — плашка: шеврон и фото в строку, высота 44, как кнопка шапки */
+.sd-pill2--b{ flex-direction:row; height:44px; padding:0 8px 0 6px; gap:4px; }
+.sd-pill2--b i{ width:20px; height:28px; }
+/* c — мини-шапка: «‹ фото имя / тип», как шапка сайдбара */
+.sd-pill2--c{ flex-direction:row; height:52px; padding:0 14px 0 6px; gap:8px; max-width:200px; }
+.sd-pill2--c i{ width:24px; height:30px; border-radius:6px; background:rgba(255,255,255,.05); }
+.sd-pill2--c img{ width:32px; height:32px; }
+.sd-pill2--c span{ display:flex; flex-direction:column; min-width:0; } .sd-pill2--c b{ font:600 13px/16px var(--w-font); color:var(--w-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .sd-pill2--c small{ font:var(--t-sub); color:var(--w-muted-fg); }
+/* d — только фото: квадрат 44, шеврон появляется поверх по наведению */
+.sd-pill2--d{ width:44px; height:44px; padding:0; position:fixed; }
+.sd-pill2--d img{ width:32px; height:32px; }
+.sd-pill2--d i{ position:absolute; inset:0; border-radius:8px 0 0 8px; background:rgba(0,0,0,.55); color:#fff; opacity:0; transition:opacity .15s; }
+.sd-pill2--d:hover i{ opacity:1; }
+/* a и d — в ширину поля справа (32), чтобы не лезть на виджет колонки */
+.sd-pill2--a{ width:32px; padding:4px 0 8px; } .sd-pill2--a img{ width:24px; height:24px; border-radius:5px; }
+.sd-pill2--d{ width:32px; height:40px; } .sd-pill2--d img{ width:24px; height:24px; border-radius:5px; }
+/* ── v29 (SD_PILL 't'): как было (узкая вертикальная, 32 — в поле справа), но трапеция — левый край скошен сверху и снизу; фото того, что в сайдбаре, и значок «i» */
+.sd-pill2--t{ flex-direction:column; width:32px; height:104px; padding:0; gap:10px; border:0; border-radius:0; clip-path:polygon(0 14px, 100% 0, 100% 100%, 0 calc(100% - 14px)); box-shadow:none; background:color-mix(in srgb, var(--w-bg) 88%, #fff 12%); }
+.sd-pill2--t:hover{ background:color-mix(in srgb, var(--w-bg) 80%, #fff 20%); }
+.sd-pill2--t img{ width:22px; height:22px; border-radius:5px; }
+/* ── v30 (SD_PILL 't2'): трапеция того же цвета, что подложка сайдбара (v21: --w-bg 95% + 5% белого), уже на 4 — 28 */
+.sd-pill2--t2{ width:28px; background:color-mix(in srgb, var(--w-bg) 95%, #fff 5%); }
+.sd-pill2--t2:hover{ background:color-mix(in srgb, var(--w-bg) 95%, #fff 5%); color:var(--w-fg); }
+.sd-pill2--t2 img{ width:20px; height:20px; }
+/* ── v31 (SD_PILL_DRAG): язычок тянется по высоте */
+.sd-pill[data-drag]{ cursor:grab; touch-action:none; user-select:none; -webkit-user-select:none; }
+.sd-pill[data-drag].is-drag{ cursor:grabbing; transition:none; }
+.sd-pill[data-drag] img{ pointer-events:none; -webkit-user-drag:none; }
+/* ── v32 (SD_MIN_OUT): «свернуть» — язычок снаружи слева, по центру высоты сайдбара; трапеция, цвет сайдбара, 28 × 64 */
+.sd-mout{ all:unset; cursor:pointer; position:absolute; left:-28px; top:50%; width:28px; height:64px; margin-top:-32px; display:grid; place-items:center; color:var(--w-muted-fg);
+  background:color-mix(in srgb, var(--w-bg) 95%, #fff 5%); clip-path:polygon(0 12px, 100% 0, 100% 100%, 0 calc(100% - 12px)); }
+.sd-mout:hover{ color:var(--w-fg); }
+.sd-mout svg{ display:block; margin-left:2px; }
+/* ── v33 (SD_MIN_OUT + SD_PILL_MID): «свернуть» — того же размера и формы, что свёрнутый язычок (28 × 104, скос 14) */
+.sd--mout2 .sd-mout{ left:-28px; width:28px; height:104px; margin-top:-52px; clip-path:polygon(0 14px, 100% 0, 100% 100%, 0 calc(100% - 14px)); }
+/* ── v34 (SD_TAB1): один язычок — открыт: у левого края сайдбара со «›», закрывает его левую рамку на своей высоте; свёрнут — у края окна с фото и «i». Контур — обводкой */
+.sd-pill.sd-tab1{ transition:right .34s cubic-bezier(.2,.8,.2,1), top .34s cubic-bezier(.2,.8,.2,1), transform .3s cubic-bezier(.2,.8,.2,1); }
+.sd-pill.sd-tab1.is-drag{ transition:none; }
+.sd-tab1-o{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; overflow:visible; }
+.sd-tab1-o path{ stroke:rgba(255,255,255,.12); stroke-width:2; vector-effect:non-scaling-stroke; }
+.sd-pill.sd-tab1.is-open{ cursor:pointer; }
+/* ── v35 (SD_TAB2): язычок внутри сайдбара — едут одним движением; свёрнут — сайдбар сдвинут ровно на свою ширину, виден только язычок */
+.sd-pen.sd--tab2.is-on.is-mini{ transform:translateX(100%); visibility:visible; transition:transform .34s cubic-bezier(.2,.8,.2,1), visibility 0s; }
+.sd-pen.sd--tab2.is-mini .sd-in{ box-shadow:none; }
+.sd-tab2{ all:unset; box-sizing:border-box; cursor:pointer; position:absolute; left:-27px; width:28px; height:104px; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+  color:var(--w-muted-fg); background:color-mix(in srgb, var(--w-bg) 95%, #fff 5%); clip-path:polygon(0 14px, 100% 0, 100% 100%, 0 calc(100% - 14px)); }
+.sd-tab2:hover{ color:var(--w-fg); }
+.sd-tab2 i{ display:grid; place-items:center; font-style:normal; } .sd-tab2 svg{ display:block; }
+.sd-tab2 img{ width:20px; height:20px; border-radius:5px; object-fit:cover; background:var(--w-muted); pointer-events:none; -webkit-user-drag:none; }
+.sd-tab2[data-drag].is-mini{ cursor:grab; touch-action:none; user-select:none; } .sd-tab2.is-drag{ cursor:grabbing; }
+.sd-tab2:not(.is-mini) i{ margin-left:2px; }
+/* ── v36 (SD_FT_FULL): «Открыть страницу» — на весь низ панели, без отступов и скругления; линия сверху остаётся */
+.sd--ftfull .sd-ft{ padding:0; }
+.sd--ftfull .sd-ft .sd-page{ height:56px; border-radius:0; background:none; }
+.sd--ftfull .sd-ft .sd-page:hover{ background:rgba(255,255,255,.05); }
+
+/* v37 SD_NOTAB — без язычка: крестик в шапке справа */
+.sd--notab .sd-hd .sd-x{ margin-left:auto; }

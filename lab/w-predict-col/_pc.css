@@ -1,0 +1,548 @@
+/* Лаба w-predict-col — «Прогноз» главным в правой колонке (_pc.js). Свечение и блик — у всего виджета, в покое. */
+.pc-host .w.pc{ --pc-ac:#f5c542; --pc-y:#2fbf71; --pc-n:#e5484d; position:relative; padding:0; overflow:hidden; border-radius:16px;
+  border:1px solid color-mix(in srgb, var(--pc-ac) 45%, var(--w-border)); background:var(--w-bg);
+  box-shadow:0 0 0 1px color-mix(in srgb, var(--pc-ac) 10%, transparent), 0 0 28px -6px color-mix(in srgb, var(--pc-ac) 45%, transparent);
+  animation:pc-glow 4s ease-in-out infinite; }
+@keyframes pc-glow{ 50%{ box-shadow:0 0 0 1px color-mix(in srgb, var(--pc-ac) 18%, transparent), 0 0 40px -4px color-mix(in srgb, var(--pc-ac) 60%, transparent); } }
+/* блик — раз в 6 с проходит наискосок */
+.pc-host .w.pc::after{ content:''; position:absolute; inset:0; pointer-events:none; z-index:3;
+  background:linear-gradient(105deg, transparent 35%, rgba(255,255,255,.10) 48%, rgba(255,255,255,.18) 50%, rgba(255,255,255,.10) 52%, transparent 65%);
+  background-size:250% 100%; background-position:150% 0; animation:pc-shine 6s ease-in-out infinite; }
+@keyframes pc-shine{ 0%, 70%{ background-position:150% 0; } 100%{ background-position:-60% 0; } }
+
+.w.pc .pc-hd{ display:flex; align-items:center; gap:8px; padding:12px 12px 10px 16px; }
+.w.pc .pc-hd > b{ font:600 15px/20px var(--w-font); color:var(--w-fg); margin-right:auto; }
+.w.pc .pc-tabs{ display:flex; gap:2px; padding:2px; border-radius:9px; background:var(--w-mid-bg); }
+.w.pc .pc-tabs button{ all:unset; cursor:pointer; padding:4px 9px; border-radius:7px; font:500 12px/16px var(--w-font); color:var(--w-muted-fg); }
+.w.pc .pc-tabs button i{ font-style:normal; opacity:.6; margin-left:2px; }
+.w.pc .pc-tabs button.is-on{ background:var(--w-bg); color:var(--w-fg); }
+.w.pc .pc-x{ all:unset; cursor:pointer; display:grid; place-items:center; width:28px; height:28px; border-radius:8px; color:var(--w-muted-fg); }
+.w.pc .pc-x:hover{ background:var(--w-mid-bg); color:var(--w-fg); }
+.w.pc .pc-bd{ padding:0 12px 12px; }
+.w.pc .pc-q{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+.w.pc .pc-q b{ font:600 14px/18px var(--w-font); color:var(--w-fg); }
+.w.pc .pc-ev{ display:flex; align-items:center; gap:6px; font:500 11px/14px var(--w-font); color:var(--w-muted-fg); }
+.w.pc .pc-ev i{ width:6px; height:6px; border-radius:50%; background:var(--pc-ac); box-shadow:0 0 8px var(--pc-ac); animation:pc-dot 1.6s ease-in-out infinite; }
+@keyframes pc-dot{ 50%{ opacity:.35; } }
+.w.pc .pc-lg{ width:16px; height:16px; object-fit:contain; flex:none; }
+.num{ font-variant-numeric:tabular-nums; }
+
+/* ── главный (poly / feed): вопрос + шкала шанса */
+.w.pc .pc-top{ padding:12px; margin:0 -12px 4px; background:linear-gradient(180deg, color-mix(in srgb, var(--pc-ac) 7%, transparent), transparent); border-top:1px solid var(--w-border); }
+.w.pc .pc-hero{ display:grid; grid-template-columns:minmax(0,1fr) 84px; gap:10px; align-items:center; margin-bottom:10px; }
+.w.pc .pc-hero .pc-q b{ font-size:16px; line-height:21px; }
+.w.pc .pc-gauge{ position:relative; display:grid; justify-items:center; }
+.w.pc .pc-gauge svg{ width:84px; height:47px; } .w.pc .pc-gauge path{ fill:none; stroke-width:8; stroke-linecap:round; }
+.w.pc .pc-gauge .tr{ stroke:var(--w-mid-bg); } .w.pc .pc-gauge .fl{ stroke:var(--pc-y); } .w.pc .pc-gauge .fl--n{ stroke:var(--pc-n); }
+.w.pc .pc-gauge b{ position:absolute; top:20px; font:700 16px/18px var(--w-font); color:var(--w-fg); }
+.w.pc .pc-gauge small{ font:500 10px/12px var(--w-font); color:var(--w-muted-fg); margin-top:-2px; }
+
+/* ── кнопки исходов (poly): «исход · %» и «+баллы» */
+.w.pc .pc-btns{ display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.w.pc .pc-b{ all:unset; cursor:pointer; display:grid; grid-template-columns:auto minmax(0,1fr) auto; grid-template-rows:auto auto; column-gap:6px; align-items:center;
+  padding:8px 10px; border-radius:10px; transition:background .15s, opacity .15s; }
+.w.pc .pc-b .pc-lg{ grid-row:span 2; }
+.w.pc .pc-b b{ font:600 13px/16px var(--w-font); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.w.pc .pc-b em{ font:700 13px/16px var(--w-font); font-style:normal; justify-self:end; }
+.w.pc .pc-b small{ grid-column:2 / -1; font:500 11px/14px var(--w-font); opacity:.8; }
+.w.pc .pc-b--y{ background:color-mix(in srgb, var(--pc-y) 16%, transparent); color:var(--pc-y); }
+.w.pc .pc-b--n{ background:color-mix(in srgb, var(--pc-n) 16%, transparent); color:var(--pc-n); }
+.w.pc .pc-b--y:hover{ background:color-mix(in srgb, var(--pc-y) 26%, transparent); } .w.pc .pc-b--n:hover{ background:color-mix(in srgb, var(--pc-n) 26%, transparent); }
+.w.pc .pc-b--y.is-on{ background:var(--pc-y); color:#06210f; } .w.pc .pc-b--n.is-on{ background:var(--pc-n); color:#2a0708; }
+.w.pc .pc-b.is-off{ opacity:.45; }
+.w.pc .pc-list{ display:flex; flex-direction:column; }
+.w.pc .pc-row{ display:flex; flex-direction:column; gap:8px; padding:12px 0; border-top:1px solid var(--w-border); }
+
+/* ── bb: плитки, баллы крупно */
+.w.pc .pc-bb{ padding:12px 0; border-top:1px solid var(--w-border); display:flex; flex-direction:column; gap:8px; }
+.w.pc .pc-bb--big{ margin:0 -12px; padding:12px; background:linear-gradient(180deg, color-mix(in srgb, var(--pc-ac) 7%, transparent), transparent); }
+.w.pc .pc-bb--big .pc-q b{ font-size:16px; line-height:21px; }
+.w.pc .pc-tiles{ display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.w.pc .pc-t{ all:unset; cursor:pointer; display:flex; flex-direction:column; gap:2px; padding:8px 10px; border-radius:10px; background:var(--w-mid-bg); border:1px solid transparent; transition:border-color .15s, background .15s; }
+.w.pc .pc-t span{ display:flex; align-items:center; gap:6px; font:500 12px/16px var(--w-font); color:var(--w-muted-fg); }
+.w.pc .pc-t b{ font:700 20px/24px var(--w-font); color:var(--w-fg); }
+.w.pc .pc-t small{ font:500 10px/12px var(--w-font); color:var(--w-muted-fg); }
+.w.pc .pc-bb--big .pc-t b{ font-size:24px; line-height:28px; }
+.w.pc .pc-t:hover{ border-color:var(--w-border); }
+.w.pc .pc-t.is-on{ background:color-mix(in srgb, var(--pc-ac) 18%, var(--w-mid-bg)); border-color:var(--pc-ac); }
+.w.pc .pc-t.is-on b{ color:var(--pc-ac); }
+
+/* ── feed: компактные строки, выбор — половинками */
+.w.pc .pc-fr{ display:flex; flex-direction:column; gap:6px; padding:10px 0; border-top:1px solid var(--w-border); }
+.w.pc .pc-fq{ display:flex; flex-direction:column; gap:1px; } .w.pc .pc-fq b{ font:500 13px/17px var(--w-font); color:var(--w-fg); } .w.pc .pc-fq small{ font:500 11px/14px var(--w-font); color:var(--w-muted-fg); }
+.w.pc .pc-half{ display:grid; grid-template-columns:1fr 1fr; border-radius:8px; overflow:hidden; background:var(--w-mid-bg); }
+.w.pc .pc-h{ all:unset; cursor:pointer; padding:6px 10px; font:500 12px/16px var(--w-font); color:var(--w-fg); text-align:center; }
+.w.pc .pc-h + .pc-h{ border-left:1px solid var(--w-border); }
+.w.pc .pc-h em{ font-style:normal; color:var(--pc-ac); margin-left:4px; }
+.w.pc .pc-h:hover{ background:color-mix(in srgb, var(--w-fg) 6%, transparent); }
+.w.pc .pc-h.is-on{ background:var(--pc-ac); color:#1d1500; } .w.pc .pc-h.is-on em{ color:#1d1500; } .w.pc .pc-h.is-off{ opacity:.45; }
+
+/* новый прогноз пришёл по событию — въезжает с подсветкой */
+.w.pc .is-new{ animation:pc-new 1.2s ease-out; }
+@keyframes pc-new{ 0%{ opacity:0; transform:translateY(-6px); background:color-mix(in srgb, var(--pc-ac) 20%, transparent); } 100%{ opacity:1; transform:none; } }
+
+/* ── «Мои» */
+.w.pc .pc-mine{ display:flex; flex-direction:column; border-top:1px solid var(--w-border); }
+.w.pc .pc-m{ display:grid; grid-template-columns:20px minmax(0,1fr) auto; grid-template-rows:auto auto; column-gap:8px; align-items:center; padding:9px 0; border-bottom:1px solid var(--w-border); }
+.w.pc .pc-m b{ font:500 13px/17px var(--w-font); color:var(--w-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.w.pc .pc-m small{ grid-column:2; font:500 11px/14px var(--w-font); color:var(--w-muted-fg); }
+.w.pc .pc-m em{ grid-row:1 / span 2; grid-column:3; font:600 13px/16px var(--w-font); font-style:normal; color:var(--w-muted-fg); } .w.pc .pc-m em.ok{ color:var(--pc-y); }
+.w.pc .pc-st{ grid-row:1 / span 2; display:grid; place-items:center; width:20px; height:20px; border-radius:6px; font:700 11px/1 var(--w-font); }
+.w.pc .pc-st.ok{ background:color-mix(in srgb, var(--pc-y) 20%, transparent); color:var(--pc-y); } .w.pc .pc-st.no{ background:color-mix(in srgb, var(--pc-n) 20%, transparent); color:var(--pc-n); }
+.w.pc .pc-st.wait{ background:var(--w-mid-bg); color:var(--w-muted-fg); }
+.w.pc .pc-sum{ display:flex; justify-content:space-between; padding:10px 0 0; font:500 12px/16px var(--w-font); color:var(--w-muted-fg); } .w.pc .pc-sum b{ font:700 16px/20px var(--w-font); color:var(--pc-ac); }
+
+/* ── «Развернуть» (§4.9): прогноз на всю колонку по высоте окна, остальные виджеты колонки уходят */
+.w.pc.is-full{ height:calc(100vh - 40px); display:flex; flex-direction:column; }
+.w.pc.is-full .pc-bd{ flex:1; overflow:auto; }
+body.pc-colfull .gm-side > .gm-wd:not(:has(.pc-host)){ display:none; }
+
+/* v4–v6: один прогноз в покое (PC_ONE) — перелистывание ‹ › и точки */
+.w.pc .pc-one .pc-top{ border-top:1px solid var(--w-border); }
+.w.pc .pc-one .pc-bb--big{ border-top:1px solid var(--w-border); }
+.w.pc .pc-one .pc-fr{ border-top:0; padding:0; }
+.w.pc .pc-nav{ display:flex; align-items:center; gap:8px; padding-top:10px; font:500 11px/14px var(--w-font); color:var(--w-muted-fg); }
+.w.pc .pc-nav button{ all:unset; cursor:pointer; display:grid; place-items:center; width:26px; height:26px; border-radius:7px; background:var(--w-mid-bg); color:var(--w-fg); font:500 15px/1 var(--w-font); }
+.w.pc .pc-nav button:disabled{ opacity:.3; cursor:default; }
+.w.pc .pc-dots{ display:flex; gap:4px; margin-right:auto; }
+.w.pc .pc-dots i{ width:6px; height:6px; border-radius:50%; background:var(--w-mid-bg); cursor:pointer; } .w.pc .pc-dots i.is-done{ background:color-mix(in srgb, var(--w-fg) 40%, transparent); } .w.pc .pc-dots i.is-on{ background:var(--pc-ac); width:16px; border-radius:3px; }
+
+/* ── v9–v12 карточки по референсам (PC: pm · ks · bb2 · cp). Общее: карточка без рамки, вопрос 16 */
+.w.pc .pc-k{ display:flex; flex-direction:column; gap:10px; padding:12px; margin:0 -12px; border-top:1px solid var(--w-border); background:linear-gradient(180deg, color-mix(in srgb, var(--pc-ac) 7%, transparent), transparent 70%); }
+.w.pc .pc-k .pc-q b{ font-size:16px; line-height:21px; }
+.w.pc .pc-list--k .pc-k + .pc-k{ background:none; }
+:where(.w.pc .pc-k) button{ all:unset; box-sizing:border-box; cursor:pointer; }
+/* pm — Polymarket: выбранный исход, две кнопки, «получишь», кнопка сделки */
+.w.pc .pc-pm-sel{ display:flex; align-items:center; gap:8px; min-height:34px; } .w.pc .pc-pm-sel .pc-lg{ width:28px; height:28px; }
+.w.pc .pc-pm-sel span{ display:flex; flex-direction:column; min-width:0; } .w.pc .pc-pm-sel small{ font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.w.pc .pc-pm-sel b{ font:600 15px/18px var(--w-font); } .w.pc .pc-pm-sel b.y{ color:var(--pc-y); } .w.pc .pc-pm-sel b.n{ color:var(--pc-n); } .w.pc .pc-pm-sel b.pc-mut{ color:var(--w-muted-fg); font-weight:500; }
+.w.pc .pc-pm-b{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.w.pc .pc-pmb{ height:40px; display:flex; align-items:center; justify-content:center; gap:6px; border-radius:8px; font:600 13px/16px var(--w-font); color:var(--w-muted-fg); background:var(--w-mid-bg); box-shadow:inset 0 -3px 0 rgba(0,0,0,.25); }
+.w.pc .pc-pmb em{ font-style:normal; font-weight:700; }
+.w.pc .pc-pmb--y.is-on{ background:var(--pc-y); color:#06210f; } .w.pc .pc-pmb--n.is-on{ background:var(--pc-n); color:#2a0708; }
+.w.pc .pc-pmb:not(.is-on):hover{ color:var(--w-fg); }
+.w.pc .pc-pm-pay{ display:flex; align-items:baseline; justify-content:space-between; gap:8px; } .w.pc .pc-pm-pay span{ font:var(--t-cell); color:var(--w-fg); } .w.pc .pc-pm-pay b{ font:700 24px/28px var(--w-font); color:var(--w-fg); }
+.w.pc .pc-pm-go{ height:40px; display:grid; place-items:center; border-radius:8px; font:600 14px/16px var(--w-font); color:#fff; background:#2d6cf6; box-shadow:inset 0 -3px 0 rgba(0,0,0,.25); }
+.w.pc .pc-pm-go.is-dis{ opacity:.4; pointer-events:none; } .w.pc .pc-pm-go.is-done{ background:var(--w-mid-bg); color:var(--pc-y); box-shadow:none; pointer-events:none; }
+/* ks — Kalshi: строка исхода, полоса шанса под именем, «+N» и шанс в рамке */
+.w.pc .pc-ksr{ display:flex; align-items:center; gap:10px; min-height:40px; transition:opacity .15s; } .w.pc .pc-ksr.is-off{ opacity:.45; }
+.w.pc .pc-ksr .pc-lg{ width:22px; height:22px; }
+.w.pc .pc-ksd{ width:22px; height:22px; display:grid; place-items:center; border-radius:5px; background:var(--w-mid-bg); font:var(--t-tag); color:var(--w-muted-fg); flex:none; }
+.w.pc .pc-ksn{ flex:1; min-width:0; display:flex; flex-direction:column; gap:5px; } .w.pc .pc-ksn b{ font:500 14px/18px var(--w-font); color:var(--w-fg); }
+.w.pc .pc-ksn i{ display:block; height:2px; border-radius:1px; } .w.pc .pc-ksn i.y{ background:var(--pc-y); } .w.pc .pc-ksn i.n{ background:var(--pc-n); }
+.w.pc .pc-ksr small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.w.pc .pc-ksr em{ font-style:normal; min-width:52px; height:32px; display:grid; place-items:center; border-radius:16px; border:1px solid color-mix(in srgb, var(--pc-y) 45%, var(--w-border)); font:600 13px/16px var(--w-font); color:var(--pc-y); }
+.w.pc .pc-ksr:hover em{ background:color-mix(in srgb, var(--pc-y) 12%, transparent); } .w.pc .pc-ksr.is-on em{ background:var(--pc-y); color:#06210f; border-color:var(--pc-y); }
+/* bb2 — BetBoom: заголовок с огоньком, плитки «исход … баллы», доля прогнозов */
+.w.pc .pc-bbh{ display:flex; align-items:flex-start; gap:8px; color:var(--w-muted-fg); } .w.pc .pc-bbh svg{ flex:none; margin-top:2px; } .w.pc .pc-bbh b{ font:700 16px/21px var(--w-font); color:var(--w-fg); }
+.w.pc .pc-ev--bb{ margin:-6px 0 0 24px; }
+.w.pc .pc-bbt{ display:grid; grid-template-columns:1fr 1fr; gap:4px; }
+.w.pc .pc-bbx{ height:44px; display:flex; align-items:center; justify-content:space-between; gap:6px; padding:0 12px; border-radius:6px; background:var(--w-mid-bg); color:var(--w-fg); }
+.w.pc .pc-bbx span{ display:flex; align-items:center; gap:6px; min-width:0; font:500 14px/18px var(--w-font); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.w.pc .pc-bbx b{ font:700 15px/18px var(--w-font); } .w.pc .pc-bbx:hover{ background:color-mix(in srgb, var(--w-fg) 10%, var(--w-mid-bg)); }
+.w.pc .pc-bbx.is-on{ background:#fff; color:#111; }
+.w.pc .pc-bbs{ display:flex; align-items:center; gap:10px; color:var(--w-muted-fg); } .w.pc .pc-bbs > svg{ flex:none; padding:6px; border-radius:6px; background:var(--w-mid-bg); width:28px; height:28px; box-sizing:border-box; }
+.w.pc .pc-bbs > div{ flex:1; display:flex; flex-direction:column; gap:5px; }
+.w.pc .pc-bbbar{ display:flex; gap:3px; height:5px; } .w.pc .pc-bbbar i{ border-radius:3px; background:#fff; } .w.pc .pc-bbbar i + i{ flex:1; background:var(--pc-n); }
+.w.pc .pc-bbl{ display:flex; justify-content:space-between; font:var(--t-sub); color:var(--w-muted-fg); } .w.pc .pc-bbl b{ color:var(--w-fg); font-weight:600; }
+/* cp — купон под плитками */
+.w.pc .pc-cp{ display:flex; flex-direction:column; gap:8px; padding:10px; border-radius:8px; background:var(--w-mid-bg); }
+.w.pc .pc-cpr{ display:flex; align-items:center; justify-content:space-between; gap:8px; } .w.pc .pc-cpr span{ display:flex; flex-direction:column; } .w.pc .pc-cpr small{ font:var(--t-sub); color:var(--w-muted-fg); } .w.pc .pc-cpr span b{ font:600 14px/18px var(--w-font); color:var(--w-fg); } .w.pc .pc-cpr > b{ font:700 16px/20px var(--w-font); color:var(--w-fg); }
+.w.pc .pc-cpgo{ height:40px; display:grid; place-items:center; border-radius:8px; background:var(--pc-ac); color:#1a1400; font:600 14px/16px var(--w-font); }
+.w.pc .pc-cpgo.is-done{ background:none; color:var(--pc-y); pointer-events:none; }
+/* в покое (PC_ONE) карточка без верхней линии — сразу под шапкой */
+.w.pc .pc-one > .pc-k{ border-top:1px solid var(--w-border); }
+
+/* ── v13–v16: разные по устройству виджеты (PC: lst · chart · swipe · strip) */
+:where(.w.pc .pc-lst, .w.pc .pc-ch, .w.pc .pc-sw, .w.pc .pc-sp, .w.pc .pc-spd) button{ all:unset; box-sizing:border-box; cursor:pointer; }
+/* lst — лента рынков: фикс. высота, прокрутка */
+.w.pc .pc-lst{ max-height:340px; overflow:auto; margin:0 -12px; border-top:1px solid var(--w-border); scrollbar-width:thin; }
+.w.pc .pc-lr{ display:grid; grid-template-columns:minmax(0,1fr) 128px; gap:10px; align-items:center; padding:10px 12px; border-bottom:1px solid var(--w-border); }
+.w.pc .pc-lr.is-hot{ background:linear-gradient(90deg, color-mix(in srgb, var(--pc-ac) 10%, transparent), transparent); }
+.w.pc .pc-lq{ display:grid; grid-template-columns:auto 1fr; column-gap:6px; align-items:center; min-width:0; }
+.w.pc .pc-lq i{ width:6px; height:6px; border-radius:50%; background:var(--pc-ac); box-shadow:0 0 8px var(--pc-ac); animation:pc-dot 1.6s ease-in-out infinite; }
+.w.pc .pc-lq b{ grid-column:2; font:500 13px/17px var(--w-font); color:var(--w-fg); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; } .w.pc .pc-lq i + b{ font-weight:600; }
+.w.pc .pc-lq small{ grid-column:2; font:var(--t-sub); color:var(--w-muted-fg); }
+.w.pc .pc-lb{ display:grid; grid-template-columns:1fr 1fr; gap:4px; }
+.w.pc .pc-lb button{ display:flex; flex-direction:column; align-items:center; justify-content:center; height:40px; border-radius:6px; background:var(--w-mid-bg); }
+.w.pc .pc-lb span{ font:500 11px/13px var(--w-font); color:var(--w-muted-fg); max-width:58px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .w.pc .pc-lb b{ font:700 13px/16px var(--w-font); color:var(--w-fg); }
+.w.pc .pc-lb button:hover{ background:color-mix(in srgb, var(--w-fg) 10%, var(--w-mid-bg)); }
+.w.pc .pc-lb button.is-on{ background:var(--pc-ac); } .w.pc .pc-lb button.is-on span, .w.pc .pc-lb button.is-on b{ color:#1a1400; } .w.pc .pc-lb button.is-off{ opacity:.4; }
+/* chart — график шанса */
+.w.pc .pc-ch{ display:flex; flex-direction:column; gap:8px; padding:12px; margin:0 -12px; border-top:1px solid var(--w-border); }
+.w.pc .pc-ch .pc-q b{ font-size:16px; line-height:21px; }
+.w.pc .pc-chw{ position:relative; height:96px; margin-right:86px; }
+.w.pc .pc-chw svg{ width:100%; height:100%; overflow:visible; } .w.pc .pc-chw path{ fill:none; stroke-width:2; vector-effect:non-scaling-stroke; }
+.w.pc .pc-chw path.g{ stroke:var(--w-border); stroke-dasharray:3 3; } .w.pc .pc-chw path.y{ stroke:var(--pc-y); } .w.pc .pc-chw path.n{ stroke:var(--pc-n); }
+.w.pc .pc-chl span{ position:absolute; left:calc(100% + 8px); transform:translateY(-50%); display:flex; flex-direction:column; font:500 11px/13px var(--w-font); white-space:nowrap; }
+.w.pc .pc-chl span b{ font:700 18px/20px var(--w-font); } .w.pc .pc-chl .y{ color:var(--pc-y); } .w.pc .pc-chl .n{ color:var(--pc-n); }
+.w.pc .pc-chx{ display:flex; justify-content:space-between; margin-right:86px; font:var(--t-sub); color:var(--w-muted-fg); }
+.w.pc .pc-chb{ display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.w.pc .pc-chbt{ height:40px; display:flex; align-items:center; gap:6px; padding:0 10px; border-radius:8px; font:600 13px/16px var(--w-font); }
+.w.pc .pc-chbt b{ margin-left:auto; } .w.pc .pc-chbt--y{ background:color-mix(in srgb, var(--pc-y) 16%, transparent); color:var(--pc-y); } .w.pc .pc-chbt--n{ background:color-mix(in srgb, var(--pc-n) 16%, transparent); color:var(--pc-n); }
+.w.pc .pc-chbt--y.is-on{ background:var(--pc-y); color:#06210f; } .w.pc .pc-chbt--n.is-on{ background:var(--pc-n); color:#2a0708; }
+/* swipe — стопка */
+.w.pc .pc-sw{ position:relative; height:236px; margin-top:4px; }
+.w.pc .pc-swc{ position:absolute; inset:0 0 12px; border-radius:14px; background:var(--w-mid-bg); border:1px solid var(--w-border); }
+.w.pc .pc-swc--b1{ transform:translateY(8px) scale(.95); opacity:.7; } .w.pc .pc-swc--b2{ transform:translateY(16px) scale(.9); opacity:.4; }
+.w.pc .pc-swc--f{ display:flex; flex-direction:column; gap:8px; padding:14px; background:color-mix(in srgb, var(--w-bg) 88%, #fff 12%); touch-action:none; user-select:none; cursor:grab; z-index:2; }
+.w.pc .pc-swc--f[data-dir="y"]{ box-shadow:inset 0 0 0 2px var(--pc-y); } .w.pc .pc-swc--f[data-dir="n"]{ box-shadow:inset 0 0 0 2px var(--pc-n); }
+.w.pc .pc-swq{ font:700 17px/22px var(--w-font); color:var(--w-fg); }
+.w.pc .pc-swp{ display:flex; align-items:baseline; gap:6px; margin-top:auto; } .w.pc .pc-swp b{ font:700 28px/32px var(--w-font); color:var(--w-fg); } .w.pc .pc-swp small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.w.pc .pc-swb{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.w.pc .pc-swb button{ height:44px; display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:6px; padding:0 12px; border-radius:22px; font:600 13px/16px var(--w-font); }
+.w.pc .pc-swb i{ font-style:normal; font-weight:700; } .w.pc .pc-swb span{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.w.pc .pc-swn{ background:color-mix(in srgb, var(--pc-n) 18%, transparent); color:var(--pc-n); } .w.pc .pc-swy{ background:color-mix(in srgb, var(--pc-y) 18%, transparent); color:var(--pc-y); }
+.w.pc .pc-swn:hover{ background:var(--pc-n); color:#2a0708; } .w.pc .pc-swy:hover{ background:var(--pc-y); color:#06210f; }
+.w.pc .pc-swh{ display:flex; justify-content:space-between; padding-top:6px; font:var(--t-sub); color:var(--w-muted-fg); }
+.w.pc .pc-sw-done{ display:flex; flex-direction:column; align-items:center; gap:4px; padding:40px 0; } .w.pc .pc-sw-done b{ font:600 15px/20px var(--w-font); color:var(--w-fg); } .w.pc .pc-sw-done small{ font:var(--t-sub); color:var(--w-muted-fg); }
+/* strip — полоса мини-карточек + выбор снизу */
+.w.pc .pc-sp{ display:flex; gap:6px; overflow-x:auto; margin:0 -12px; padding:0 12px 10px; scrollbar-width:none; } .w.pc .pc-sp::-webkit-scrollbar{ display:none; }
+.w.pc .pc-spc{ flex:none; width:132px; display:flex; flex-direction:column; gap:3px; padding:8px 10px; border-radius:10px; background:var(--w-mid-bg); box-shadow:inset 0 0 0 1px transparent; }
+.w.pc .pc-spc small{ font:500 10px/12px var(--w-font); color:var(--w-muted-fg); } .w.pc .pc-spc b{ font:600 12px/15px var(--w-font); color:var(--w-fg); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:30px; }
+.w.pc .pc-spc span{ font:500 10px/12px var(--w-font); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.w.pc .pc-spc.is-on{ box-shadow:inset 0 0 0 1px var(--pc-ac); } .w.pc .pc-spc.is-done small::after{ content:' · ✓'; color:var(--pc-y); }
+.w.pc .pc-spd{ display:flex; flex-direction:column; gap:8px; padding:12px; margin:0 -12px; border-top:1px solid var(--w-border); }
+.w.pc .pc-spq{ font:700 16px/21px var(--w-font); color:var(--w-fg); } .w.pc .pc-spd > .pc-ev{ margin-top:-4px; }
+.w.pc .pc-spt{ display:grid; grid-template-columns:1fr 1fr; padding:3px; border-radius:22px; background:var(--w-mid-bg); }
+.w.pc .pc-spt button{ height:36px; display:grid; place-items:center; border-radius:18px; font:600 13px/16px var(--w-font); color:var(--w-muted-fg); } .w.pc .pc-spt em{ font-style:normal; }
+.w.pc .pc-spt button.y.is-on{ background:var(--pc-y); color:#06210f; } .w.pc .pc-spt button.n.is-on{ background:var(--pc-n); color:#2a0708; }
+.w.pc .pc-spr{ display:flex; justify-content:space-between; font:var(--t-cell); color:var(--w-muted-fg); } .w.pc .pc-spr b{ color:var(--w-fg); font-weight:700; }
+.w.pc .pc-spgo{ height:42px; display:grid; place-items:center; border-radius:21px; background:var(--pc-y); color:#06210f; font:600 14px/16px var(--w-font); }
+.w.pc .pc-spgo.is-dis{ background:var(--w-mid-bg); color:var(--w-muted-fg); pointer-events:none; } .w.pc .pc-spgo.is-done{ background:none; color:var(--pc-y); pointer-events:none; }
+.w.pc .pc-sw{ height:252px; } .w.pc .pc-swc{ inset:0 0 24px; }
+.w.pc .pc-swc--b1{ transform:translateY(12px) scale(.94); opacity:.8; } .w.pc .pc-swc--b2{ transform:translateY(24px) scale(.88); opacity:.5; }
+
+/* ── v17 (PC_EDGE): 3 : 4, скругление 10, блик по рамке (как widget-predict v39 / v41), график — на всю свободную высоту */
+@property --pc-a{ syntax:'<angle>'; inherits:false; initial-value:0deg; }
+@keyframes pc-spin{ to{ --pc-a:360deg; } }
+.pc-host .w.pc.pc--edge{ aspect-ratio:3 / 4; display:flex; flex-direction:column; border-radius:10px; border:1px solid transparent; box-shadow:none; animation:pc-spin 6s linear infinite;
+  background:linear-gradient(var(--w-bg), var(--w-bg)) padding-box, conic-gradient(from var(--pc-a), var(--w-border) 0 62%, color-mix(in srgb, var(--pc-ac) 90%, transparent) 75%, var(--w-border) 88%) border-box; }
+.pc-host .w.pc.pc--edge::after{ display:none; }
+.w.pc.pc--edge .pc-bd{ flex:1; min-height:0; display:flex; flex-direction:column; overflow:auto; }
+.w.pc.pc--edge .pc-ch{ flex:1; min-height:0; }
+.w.pc.pc--edge .pc-chw{ flex:1; min-height:96px; height:auto; }
+.w.pc.pc--edge .pc-nav{ margin-top:auto; }
+
+/* ── v18 (PC_V18): без линии под шапкой, вопрос — ровно две строки, график 150 (середина — на одном месте у любого вопроса), без ‹ › */
+.w.pc.pc--v18 .pc-ch{ border-top:0; padding-top:4px; }
+.w.pc.pc--v18 .pc-ch .pc-q b{ height:42px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.w.pc.pc--v18 .pc-chw{ flex:none; height:150px; min-height:0; }
+.w.pc.pc--v18 .pc-nav > button{ display:none; }
+.w.pc.pc--v18 .pc-nav{ justify-content:space-between; }
+/* ── v19 (PC_V19): кнопки прижаты к низу — над точками */
+.w.pc.pc--v19 .pc-ch{ padding-bottom:0; } .w.pc.pc--v19 .pc-chb{ margin-top:auto; }
+/* ── v20 (PC_V20): график — всё место между вопросом и кнопками (середина — по центру), «Мои» — список прокручивается, «За матч» прижата к низу */
+.w.pc.pc--v20 .pc-chw{ flex:1; height:auto; min-height:0; }
+.w.pc.pc--v20 .pc-chb{ margin-top:0; }
+.w.pc.pc--v20 .pc-bd{ position:relative; overflow:hidden; }
+.w.pc.pc--v20 .pc-mine{ position:absolute; inset:0 12px 0; overflow:auto; padding-bottom:48px; scrollbar-width:thin; }
+.w.pc.pc--v20 .pc-sum{ position:absolute; left:12px; right:12px; bottom:0; height:44px; padding:0; align-items:center; background:var(--w-bg); border-top:1px solid var(--w-border); }
+.w.pc.pc--v20 .pc-chx{ display:none; } /* без подписей «10 мин назад · сейчас» (дирижёр 04.11: «эти убрать») — середина графика сама на середине места */
+/* ── v21 (PC_V21): на телефоне (до 799) — 1 : 1, ниже, чем 3 : 4 */
+@media (max-width:799px){ .pc-host .w.pc.pc--edge.pc--v21{ aspect-ratio:1 / 1; } }
+/* ── v22 (PC_V22): не выше 440 (на планшете колонка широкая — 3 : 4 было огромным); на телефоне 4 : 3 и отступ снизу под нижнее меню */
+.pc-host .w.pc.pc--edge.pc--v22{ max-height:440px; }
+@media (max-width:799px){ .pc-host .w.pc.pc--edge.pc--v22{ aspect-ratio:4 / 3; } .pc-host:has(.pc--v22){ margin-bottom:96px; } }
+@media (max-width:799px){ .w.pc.pc--v22 .pc-chl span{ flex-direction:row; align-items:baseline; gap:4px; } .w.pc.pc--v22 .pc-chl span b{ font-size:15px; line-height:18px; } }
+@media (max-width:799px){ .w.pc.pc--v22 .pc-chw{ margin-right:116px; } }
+/* ── v23 (PC_V23): место под вопрос — две строки, вопрос в одну строку прижат книзу (метка события — вместе с ним) */
+.w.pc.pc--v23 .pc-ch .pc-q{ height:59px; justify-content:flex-end; }
+.w.pc.pc--v23 .pc-ch .pc-q b{ height:auto; max-height:42px; }
+/* ── v24 (PC_V24): без запаса под вторую строку вопроса — вопрос сразу под шапкой */
+.w.pc.pc--v24 .pc-ch .pc-q{ height:auto; }
+.w.pc.pc--v24 .pc-ch .pc-q b{ height:auto; max-height:42px; }
+
+/* ── созвон 05.11 §6 (лаба w-predict-2): yn — вопрос по центру, две большие кнопки одна над другой */
+.w.pc .pc-yn { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 4px 12px 12px; margin: 0 -12px; }
+.w.pc .pc-ynm { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; min-height: 96px; }
+.w.pc .pc-ynq { font: 600 20px/26px var(--w-font); color: var(--w-fg); text-wrap: balance; }
+.w.pc .pc-ynb { display: flex; flex-direction: column; gap: 8px; }
+.w.pc .pc-ynbt { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 10px; height: 52px; padding: 0 16px; border-radius: 10px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); color: var(--w-fg); font: 600 15px/18px var(--w-font); text-align: left; cursor: pointer; transition: background .15s, box-shadow .15s, opacity .15s; }
+.w.pc .pc-ynbt:hover { background: var(--w-muted); }
+.w.pc .pc-ynl { display: flex; align-items: center; gap: 8px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.w.pc .pc-ynbt small { color: var(--w-muted-fg); font: 500 13px/16px var(--w-font); } .w.pc .pc-ynbt b { color: var(--pc-ac); font: 700 14px/18px var(--w-font); }
+.w.pc .pc-ynbt.is-on { background: color-mix(in srgb, var(--pc-ac) 16%, var(--w-mid-bg)); box-shadow: inset 0 0 0 1.5px var(--pc-ac); }
+.w.pc .pc-ynbt.is-off { opacity: .45; }
+.w.pc .pc-yn--c .pc-ynbt--y { background: color-mix(in srgb, var(--pc-y) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pc-y) 35%, transparent); color: var(--pc-y); }
+.w.pc .pc-yn--c .pc-ynbt--n { background: color-mix(in srgb, var(--pc-n) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pc-n) 35%, transparent); color: var(--pc-n); }
+.w.pc .pc-yn--c .pc-ynbt b { color: inherit; } .w.pc .pc-yn--c .pc-ynbt small { color: inherit; opacity: .75; }
+.w.pc .pc-yn--c .pc-ynbt--y.is-on { background: var(--pc-y); color: #06210f; } .w.pc .pc-yn--c .pc-ynbt--n.is-on { background: var(--pc-n); color: #2a0708; }
+.w.pc .pc-yn.is-new .pc-ynq { animation: pc-new .6s ease-out; }
+/* PC_STILL — свечение рамки ровное, без бегающего блика; новый прогноз — вспышка 3 с */
+.pc-host .w.pc.pc--edge.pc--still { animation: none; background: linear-gradient(var(--w-bg), var(--w-bg)) padding-box, linear-gradient(160deg, color-mix(in srgb, var(--pc-ac) 55%, transparent), var(--w-border) 45%, color-mix(in srgb, var(--pc-ac) 30%, transparent)) border-box;
+  box-shadow: 0 0 24px -10px color-mix(in srgb, var(--pc-ac) 45%, transparent); }
+.pc-host .w.pc.pc--still::after { display: none; }
+.pc-host .w.pc.pc--still.pc--ping { animation: pc-ping 3s ease-out; }
+@keyframes pc-ping { 0% { box-shadow: 0 0 0 2px color-mix(in srgb, var(--pc-ac) 80%, transparent), 0 0 48px 0 color-mix(in srgb, var(--pc-ac) 70%, transparent); } 100% { box-shadow: 0 0 24px -10px color-mix(in srgb, var(--pc-ac) 45%, transparent); } }
+
+/* v3 PC_IDEAL — доля голосов полосой в кнопке, поток «Дальше», «Экспресс» внизу */
+.w.pc .pc-yn--id { padding-bottom: 8px; }
+.w.pc .pc-yn--id .pc-ynm { min-height: 64px; }
+.w.pc .pc-yn--id .pc-ynbt { position: relative; overflow: hidden; isolation: isolate; height: 56px; }
+.w.pc .pc-yn--id .pc-ynbt::before { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--p); background: currentColor; opacity: .12; z-index: -1; transition: width .3s; }
+.w.pc .pc-yn--id .pc-ynbt.is-on::before { opacity: 0; }
+.w.pc .pc-idq { display: flex; flex-direction: column; gap: 4px; padding-top: 8px; border-top: 1px solid var(--w-border); }
+.w.pc .pc-idh { color: var(--w-muted-fg); font: 500 12px/16px var(--w-font); } .w.pc .pc-idh i { font-style: normal; color: var(--w-fg); }
+.w.pc .pc-idr { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px; height: 34px; padding: 0 10px; border-radius: 8px; background: var(--w-mid-bg); color: var(--w-fg); text-align: left; cursor: pointer; }
+.w.pc .pc-idr:hover { background: var(--w-muted); }
+.w.pc .pc-idr b { font: 500 13px/16px var(--w-font); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.w.pc .pc-idr em { font: 500 12px/16px var(--w-font); font-style: normal; color: var(--w-muted-fg); }
+.w.pc .pc-ide { color: var(--w-muted-fg); font: 500 13px/34px var(--w-font); }
+.w.pc .pc-idx { display: flex; align-items: center; justify-content: space-between; height: 36px; margin-top: 8px; padding: 0 12px; border-radius: 8px; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pc-ac) 40%, transparent); color: var(--w-fg); font: 500 13px/16px var(--w-font); cursor: pointer; }
+.w.pc .pc-idx i { font-style: normal; } .w.pc .pc-idx b { color: var(--pc-ac); font: 700 14px/18px var(--w-font); }
+
+/* v5 PC_SLIP — купон как у Polymarket, в наших токенах */
+.pc-host .w.pc.pc--edge.pc--slip:not(.pc--sl) { aspect-ratio: auto; max-height: none; }
+.w.pc.pc--slip .pc-bd { display: flex; flex-direction: column; gap: 12px; overflow: visible; }
+.w.pc .pc-slc { display: flex; flex-direction: column; gap: 12px; padding: 14px; border-radius: 12px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.w.pc .pc-slh { display: flex; align-items: center; gap: 12px; }
+.w.pc .pc-sli { flex: none; width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: var(--w-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.w.pc .pc-sli img { width: 26px; height: 26px; object-fit: contain; } .w.pc .pc-sli i { width: 8px; height: 8px; border-radius: 50%; background: var(--pc-ac); box-shadow: 0 0 10px var(--pc-ac); }
+.w.pc .pc-slm { display: flex; flex-direction: column; gap: 2px; min-width: 0; } .w.pc .pc-slm small { color: var(--w-muted-fg); font: 500 12px/16px var(--w-font); } .w.pc .pc-slm b { font: 600 17px/22px var(--w-font); color: var(--w-fg); text-wrap: balance; }
+.w.pc .pc-slb { display: flex; flex-direction: column; gap: 8px; }
+.w.pc .pc-slo { position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: center; justify-content: space-between; gap: 10px; height: 52px; padding: 0 16px; border-radius: 10px; cursor: pointer; font: 600 15px/18px var(--w-font); transition: background .15s, box-shadow .15s, opacity .15s, color .15s; }
+.w.pc .pc-slo::before { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--p, 0); background: currentColor; opacity: .1; z-index: -1; }
+.w.pc .pc-slo--y { color: var(--pc-y); background: color-mix(in srgb, var(--pc-y) 10%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pc-y) 30%, transparent); }
+.w.pc .pc-slo--n { color: var(--pc-n); background: color-mix(in srgb, var(--pc-n) 10%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pc-n) 30%, transparent); }
+.w.pc .pc-slo:hover { filter: brightness(1.15); }
+.w.pc .pc-slo b { font: 600 15px/18px var(--w-font); }
+.w.pc .pc-slo--y.is-on { background: var(--pc-y); color: #06210f; box-shadow: none; } .w.pc .pc-slo--n.is-on { background: var(--pc-n); color: #2a0708; box-shadow: none; }
+.w.pc .pc-slo.is-on::before { opacity: 0; } .w.pc .pc-slo.is-off { opacity: .45; }
+.w.pc .pc-sla { display: flex; align-items: baseline; justify-content: space-between; padding-top: 4px; }
+.w.pc .pc-sla span { color: var(--w-fg); font: 500 15px/20px var(--w-font); }
+.w.pc .pc-sla b { color: var(--pc-ac); font: 700 36px/40px var(--w-font); } .w.pc .pc-sla b.is-0 { color: var(--w-muted-fg); opacity: .5; }
+.w.pc .pc-slp { display: flex; justify-content: space-between; min-height: 16px; margin-top: -8px; color: var(--w-muted-fg); font: 500 12px/16px var(--w-font); } .w.pc .pc-slp b { font-weight: 600; }
+.w.pc .pc-slgo { height: 48px; border-radius: 10px; background: var(--pc-ac); color: #1d1500; font: 700 15px/18px var(--w-font); cursor: pointer; transition: filter .15s, background .2s; }
+.w.pc .pc-slgo:hover { filter: brightness(1.08); } .w.pc .pc-slgo:disabled { background: var(--w-bg); color: var(--w-muted-fg); box-shadow: inset 0 0 0 1px var(--w-border); cursor: default; filter: none; }
+.w.pc .pc-slgo.is-ok { background: var(--pc-y); color: #06210f; }
+.w.pc .pc-sll { display: flex; flex-direction: column; gap: 8px; }
+.w.pc .pc-slt { color: var(--w-muted-fg); font: 500 12px/16px var(--w-font); } .w.pc .pc-slt i { font-style: normal; color: var(--w-fg); }
+.w.pc .pc-slr { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border-radius: 10px; box-shadow: inset 0 0 0 1px var(--w-border); }
+.w.pc .pc-slrq { display: flex; flex-direction: column; gap: 2px; text-align: left; color: var(--w-fg); cursor: pointer; } .w.pc .pc-slrq small { color: var(--w-muted-fg); font: 500 11px/14px var(--w-font); } .w.pc .pc-slrq b { font: 600 14px/18px var(--w-font); }
+.w.pc .pc-slrb { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.w.pc .pc-slo--s { height: 34px; padding: 0 10px; font-size: 13px; } .w.pc .pc-slo--s b { font-size: 13px; } .w.pc .pc-slo--s::before { display: none; }
+.w.pc .pc-slx { display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 14px; border-radius: 24px; color: var(--w-fg); font: 500 14px/18px var(--w-font); cursor: pointer;
+  background: linear-gradient(var(--w-bg), var(--w-bg)) padding-box, linear-gradient(90deg, color-mix(in srgb, var(--pc-ac) 70%, transparent), color-mix(in srgb, var(--pc-y) 50%, transparent)) border-box; border: 1px solid transparent; }
+.w.pc .pc-slxi { display: grid; place-items: center; min-width: 22px; height: 22px; border-radius: 11px; background: var(--pc-ac); color: #1d1500; font: 700 12px/1 var(--w-font); }
+.w.pc .pc-slx b { margin-left: auto; color: var(--pc-ac); font: 700 15px/18px var(--w-font); } .w.pc .pc-slx i { font-style: normal; color: var(--w-muted-fg); }
+.w.pc .pc-sle { padding: 24px 8px; text-align: center; color: var(--w-muted-fg); font: 500 14px/20px var(--w-font); }
+
+/* v6–v8 PC_SL — компактный купон в высоте виджета */
+.w.pc.pc--sl .pc-bd { display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: hidden; }
+.w.pc .pc-sl2 { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; }
+.w.pc .pc-sk { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; }
+.w.pc .pc-skq { font: 600 17px/22px var(--w-font); color: var(--w-fg); text-wrap: balance; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: auto; }
+.w.pc .pc-skb { display: flex; flex-direction: column; gap: 8px; }
+.w.pc .pc-sko { position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 10px; height: 48px; padding: 0 14px; border-radius: 10px; cursor: pointer; font: 600 15px/18px var(--w-font); text-align: left; transition: background .15s, opacity .15s, color .15s; }
+.w.pc .pc-sko::before { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--p); background: currentColor; opacity: .1; z-index: -1; }
+.w.pc .pc-sko small { font: 500 13px/16px var(--w-font); opacity: .75; } .w.pc .pc-sko b { font: 600 13px/16px var(--w-font); }
+.w.pc .pc-sko--y { color: var(--pc-y); background: color-mix(in srgb, var(--pc-y) 10%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pc-y) 30%, transparent); }
+.w.pc .pc-sko--n { color: var(--pc-n); background: color-mix(in srgb, var(--pc-n) 10%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pc-n) 30%, transparent); }
+.w.pc .pc-sko:hover { filter: brightness(1.15); }
+.w.pc .pc-sko--y.is-on { background: var(--pc-y); color: #06210f; box-shadow: none; } .w.pc .pc-sko--n.is-on { background: var(--pc-n); color: #2a0708; box-shadow: none; }
+.w.pc .pc-sko.is-on::before { opacity: 0; } .w.pc .pc-sko.is-off { opacity: .45; }
+.w.pc .pc-skgo { flex: none; height: 40px; border-radius: 10px; background: var(--pc-ac); color: #1d1500; font: 600 14px/18px var(--w-font); cursor: pointer; }
+.w.pc .pc-skgo:disabled { background: transparent; color: var(--w-muted-fg); box-shadow: inset 0 0 0 1px var(--w-border); cursor: default; }
+.w.pc .pc-skgo.is-ok { background: var(--pc-y); color: #06210f; }
+.w.pc .pc-skn { display: flex; align-items: center; gap: 8px; color: var(--w-muted-fg); font: 500 12px/16px var(--w-font); }
+.w.pc .pc-skn button { width: 24px; height: 24px; border-radius: 6px; background: var(--w-mid-bg); color: var(--w-fg); cursor: pointer; } .w.pc .pc-skn button:disabled { opacity: .3; cursor: default; }
+.w.pc .pc-skc { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 -12px; padding: 0 12px; }
+.w.pc .pc-skc button { flex: none; height: 28px; padding: 0 10px; border-radius: 14px; background: var(--w-mid-bg); color: var(--w-muted-fg); font: 500 12px/16px var(--w-font); cursor: pointer; }
+.w.pc .pc-skc button.is-on { background: var(--w-fg); color: var(--w-bg); } .w.pc .pc-skc button.is-pk::after { content: ' ·'; color: var(--pc-ac); }
+.w.pc .pc-skd { display: flex; flex-direction: column; gap: 4px; }
+.w.pc .pc-skd button { display: flex; gap: 8px; align-items: baseline; height: 30px; padding: 0 12px; border-radius: 8px; background: var(--w-mid-bg); text-align: left; cursor: pointer; overflow: hidden; }
+.w.pc .pc-skd button span { flex: none; color: var(--w-muted-fg); font: 500 11px/30px var(--w-font); } .w.pc .pc-skd button b { color: var(--w-fg); font: 500 13px/30px var(--w-font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.w.pc .pc-skd1 { opacity: .55; margin: 0 8px; }
+.w.pc.pc--sl .pc-slx { height: 40px; flex: none; }
+
+/* v9–v12 PC_K — кардинально разные виджеты, высота виджета прежняя (3 : 4, не выше 440) */
+.w.pc.pc--k .pc-bd { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.w.pc .qz { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.w.pc .qz-ev { color: var(--w-muted-fg); font: 500 12px/16px var(--w-font); } .w.pc .qz-ev em { font-style: normal; color: var(--pc-ac); font-weight: 600; }
+.w.pc .qz-q { font: 600 20px/26px var(--w-font); color: var(--w-fg); text-wrap: balance; }
+.w.pc .qz-l { display: flex; align-items: center; gap: 8px; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.w.pc .qz .is-off { opacity: .4; }
+@keyframes qz-in { from { opacity: 0; transform: translateY(10px); } }
+.w.pc .qz .is-in, .w.pc .qz.is-in { animation: qz-in .35s ease-out; }
+/* timer */
+.w.pc .qz-t { align-items: center; text-align: center; gap: 8px; padding-top: 8px; }
+.w.pc .qz-t .qz-q { font-size: 22px; line-height: 28px; margin: auto 0 4px; }
+.w.pc .qz-bar { width: 60%; height: 3px; border-radius: 2px; background: var(--w-mid-bg); overflow: hidden; } .w.pc .qz-bar i { display: block; height: 100%; background: var(--pc-ac); border-radius: 2px; }
+.w.pc .qz-tl { color: var(--w-muted-fg); font: 500 12px/16px var(--w-font); margin-bottom: auto; }
+.w.pc .qz-tb { align-self: stretch; display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.w.pc .qz-tbt { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 64px; padding: 0 20px; border-radius: 14px; font: 700 18px/22px var(--w-font); cursor: pointer; color: var(--w-fg); background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); transition: background .15s, box-shadow .15s, opacity .15s; }
+.w.pc .qz-tbt:hover { box-shadow: inset 0 0 0 1.5px var(--pc-ac); }
+.w.pc .qz-tbt .qz-r { display: flex; flex-direction: column; align-items: flex-end; } .w.pc .qz-tbt small { color: var(--w-muted-fg); font: 500 12px/14px var(--w-font); } .w.pc .qz-tbt b { color: var(--pc-ac); font: 700 15px/18px var(--w-font); }
+.w.pc .qz-tbt.is-on { background: var(--pc-ac); color: #1d1500; box-shadow: none; } .w.pc .qz-tbt.is-on small, .w.pc .qz-tbt.is-on b { color: inherit; }
+/* deck */
+.w.pc .qz-d { gap: 10px; padding-top: 14px; }
+.w.pc .qz-dk { position: relative; flex: 1; min-height: 0; display: flex; }
+.w.pc .qz-dk.has-1::before, .w.pc .qz-dk.has-2::before, .w.pc .qz-dk.has-2::after { content: ''; position: absolute; left: 10px; right: 10px; top: -6px; height: 20px; border-radius: 12px 12px 0 0; background: color-mix(in srgb, var(--w-fg) 6%, var(--w-bg)); box-shadow: inset 0 1px 0 var(--w-border); }
+.w.pc .qz-dk.has-2::after { left: 20px; right: 20px; top: -12px; background: color-mix(in srgb, var(--w-fg) 3%, var(--w-bg)); z-index: -1; }
+.w.pc .qz-dk.has-2::before { z-index: 0; }
+.w.pc .qz-dc { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 14px; background: color-mix(in srgb, var(--w-fg) 8%, var(--w-bg)); box-shadow: 0 8px 24px -8px rgba(0,0,0,.6), inset 0 0 0 1px var(--w-border); }
+.w.pc .qz-dh { display: flex; align-items: center; justify-content: space-between; min-height: 24px; color: var(--w-muted-fg); font: 500 12px/16px var(--w-font); }
+.w.pc .qz-dc .qz-q { margin-bottom: auto; }
+.w.pc .qz-db { display: flex; flex-direction: column; gap: 8px; }
+.w.pc .qz-dbt { display: grid; grid-template-columns: minmax(0, 1fr) 40px 36px; align-items: center; gap: 10px; height: 50px; padding: 0 14px; border-radius: 10px; font: 600 15px/18px var(--w-font); cursor: pointer; }
+.w.pc .qz-dbt--y { background: color-mix(in srgb, var(--pc-y) 14%, transparent); color: var(--pc-y); } .w.pc .qz-dbt--n { background: color-mix(in srgb, var(--pc-n) 14%, transparent); color: var(--pc-n); }
+.w.pc .qz-dbt small, .w.pc .qz-dbt b { text-align: right; } .w.pc .qz-dbt small { opacity: .75; font: 500 13px/16px var(--w-font); } .w.pc .qz-dbt b { font: 700 14px/18px var(--w-font); }
+.w.pc .qz-dbt--y.is-on { background: var(--pc-y); color: #06210f; } .w.pc .qz-dbt--n.is-on { background: var(--pc-n); color: #2a0708; }
+.w.pc .qz-dn { display: flex; align-items: center; gap: 6px; color: var(--w-muted-fg); font: 500 12px/16px var(--w-font); } .w.pc .qz-dn button { width: 24px; height: 24px; font-size: 14px; border-radius: 8px; background: var(--w-mid-bg); color: var(--w-fg); cursor: pointer; } .w.pc .qz-dn button:disabled { opacity: .3; cursor: default; }
+/* duel */
+.w.pc .qz-du { gap: 0; }
+.w.pc .qz-u { position: relative; isolation: isolate; overflow: hidden; flex: 1; min-height: 72px; display: flex; align-items: center; gap: 12px; padding: 0 18px; border-radius: 14px; cursor: pointer; text-align: left; transition: background .15s, opacity .15s; }
+.w.pc .qz-u::before { content: ''; position: absolute; inset: auto auto 0 0; height: 3px; width: var(--p); background: currentColor; opacity: .6; }
+.w.pc .qz-u--y { color: var(--pc-y); background: linear-gradient(180deg, color-mix(in srgb, var(--pc-y) 18%, transparent), color-mix(in srgb, var(--pc-y) 6%, transparent)); }
+.w.pc .qz-u--n { color: var(--pc-n); background: linear-gradient(0deg, color-mix(in srgb, var(--pc-n) 18%, transparent), color-mix(in srgb, var(--pc-n) 6%, transparent)); }
+.w.pc .qz-u:hover { filter: brightness(1.2); }
+.w.pc .qz-u.is-on.qz-u--y { background: var(--pc-y); color: #06210f; } .w.pc .qz-u.is-on.qz-u--n { background: var(--pc-n); color: #2a0708; }
+.w.pc .qz-ul { flex: none; width: 36px; height: 36px; object-fit: contain; }
+.w.pc .qz-un { font: 700 20px/24px var(--w-font); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.w.pc .qz-ur { flex: none; white-space: nowrap; margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; } .w.pc .qz-ur b { font: 700 16px/20px var(--w-font); } .w.pc .qz-ur small { font: 500 11px/14px var(--w-font); opacity: .75; }
+.w.pc .qz-uq { position: relative; z-index: 2; margin: -10px 14px; padding: 10px 14px; border-radius: 12px; text-align: center; background: var(--w-bg); box-shadow: 0 0 0 1px var(--w-border), 0 6px 20px -6px rgba(0,0,0,.7); display: flex; flex-direction: column; gap: 2px; }
+.w.pc .qz-uq b { font: 600 16px/21px var(--w-font); color: var(--w-fg); text-wrap: balance; }
+.w.pc .qz-du .pc-nav { margin-top: 10px; }
+/* feed */
+.w.pc .qz-f { gap: 10px; }
+.w.pc .qz-fo { flex: none; display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 12px; background: color-mix(in srgb, var(--pc-ac) 7%, var(--w-mid-bg)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pc-ac) 30%, transparent); }
+.w.pc .qz-fo.is-new { animation: qz-in .5s ease-out; }
+.w.pc .qz-fo .qz-q { font-size: 18px; line-height: 23px; }
+.w.pc .qz-fb { display: flex; flex-direction: column; gap: 6px; }
+.w.pc .qz-fbt { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 10px; height: 46px; padding: 0 14px; border-radius: 10px; background: var(--w-bg); box-shadow: inset 0 0 0 1px var(--w-border); color: var(--w-fg); font: 600 15px/18px var(--w-font); cursor: pointer; }
+.w.pc .qz-fbt:hover { box-shadow: inset 0 0 0 1.5px var(--pc-ac); } .w.pc .qz-fbt small { color: var(--w-muted-fg); font: 500 13px/16px var(--w-font); } .w.pc .qz-fbt b { color: var(--pc-ac); font: 700 14px/18px var(--w-font); }
+.w.pc .qz-fbt.is-on { background: var(--pc-ac); color: #1d1500; } .w.pc .qz-fbt.is-on small, .w.pc .qz-fbt.is-on b { color: inherit; }
+.w.pc .qz-fl { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; display: flex; flex-direction: column; -webkit-mask: linear-gradient(#000 80%, transparent); mask: linear-gradient(#000 80%, transparent); }
+.w.pc .qz-fr { display: flex; align-items: center; gap: 10px; padding: 8px 2px; border-bottom: 1px solid var(--w-border); }
+.w.pc .qz-fq { flex: 1; min-width: 0; display: flex; flex-direction: column; } .w.pc .qz-fq small { color: var(--w-muted-fg); font: 500 11px/14px var(--w-font); } .w.pc .qz-fq b { color: var(--w-fg); font: 500 13px/17px var(--w-font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.w.pc .qz-fa { flex: none; font: 600 12px/16px var(--w-font); } .w.pc .qz-fa i { font-style: normal; color: var(--pc-ac); } .w.pc .qz-fa--y { color: var(--pc-y); } .w.pc .qz-fa--n { color: var(--pc-n); }
+.w.pc .qz-fw { flex: none; color: var(--w-muted-fg); font: 500 12px/16px var(--w-font); }
+.w.pc .qz-fe { padding: 20px 8px; text-align: center; color: var(--w-muted-fg); font: 500 14px/20px var(--w-font); }
+
+.w.pc .qz-u--y::before { inset: 0 auto auto 0; }
+.w.pc .qz-u--y { padding-bottom: 10px; } .w.pc .qz-u--n { padding-top: 10px; }
+/* v13 PC_FLIP — перелистывание колоды */
+.w.pc .qz-d--flip .qz-dk { isolation: isolate; }
+.w.pc .qz-d--flip .qz-dc.is-out { position: absolute; inset: 0; z-index: 3; pointer-events: none; animation: qz-out .45s cubic-bezier(.5,0,.75,0) forwards; }
+.w.pc .qz-d--flip .qz-dc.is-out.qz--bk { animation-name: qz-out-r; }
+@keyframes qz-out { to { transform: translateX(-115%) rotate(-10deg); opacity: 0; } }
+@keyframes qz-out-r { to { transform: translateX(115%) rotate(10deg); opacity: 0; } }
+.w.pc .qz-d--flip .qz-dc.is-in { animation: qz-rise .45s cubic-bezier(.2,.7,.3,1); }
+.w.pc .qz-d--flip .qz-dc.is-in.qz--bk { animation: qz-back .45s cubic-bezier(.2,.7,.3,1); }
+@keyframes qz-rise { from { transform: translateY(-12px) scale(.92); opacity: .4; } }
+@keyframes qz-back { from { transform: translateX(-115%) rotate(-10deg); opacity: 0; } }
+/* v13–v14 PC_EVT — «Ждём событие» и переключалка состояний (только лаба) */
+.w.pc .qz-w { align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 0 16px; }
+.w.pc .qz-w b { font: 600 18px/24px var(--w-font); color: var(--w-fg); } .w.pc .qz-w span { color: var(--w-muted-fg); font: 500 13px/18px var(--w-font); text-wrap: balance; }
+.w.pc .qz-wi { width: 10px; height: 10px; border-radius: 50%; background: var(--pc-ac); opacity: .7; animation: pc-dot 1.6s ease-in-out infinite; margin-bottom: 4px; }
+.w.pc .qz-w button { margin-top: 8px; height: 32px; padding: 0 14px; border-radius: 8px; background: var(--w-mid-bg); color: var(--w-fg); font: 500 13px/16px var(--w-font); cursor: pointer; }
+.qz-sw { position: fixed; left: 16px; bottom: 16px; z-index: 9999; display: flex; align-items: center; gap: 4px; padding: 4px; border-radius: 12px; background: #1b1b1f; box-shadow: 0 0 0 1px #2c2c33, 0 8px 24px rgba(0,0,0,.5); font: 500 13px/16px Inter, system-ui, sans-serif; }
+.qz-sw span { padding: 0 8px; color: #8a8a93; } .qz-sw button { height: 30px; padding: 0 12px; border-radius: 8px; color: #d8d8de; cursor: pointer; background: none; border: 0; font: inherit; } .qz-sw button.is-on { background: #f5c542; color: #1d1500; }
+
+/* v15–v16 PC_DONE — итог «Всё собрано» */
+.w.pc .qz-z { gap: 10px; }
+.w.pc .qz-zh { display: flex; align-items: baseline; justify-content: space-between; } .w.pc .qz-zh b { font: 600 18px/24px var(--w-font); color: var(--w-fg); } .w.pc .qz-zh span { color: var(--w-muted-fg); font: 500 12px/16px var(--w-font); }
+.w.pc .qz-zl { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; display: flex; flex-direction: column; gap: 6px; }
+.w.pc .qz-zr { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: var(--w-mid-bg); transition: background .3s, opacity .3s; }
+.w.pc .qz-zr.is-ok { background: color-mix(in srgb, var(--pc-y) 14%, var(--w-mid-bg)); } .w.pc .qz-zr.is-no { opacity: .5; }
+.w.pc .qz-zq { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; } .w.pc .qz-zq small { color: var(--w-muted-fg); font: 500 11px/14px var(--w-font); } .w.pc .qz-zq b { color: var(--w-fg); font: 500 13px/17px var(--w-font); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.w.pc .qz-za { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.w.pc .qz-zc { font-style: normal; font: 600 13px/16px var(--w-font); } .w.pc .qz-zc--y { color: var(--pc-y); } .w.pc .qz-zc--n { color: var(--pc-n); }
+.w.pc .qz-za i { font-style: normal; color: var(--w-muted-fg); font: 500 11px/14px var(--w-font); } .w.pc .qz-zr.is-ok .qz-za i { color: var(--pc-y); font-weight: 600; }
+.w.pc .qz-zs { display: flex; justify-content: space-between; padding-top: 8px; border-top: 1px solid var(--w-border); color: var(--w-muted-fg); font: 500 13px/18px var(--w-font); } .w.pc .qz-zs b { color: var(--pc-ac); font-weight: 700; }
+.w.pc .qz-zn { display: flex; align-items: center; gap: 8px; color: var(--w-muted-fg); font: 500 12px/16px var(--w-font); } .w.pc .qz-zn .qz-wi { width: 6px; height: 6px; margin: 0; }
+
+/* v19–v20 PC_MYB — «Мои» кнопкой внизу, всё уезжает вверх; PC_NOBAR — дуэль без полосы */
+.w.pc .qz-pg { flex: 1; min-height: 0; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+.w.pc .qz-pp { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 10px; transition: transform .4s cubic-bezier(.3,.7,.3,1); }
+.w.pc .qz-pp--m { transform: translateY(100%); overflow: hidden; }
+.w.pc .qz-pg.is-mine .qz-pp:not(.qz-pp--m) { transform: translateY(-100%); } .w.pc .qz-pg.is-mine .qz-pp--m { transform: none; }
+.w.pc .qz-pg.is-anim.is-mine .qz-pp:not(.qz-pp--m) { animation: qz-upA .4s cubic-bezier(.3,.7,.3,1); } .w.pc .qz-pg.is-anim.is-mine .qz-pp--m { animation: qz-upB .4s cubic-bezier(.3,.7,.3,1); }
+.w.pc .qz-pg.is-anim:not(.is-mine) .qz-pp:not(.qz-pp--m) { animation: qz-dnA .4s cubic-bezier(.3,.7,.3,1); } .w.pc .qz-pg.is-anim:not(.is-mine) .qz-pp--m { animation: qz-dnB .4s cubic-bezier(.3,.7,.3,1); }
+@keyframes qz-upA { from { transform: none; } } @keyframes qz-upB { from { transform: translateY(100%); } }
+@keyframes qz-dnA { from { transform: translateY(-100%); } } @keyframes qz-dnB { from { transform: none; } }
+.w.pc .qz-pp .qz { flex: 1; min-height: 0; }
+.w.pc .qz-pp--m { gap: 0; }
+.w.pc.pc--v20 .qz-pp--m .pc-mine, .w.pc .qz-pp--m .pc-mine { position: static; inset: auto; flex: 1; min-height: 0; overflow: auto; padding-bottom: 0; scrollbar-width: none; }
+.w.pc.pc--v20 .qz-pp--m .pc-sum, .w.pc .qz-pp--m .pc-sum { position: static; flex: none; height: 44px; padding: 0; align-items: center; }
+.w.pc .qz-my { flex: none; display: flex; align-items: center; justify-content: center; gap: 6px; height: 36px; border-radius: 10px; background: var(--w-mid-bg); color: var(--w-fg); font: 500 13px/16px var(--w-font); cursor: pointer; }
+.w.pc .qz-my:hover { background: var(--w-muted); } .w.pc .qz-my i { font-style: normal; color: var(--w-muted-fg); }
+.w.pc.pc--nobar .qz-u::before { display: none; }
+.w.pc.pc--nobar .qz-u--y { padding-bottom: 0; } .w.pc.pc--nobar .qz-u--n { padding-top: 0; }
+
+/* v21–v23 PC_NOMY — без «Мои», итог и есть «Мои»: счётчик в шапке; PC_LIVE — заливка исхода по голосам */
+.w.pc .qz-hc { margin-left: auto; color: var(--w-muted-fg); font: 500 12px/16px var(--w-font); }
+.w.pc .qz-uf { position: absolute; inset: 0 auto 0 0; z-index: -1; background: currentColor; opacity: .14; transition: width .8s ease-out; pointer-events: none; }
+.w.pc .qz-u.is-on .qz-uf { opacity: .18; background: #000; }
+
+/* v24–v26 PC_ACT — есть прогноз: рамка дышит; нет — обычная рамка */
+.pc-host .w.pc.pc--edge.pc--still.pc--act { animation: qz-breathe 2.4s ease-in-out infinite; }
+@keyframes qz-breathe { 0%, 100% { box-shadow: 0 0 0 0 transparent, 0 0 16px -8px color-mix(in srgb, var(--pc-ac) 40%, transparent); } 50% { box-shadow: 0 0 0 1px color-mix(in srgb, var(--pc-ac) 70%, transparent), 0 0 32px -6px color-mix(in srgb, var(--pc-ac) 65%, transparent); } }
+.pc-host .w.pc.pc--edge.pc--still.pc--act.pc--ping { animation: pc-ping 3s ease-out; }
+.pc-host .w.pc.pc--still.pc--calm, .pc-host .w.pc.pc--edge.pc--still.pc--calm { animation: none; background: var(--w-bg); border: 1px solid var(--w-border); box-shadow: none; transition: border-color .4s; }
+
+/* фикс 05.11 (дирижёр: «виджет можно влево-вправо сдвинуть»): у виджетов v9+ прокрутку вбок отрезаем совсем */
+.pc-host .w.pc.pc--k, .w.pc.pc--k .pc-bd { overflow: clip; overscroll-behavior-x: none; }
+/* v27–v28 PC_SPIN — есть прогноз: аккуратный блик по рамке */
+.pc-host .w.pc.pc--edge.pc--still.pc--act.pc--spin { box-shadow: none; animation: pc-spin 8s linear infinite;
+  background: linear-gradient(var(--w-bg), var(--w-bg)) padding-box, conic-gradient(from var(--pc-a), var(--w-border) 0 72%, color-mix(in srgb, var(--pc-ac) 70%, transparent) 86%, var(--w-border) 100%) border-box; }
+.pc-host .w.pc.pc--edge.pc--still.pc--act.pc--spin.pc--ping { animation: pc-spin 8s linear infinite, qz-ping 3s ease-out; }
+/* фикс 05.11 (дирижёр: «появление выделяется не по тому бордеру»): вспышка нового — внутри, по самой рамке, а не тенью снаружи (её срезала колонка, оставались уголки) */
+.pc-host .w.pc.pc--k.pc--ping, .pc-host .w.pc.pc--edge.pc--still.pc--act.pc--ping { animation: qz-ping 3s ease-out; }
+@keyframes qz-ping { 0%, 20% { box-shadow: inset 0 0 0 1.5px var(--pc-ac), inset 0 0 28px -10px color-mix(in srgb, var(--pc-ac) 70%, transparent); } 100% { box-shadow: inset 0 0 0 1.5px transparent, inset 0 0 28px -10px transparent; } }
+
+/* v29 PC_SKIP — «Пропустить», «за» уезжает вправо, «против» — влево, пропуск — вниз */
+.w.pc .qz-skip { align-self: center; height: 28px; padding: 0 12px; margin-top: -2px; border-radius: 8px; color: var(--w-muted-fg); font: 500 13px/16px var(--w-font); cursor: pointer; }
+.w.pc .qz-skip:hover { color: var(--w-fg); background: var(--w-mid-bg); } .w.pc .qz-skip:disabled { visibility: hidden; }
+.w.pc .qz-d--flip .qz-dc.is-out.qz--r { animation-name: qz-out-r; }
+.w.pc .qz-d--flip .qz-dc.is-out.qz--l { animation-name: qz-out; }
+.w.pc .qz-d--flip .qz-dc.is-out.qz--d { animation-name: qz-out-d; }
+@keyframes qz-out-d { to { transform: translateY(60%) scale(.9); opacity: 0; } }
+.w.pc .qz-d--flip .qz-dc.is-in.qz--r, .w.pc .qz-d--flip .qz-dc.is-in.qz--l, .w.pc .qz-d--flip .qz-dc.is-in.qz--d { animation: qz-rise .45s cubic-bezier(.2,.7,.3,1); }
+
+/* v30 PC_SKIP2 — «Пропуск» маленькой кнопкой у стрелок */
+/* фикс 05.11 (дирижёр: «явно криво»): стрелки, счётчик и «Пропуск» — одной плашкой одной высоты, кнопки без своих подложек */
+.w.pc .qz-dn--s { gap: 0; height: 26px; padding: 0 2px; border-radius: 8px; background: var(--w-mid-bg); }
+.w.pc .qz-dn--s button { width: 22px; height: 26px; border-radius: 6px; background: none; color: var(--w-fg); font: 500 14px/26px var(--w-font); }
+.w.pc .qz-dn--s button:disabled { opacity: .3; }
+.w.pc .qz-dn--s .num { min-width: 30px; text-align: center; color: var(--w-muted-fg); font: 500 12px/26px var(--w-font); }
+.w.pc .qz-dn--s .qz-sk2 { position: relative; display: grid; place-items: center; width: 30px; margin-left: 4px; padding: 0 0 0 2px; color: var(--w-muted-fg); font: 500 12px/26px var(--w-font); }
+.w.pc .qz-dn--s .qz-sk2::before { content: ''; position: absolute; left: 0; top: 7px; bottom: 7px; width: 1px; background: var(--w-border); }
+.w.pc .qz-dn--s button:not(:disabled):hover { color: var(--w-fg); }
+.w.pc .qz-dn--s .qz-sk2:disabled { visibility: hidden; }
+
+.w.pc .qz-d--z { padding-top: 0; } .w.pc .qz-d--z .qz-dk > .qz-z { flex: 1; min-width: 0; }
+
+/* «Пропуск» иконкой, плашка в правом верхнем углу, подпись события — строкой ниже (дирижёр 05.11) */
+.w.pc .qz-dh--s { justify-content: flex-end; min-height: 26px; margin: -4px -4px -4px 0; }
+.w.pc .qz-dn--s { white-space: nowrap; flex: none; }
+
+/* v31–v33 PC_SK3 — «Пропуск» отдельной кнопкой */
+.w.pc .qz-dh--sep, .w.pc .qz-dh--label { gap: 6px; }
+.w.pc .qz-sk3 { flex: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 26px; min-width: 26px; padding: 0; border-radius: 13px; background: var(--w-mid-bg); color: var(--w-muted-fg); font: 500 12px/16px var(--w-font); cursor: pointer; transition: color .15s, background .15s; }
+.w.pc .qz-sk3:hover { color: var(--w-fg); background: var(--w-muted); } .w.pc .qz-sk3:disabled { visibility: hidden; }
+.w.pc .qz-dh--sep .qz-sk3 { width: 26px; }
+.w.pc .qz-dh--label .qz-sk3 { padding: 0 10px 0 8px; border-radius: 8px; }
+.w.pc .qz-dh--split { justify-content: space-between; } .w.pc .qz-dh--split .qz-sk3 { order: -1; width: 26px; }
+
+/* фикс 05.11 (дирижёр: «стрелки криво лежат на подложке»): шевроны SVG по центру квадрата, плашка без внутренних отступов */
+.w.pc .qz-dn--s { padding: 0; align-items: center; }
+.w.pc .qz-dn--s button[data-nav] { display: grid; place-items: center; width: 26px; height: 26px; padding: 0; margin: 0; border: 0; line-height: 0; }
+.w.pc .qz-dn--s button[data-nav] svg { display: block; }
+.w.pc .qz-dn--s .num { min-width: 34px; line-height: 26px; font-variant-numeric: tabular-nums; }
+/* v34 'labelL' */
+.w.pc .qz-dh--labelL { justify-content: space-between; } .w.pc .qz-dh--labelL .qz-sk3 { order: -1; padding: 0 10px 0 8px; border-radius: 8px; }
+
+/* v35 PC_MOB — телефон: короче, без рамки */
+body:not(.is-desk) .pc-host .w.pc.pc--mob, body:not(.is-desk) .pc-host .w.pc.pc--edge.pc--mob, body:not(.is-desk) .pc-host .w.pc.pc--edge.pc--still.pc--mob,
+body:not(.is-desk) .pc-host .w.pc.pc--edge.pc--still.pc--act.pc--spin.pc--mob, body:not(.is-desk) .pc-host .w.pc.pc--edge.pc--still.pc--calm.pc--mob {
+  aspect-ratio: auto; max-height: none; height: auto; border: 0; border-radius: 0; background: var(--w-bg); box-shadow: none; animation: none; }
+body:not(.is-desk) .pc-host .w.pc.pc--edge.pc--still.pc--act.pc--spin.pc--mob.pc--ping { animation: qz-ping 3s ease-out; }
+body:not(.is-desk) .w.pc.pc--mob .pc-hd { padding-left: 12px; }
+body:not(.is-desk) .w.pc.pc--mob .qz-dk { flex: none; }
+body:not(.is-desk) .w.pc.pc--mob .qz-dc { gap: 8px; }
+body:not(.is-desk) .w.pc.pc--mob .qz-dc .qz-q { margin-bottom: 6px; font-size: 18px; line-height: 23px; }
+body:not(.is-desk) .w.pc.pc--mob .qz-dbt { height: 46px; }
+body:not(.is-desk) .w.pc.pc--mob .qz-z { min-height: 0; } body:not(.is-desk) .w.pc.pc--mob .qz-zl { flex: none; }
+body:not(.is-desk) .w.pc.pc--mob .qz-w { padding: 24px 16px; }

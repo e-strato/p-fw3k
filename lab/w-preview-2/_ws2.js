@@ -97,7 +97,12 @@
         cores.filter(q => !out.has(q)).forEach(q => out.set(q, free.shift())); by.slice(3).forEach((q, i) => out.set(q, 4 + i));
         return [...out.entries()].sort((x, y) => x[1] - y[1]).map(([p, n]) => ({ p, n, hs: past(p.account_id).map(x => x[0]) })); };
       const five = id => PR ? realFive(id) : five0(id);
-      const hic = id => `<img class="ws24-h" src="${hero(id).img}" alt="" title="${hero(id).name}">`;
+      // w-stats v1 (созвон 04.11 §5.2–5.4; Claude-B): WS2_ST — герои иконками с мини-карты (gs-match/img/heroes/icon, нет иконки — портрет), игроки — фото из общей базы (нет фото — шаблон-силуэт), номер позиции — на фото
+      const ST = !!window.WS2_ST, icn = id => hero(id).img.replace(/\/heroes\/([\w]+\.png)$/, '/heroes/icon/$1');
+      const hic = id => ST ? `<img class="ws24-h wst-h" src="${icn(id)}" onerror="this.onerror=null;this.src='${hero(id).img}';this.classList.add('is-pt')" alt="" title="${hero(id).name}">` : `<img class="ws24-h" src="${hero(id).img}" alt="" title="${hero(id).name}">`;
+      const photo = p => { const d = window.DB && DB.players && DB.players().find(x => x.steam === p.account_id); return d && d.photo ? DB.url(d.photo) : ''; };
+      const SIL = '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="12" r="6" fill="currentColor"/><path d="M4 31c1.5-7 6.3-10 12-10s10.5 3 12 10z" fill="currentColor"/></svg>';
+      const PAV = (p, n) => `<span class="wst-pa">${photo(p) ? `<img src="${photo(p)}" alt="">` : `<span class="wst-sil">${SIL}</span>`}<i>${n}</i></span>`;
       const duel = () => { const fa = five(A), fb = five(B); if (!fa.length) return '';
         const pl = (q, side) => `<div class="ws24-p ${side}"><img class="ws24-av" src="${pav(q.p)}" alt=""><span class="ws24-nm"><b>${pnm(q.p)}</b><span class="ws24-hs">${q.hs.map(hic).join('')}</span></span></div>`;
         return `<div class="ws24"><div class="ws24-hd"><b>Составы</b><small>по позициям · герои — чаще всего на турнире</small></div>
@@ -131,7 +136,8 @@
           return `<div class="ws24">${hd.replace(' · герои — чаще всего на турнире', '')}<div class="ws28">${[[A, fa], [B, fb]].map(([id, f5]) => `<div><div class="ws28-t">${tname(id)}</div>${f5.map(q => `<div class="ws27-r ws33-r"><i class="ws24-n">${q.n}</i>${AV(q.p)}<span class="ws31-nm"><b>${pnm(q.p)}</b>${fact(q)}</span></div>`).join('')}</div>`).join('')}</div></div>`; }
         if (X === 'luChip') { // v37: факт-плашка — главный герой и счёт на нём до матча
           const best = f5 => Math.max(...f5.map(q => { const [, n, w] = hst(q)[0]; return w / n; }));
-          return `<div class="ws24">${hd.replace(' · герои — чаще всего на турнире', ' · главный герой и счёт на нём до матча')}<div class="ws28">${[[A, fa], [B, fb]].map(([id, f5]) => { const bw = best(f5); return `<div><div class="ws28-t">${tname(id)}</div>${f5.map(q => { const [h, n, w] = hst(q)[0], top = w / n === bw;
+          return `<div class="ws24">${hd.replace(' · герои — чаще всего на турнире', ST ? ' · главный герой до матча: побед из карт на нём' : ' · главный герой и счёт на нём до матча')}<div class="ws28">${[[A, fa], [B, fb]].map(([id, f5]) => { const bw = best(f5); return `<div><div class="ws28-t">${tname(id)}</div>${f5.map(q => { const [h, n, w] = hst(q)[0], top = w / n === bw;
+            if (ST) return `<div class="ws27-r ws37-r wst-r" data-sbp="${q.p.account_id}">${PAV(q.p, q.n)}<b>${pnm(q.p)}</b><span class="ws37-c wst-c${top ? ' is-top' : ''}" title="${hero(h).name}: ${w} ${pl(w, 'победа', 'победы', 'побед')} из ${n} ${pl(n, 'карты', 'карт', 'карт')} до этого матча">${hic(h)}<span>${hero(h).name}</span><b class="num">${w} из ${n}</b></span></div>`; /* 5.5: «2–2» никто не понимает — «побед из карт» */
             return `<div class="ws27-r ws37-r" data-sbp="${q.p.account_id}"><i class="ws24-n">${q.n}</i>${AV(q.p)}<b>${pnm(q.p)}</b><span class="ws37-c${top ? ' is-top' : ''}" title="${hero(h).name}: ${w} ${pl(w, 'победа', 'победы', 'побед')} из ${n} до этого матча">${hic(h)}<span>${hero(h).name}</span><b class="num">${w}–${n - w}</b></span></div>`; }).join('')}</div>`; }).join('')}</div></div>`; }
         if (X === 'luPP' || X === 'luPPseg' || X === 'luPPslim') { // v34–v35: вид «Игроки по позициям» со страницы турнира (2.4, ../widget-positions/_pp.css): ник и команда, главные герои — имя, винрейт полоской и числом, карты
           const ROLE = ['', 'Керри', 'Мид', 'Оффлейн', 'Саппорт 4', 'Саппорт 5'];
@@ -314,7 +320,9 @@
         if (t === 'Очные и форма') { c.style.display = 'none'; return; }
         if (AB) { const g = [...c.querySelectorAll('.gr-lg')].find(x => /^Форма на турнире/.test(x.textContent)); if (g) { const bd = g.parentElement; bd.classList.add('ws2'); bd.innerHTML = about(); if (window.WS2_SKIN === 'trn4') logoTint(bd); } }
         // v24–v25: дуэли — на месте старого блока «Составы» (там же, где он стоит на странице), а не внутри статистики
-        if (t === 'Составы' && X !== 'h2h') { const d = X === 'duel' || X === 'heroes' ? duel() : lineup(); if (d) { c.classList.add('ws2', 'ws24-cd'); c.innerHTML = d; } } }); });
+        if (t === 'Составы' && X !== 'h2h') { const d = X === 'duel' || X === 'heroes' ? duel() : lineup(); if (d) { c.classList.add('ws2', 'ws24-cd'); c.innerHTML = d; } } });
+        // w-stats v3 (дирижёр 04.11: «нет статистики»): WS2_ST_ABOUT — во вкладке «Статистика» идущего / сыгранного матча тоже «О матче» (шансы и плитки), первым, над «Составами»
+        if (window.WS2_ST_ABOUT && AB && ![...g.querySelectorAll('.ws24-hd b')].some(b => b.textContent === 'О матче')) { const lu = g.querySelector('section.cd.ws24-cd'); if (lu) { lu.insertAdjacentHTML('beforebegin', `<section class="cd wst-about"><div class="cd-bd ws2">${about()}</div></section>`); if (window.WS2_SKIN === 'trn4') logoTint(lu.previousElementSibling.querySelector('.cd-bd')); } } });
       return; }
     if (K === 'board') { // табло сравнения: крупные лого, форма точками, строки с полосами от центра
       el.innerHTML = `<div class="ws2 ws4"><div class="ws4-hd">

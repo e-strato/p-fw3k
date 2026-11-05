@@ -1,0 +1,44 @@
+/* w-lane-2 — лайнинг до матча, состояния карты (созвон 05.11 §8, §7.4) */
+.wls-sw { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 100; display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 12px; background: #18181bf2; box-shadow: 0 0 0 1px #ffffff14, 0 8px 24px #0008; backdrop-filter: blur(8px); }
+.wls-sw button { height: 32px; padding: 0 12px; border: 0; border-radius: 8px; background: none; color: #a1a1aa; font: 500 13px/1 var(--w-font, system-ui); cursor: pointer; white-space: nowrap; }
+.wls-sw button:hover { color: #fafafa; }
+.wls-sw button.on { background: #27272a; color: #fafafa; }
+.wls-sw i { font-style: normal; color: #52525b; font-size: 12px; }
+/* «До матча»: пики встали в слоты */
+.wls .wl-slot.wls-pk .d3-i img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; display: block; }
+/* 8.3 метка у 12′ */
+html.wls-mk--L .g2-l12 { width: 22px !important; height: 22px !important; border-radius: 50% !important; background: #27272a !important; border: 1.5px solid #e4e4e7 !important; box-shadow: none !important; display: grid; place-items: center; }
+html.wls-mk--L .g2-l12::after { content: 'L'; font: 700 11px/1 var(--w-font, system-ui); color: #fafafa; }
+html.wls-mk--L .g2-l12.on { background: #fafafa !important; }
+html.wls-mk--L .g2-l12.on::after { color: #09090b; }
+html.wls-mk--chip .g2-l12 { width: auto !important; height: 24px !important; padding: 0 10px 0 8px !important; border-radius: 12px !important; background: #27272a !important; border: 1px solid #ffffff26 !important; box-shadow: none !important; display: flex; align-items: center; gap: 6px; transform: translate(-50%, -50%); white-space: nowrap; }
+html.wls-mk--chip .g2-l12::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #e4e4e7; }
+html.wls-mk--chip .g2-l12::after { content: 'Линии'; font: 600 12px/1 var(--w-font, system-ui); color: #fafafa; }
+html.wls-mk--chip .g2-l12:hover, html.wls-mk--chip .g2-l12.on { background: #3f3f46 !important; }
+/* v4 WLS_PH (дирижёр 05.11: «на телефоне должен быть график»): на телефоне до матча — график; блок «Линии» по нажатию — на всю ширину графика; у «L» зона нажатия 44 */
+html.wls-ph body:not(.is-desk) .g2-lanes { left: 8px !important; right: 8px !important; width: auto !important; max-width: none !important; }
+html.wls-ph body:not(.is-desk) .g2-l12 { overflow: visible; }
+html.wls-ph body:not(.is-desk) .g2-l12::before { content: ''; position: absolute; inset: -11px; }
+/* v5–v8 (дирижёр 05.11: «почему L, а не прогноз?»): метка у 12′ — сам прогноз; WLS_MK: 'val' — «+0.9k» · 'fc' — «Прогноз» · 'lgval' — лого лидера и «+0.9k» · 'fcval' — «Прогноз +0.9k» */
+html.wls-mkv .g2-l12 { width: auto !important; height: 26px !important; padding: 0 10px !important; border-radius: 13px !important; background: #18181b !important; border: 1px solid #ffffff2e !important; box-shadow: 0 2px 8px #0008 !important; display: flex !important; align-items: center; gap: 6px; transform: translate(-50%, -50%); white-space: nowrap; cursor: pointer; }
+html.wls-mkv .g2-l12:hover, html.wls-mkv .g2-l12.on { background: #27272a !important; border-color: #ffffff4d !important; }
+html.wls-mkv .g2-l12::after { font: 600 13px/1 var(--w-font, system-ui); font-variant-numeric: tabular-nums; color: #fafafa; }
+html.wls-mk--val .g2-l12::after { content: var(--wls-v); color: #facc15; }
+html.wls-mk--fc .g2-l12::after { content: 'Прогноз'; }
+html.wls-mk--lgval .g2-l12::before { content: ''; width: 16px; height: 16px; background: var(--wls-lg) center / contain no-repeat; }
+html.wls-mk--lgval .g2-l12::after { content: var(--wls-v); color: #facc15; }
+html.wls-mk--fcval .g2-l12::after { content: 'Прогноз ' var(--wls-v); }
+/* телефон: блок «Линии» — шторкой снизу (дирижёр 05.11: «bottom sheet, а не pop-up») */
+html.wls-sh body:not(.is-desk) .g2-lanes { position: fixed !important; left: 0 !important; right: 0 !important; bottom: 0 !important; top: auto !important; width: auto !important; max-width: none !important; max-height: 82vh; overflow: auto; z-index: 300; border-radius: 20px 20px 0 0 !important; padding-top: 20px !important; box-shadow: 0 0 0 100vmax #000a !important; animation: wls-up .22s cubic-bezier(.2,.8,.2,1); }
+html.wls-sh body:not(.is-desk) .g2-lanes::before { content: ''; position: absolute; top: 8px; left: 50%; width: 36px; height: 4px; margin-left: -18px; border-radius: 2px; background: #52525b; }
+@keyframes wls-up { from { transform: translateY(100%); } to { transform: none; } }
+html.wls-sh body:not(.is-desk) .g2-l12::before { content: ''; position: absolute; inset: -9px -4px; }
+html.wls-sh.wls-mk--lgval body:not(.is-desk) .g2-l12::before { position: static; inset: auto; }
+/* v9 WLS_SIDE (дирижёр 05.11: «не жёлтым, а цветом Dire / Radiant»): значение на метке — цветом стороны того, кого ждут впереди */
+html.wls-side.wls-lead--rad .g2-l12::after { color: var(--w-up, #22c55e) !important; }
+html.wls-side.wls-lead--dire .g2-l12::after { color: var(--w-down, #ef4444) !important; }
+/* v10 WLS_SIDEC (дирижёр 05.11: «Dire / Radiant должны быть цветными»): до матча подписи сторон под командами — цветом стороны, как на идущей карте */
+html.wls-sidec .d3-five.a .d3-tm small { color: var(--w-up, #22c55e) !important; }
+html.wls-sidec .d3-five.b .d3-tm small { color: var(--w-down, #ef4444) !important; }
+/* после 12′ метки нет (WGX_NO12) — метка-прогноз своим display: flex перебивала скрытие (исправлено 05.11) */
+html.wls-mkv .wgx-p12 .g2-l12, html.wls .wgx-p12 .g2-l12 { display: none !important; }

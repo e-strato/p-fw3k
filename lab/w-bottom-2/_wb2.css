@@ -1,0 +1,246 @@
+/* w-bottom-2 — нижняя строка (созвон 05.11 §2). Компьютер: команда — строкой над героями; золото — по центру над счётом */
+html.wb2 body.is-desk .d3-row { display: grid !important; grid-template-columns: 1fr auto 1fr; grid-template-areas: "ta gd tb" "ha sc hb"; column-gap: 28px; row-gap: 10px; align-items: center; }
+html.wb2 body.is-desk .d3-row > .d3-five, html.wb2 body.is-desk .d3-row > .d3-mid { display: contents; }
+html.wb2 body.is-desk .d3-five.a > .d3-tm { grid-area: ta; } html.wb2 body.is-desk .d3-five.a > .d3-hs { grid-area: ha; justify-content: flex-start; }
+html.wb2 body.is-desk .d3-five.b > .d3-tm { grid-area: tb; } html.wb2 body.is-desk .d3-five.b > .d3-hs { grid-area: hb; justify-content: flex-end; }
+/* строка команды: лого · название · сторона · форма */
+html.wb2 body.is-desk .d3-row .d3-tm { height: auto !important; display: flex; flex-direction: row; align-items: center; gap: 10px; width: auto; }
+html.wb2 body.is-desk .d3-row .d3-tm.b { flex-direction: row-reverse; justify-self: end; text-align: right; }
+html.wb2 body.is-desk .d3-row .d3-tm.a { justify-self: start; }
+html.wb2 body.is-desk .d3-row .ws-tn { display: flex; align-items: baseline; gap: 8px; }
+html.wb2 body.is-desk .d3-row .d3-tm.b .ws-tn { flex-direction: row-reverse; }
+html.wb2 body.is-desk .d3-row .ws-tn small { display: inline-flex; align-items: center; gap: 8px; }
+html.wb2 body.is-desk .d3-row .d3-tm.b .ws-tn small { flex-direction: row-reverse; }
+/* лого — 40, без обводки и кольца, на всю область */
+html.wb2 .d3-row .wb-lr { width: 40px !important; height: 40px !important; padding: 0 !important; border: 0 !important; box-shadow: none !important; background: none !important; outline: 0 !important; }
+html.wb2 .d3-row .wb-lr img { width: 100% !important; height: 100% !important; object-fit: contain; }
+html.wb2 .d3-row .wb-lr::before, html.wb2 .d3-row .wb-lr::after { display: none !important; }
+html.wb2 .d3-row .wb-gt { display: none !important; }   /* тег «+8.7k» у лого — золото теперь по центру */
+/* форма — точками: победа зелёная, поражение красная */
+html.wb2 .d3-row .wb-f i { width: 6px !important; height: 6px !important; border-radius: 50% !important; background: #71717a !important; margin: 0 2px; }
+html.wb2 .d3-row .wb-f i svg { display: none; }
+html.wb2 .d3-row .wb-f i.w { background: #30a46c !important; }
+html.wb2 .d3-row .wb-f i.l { background: #e5484d !important; }
+/* по центру: золото сверху, счёт мельче под ним */
+html.wb2 body.is-desk .d3-row .d3-mid > small { display: none; }
+html.wb2 body.is-desk .d3-row .d3-gd { grid-area: gd; display: inline-flex !important; align-items: center; justify-self: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 8px; background: #e8c57324; color: #e8c573; font-size: 15px; font-weight: 700; }
+html.wb2 body.is-desk .d3-row .d3-gd img { width: 16px; height: 16px; object-fit: contain; }
+html.wb2 body.is-desk .d3-row .d3-sc { grid-area: sc; justify-self: center; font-size: 20px !important; opacity: .85; }
+/* обводка лого рисуется тенью на самом img — убираем; рамки-подложки у img тоже нет */
+html.wb2 .d3-row .wb-lr img { box-shadow: none !important; border: 0 !important; border-radius: 0 !important; background: none !important; padding: 0 !important; }
+/* название сверху, под ним сторона и форма — у обеих команд одинаково */
+html.wb2 body.is-desk .d3-row .ws-tn { flex-direction: column !important; align-items: flex-start; gap: 2px; }
+html.wb2 body.is-desk .d3-row .d3-tm.b .ws-tn { flex-direction: column !important; align-items: flex-end; }
+/* у золота — лого лидера */
+html.wb2 body.is-desk .d3-row .d3-gd img { display: block !important; }
+html.wb2 body .d3-row .d3-five .d3-tm.ws-tm .wb-lr img, html.wb2 body .d3-row .d3-five .d3-tm.wb-on.wb-lead .wb-lr img { box-shadow: none !important; }
+
+/* ===== v2 «табло»: шапка · 5 героев · золото · счёт · золото · 5 героев · шапка ===== */
+html.wb2-nw body.is-desk .d3-row { grid-template-columns: 1fr auto auto auto 1fr; grid-template-areas: "ta ta sl tb tb" "ha ga sc gb hb"; column-gap: 0; row-gap: 0; align-items: stretch; }
+html.wb2-nw body.is-desk .d3-row .d3-gd { display: none !important; }
+/* шапка команды — над героями и её золотом, снизу черта цветом стороны */
+html.wb2-nw body.is-desk .d3-row .d3-tm { justify-self: stretch !important; padding: 0 12px 10px; margin-bottom: 10px; border-bottom: 2px solid var(--wb2-side); gap: 12px; }
+html.wb2-nw body.is-desk .d3-row .d3-tm.wb-rad { --wb2-side: #30a46c66; }
+html.wb2-nw body.is-desk .d3-row .d3-tm.wb-dire { --wb2-side: #e5484d66; }
+html.wb2-nw body.is-desk .d3-row .d3-tm b { font-size: 16px; }
+html.wb2-nw body.is-desk .d3-row .d3-tm.a { margin-right: 6px; } html.wb2-nw body.is-desk .d3-row .d3-tm.b { margin-left: 6px; }
+html.wb2-nw body.is-desk .d3-row .d3-hs { align-self: center; padding: 0 12px; }
+/* колонка золота команды */
+html.wb2-nw body.is-desk .d3-row .wb2-g { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 84px; padding: 0 12px; border-radius: 10px; }
+html.wb2-nw body.is-desk .d3-row .wb2-g.a { grid-area: ga; } html.wb2-nw body.is-desk .d3-row .wb2-g.b { grid-area: gb; }
+html.wb2-nw .wb2-nv { font: 700 20px/1 'JetBrains Mono', ui-monospace, monospace; letter-spacing: -.03em; color: var(--w-muted-fg, #a1a1aa); }
+html.wb2-nw .wb2-g.is-lead { background: #e8c57314; }
+html.wb2-nw .wb2-g.is-lead .wb2-nv { color: #e8c573; }
+html.wb2-nw .wb2-dv { height: 16px; font: 600 11px/16px 'JetBrains Mono', ui-monospace, monospace; color: #e8c573; }
+html.wb2-nw .wb2-g small, html.wb2-nw .wb2-sl { font-size: 11px; color: var(--w-muted-fg, #71717a); }
+/* счёт по центру — мельче золота, подпись «убийства» над ним в строке шапок */
+html.wb2-nw body.is-desk .d3-row .d3-sc { align-self: center; padding: 0 14px; font-size: 18px !important; opacity: .75; }
+html.wb2-nw body.is-desk .d3-row .wb2-sl { grid-area: sl; align-self: end; justify-self: center; padding-bottom: 14px; }
+html.wb2-nw body:not(.is-desk) .d3-row .wb2-g, html.wb2-nw body:not(.is-desk) .d3-row .wb2-sl { display: none; }
+html.wb2-nw body.is-desk .d3-row .d3-tm.a { justify-content: flex-start; } html.wb2-nw body.is-desk .d3-row .d3-tm.b { justify-content: flex-start; }
+
+/* ===== v3–v5: разный вид табло; без черт и обводок с одной стороны (дирижёр 05.11) ===== */
+html[class*="wb2-l--"] body.is-desk .d3-row .d3-tm { border-bottom: 0 !important; }
+html.wb2-nw .wb2-sp { display: none; }
+
+/* v3 · plain: без подложек — шапка просто текстом, золото крупными цифрами, у лидера жёлтым */
+html.wb2-l--plain body.is-desk .d3-row .d3-tm { padding: 0 12px 6px; margin-bottom: 4px; }
+html.wb2-l--plain body.is-desk .d3-row .wb2-g.is-lead { background: none; }
+html.wb2-l--plain .wb2-nv { font-size: 22px; }
+
+/* v4 · bar: шапка — плашкой во всю ширину своей половины (скругление со всех сторон, ровный фон), золото — без подложки */
+html.wb2-l--bar body.is-desk .d3-row .d3-tm { padding: 8px 12px; margin-bottom: 10px; border-radius: 10px; background: #ffffff0a; }
+html.wb2-l--bar body.is-desk .d3-row .d3-tm.wb-rad { background: #30a46c14; }
+html.wb2-l--bar body.is-desk .d3-row .d3-tm.wb-dire { background: #e5484d14; }
+html.wb2-l--bar body.is-desk .d3-row .wb2-g.is-lead { background: none; }
+html.wb2-l--bar body.is-desk .d3-row .wb2-sl { padding-bottom: 22px; }
+
+/* v5 · split: золото и счёт — одним блоком по центру: числа по краям, между ними полоса долей золота (цвет стороны), над ней счёт */
+html.wb2-l--split body.is-desk .d3-row { grid-template-areas: "ta ta sl tb tb" "ha ga sc gb hb" "ha ga sp gb hb"; }
+html.wb2-l--split body.is-desk .d3-row .d3-tm { padding: 0 12px 6px; margin-bottom: 4px; }
+html.wb2-l--split body.is-desk .d3-row .wb2-g { grid-row: 2 / span 2; }
+html.wb2-l--split body.is-desk .d3-row .wb2-g.is-lead { background: none; }
+html.wb2-l--split body.is-desk .d3-row .wb2-g small { display: none; }
+html.wb2-l--split body.is-desk .d3-row .d3-sc { align-self: end; padding-bottom: 6px; }
+html.wb2-l--split body.is-desk .d3-row .wb2-sp { grid-area: sp; display: flex; align-self: start; gap: 2px; width: 120px; height: 6px; margin: 0 auto; }
+html.wb2-l--split .wb2-sp i { display: block; height: 100%; border-radius: 3px; }
+html.wb2-l--split .wb2-sp i.a { background: var(--wb2-ca, #30a46c); } html.wb2-l--split .wb2-sp i.b { background: var(--wb2-cb, #e5484d); }
+html.wb2-l--split body.is-desk .d3-row:has(.d3-tm.a.wb-dire) .wb2-sp { --wb2-ca: #e5484d; --wb2-cb: #30a46c; }
+
+/* ===== v6–v8: золото — в строке команды (там, где команда), в строке пиков — только счёт, мельче; пики растянуты ===== */
+html.wb2-nw .wb2-bg { display: none; }
+html[class*="wb2-k--"] body.is-desk .d3-row { grid-template-columns: 1fr auto 1fr; grid-template-areas: "ta . tb" "ha sc hb"; column-gap: 20px; row-gap: 12px; align-items: center; }
+html[class*="wb2-k--"] body.is-desk .d3-row .d3-tm { border: 0 !important; margin: 0; padding: 0; }
+html[class*="wb2-k--"] body.is-desk .d3-row .wb2-sl { display: none; }
+html[class*="wb2-k--"] body.is-desk .d3-row .wb2-g small { display: none; }
+html[class*="wb2-k--"] body.is-desk .d3-row .wb2-g { grid-row: 1; background: none !important; padding: 0; min-width: 0; }
+html[class*="wb2-k--"] body.is-desk .d3-row .wb2-g.a { grid-area: ta; justify-self: end; align-items: flex-end; }
+html[class*="wb2-k--"] body.is-desk .d3-row .wb2-g.b { grid-area: tb; justify-self: start; align-items: flex-start; }
+html[class*="wb2-k--"] body.is-desk .d3-row .d3-tm.a { justify-self: start; } html[class*="wb2-k--"] body.is-desk .d3-row .d3-tm.b { justify-self: end; }
+html[class*="wb2-k--"] .wb2-nv { font-size: 26px; }
+/* пики — тянутся на всю свою половину */
+html[class*="wb2-k--"] body.is-desk .d3-row .d3-hs { display: flex; justify-content: space-between !important; padding: 0; }
+html[class*="wb2-k--"] body.is-desk .d3-row .d3-hs > .d3-h { flex: 1 1 0; }
+/* счёт — только он в строке пиков, мелко */
+html[class*="wb2-k--"] body.is-desk .d3-row .d3-sc { font-size: 16px !important; opacity: .7; padding: 0 6px; }
+
+/* v6 · row: всё на одном фоне, золото — у края своей шапки, ближе к центру */
+html.wb2-k--row body.is-desk .d3-row .wb2-dv { order: -1; }
+
+/* v7 · card: каждая команда — карточка (шапка, золото справа в шапке, пики под ней); между карточками — только счёт */
+html.wb2-k--card body.is-desk .d3-row { position: relative; row-gap: 0; }
+html.wb2-k--card body.is-desk .d3-row .wb2-bg { display: block; grid-row: 1 / 3; border-radius: 14px; background: #ffffff08; z-index: 0; margin: -6px 0; }
+html.wb2-k--card body.is-desk .d3-row .wb2-bg.a { grid-column: 1; } html.wb2-k--card body.is-desk .d3-row .wb2-bg.b { grid-column: 3; }
+html.wb2-k--card body.is-desk .d3-row .wb2-bg.a:has(~ .d3-five .d3-tm.a.wb-lead), html.wb2-k--card body.is-desk .d3-row:has(.d3-tm.a.wb-lead) .wb2-bg.a { background: #e8c5730d; }
+html.wb2-k--card body.is-desk .d3-row:has(.d3-tm.b.wb-lead) .wb2-bg.b { background: #e8c5730d; }
+html.wb2-k--card body.is-desk .d3-row > :not(.wb2-bg), html.wb2-k--card body.is-desk .d3-row .d3-five > *, html.wb2-k--card body.is-desk .d3-row .d3-mid > * { position: relative; z-index: 1; }
+html.wb2-k--card body.is-desk .d3-row .d3-tm, html.wb2-k--card body.is-desk .d3-row .wb2-g { margin: 10px 16px 6px; }
+html.wb2-k--card body.is-desk .d3-row .d3-hs { padding: 4px 10px 12px; }
+html.wb2-k--card body.is-desk .d3-row .d3-tm.b { justify-self: start; flex-direction: row; text-align: left; }
+html.wb2-k--card body.is-desk .d3-row .d3-tm.b .ws-tn { align-items: flex-start; }
+html.wb2-k--card body.is-desk .d3-row .wb2-g.b { justify-self: end; align-items: flex-end; }
+
+/* v8 · tug: под шапками — полоса перевеса на всю ширину: золото команд по краям полосы, доли цветом сторон; ниже пики и счёт */
+html.wb2-k--tug body.is-desk .d3-row { grid-template-areas: "ta . tb" "bar bar bar" "ha sc hb"; row-gap: 8px; }
+html.wb2-k--tug body.is-desk .d3-row .wb2-sp { grid-area: bar; display: flex; gap: 3px; width: 100%; height: 8px; margin: 0; }
+html.wb2-k--tug .wb2-sp i { display: block; height: 100%; border-radius: 4px; }
+html.wb2-k--tug .wb2-sp i.a { background: #30a46c; } html.wb2-k--tug .wb2-sp i.b { background: #e5484d; }
+html.wb2-k--tug body.is-desk .d3-row:has(.d3-tm.a.wb-dire) .wb2-sp i.a { background: #e5484d; } html.wb2-k--tug body.is-desk .d3-row:has(.d3-tm.a.wb-dire) .wb2-sp i.b { background: #30a46c; }
+html.wb2-k--tug body.is-desk .d3-row .wb2-g { flex-direction: row; align-items: baseline !important; gap: 8px; }
+html.wb2-k--tug body.is-desk .d3-row .wb2-g.a { flex-direction: row-reverse; }
+html.wb2-k--card body.is-desk .d3-row .wb2-bg { align-self: stretch; justify-self: stretch; background: #ffffff0b; } html.wb2-k--card body.is-desk .d3-row:has(.d3-tm.a.wb-lead) .wb2-bg.a, html.wb2-k--card body.is-desk .d3-row:has(.d3-tm.b.wb-lead) .wb2-bg.b { background: #e8c57312; }
+
+/* v9–v11: у суммы золота — значок золота из Доты (горка монет) */
+html.wb2-nw .wb2-nv { display: inline-flex; align-items: center; gap: 6px; }
+html.wb2-nw .wb2-coin { width: 22px; height: 22px; object-fit: contain; flex: none; }
+html[class*="wb2-k--"] body.is-desk .d3-row .wb2-g.a .wb2-nv { flex-direction: row; }
+
+/* ===== v12–v14: от v6 ===== */
+/* v12 · chip: суммы одного цвета; лидер — жёлтым чипом «+8.7k» рядом с суммой, отстающий — серым без чипа */
+html.wb2-v--chip .wb2-g .wb2-nv { color: var(--w-fg, #fafafa) !important; font-size: 24px; }
+html.wb2-v--chip .wb2-g:not(.is-lead) .wb2-nv { color: var(--w-muted-fg, #a1a1aa) !important; }
+html.wb2-v--chip body.is-desk .d3-row .wb2-g { flex-direction: row !important; align-items: center !important; gap: 8px; }
+html.wb2-v--chip body.is-desk .d3-row .wb2-g.a { flex-direction: row-reverse !important; }
+html.wb2-v--chip .wb2-g .wb2-dv { order: 0 !important; height: 22px; padding: 0 8px; border-radius: 6px; background: #e8c57324; line-height: 22px; font-size: 12px; }
+html.wb2-v--chip .wb2-g .wb2-dv--0 { display: none; }
+/* v13 · tight: шапка команды в одну строку (лого 32 · название · сторона · форма), золото крупнее (30) со значком монет */
+html.wb2-v--tight body.is-desk .d3-row .wb-lr { width: 32px !important; height: 32px !important; }
+html.wb2-v--tight body.is-desk .d3-row .ws-tn { flex-direction: row !important; align-items: baseline !important; gap: 10px; }
+html.wb2-v--tight body.is-desk .d3-row .d3-tm.b .ws-tn { flex-direction: row-reverse !important; }
+html.wb2-v--tight .wb2-nv { font-size: 30px !important; }
+html.wb2-v--tight .wb2-coin { width: 24px; height: 24px; }
+html.wb2-v--tight body.is-desk .d3-row .wb2-g { flex-direction: row !important; align-items: baseline !important; gap: 8px; }
+html.wb2-v--tight body.is-desk .d3-row .wb2-g.a { flex-direction: row-reverse !important; }
+html.wb2-v--tight .wb2-g .wb2-dv { order: 0 !important; }
+/* v14 · axis: тонкая вертикальная ось по центру через обе строки, счёт — плашкой на оси; золото — у оси с обеих сторон */
+html.wb2-v--axis body.is-desk .d3-row { position: relative; column-gap: 28px; }
+html.wb2-v--axis body.is-desk .d3-row::before { content: ''; position: absolute; left: 50%; top: 4px; bottom: 4px; width: 1px; background: var(--w-border, #ffffff1f); pointer-events: none; }
+html.wb2-v--axis body.is-desk .d3-row .d3-sc { position: relative; z-index: 1; padding: 4px 10px; border-radius: 8px; background: var(--w-bg, #0a0a0a); box-shadow: 0 0 0 1px var(--w-border, #ffffff1f); opacity: 1; }
+html.wb2-v--axis body.is-desk .d3-row .wb2-g .wb2-dv { order: 0 !important; }
+
+/* v15: вся строка компактнее — меньше отступы, лого 32, шрифты и иконки героев мельче */
+html.wb2-cmp body.is-desk .d3-row { padding: 6px 12px 8px !important; row-gap: 6px !important; }
+html.wb2-cmp body.is-desk .d3-row .wb-lr { width: 32px !important; height: 32px !important; }
+html.wb2-cmp body.is-desk .d3-row .d3-tm { gap: 8px; }
+html.wb2-cmp body.is-desk .d3-row .d3-tm b { font-size: 14px !important; }
+html.wb2-cmp .wb2-nv { font-size: 22px !important; }
+html.wb2-cmp .wb2-g .wb2-dv { height: 14px; line-height: 14px; }
+html.wb2-cmp body.is-desk .d3-row .d3-h { height: auto !important; min-height: 0 !important; gap: 2px; }
+html.wb2-cmp body.is-desk .d3-row .d3-h .d3-i { width: 34px !important; height: 34px !important; }
+html.wb2-cmp body.is-desk .d3-row .d3-h .d3-i img { width: 100% !important; height: 100% !important; }
+html.wb2-cmp body.is-desk .d3-row .d3-sc { font-size: 15px !important; padding: 3px 8px; }
+
+/* ===== v16–v18: от v15 — ровные отступы, перевес цветом стороны лидера ===== */
+html.wb2-nw .wb2-cd { display: none; }
+/* ровные отступы: черта над строкой → шапка = шапка → пики = пики → низ (12) */
+html.wb2-eq body.is-desk .d3-row { padding: 12px 12px 12px !important; row-gap: 12px !important; align-items: center; }
+html.wb2-eq body.is-desk .d3-row .d3-tm, html.wb2-eq body.is-desk .d3-row .wb2-g { margin: 0 !important; padding: 0 !important; }
+html.wb2-eq body.is-desk .d3-row::before { top: 12px; bottom: 12px; }
+html.wb2-eq body.is-desk .d3-row .wb2-g .wb2-dv { height: auto; }
+/* цвет стороны лидера */
+html[class*="wb2-cd--"] .wb2-g.is-lead .wb2-nv { color: var(--w-fg, #fafafa) !important; }
+html[class*="wb2-cd--"] .wb2-g:not(.is-lead) .wb2-nv { color: var(--w-muted-fg, #a1a1aa) !important; }
+/* v16 · near: «+8.7k» у суммы лидера, цветом его стороны */
+html.wb2-cd--near .wb2-g.lead-rad .wb2-dv { color: #3dd68c; } html.wb2-cd--near .wb2-g.lead-dire .wb2-dv { color: #ff6369; }
+/* v17 · mid: «+8.7k» по центру на оси в строке команд, цветом стороны; у сумм — без перевеса */
+html.wb2-cd--mid .wb2-g .wb2-dv, html.wb2-cd--pill .wb2-g .wb2-dv { display: none !important; }
+html.wb2-cd--mid body.is-desk .d3-row .wb2-cd, html.wb2-cd--pill body.is-desk .d3-row .wb2-cd { grid-row: 1; grid-column: 2; justify-self: center; display: inline-flex; align-items: center; gap: 5px; position: relative; z-index: 1; padding: 3px 8px; border-radius: 8px; background: var(--w-bg, #0a0a0a); font: 700 14px/1 'JetBrains Mono', ui-monospace, monospace; }
+html.wb2-cd--mid .wb2-cd img { display: none; }
+html.wb2-cd--mid .wb2-cd.is-rad { color: #3dd68c; } html.wb2-cd--mid .wb2-cd.is-dire { color: #ff6369; }
+/* v18 · pill: перевес по центру плашкой цвета стороны с лого лидера */
+html.wb2-cd--pill .wb2-cd img { width: 16px; height: 16px; object-fit: contain; }
+html.wb2-cd--pill .wb2-cd.is-rad { background: #30a46c26 !important; color: #3dd68c; box-shadow: 0 0 0 1px #30a46c40; }
+html.wb2-cd--pill .wb2-cd.is-dire { background: #e5484d26 !important; color: #ff6369; box-shadow: 0 0 0 1px #e5484d40; }
+
+/* v19: в плашке перевеса — значок золота; счёт — такой же плашкой на оси (тот же размер, шрифт, скругление), только нейтральной */
+html.wb2-cd--pill .wb2-cd img.wb2-cc { width: 18px; height: 18px; }
+html.wb2-scp body.is-desk .d3-row .d3-sc { display: inline-flex !important; align-items: center; gap: 3px; height: auto; padding: 3px 8px !important; border-radius: 8px !important; font: 700 14px/1 'JetBrains Mono', ui-monospace, monospace !important; opacity: 1 !important; background: #ffffff0f !important; box-shadow: 0 0 0 1px #ffffff1f !important; color: var(--w-fg, #fafafa); }
+html.wb2-scp body.is-desk .d3-row .d3-sc b, html.wb2-scp body.is-desk .d3-row .d3-sc i { font: inherit !important; }
+html.wb2-scp.wb2-cd--pill body.is-desk .d3-row .wb2-cd { padding: 3px 8px; min-height: 24px; box-sizing: border-box; }
+html.wb2-scp body.is-desk .d3-row .d3-sc { min-height: 24px; box-sizing: border-box; }
+
+/* v20: от v17 — у «+8.7k» значок золота; счёт — так же, как перевес: текст на оси, тем же шрифтом и размером, ось под ним прерывается так же */
+html.wb2-cd--mid.wb2-sct .wb2-cd img.wb2-cc { display: block !important; width: 18px; height: 18px; object-fit: contain; }
+html.wb2-sct body.is-desk .d3-row .d3-sc { display: inline-flex !important; align-items: center; gap: 3px; padding: 3px 8px !important; border-radius: 8px !important; font: 700 14px/1 'JetBrains Mono', ui-monospace, monospace !important; opacity: 1 !important; background: var(--w-bg, #0a0a0a) !important; box-shadow: none !important; color: var(--w-fg, #fafafa); }
+html.wb2-sct body.is-desk .d3-row .d3-sc b, html.wb2-sct body.is-desk .d3-row .d3-sc i { font: inherit !important; }
+html.wb2-sct body.is-desk .d3-row .d3-sc i { color: var(--w-muted-fg, #71717a); }
+
+/* ===== v21: телефон по логике v20 — шапка команды (золото справа) · пики на всю ширину · линия с перевесом и счётом · вторая команда ===== */
+html.wb2-ph body:not(.is-desk) .d3-row { display: grid !important; grid-template-columns: 1fr 1fr; grid-template-areas: "ta ta" "ha ha" "cd sc" "tb tb" "hb hb"; row-gap: 12px; column-gap: 8px; padding: 12px !important; align-items: center; }
+html.wb2-ph body:not(.is-desk) .d3-row > .d3-five, html.wb2-ph body:not(.is-desk) .d3-row > .d3-mid { display: contents !important; }
+html.wb2-ph body:not(.is-desk) .d3-row .d3-mid > small, html.wb2-ph body:not(.is-desk) .d3-row .d3-gd, html.wb2-ph body:not(.is-desk) .d3-row .wb2-bg, html.wb2-ph body:not(.is-desk) .d3-row .wb2-sp { display: none !important; }
+/* шапки команд — строкой: лого 28 · название · сторона и форма; золото — справа в той же строке */
+html.wb2-ph body:not(.is-desk) .d3-row .d3-tm { height: auto !important; width: auto; margin: 0 !important; padding: 0 !important; border: 0 !important; display: flex !important; flex-direction: row !important; align-items: center; gap: 8px; justify-self: start; text-align: left; }
+html.wb2-ph body:not(.is-desk) .d3-row .d3-tm.a { grid-area: ta; } html.wb2-ph body:not(.is-desk) .d3-row .d3-tm.b { grid-area: tb; }
+html.wb2-ph body:not(.is-desk) .d3-row .wb-lr { width: 28px !important; height: 28px !important; }
+html.wb2-ph body:not(.is-desk) .d3-row .ws-tn { display: flex !important; flex-direction: column !important; align-items: flex-start !important; gap: 2px; }
+html.wb2-ph body:not(.is-desk) .d3-row .ws-tn b { font-size: 14px; }
+html.wb2-ph body:not(.is-desk) .d3-row .ws-tn small { display: inline-flex !important; flex-direction: row !important; align-items: center; gap: 6px; }
+html.wb2-ph body:not(.is-desk) .d3-row .wb2-g { display: flex !important; grid-row: auto; justify-self: end; align-items: flex-end; background: none !important; padding: 0; min-width: 0; }
+html.wb2-ph body:not(.is-desk) .d3-row .wb2-g.a { grid-area: ta; } html.wb2-ph body:not(.is-desk) .d3-row .wb2-g.b { grid-area: tb; }
+html.wb2-ph body:not(.is-desk) .d3-row .wb2-g small, html.wb2-ph body:not(.is-desk) .d3-row .wb2-g .wb2-dv { display: none !important; }
+html.wb2-ph body:not(.is-desk) .wb2-nv { font-size: 20px !important; }
+/* пики — на всю ширину */
+html.wb2-ph body:not(.is-desk) .d3-row .d3-five.a > .d3-hs { grid-area: ha; } html.wb2-ph body:not(.is-desk) .d3-row .d3-five.b > .d3-hs { grid-area: hb; }
+html.wb2-ph body:not(.is-desk) .d3-row .d3-hs { display: flex !important; justify-content: space-between !important; width: 100%; padding: 0 !important; }
+html.wb2-ph body:not(.is-desk) .d3-row .d3-hs > .d3-h { flex: 1 1 0; min-width: 0; }
+/* между командами — горизонтальная линия, на ней перевес (значок золота, цвет лидера) и счёт тем же шрифтом */
+html.wb2-ph body:not(.is-desk) .d3-row .wb2-sl { display: block !important; grid-column: 1 / -1; grid-row: 3; align-self: center; height: 1px; padding: 0 !important; font-size: 0; background: var(--w-border, #ffffff1f); }
+html.wb2-ph body:not(.is-desk) .d3-row .wb2-cd { grid-area: cd; justify-self: end; display: inline-flex !important; align-items: center; gap: 5px; position: relative; z-index: 1; padding: 3px 8px; border-radius: 8px; background: var(--w-bg, #0a0a0a); font: 700 14px/1 'JetBrains Mono', ui-monospace, monospace; }
+html.wb2-ph body:not(.is-desk) .d3-row .wb2-cd img { display: block !important; width: 18px; height: 18px; object-fit: contain; }
+html.wb2-ph .wb2-cd.is-rad { color: #3dd68c; } html.wb2-ph .wb2-cd.is-dire { color: #ff6369; }
+html.wb2-ph body:not(.is-desk) .d3-row .d3-sc { grid-area: sc; justify-self: start; display: inline-flex !important; align-items: center; gap: 3px; position: relative; z-index: 1; padding: 3px 8px !important; border-radius: 8px; background: var(--w-bg, #0a0a0a) !important; font: 700 14px/1 'JetBrains Mono', ui-monospace, monospace !important; opacity: 1 !important; margin: 0 !important; }
+html.wb2-ph body:not(.is-desk) .d3-row .d3-sc b, html.wb2-ph body:not(.is-desk) .d3-row .d3-sc i { font: inherit !important; }
+
+/* v22: значок золота — у сумм команд (70.3k / 79.0k), у перевеса — без значка */
+html.wb2-ph body:not(.is-desk) .wb2-coin { width: 18px; height: 18px; }
+html.wb2-nw .wb2-g.a .wb2-nv, html.wb2-nw .wb2-g.b .wb2-nv { flex-direction: row !important; }
+
+/* v24: цифры золота — одинаковой ширины (моно), при докрутке строка не дёргается */
+html.wb2-nw .wb2-nt, html.wb2-nw .wb2-dv, html.wb2-nw .wb2-cd b { font-variant-numeric: tabular-nums; }
+
+/* v25–v27: анимации смены цифр */
+html.wb2-nw .wb2-nt, html.wb2-nw .wb2-dv, html.wb2-nw .wb2-cd b { display: inline-block; }
+html.wb2-nw .wb2-nv { overflow: hidden; }
+html.wb2-nw .wb2-od { display: inline-block; overflow: hidden; vertical-align: top; height: 1.1em; line-height: 1.1em; }
+html.wb2-nw .wb2-od > span { display: inline-block; }

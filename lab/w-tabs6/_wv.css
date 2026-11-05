@@ -1,0 +1,59 @@
+/* w-tabs6 — переключатель видов карты и вид «Золото» */
+[data-wd="gold"] { position: relative; }
+.wv-sw { position: absolute; z-index: 6; left: 120px; bottom: 56px; display: flex; padding: 2px; border-radius: 10px; background: #18181bdd; box-shadow: 0 0 0 1px #ffffff1a; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.wv-sw button { height: 28px; padding: 0 10px; border: 0; border-radius: 8px; background: none; color: #a1a1aa; font: 500 12px/28px var(--w-font, system-ui); cursor: pointer; }
+.wv-sw button:hover { color: #fff; } .wv-sw button.on { background: #ffffff1a; color: #fff; }
+body:not(.is-desk) .wv-sw { left: auto; right: 8px; bottom: auto; top: 8px; }
+.wv-pn { --up: #22c55e; --dn: #ef4444; position: absolute; z-index: 5; inset: 0 0 0 0; padding: 12px 8px 96px; background: var(--w-bg, #09090b); overflow: auto; }
+body:not(.is-desk) .wv-pn { padding: 48px 4px 12px; }
+.wv-hd { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+.wv-hd b { font: 600 14px/1.3 var(--w-font, system-ui); color: #fafafa; }
+.wv-lg { display: flex; align-items: center; gap: 6px; color: #a1a1aa; font-size: 12px; } .wv-lg i { width: 8px; height: 8px; border-radius: 2px; margin-left: 8px; } .wv-lg i.up { background: var(--up); } .wv-lg i.dn { background: var(--dn); }
+.wv-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; }
+body:not(.is-desk) .wv-grid { grid-template-columns: 1fr 1fr; } body:not(.is-desk) .wv-bars { grid-column: 1 / -1; }
+.wv-c { margin: 0; padding: 12px; border-radius: 12px; background: #ffffff06; box-shadow: inset 0 0 0 1px #ffffff0f; display: flex; flex-direction: column; }
+.wv-c figcaption { margin-bottom: 8px; color: #a1a1aa; font-size: 12px; }
+.wv-c svg { width: 100%; height: auto; max-height: 340px; }
+.wv-v { fill: #e4e4e7; font: 600 11px var(--w-font, system-ui); text-anchor: middle; } .wv-pos { fill: #71717a; font: 500 11px var(--w-font, system-ui); text-anchor: middle; }
+.wv-ct { fill: #fafafa; font: 700 16px var(--w-font, system-ui); text-anchor: middle; } .wv-cs { fill: #71717a; font: 500 10px var(--w-font, system-ui); text-anchor: middle; }
+.wv-sum { display: flex; flex-direction: column; gap: 2px; margin-top: 8px; font-size: 12px; color: #71717a; } .wv-sum .up { color: var(--up); font-weight: 600; } .wv-sum .dn { color: var(--dn); font-weight: 600; }
+/* вид не «График» — сам график прячем целиком (его края и живая точка выходили из-под панели), место держим */
+[data-wd="gold"].wv-alt > .g2 { visibility: hidden; }
+/* 6.3 — таб «Новости»: фильтр и лента */
+.ws-ph.wn-on { display: block; min-height: 0; text-align: left; padding: 12px; }
+.wn-f { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.wn-f button { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border: 0; border-radius: 999px; background: #ffffff0d; color: #a1a1aa; font: 500 13px/30px var(--w-font, system-ui); cursor: pointer; }
+.wn-f button small { color: #71717a; font-size: 11px; } .wn-f button.on { background: #fafafa; color: #09090b; } .wn-f button.on small { color: #52525b; }
+.wn-r { display: flex; gap: 12px; padding: 12px 4px; border-top: 1px solid #ffffff0d; color: inherit; text-decoration: none; }
+.wn-r:hover .wn-t { color: #fff; }
+.wn-im { flex: none; order: 2; width: 120px; height: 68px; border-radius: 8px; object-fit: cover; }
+.wn-b { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.wn-t { color: #e4e4e7; font: 500 14px/1.4 var(--w-font, system-ui); }
+.wn-m { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; color: #71717a; font-size: 12px; }
+.wn-lg { display: inline-flex; gap: 4px; } .wn-lg:empty { display: none; } .wn-lg img { width: 16px; height: 16px; object-fit: contain; }
+.wn-0 { color: #71717a; font-size: 12px; padding: 12px 4px; }
+body:not(.is-desk) .wn-im { width: 84px; height: 56px; }
+/* v5 — строкой табов над картой */
+html.wv-row .wv-sw { position: static; width: max-content; margin: 0 auto 8px; background: #ffffff0a; box-shadow: none; }
+html.wv-row .wv-pn { top: 42px; }
+body:not(.is-desk) html.wv-row .wv-sw, html.wv-row body:not(.is-desk) .wv-sw { margin: 0 auto 8px; }
+/* v4 — виджет под окном матча */
+.wv-wd { --up: #22c55e; --dn: #ef4444; margin-top: 12px; padding: 12px; border-radius: 16px; background: var(--w-bg, #09090b); box-shadow: inset 0 0 0 1px var(--w-border, #ffffff14); }
+.wv-wd-hd { margin-bottom: 8px; } .wv-wd .wv-sw { position: static; width: max-content; background: #ffffff0a; box-shadow: none; }
+.wv-wd .wv-pn { position: static; padding: 0; background: none; overflow: visible; }
+/* v6 — виджет в правой колонке: узко — столбцы во всю ширину, круговая и донат рядом под ними */
+.wv-wd--side { margin-top: 12px; border-radius: 12px; }
+.wv-wd--side .wv-grid { grid-template-columns: 1fr 1fr; gap: 8px; } .wv-wd--side .wv-bars { grid-column: 1 / -1; }
+.wv-wd--side .wv-c { padding: 8px; } .wv-wd--side .wv-hd b { font-size: 13px; } .wv-wd--side .wv-lg { font-size: 11px; }
+.wv-wd--side .wv-sum { font-size: 11px; }
+/* v7 — табы серии «Золото» / «Драфт»: все карты подряд */
+.bw-page.wv-hide > :not(.wv-serbox) { display: none !important; }
+.wv-serbox { --up: #22c55e; --dn: #ef4444; padding: 12px; }
+.wv-map { padding: 12px 0 16px; border-top: 1px solid #ffffff0d; } .wv-map:first-child { border-top: 0; padding-top: 0; }
+.wv-mh { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-bottom: 10px; } .wv-mh b { font: 600 14px/1.3 var(--w-font, system-ui); color: #fafafa; } .wv-mh > span:not(.wv-lg) { color: #a1a1aa; font-size: 12px; } .wv-mh .wv-lg { margin-left: auto; }
+.wv-map.is-off .wv-mh { opacity: .5; margin: 0; }
+.wv-serbox .wv-c svg { max-height: 220px; }
+html.wv-notv aside.gm-side > .gm-wd:has(> .dc2-host) { display: none !important; }
+.ws-tabs .h3-tab.wv-dv { position: relative; overflow: visible; }
+.ws-tabs .h3-tab.wv-dv::after { content: ''; position: absolute; right: -2px; top: 50%; width: 1px; height: 16px; margin-top: -8px; background: #ffffff24; pointer-events: none; }
+html.wv-nohb header.pt { border-bottom-color: transparent !important; }

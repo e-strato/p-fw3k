@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"><g id="Icons/Roles" clip-path="url(#clip0_6_3)">
+<path id="Vector" fill-rule="evenodd" clip-rule="evenodd" d="M0 1.09091V2.97541C0 4.9869 0.082284 7.08864 1.21196 8.75292C1.59654 9.3195 2.09269 9.8877 2.72727 10.3636C4.3006 11.5436 5.45454 12 6 12C6.54546 12 7.69938 11.5436 9.2727 10.3636C9.90732 9.8877 10.4035 9.3195 10.7881 8.75292C11.9177 7.08864 12 4.9869 12 2.97541V1.09091C12 0.488418 11.5116 0 10.9091 0H1.09091C0.488418 0 0 0.488418 0 1.09091ZM8.01648 5.03262C8.01648 5.1699 7.18896 6.16524 6.18906 7.26354C4.5858 9.03108 4.05137 9.51156 4.05137 9.18552C4.05137 9.13404 4.30997 8.44764 4.63752 7.64106C4.96506 6.8517 5.17194 6.16524 5.12022 6.11376C5.0685 6.06228 4.72372 6.0108 4.36169 6.0108C3.99966 6.0108 3.70659 5.94216 3.70659 5.85636C3.70659 5.77056 4.17205 4.87818 4.75819 3.88287C5.8098 2.06384 5.8098 2.06383 6.70626 2.06383C7.20618 2.06383 7.67166 2.11532 7.72338 2.18396C7.79232 2.23544 7.5165 2.85323 7.13724 3.55682C6.73254 4.29201 6.56538 4.59574 6.6531 4.72122C6.71484 4.80954 6.90294 4.80954 7.22346 4.80954C7.7751 4.80954 8.01648 4.87818 8.01648 5.03262Z" fill="white" />
+</g>
+<defs>
+<filter id="filter0_dd_6_3" x="-20" y="-74" width="148" height="164" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix" />
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+<feMorphology radius="2" operator="dilate" in="SourceAlpha" result="effect1_dropShadow_6_3" />
+<feOffset dy="2" />
+<feGaussianBlur stdDeviation="3" />
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0" />
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_6_3" />
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+<feOffset dy="1" />
+<feGaussianBlur stdDeviation="1" />
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0" />
+<feBlend mode="normal" in2="effect1_dropShadow_6_3" result="effect2_dropShadow_6_3" />
+<feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_6_3" result="shape" />
+</filter>
+<clipPath id="clip0_6_3">
+<rect width="12" height="12" fill="white" />
+</clipPath>
+</defs>
+</svg>

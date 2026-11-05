@@ -99,6 +99,8 @@ window.NW2 = (() => {
       return `<a class="n2-p" href="#" title="Страница игрока"${c ? ` style="--tc:${c}"` : ''}>${av}${a}</a>` }
     const lg = k === 't' ? LG(a) : TOUR[a].logo, nm = k === 't' ? b || a : TOUR[a].name, c = k === 't' && TC[a]
     return `<span class="n2-e${lg ? '' : ' n2-e--nl'}"${c ? ` style="--tc:${c}"` : ''}>${lg ? `<img src="${lg}" alt="">` : ''}${nm}</span>` })
+    // 05.11 (дирижёр: «после тега сбивается строка») — кавычка / скобка перед плашкой и знаки после неё не отрываются от плашки на другую строку
+    .replace(/([«"(„]*)(<(a|span) class="n2-[pe][ "][^>]*>(?:(?!<\/\3>)[\s\S])*<\/\3>)([,.:;!?»")…]*)/g, (x, l, m, _, r) => (l || r ? `<span class="n2-nb">${l}${m}${r}</span>` : x))
   const MON = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
   const pad = (n) => String(n).padStart(2, '0')
   function when(ts) { const now = NOWF(), m = Math.floor((now - ts) / 60000), d = new Date(ts), t = new Date(now)
@@ -114,7 +116,8 @@ window.NW2 = (() => {
     if (al.length) t = t.replace(new RegExp(`(?<![\\wА-Яа-яЁё{|:])(${al.map(([a]) => reE(a)).join('|')})(?![\\wА-Яа-яЁё}])`, 'g'), (x) => al.find(([a]) => a === x)[1]); return t }
   const fromDB = (n, extra = {}) => ({ id: n.id, ts: new Date(n.t).getTime(), tour: n.tours.includes(window.DB_TOUR || 'ti-2026') || (!window.DB_TOUR && /TI15|The International/i.test(n.title)) ? 'ti' : null, t: tok(n), lede: n.lede || n.title, main: [], img: n.img ? window.DB.url(n.img) : '', ...extra })
   if (DBM) { for (const k of Object.keys(PL)) delete PL[k]; for (const x of window.DB.playerStats(window.DB_TOUR || 'ti-2026')) { const p = DBD.players[x.player]; PL[p.nick] = [DBD.teams[x.team]?.name || '', x.heroes[0]?.hero || ''] } }
-  const DBN = DBM ? window.DB.news({ tour: window.DB_TOUR || 'ti-2026' }) : []
+  // 05.11 (лаба w-match-news, дирижёр: «тут должны быть не новости турнира, а новости матча»): NW2_TEAMS = [id, id] — новости, где есть хоть одна из команд (до загрузки виджета)
+  const DBN = DBM ? (window.NW2_TEAMS ? window.DB.news().filter((n) => window.NW2_TEAMS.some((id) => n.teams.includes(id))) : window.DB.news({ tour: window.DB_TOUR || 'ti-2026' })) : []
   const T0 = Date.now()
   const LIST = DBM ? DBN.slice(1, 16).map((n) => fromDB(n)) : N.map(([id, m, tour, t]) => { const n = REAL.find((x) => x.id === id); return { id, ts: T0 - m * 60000, tour, t, lede: n.lede, main: (n.main || []).length > 1 ? n.main : [], rich: RICH[id], img: (n.imgs || [])[0] || '' } })
   // «Кратко» — кнопка в духе «✦ Пикабу ИИ» (Pikabu-AI-prototype, pikabu-post-demo): переливается, открыта — серый круг ×
