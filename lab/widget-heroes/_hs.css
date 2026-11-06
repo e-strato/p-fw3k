@@ -84,3 +84,21 @@
 .w .hsw-rc{ display:inline-flex; align-items:center; gap:5px; height:28px; padding:0 10px; border-radius:6px; background:var(--w-muted); color:var(--w-fg); font:500 12px/1 var(--w-font); white-space:nowrap; }
 .w .hsw-rc:hover{ background:var(--w-ring); } .w .hsw-rc:disabled{ opacity:.35; cursor:default; background:var(--w-muted); }
 .hsw-sub + .hsw-rc{ margin-left:4px; }
+
+/* w-hero-stats (HSW_D, дирижёр 06.11): компьютер — узко, помещается на страницу */
+.hsw-d .hsw-t { min-width: 0; width: 100%; } .hsw-d .hsw-t col.c-h { width: auto; } .hsw-d .hsw-t col.c-k { width: 32px; } .hsw-d .hsw-t col.c-n, .hsw-d .hsw-t col.c-wr { width: 96px; }
+.hsw-d .hsw-box { max-height: none; overflow: visible; }
+.hsw-d[data-hswd="scroll"] .hsw-box { max-height: 440px; overflow: auto; }
+.hsw-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 32px; }
+.hsw-d[data-hswd="cols"] .hsw-t col.c-n, .hsw-d[data-hswd="cols"] .hsw-t col.c-wr { width: 72px; }
+.w .hsw-all { display: block; width: calc(100% - 24px); margin: 8px 12px 12px; height: 36px; border-radius: 8px; background: #ffffff08; color: var(--w-muted-fg); font: 500 13px/1 var(--w-font); text-align: center; }
+.w .hsw-all:hover { background: #ffffff10; color: var(--w-fg); }
+/* full / fullscroll — все 14 колонок, но таблица помещается в колонку страницы (~1000 px): уже номер, герой, числа; шрифт чуть меньше */
+.hsw-d[data-hswd^="full"] .hsw-t { min-width: 0; font-size: 12px; }
+.hsw-d[data-hswd^="full"] .hsw-t col.c-k { width: 28px; } .hsw-d[data-hswd^="full"] .hsw-t col.c-h { width: 156px; }
+.hsw-d[data-hswd^="full"] .hsw-t col.c-n { width: auto; } .hsw-d[data-hswd^="full"] .hsw-t col.c-wr { width: 58px; }
+.hsw-d[data-hswd^="full"] .hsw .hero img, .hsw-d[data-hswd^="full"] .hero img { width: 28px; height: 16px; }
+.hsw-d[data-hswd^="full"] .hero { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hsw-d[data-hswd^="full"] .wrh { min-width: 0; padding: 2px 5px; }
+.hsw-d[data-hswd="fullscroll"] .hsw-box { max-height: 480px; overflow: auto; }
+.hsw-d[data-hswd^="full"] .hsw-t col.c-k { width: 34px; } .hsw-d[data-hswd^="full"] .hsw-t col.c-h { width: 172px; }

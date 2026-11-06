@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>v1 · Открытие пака — как в видео</title>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<style>
+html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font: 500 13px/1.35 Inter, system-ui, sans-serif; color: #e4e4e7; }
+#c { position: fixed; inset: 0; width: 100%; height: 100%; display: block; cursor: pointer; }
+.hint { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); color: #a1a1aa; font-size: 14px; pointer-events: none; transition: opacity .3s; }
+.pn { position: fixed; top: 12px; right: 12px; width: 276px; max-height: calc(100% - 24px); overflow: auto; box-sizing: border-box; background: rgba(15, 15, 18, .86); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, .08); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; z-index: 2; }
+.pn.is-min > :not(.pn-hd) { display: none; }
+.pn-hd { display: flex; align-items: center; justify-content: space-between; }
+.pn-hd b { font-weight: 600; font-size: 14px; }
+.btn { all: unset; cursor: pointer; padding: 6px 10px; border-radius: 8px; background: rgba(255, 255, 255, .08); color: #e4e4e7; font-weight: 500; text-align: center; }
+.btn:hover { background: rgba(255, 255, 255, .14); }
+.btn--p { background: #8b5cf6; color: #fff; } .btn--p:hover { background: #7c3aed; }
+.btns { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.row { display: flex; align-items: center; gap: 8px; } .row > span { flex: 1; color: #a1a1aa; }
+.row input[type=number] { width: 52px; background: rgba(255, 255, 255, .06); border: 0; border-radius: 6px; color: #e4e4e7; padding: 3px 6px; font: inherit; font-variant-numeric: tabular-nums; }
+.img { display: grid; grid-template-columns: 44px 1fr; gap: 10px; align-items: center; }
+.img img { width: 44px; height: 62px; object-fit: contain; border-radius: 6px; background: #27272a; }
+.img .col { display: flex; flex-direction: column; gap: 4px; } .img .col b { font-weight: 600; }
+.img .col .btns { grid-template-columns: 1fr 1fr 1fr; } .img .btn { padding: 4px 6px; font-size: 12px; }
+input[type=color] { width: 30px; height: 22px; border: 0; padding: 0; background: none; cursor: pointer; }
+input[type=range] { width: 100%; accent-color: #8b5cf6; margin: 0; }
+.sec { color: #71717a; font-size: 12px; margin-top: 4px; }
+.tl { display: flex; align-items: center; gap: 8px; } .tl b { width: 42px; text-align: right; font-variant-numeric: tabular-nums; color: #a1a1aa; font-weight: 500; }
+.note { color: #f59e0b; font-size: 12px; }
+</style></head>
+<body>
+<!-- v1 · Открытие пака — как в видео дирижёра (06.11). Клик по паку: белый экран → пак вылетает снизу, крутясь → бирюзовый туннель,
+     пак покачивается, от него отлетают крошки → из-за пака бьют белые лучи, радужное кольцо, пак наклоняется и трясётся →
+     вспышка-звезда, пак мнётся → разлетается на кристаллы, в центре стеклянная сфера, внутри светится карта → радужная кайма,
+     камера влетает в сферу → белый экран → карта. Картинки пака и карты, цвета, скорость и свечение — в панели справа, сохраняются сами. -->
+<canvas id="c"></canvas>
+<div class="hint" id="hint">Нажми на пак</div>
+<div class="pn" id="pn">
+  <div class="pn-hd"><b>Настройки</b><button class="btn" id="min">Свернуть</button></div>
+  <div class="btns"><button class="btn btn--p" id="play">Открыть</button><button class="btn" id="pause">Пауза</button></div>
+  <div class="tl"><input type="range" id="tl" min="0" max="6.2" step="0.01" value="0" /><b id="tlv">0,00</b></div>
+  <div class="row"><span>Скорость</span><input type="range" id="speed" min="0.2" max="2" step="0.05" style="width:110px" /><input type="number" id="speedN" min="0.2" max="2" step="0.05" /></div>
+  <div class="sec">Картинки</div>
+  <div class="img"><img id="packI" alt="" /><div class="col"><b>Пак</b><div class="btns"><button class="btn" data-f="pack">Файл</button><button class="btn" data-u="pack">Ссылка</button><button class="btn" data-d="pack">Базовый</button></div></div></div>
+  <div class="img"><img id="cardI" alt="" /><div class="col"><b>Карта</b><div class="btns"><button class="btn" data-f="card">Файл</button><button class="btn" data-u="card">Ссылка</button><button class="btn" data-d="card">Базовая</button></div></div></div>
+  <div class="note" id="note" hidden></div>
+  <div class="sec">Цвета</div>
+  <div class="row"><span>Туннель 1</span><input type="color" data-c="c1" /></div>
+  <div class="row"><span>Туннель 2</span><input type="color" data-c="c2" /></div>
+  <div class="row"><span>Лучи</span><input type="color" data-c="beam" /></div>
+  <div class="row"><span>Сфера</span><input type="color" data-c="sphere" /></div>
+  <div class="row"><span>Кристаллы</span><input type="color" data-c="shard" /></div>
+  <div class="row"><span>Белый экран</span><input type="color" data-c="white" /></div>
+  <div class="row"><span>Свечение</span><input type="range" id="bloom" min="0" max="2.5" step="0.05" style="width:110px" /><input type="number" id="bloomN" min="0" max="2.5" step="0.05" /></div>
+  <button class="btn" id="reset">Сбросить всё к базовым</button>
+  <input type="file" id="file" accept="image/*" hidden />
+</div>
+<script type="module">
+import * as THREE from 'three'
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
+
+// ── настройки (сохраняются сами) ──
+const KEY = 'lab-pack-burst-v1'
+const DEF = { pack: '', card: '', c1: '#12b5c9', c2: '#3aa860', beam: '#e9fdff', sphere: '#2b1f66', shard: '#dff4ff', white: '#f1ecff', speed: 1, bloom: 0.3 }
+let S = { ...DEF }
+try { S = { ...DEF, ...JSON.parse(localStorage.getItem(KEY) || '{}') } } catch (e) {}
+const note = (t) => { const n = document.getElementById('note'); n.hidden = !t; n.textContent = t || '' }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); note('') } catch (e) { note('Картинка большая — не сохранилась, но в этом окне работает') } }
+
+// ── сцена ──
+const cv = document.getElementById('c')
+const R = new THREE.WebGLRenderer({ canvas: cv, antialias: true })
+R.setPixelRatio(Math.min(devicePixelRatio, 2))
+R.toneMapping = THREE.ACESFilmicToneMapping
+R.toneMappingExposure = 1
+const scene = new THREE.Scene()
+const cam = new THREE.PerspectiveCamera(35, 1, 0.1, 100)
+cam.position.set(0, 0, 8)
+const pm = new THREE.PMREMGenerator(R)
+scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture
+scene.add(new THREE.AmbientLight(0xffffff, 0.35))
+const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(2, 3, 5); scene.add(key)
+const rim = new THREE.PointLight(0xffffff, 0, 12); rim.position.set(0, 0.4, -1.5); scene.add(rim)
+
+const composer = new EffectComposer(R)
+composer.addPass(new RenderPass(scene, cam))
+const bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), S.bloom, 0.25, 1.2)
+composer.addPass(bloom)
+composer.addPass(new OutputPass())
+
+// ── фон: туннель, лучи, звезда, сфера, радуга, белый экран — один шейдер во весь экран ──
+const col = (h) => new THREE.Color(h)
+const U = {
+  uRes: { value: new THREE.Vector2(1, 1) }, uTime: { value: 0 }, uIntro: { value: 1 }, uTunnel: { value: 0 }, uZoom: { value: 0 },
+  uBeams: { value: 0 }, uBeamRot: { value: 0 }, uRain: { value: 0 }, uStar: { value: 0 }, uStage: { value: 0 }, uSR: { value: 0 },
+  uChroma: { value: 0 }, uWhite: { value: 0 }, uFin: { value: 0 },
+  uC1: { value: col(S.c1) }, uC2: { value: col(S.c2) }, uBeam: { value: col(S.beam) }, uSph: { value: col(S.sphere) }, uWh: { value: col(S.white) },
+}
+const bg = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({
+  uniforms: U, depthTest: false, depthWrite: false,
+  vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.9999, 1.0); }',
+  fragmentShader: `
+  uniform vec2 uRes; uniform float uTime, uIntro, uTunnel, uZoom, uBeams, uBeamRot, uRain, uStar, uStage, uSR, uChroma, uWhite, uFin;
+  uniform vec3 uC1, uC2, uBeam, uSph, uWh; varying vec2 vUv;
+  float h1(float n){ return fract(sin(n * 127.1) * 43758.5453); }
+  float h2(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  // шум по углу — без шва (K ячеек по кругу), z — глубина туннеля
+  float rayN(float a, float z, float K){ float x = (a / 6.2831853 + 0.5) * K; float i = floor(x), f = fract(x); f = f * f * (3. - 2. * f); float i1 = mod(i + 1., K);
+    float zi = floor(z), zf = smoothstep(0., 1., fract(z));
+    return mix(mix(h2(vec2(i, zi)), h2(vec2(i1, zi)), f), mix(h2(vec2(i, zi + 1.)), h2(vec2(i1, zi + 1.)), f), zf); }
+  float adiff(float a, float b){ return abs(mod(a - b + 3.14159265, 6.2831853) - 3.14159265); }
+  void main(){
+    vec2 p = (vUv - .5) * uRes / uRes.y; float r = length(p), a = atan(p.y, p.x);
+    // начало: белый → серый → тёмный, мягкий свет за паком
+    vec3 c = mix(vec3(1.6), vec3(.014, .014, .02), uIntro);
+    c += vec3(.2, .19, .26) * exp(-r * r * 6.) * uIntro * (1. - uTunnel);
+    // туннель
+    float z = .32 / (r + .035) + uZoom;
+    float n1 = rayN(a, z, 56.), n2 = rayN(a + 1.3, z * .5, 19.), nc = rayN(a + .7, z * .22, 7.);
+    vec3 tc = mix(uC1, uC2, smoothstep(.35, .8, nc));
+    float core = exp(-r * 2.4);
+    vec3 tun = tc * (.18 + 1.1 * pow(n1, 2.2) * (.4 + n2)) * (.3 + 1.1 * core) + vec3(.85, 1., 1.) * exp(-r * 6.) * .5;
+    for (int i = 0; i < 3; i++) { float rr = fract(uTime * .42 + float(i) / 3.) * 1.4; tun += tc * .8 * exp(-pow((r - rr) * 12., 2.)) * (1. - rr / 1.4); }
+    c = mix(c, tun, uTunnel);
+    // белые лучи из-за пака
+    float bm = 0.;
+    for (int i = 0; i < 7; i++) { float fi = float(i); float d = adiff(a, uBeamRot + fi * .898 + h1(fi) * .5); float w = .025 + .1 * h1(fi + 7.); bm += smoothstep(w, 0., d) * (.5 + .9 * h1(fi + 3.)); }
+    c += uBeam * bm * smoothstep(.06, .4, r) * uBeams * 1.3;
+    // радужное кольцо
+    float r0 = .6;
+    c += vec3(exp(-pow((r - r0 - .035) * 20., 2.)), exp(-pow((r - r0) * 20., 2.)), exp(-pow((r - r0 + .035) * 20., 2.))) * uRain * 1.1;
+    // вспышка-звезда
+    float st = 0.;
+    for (int i = 0; i < 11; i++) { float fi = float(i); float d = adiff(a, fi * .571 + h1(fi + 11.) * .35); float len = .45 + 1.1 * h1(fi + 5.); st += exp(-d * (50. + r * 160.)) * smoothstep(len, 0., r); }
+    c += (st * 3.5 + exp(-r * 4.) * 2.5) * uStar + vec3(.85, 1., 1.) * 1.4 * exp(-r * 1.3) * uStar * .6;
+    // сфера с картой
+    if (uStage > 0.) {
+      vec3 b = vec3(.016, .012, .042) + uSph * .2 * exp(-r * 1.1);
+      float sk = rayN(a, .55 / (r + .05) + uTime * 3., 90.);
+      b += vec3(.6, .6, .95) * pow(sk, 14.) * smoothstep(.2, .9, r) * .7;
+      float R = uSR, ch = .02 * uChroma;
+      vec3 rm = vec3(exp(-pow((r - R * (1. + ch)) * 55., 2.)), exp(-pow((r - R) * 55., 2.)), exp(-pow((r - R * (1. - ch)) * 55., 2.)));
+      float ins = smoothstep(R + .004, R - .004, r);
+      vec3 inn = mix(uSph * .28, uSph * 1.1 + vec3(.1, .08, .2), pow(clamp(r / max(R, .001), 0., 1.), 5.));
+      inn += vec3(.8, .8, 1.) * exp(-r * 9.) * .25 + vec3(.7, .7, 1.) * pow(rayN(a, uTime * .8, 40.), 10.) * .35 * smoothstep(R, 0., r);
+      vec3 sp = mix(b, inn, ins) + rm * 1.25 + vec3(.6, .55, .95) * exp(-pow((r - R) * 12., 2.)) * .18;
+      vec3 hue = .5 + .5 * cos(6.2831853 * (a * .48 + r * 1.6 + vec3(0., .33, .67)));
+      float cs = pow(rayN(a, .5 / (r + .05) + uTime * 2.5, 70.), 6.);
+      sp += hue * cs * uChroma * smoothstep(R, R + .15, r) * 2.4 + hue * exp(-pow((r - R * 1.07) * 13., 2.)) * uChroma * 1.3;
+      c = mix(c, sp, uStage);
+    }
+    // финал: спокойный фон за картой
+    vec3 f = vec3(.02, .015, .045) + uSph * .55 * exp(-r * 1.7) + mix(uC1, uC2, .5) * .22 * pow(rayN(a, uTime * .15, 24.), 3.) * exp(-r * 1.1);
+    c = mix(c, f, uFin);
+    c = mix(c, uWh * 3.2, uWhite);
+    c *= 1. - .35 * smoothstep(.55, 1.4, r);
+    gl_FragColor = vec4(c, 1.);
+  }`,
+}))
+bg.frustumCulled = false; bg.renderOrder = -1
+scene.add(bg)
+
+// ── картинки по умолчанию: рисуем на холсте ──
+function defPack() {
+  const w = 512, h = 820, c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d')
+  const gr = g.createLinearGradient(0, 0, w, h); ['#6d28d9', '#22d3ee', '#f0abfc', '#a3e635', '#818cf8', '#f472b6'].forEach((x, i, a) => gr.addColorStop(i / (a.length - 1), x))
+  g.fillStyle = gr; g.fillRect(0, 0, w, h)
+  for (let i = 0; i < 40; i++) { g.globalAlpha = .08 + Math.random() * .12; g.fillStyle = i % 2 ? '#fff' : '#1e1b4b'; g.save(); g.translate(Math.random() * w, Math.random() * h); g.rotate(-.6); g.fillRect(-300, 0, 600, 4 + Math.random() * 18); g.restore() }
+  g.globalAlpha = 1
+  const crimp = (y) => { const cg = g.createLinearGradient(0, y, 0, y + 46); cg.addColorStop(0, '#e5e7eb'); cg.addColorStop(.5, '#9ca3af'); cg.addColorStop(1, '#f3f4f6'); g.fillStyle = cg; g.fillRect(0, y, w, 46); g.fillStyle = 'rgba(0,0,0,.18)'; for (let x = 0; x < w; x += 8) g.fillRect(x, y, 3, 46) }
+  crimp(0); crimp(h - 46)
+  g.fillStyle = 'rgba(15,10,40,.35)'; g.beginPath(); g.arc(w / 2, 330, 130, 0, 7); g.fill()
+  g.lineWidth = 14; g.strokeStyle = '#fff'; g.beginPath(); g.arc(w / 2, 330, 120, 0, 7); g.stroke()
+  g.fillStyle = '#fff'; g.font = '900 170px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('F', w / 2, 338)
+  g.font = '900 78px Inter, system-ui, sans-serif'; g.lineWidth = 10; g.strokeStyle = '#1e1b4b'; g.strokeText('FANTASY', w / 2, 560); g.fillText('FANTASY', w / 2, 560)
+  g.font = '700 30px Inter, system-ui, sans-serif'; g.fillStyle = '#1e1b4b'; g.fillText('DOTA 2 · БУСТЕР', w / 2, 630)
+  return c.toDataURL('image/png')
+}
+function defCard() {
+  const w = 512, h = 716, c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d')
+  return new Promise((res) => {
+    const draw = (img) => {
+      const fr = g.createLinearGradient(0, 0, w, h); fr.addColorStop(0, '#fde68a'); fr.addColorStop(.5, '#b45309'); fr.addColorStop(1, '#fef3c7')
+      g.fillStyle = fr; g.beginPath(); g.roundRect(0, 0, w, h, 34); g.fill()
+      g.fillStyle = '#120d24'; g.beginPath(); g.roundRect(14, 14, w - 28, h - 28, 24); g.fill()
+      if (img) { g.save(); g.beginPath(); g.roundRect(30, 30, w - 60, 480, 16); g.clip(); const s = Math.max((w - 60) / img.width, 480 / img.height); g.drawImage(img, w / 2 - img.width * s / 2, 30, img.width * s, img.height * s); g.restore() }
+      else { const gg = g.createLinearGradient(0, 30, 0, 510); gg.addColorStop(0, '#7c3aed'); gg.addColorStop(1, '#0e7490'); g.fillStyle = gg; g.beginPath(); g.roundRect(30, 30, w - 60, 480, 16); g.fill() }
+      const sh = g.createLinearGradient(0, 380, 0, 510); sh.addColorStop(0, 'rgba(18,13,36,0)'); sh.addColorStop(1, 'rgba(18,13,36,1)'); g.fillStyle = sh; g.fillRect(30, 380, w - 60, 131)
+      g.fillStyle = '#facc15'; g.font = '900 64px Inter, system-ui, sans-serif'; g.textAlign = 'left'; g.textBaseline = 'top'; g.fillText('92', 48, 44)
+      g.fillStyle = '#fff'; g.textAlign = 'center'; g.font = '800 52px Inter, system-ui, sans-serif'; g.fillText('RAMZES666', w / 2, 528)
+      g.fillStyle = '#a1a1aa'; g.font = '600 28px Inter, system-ui, sans-serif'; g.fillText('Легендарная · керри', w / 2, 598)
+      g.fillStyle = '#facc15'; g.fillText('★ ★ ★ ★ ★', w / 2, 644)
+      res(c.toDataURL('image/png'))
+    }
+    const im = new Image(); im.onload = () => draw(im); im.onerror = () => draw(null); im.src = '../_db/img/players/ramzes666.jpg'
+  })
+}
+let DEF_PACK = defPack(), DEF_CARD = ''
+
+// ── загрузка картинки в текстуру ──
+function loadImg(src) { return new Promise((res, rej) => { const im = new Image(); if (/^https?:/.test(src)) im.crossOrigin = 'anonymous'; im.onload = () => res(im); im.onerror = rej; im.src = src }) }
+function texOf(im) { const t = new THREE.Texture(im); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; t.needsUpdate = true; return t }
+
+// ── пак: плоскость с сеткой — мнётся, гнётся; голо-фольга ──
+const PH = 2.25
+const packGeo = new THREE.PlaneGeometry(1, 1, 28, 40), P0 = packGeo.attributes.position.array.slice()
+const crum = []; for (let i = 0; i < 6; i++) crum.push([3 + Math.random() * 9, 3 + Math.random() * 9, Math.random() * 6.28, Math.random() * 6.28, .3 + Math.random() * .7])
+const packMat = new THREE.MeshPhysicalMaterial({ metalness: .35, roughness: .22, iridescence: 1, iridescenceIOR: 1.7, iridescenceThicknessRange: [180, 820], clearcoat: 1, clearcoatRoughness: .08, side: THREE.DoubleSide, emissive: 0xffffff, emissiveIntensity: 0, envMapIntensity: 1.4, transparent: true, alphaTest: .04 })
+const pack = new THREE.Mesh(packGeo, packMat); scene.add(pack)
+let packAspect = .62
+function deform(amt, bend) {
+  const A = packGeo.attributes.position.array
+  for (let i = 0; i < A.length; i += 3) {
+    const x = P0[i], y = P0[i + 1]
+    let z = -bend * (x * x * 1.6 + y * y * .4), sx = 1, sy = 1
+    if (amt > 0) { let n = 0; for (const [fx, fy, px, py, k] of crum) n += Math.sin(x * fx + px) * Math.sin(y * fy + py) * k; z += amt * n * .09; sx = 1 - amt * .22 * (1 - Math.abs(y)); sy = 1 - amt * .1 }
+    A[i] = x * sx; A[i + 1] = y * sy; A[i + 2] = z
+  }
+  packGeo.attributes.position.needsUpdate = true; packGeo.computeVertexNormals()
+}
+
+// ── карта ──
+const CH = 2.4
+const cardMat = new THREE.MeshStandardMaterial({ roughness: .35, metalness: .1, emissive: 0xffffff, emissiveIntensity: 4, transparent: true, alphaTest: .04, side: THREE.DoubleSide })
+const card = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), cardMat); scene.add(card)
+let cardAspect = .715
+
+// ── кристаллы: всплеск из центра ──
+const NS = 190
+const shardMat = new THREE.MeshPhysicalMaterial({ color: col(S.shard), metalness: 0, roughness: .04, clearcoat: 1, iridescence: .7, iridescenceIOR: 1.5, envMapIntensity: .7, emissive: col(S.shard), emissiveIntensity: .03, flatShading: true, transparent: true, opacity: .8 })
+const shards = new THREE.InstancedMesh(new THREE.OctahedronGeometry(1, 0), shardMat, NS); shards.frustumCulled = false; scene.add(shards)
+const SH = []
+for (let i = 0; i < NS; i++) {
+  const th = Math.random() * 6.283, zz = Math.random() * .45, s = i < 8 ? .14 + Math.random() * .12 : .025 + Math.random() * .08
+  SH.push({ d: new THREE.Vector3(Math.cos(th), Math.sin(th), zz).normalize(), v: 3 + Math.random() * 7, sc: new THREE.Vector3(s * .6, s * (2 + Math.random() * 2.2), s * .45),
+    ax: new THREE.Vector3(Math.random() - .5, Math.random() - .5, Math.random() - .5).normalize(), w: 1 + Math.random() * 4, q0: new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random() * 6, Math.random() * 6, Math.random() * 6)), o: new THREE.Vector3((Math.random() - .5) * .4, (Math.random() - .5) * .4, 0) })
+}
+// крошки, что отлетают от пака до взрыва
+const NB = 26
+const bits = new THREE.InstancedMesh(new THREE.TetrahedronGeometry(1, 0), new THREE.MeshStandardMaterial({ color: 0x1c1b3a, metalness: .8, roughness: .3, flatShading: true }), NB); bits.frustumCulled = false; scene.add(bits)
+const BT = []; for (let i = 0; i < NB; i++) BT.push({ t0: .9 + i * .055, p: new THREE.Vector3((Math.random() - .3) * .9, .6 + Math.random() * .6, .1), v: new THREE.Vector3(.4 + Math.random() * 1.6, .2 + Math.random() * 1.4, Math.random()), s: .025 + Math.random() * .05, ax: new THREE.Vector3(Math.random(), Math.random(), Math.random()).normalize() })
+
+// ── тайминг (секунды видео) ──
+const T_END = 6.2
+const E = { io: (x) => (x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2), o: (x) => 1 - Math.pow(1 - x, 3), i: (x) => x * x * x, l: (x) => x }
+function K(t, k, e = 'io') { if (t <= k[0][0]) return k[0][1]; for (let i = 1; i < k.length; i++) { const [t1, v1, e1] = k[i], [t0, v0] = k[i - 1]; if (t <= t1) return v0 + (v1 - v0) * E[e1 || e]((t - t0) / (t1 - t0 || 1)) } return k[k.length - 1][1] }
+const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), Q2 = new THREE.Quaternion(), V = new THREE.Vector3(), SC = new THREE.Vector3(), ZERO = new THREE.Vector3(0, 0, 0)
+
+let mode = 'idle', t = 0, playing = false, clock = 0, zoom = 0
+const hint = document.getElementById('hint')
+function setHint() { hint.style.opacity = mode === 'play' ? 0 : 1; hint.textContent = mode === 'done' ? 'Нажми — ещё раз' : 'Нажми на пак' }
+
+function frame(dt) {
+  clock += dt
+  if (playing) { t = Math.min(T_END, t + dt * S.speed); if (t >= T_END) { playing = false; mode = 'done'; setHint() } }
+  const idle = mode === 'idle', tt = idle ? 0 : t
+  if (playing) zoom += dt * S.speed * K(tt, [[.5, .4], [1.2, 1], [2, 2.6], [2.4, 4.2]])
+  else if (!idle) zoom = tt * 1.6
+  else zoom += dt * .25
+  U.uTime.value = clock; U.uZoom.value = zoom
+  // фон
+  U.uIntro.value = idle ? 1 : K(tt, [[0, 0], [.12, .28], [.45, 1]])
+  U.uTunnel.value = idle ? .22 : K(tt, [[.55, 0], [.95, 1], [2.42, 1], [2.46, 0, 'l']])
+  U.uBeams.value = idle ? 0 : K(tt, [[1.45, 0], [1.6, 1], [2.1, 1], [2.35, .5], [2.45, 0]]); U.uBeamRot.value = .4 + clock * .3
+  U.uRain.value = idle ? 0 : K(tt, [[1.55, 0], [1.9, .9], [2.2, .6], [2.4, 0]])
+  U.uStar.value = idle ? 0 : K(tt, [[2, 0], [2.15, 1], [2.38, 1], [2.5, 0]])
+  U.uWhite.value = idle ? 0 : K(tt, [[2.28, 0], [2.43, 1, 'i'], [2.62, 0, 'o'], [4.25, 0], [4.75, 1, 'i'], [5, 1], [5.7, 0, 'o']])
+  U.uStage.value = !idle && tt >= 2.44 ? 1 : 0
+  U.uSR.value = K(tt, [[2.44, .04], [2.8, .4, 'o'], [3.4, .42], [4.3, .64, 'i']])
+  U.uChroma.value = idle ? 0 : K(tt, [[3.25, 0], [3.7, 1], [4.4, 1]])
+  U.uFin.value = idle ? 0 : K(tt, [[4.8, 0], [5, 1, 'l']])
+  cam.position.z = idle ? 8 : K(tt, [[3.3, 8], [4.4, 6.3, 'i'], [4.8, 8, 'l']])
+  const shk = idle ? 0 : K(tt, [[2, 0], [2.2, .05], [2.6, .08], [3, 0]])
+  cam.position.x = (Math.random() - .5) * shk; cam.position.y = (Math.random() - .5) * shk
+  // пак
+  const pv = idle || tt < 2.47
+  pack.visible = pv
+  if (pv) {
+    const h = PH * (idle ? 1 : K(tt, [[0, .45], [.8, 1, 'o'], [1.5, 1], [2, 1.12], [2.3, 1], [2.46, .72]]))
+    pack.scale.set(h * packAspect, h, h)
+    const sh = idle ? 0 : K(tt, [[1.4, 0], [1.6, .03], [2, .06], [2.4, .12]])
+    pack.position.set((Math.random() - .5) * sh, (idle ? Math.sin(clock * 1.4) * .06 : K(tt, [[0, -2.8], [.75, 0, 'o']]) + Math.sin(clock * 1.6) * .04) + (Math.random() - .5) * sh, 0)
+    const wob = idle ? 1 : K(tt, [[.7, 0], [1, 1]])
+    pack.rotation.set(Math.sin(clock * 1.7) * .08 * wob, (idle ? 0 : K(tt, [[0, Math.PI * 5], [.85, 0, 'o']])) + Math.sin(clock * 1.1) * .22 * wob, idle ? 0 : K(tt, [[1.45, 0], [1.75, -.38], [2, -.3], [2.3, .15]]))
+    packMat.emissiveIntensity = idle ? 0 : K(tt, [[0, 2.5], [.2, 1], [.45, 0], [2.1, 0], [2.42, 1.4]])
+    deform(idle ? 0 : K(tt, [[1.95, 0], [2.42, 1, 'i']]), .12)
+    rim.intensity = idle ? 3 : K(tt, [[.4, 0], [.9, 4], [2.3, 9]])
+    rim.color.copy(U.uC1.value)
+  }
+  // карта
+  const cvz = !idle && tt >= 2.5
+  card.visible = cvz
+  if (cvz) {
+    const h = CH * K(tt, [[2.5, 0], [2.8, .42, 'o'], [4.3, .55], [4.85, .55], [5.8, 1, 'o']])
+    card.scale.set(h * cardAspect, h, 1)
+    cardMat.emissiveIntensity = K(tt, [[2.5, 3], [4.9, 3], [5.9, 0, 'o']])
+    card.rotation.set(Math.sin(clock * 1.3) * .05, K(tt, [[4.9, -.55], [5.9, 0, 'o']]) + Math.sin(clock * .9) * (mode === 'done' ? .12 : .06), 0)
+    card.position.set(0, mode === 'done' ? Math.sin(clock * 1.4) * .05 : 0, 0)
+  }
+  // кристаллы
+  const tau = tt - 2.44, sv = !idle && tau > 0 && tt < 4.8
+  shards.visible = sv
+  if (sv) {
+    const k = (1 - Math.exp(-tau * 1.7)) / 1.7
+    for (let i = 0; i < NS; i++) {
+      const s = SH[i]
+      V.copy(s.o).addScaledVector(s.d, s.v * k + .35 * tau)
+      Q2.setFromAxisAngle(s.ax, s.w * tau); Q.copy(s.q0).multiply(Q2)
+      SC.copy(s.sc).multiplyScalar(Math.min(1, tau * 8))
+      M.compose(V, Q, SC); shards.setMatrixAt(i, M)
+    }
+    shards.instanceMatrix.needsUpdate = true
+  }
+  // крошки
+  bits.visible = !idle && tt > .9 && tt < 2.5
+  if (bits.visible) {
+    for (let i = 0; i < NB; i++) {
+      const b = BT[i], a = tt - b.t0
+      if (a < 0 || a > 1.2) { M.compose(ZERO, Q.identity(), SC.set(0, 0, 0)) } else { V.copy(b.p).multiplyScalar(pack.scale.y / PH).addScaledVector(b.v, a); Q.setFromAxisAngle(b.ax, a * 8); SC.setScalar(b.s * (1 - a / 1.2)); M.compose(V, Q, SC) }
+      bits.setMatrixAt(i, M)
+    }
+    bits.instanceMatrix.needsUpdate = true
+  }
+  // таймлайн
+  if (!scrub) { tlI.value = tt; tlV.textContent = tt.toFixed(2).replace('.', ',') }
+  composer.render()
+}
+
+function resize() {
+  const w = innerWidth, h = innerHeight
+  R.setSize(w, h, false); composer.setSize(w, h); cam.aspect = w / h; cam.updateProjectionMatrix()
+  U.uRes.value.set(w, h)
+}
+addEventListener('resize', resize); resize()
+let last = performance.now()
+R.setAnimationLoop((now) => { const dt = Math.min(.05, (now - last) / 1000); last = now; frame(dt) })
+
+// ── управление ──
+const start = () => { mode = 'play'; t = 0; zoom = 0; playing = true; setHint(); pauseB.textContent = 'Пауза' }
+cv.addEventListener('click', () => { if (mode === 'idle') start(); else if (mode === 'done') { mode = 'idle'; setHint() } })
+document.getElementById('play').onclick = start
+const pauseB = document.getElementById('pause')
+pauseB.onclick = () => { if (mode !== 'play') return; playing = !playing; pauseB.textContent = playing ? 'Пауза' : 'Дальше' }
+const tlI = document.getElementById('tl'), tlV = document.getElementById('tlv'); let scrub = false
+tlI.addEventListener('input', () => { scrub = true; mode = 'play'; playing = false; t = +tlI.value; pauseB.textContent = 'Дальше'; tlV.textContent = t.toFixed(2).replace('.', ','); setHint() })
+tlI.addEventListener('change', () => { scrub = false })
+document.getElementById('min').onclick = (e) => { const p = document.getElementById('pn'); p.classList.toggle('is-min'); e.target.textContent = p.classList.contains('is-min') ? 'Открыть' : 'Свернуть' }
+
+// пары «ползунок + число»
+function pair(id, k, on) { const r = document.getElementById(id), n = document.getElementById(id + 'N'); const set = (v, from) => { v = Math.max(+r.min, Math.min(+r.max, +v || 0)); S[k] = v; if (from !== r) r.value = v; if (from !== n) n.value = v; on && on(v); save() }; r.value = n.value = S[k]; on && on(S[k]); r.oninput = () => set(r.value, r); n.onchange = () => set(n.value, n) }
+pair('speed', 'speed')
+pair('bloom', 'bloom', (v) => { bloom.strength = v })
+// цвета
+const applyColors = () => { U.uC1.value.set(S.c1); U.uC2.value.set(S.c2); U.uBeam.value.set(S.beam); U.uSph.value.set(S.sphere); U.uWh.value.set(S.white); shardMat.color.set(S.shard); shardMat.emissive.set(S.shard) }
+document.querySelectorAll('[data-c]').forEach((el) => { el.value = S[el.dataset.c]; el.oninput = () => { S[el.dataset.c] = el.value; applyColors(); save() } })
+applyColors()
+
+// картинки
+async function setImg(kind, src) {
+  const def = kind === 'pack' ? DEF_PACK : DEF_CARD
+  let im; try { im = await loadImg(src || def) } catch (e) { note('Картинка не грузится по ссылке — скачай её и загрузи файлом'); return false }
+  const tex = texOf(im)
+  if (kind === 'pack') { packMat.map?.dispose(); packMat.map = tex; packMat.needsUpdate = true; packAspect = im.width / im.height }
+  else { cardMat.map?.dispose(); cardMat.map = tex; cardMat.needsUpdate = true; cardAspect = im.width / im.height }
+  document.getElementById(kind + 'I').src = src || def
+  return true
+}
+function shrink(im, png) { const m = 1024, s = Math.min(1, m / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = Math.round(im.width * s); c.height = Math.round(im.height * s); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); return c.toDataURL(png ? 'image/png' : 'image/jpeg', .9) }
+let fileKind = 'pack'; const fileI = document.getElementById('file')
+document.querySelectorAll('[data-f]').forEach((b) => (b.onclick = () => { fileKind = b.dataset.f; fileI.value = ''; fileI.click() }))
+fileI.onchange = () => { const f = fileI.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = async () => { const im = await loadImg(rd.result); const url = shrink(im, f.type === 'image/png' || f.type === 'image/webp'); if (await setImg(fileKind, url)) { S[fileKind] = url; save() } }; rd.readAsDataURL(f) }
+document.querySelectorAll('[data-u]').forEach((b) => (b.onclick = async () => { const u = prompt('Ссылка на картинку'); if (!u) return; if (await setImg(b.dataset.u, u)) { S[b.dataset.u] = u; save() } }))
+document.querySelectorAll('[data-d]').forEach((b) => (b.onclick = async () => { S[b.dataset.d] = ''; await setImg(b.dataset.d, ''); save() }))
+document.getElementById('reset').onclick = async () => {
+  S = { ...DEF }; save()
+  document.querySelectorAll('[data-c]').forEach((el) => (el.value = S[el.dataset.c])); applyColors()
+  ;['speed', 'bloom'].forEach((id) => { document.getElementById(id).value = document.getElementById(id + 'N').value = S[id] }); bloom.strength = S.bloom
+  await setImg('pack', ''); await setImg('card', '')
+}
+
+DEF_CARD = await defCard()
+await setImg('pack', S.pack); await setImg('card', S.card)
+setHint()
+</script>
+</body></html>

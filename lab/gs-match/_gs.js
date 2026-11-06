@@ -17,15 +17,19 @@
   // Страница в песочнице вне лабы (раздел «Страница матча» / «Виджеты»): ?state= и ?auth= — переключатели песочницы, ?fit=1 — вид по ширине окна
   const Q = new URLSearchParams(location.search), FIT = Q.get('fit') === '1', fitView = () => (innerWidth >= 800 ? 'desk' : 'phone');
   const CFG = { view: FIT ? fitView() : (window.GS_VIEW || 'desk'), // в лабе — сначала компьютер (дирижёр 02.11); GS_VIEW = 'phone' — открыть телефоном
-    state: Q.get('state') || window.GS_STATE || 'feed', // GS_STATE — с какого состояния открыть (лаба gs-gold — live)
+    state: (Q.get('case') && Q.get('case') !== 'none' ? Q.get('case') : '') || Q.get('state') || window.GS_STATE || 'live', mst: (window.WLS_PROD && window.WLS_ST) || Q.get('state') || window.GS_STATE || 'live', // ?case= — особый случай поверх хода матча (панель песочницы, 06.11)
+    // GS_STATE — с какого состояния открыть; 06.11 (дирижёр: «что такое лента? — давай удалим»): по умолчанию live, «Ленты» в панели нет
     auth: Q.get('auth') === 'in', spoiler: false, event: !!window.GS_EVENT, // GS_EVENT — сразу с вопросом по событию (лаба w-social v26–v28)
-    hd: window.GS_HD || 'h0' }; // GS_HD — вариант шапки (файлы v4-h*.html)
+    hd: window.GS_HD || 'h0' }; CFG.state = ({ pre0: 'pre', draft: 'pre', live12: 'live' })[CFG.state] || CFG.state; // GS_HD — вариант шапки (файлы v4-h*.html)
   const START = { feed: 0, post: 0, live: 2, nodata: 2, offline: 2, pre: 3, announce: 3, delayed: 3, cancel: 3 }; // с какого матча открыть
   // v31 (дирижёр 27.10: «лайв не во время паузы показывать везде… сделай её доп состоянием»): GS_PAUSE = 'state' — в Live пауза, на которую попадает «сейчас» (33:30), не идёт,
   // а «Live · пауза» — отдельное состояние в панели. Без флага — как было (пауза в Live всегда)
   const PAUSE_ST = window.GS_PAUSE === 'state';
-  const STATES = [['feed', 'Лента'], ['announce', 'Анонс'], ['pre', 'До матча'], ['live', 'Live'], ...(PAUSE_ST ? [['pause', 'Live · пауза']] : []), ['post', 'После'], ['nodata', 'Нет данных'],
-    ['offline', 'Нет данных и трансляции'], ['delayed', 'Перенос'], ['cancel', 'Отмена']];
+  // 06.11 (дирижёр: «до матча → драфт → пики кончились → первые 12 минут → обычный лайв → после»; «твои названия хорошие — раздай везде»):
+  //   ход матча — 6 шагов; draft и live12 рисует w-lane-2 (_wls-st.js), pre0 — матч не начался, драфта ещё нет; «Анонс» — в особых случаях
+  const STATES = [['pre0', 'До матча'], ['draft', 'Драфт'], ['pre', 'Пики готовы'], ['live12', 'Первые 12′'], ['live', 'Live'], ...(PAUSE_ST ? [['pause', 'Live · пауза']] : []), ['post', 'После'],
+    ['announce', 'Анонс'], ['nodata', 'Нет данных'], ['offline', 'Нет данных и трансляции'], ['delayed', 'Перенос'], ['cancel', 'Отмена']];
+  const CORE = { pre0: 'pre', draft: 'pre', live12: 'live' }, WLSS = ['pre0', 'draft', 'live12']; // шаги, которых _gs.js не знает, — по ядру
   const vs = i => { const m = D.series[i].maps[0]; return `${SHORT[m.radiant_team_id]} — ${SHORT[m.dire_team_id]}`; };
   const CAPTION = { feed: 'Лента как есть: две сыгранные серии → live → до матча; листай вниз', announce: 'Анонс: время матча не назначено',
     pre: `До матча: ${vs(3)}`, live: `Live: ${vs(2)}, карта 3, 33:30${PAUSE_ST ? '' : ', идёт пауза'}`, pause: `Live на паузе: ${vs(2)}, карта 3, 33:30 — игра остановлена`, post: `После: ${vs(0)}, голосование MVP`,
@@ -875,7 +879,7 @@
   if (V14 && !V16) document.body.classList.add('hd-shrink');
   if (V16 && !V18) document.body.classList.add('hd-smooth');
   function paint(sec, M) {
-    sec.innerHTML = render(M);
+    sec.innerHTML = render(M); sec.dataset.st = M.state; // 06.11 (w-stats-3): состояние матча на секции — блоки вкладок читают его (pre · live · post …)
     if (V13) { const hd = sec.querySelector('.gm-hd'); if (hd) hdObs.observe(hd); }
     sec.querySelectorAll('[data-wd]').forEach(el => { try { WIDGETS.find(w => w.id === el.dataset.wd).draw(el, M); } catch (e) { el.remove(); } });
     if (V19 && CFG.labels) labelWidgets(sec);
@@ -948,11 +952,14 @@
   const rerender = () => { document.body.classList.toggle('is-desk', CFG.view === 'desk'); fluid(); portal(); document.querySelectorAll('.gm').forEach(sec => paint(sec, models[sec.dataset.i])); };
 
   // ——— Панель песочницы (window.LAB, view 'toolbar' — см. sandbox-project/lab.tsx) ———
+  const CASE_V = ['announce', 'nodata', 'offline', 'delayed', 'cancel']; if (!CFG.mst || CASE_V.includes(CFG.mst)) CFG.mst = CASE_V.includes(CFG.state) ? 'live' : CFG.state;
   window.LAB = { view: 'toolbar', flows: () => [], go() {}, cur: () => ({ f: 0, i: 0 }),
     axes: () => [
       { key: 'view', name: 'Вид', value: CFG.view, options: [{ v: 'desk', label: 'Компьютер 1440' }, { v: 'phone', label: 'Телефон 390' }] },
       // GS_ONLY_STATES — лаба одного блока (gs-gold): остальные состояния нельзя выбрать — блока в них нет
-      { key: 'state', name: 'Состояние', value: CFG.state, options: STATES.map(([v, label]) => (window.GS_ONLY_STATES && !GS_ONLY_STATES.includes(v) ? { v, label, off: true, offNote: 'виджета нет' } : { v, label })) },
+      // 06.11 (дирижёр: «разделить состояние матча и дополнительные моменты, когда нет данных и всё такое»): «Матч» — ход матча, «Особый случай» — нет данных, перенос, отмена (поверх хода матча)
+      { key: 'state', name: 'Матч', value: CFG.mst, options: STATES.filter(([v]) => !CASE_V.includes(v)).map(([v, label]) => (window.GS_ONLY_STATES && !GS_ONLY_STATES.includes(v) ? { v, label, off: true, offNote: 'виджета нет' } : !window.WLS_PROD && (v === 'draft' || v === 'live12') ? { v, label, off: true, offNote: 'нет в этой версии' } : { v, label })) },
+      { key: 'case', name: 'Особый случай', value: CASE_V.includes(CFG.state) ? CFG.state : 'none', options: [{ v: 'none', label: 'Нет' }, ...STATES.filter(([v]) => CASE_V.includes(v)).map(([v, label]) => (window.GS_ONLY_STATES && !GS_ONLY_STATES.includes(v) ? { v, label, off: true, offNote: 'виджета нет' } : { v, label }))] },
       { key: 'auth', name: 'Зритель', value: CFG.auth ? 'in' : 'guest', options: [{ v: 'guest', label: 'Гость' }, { v: 'in', label: 'Вошёл' }] },
       { key: 'game', name: 'Игра', value: 'dota', options: [{ v: 'dota', label: 'Dota 2' }, ...['LoL', 'CS2', 'Valorant', 'MLBB'].map(g => ({ v: g, label: g, off: true }))] },
       { key: 'bo', name: 'Серия', value: 'bo3', options: [{ v: 'bo1', label: 'Bo1', off: true }, { v: 'bo3', label: 'Bo3' }, { v: 'bo5', label: 'Bo5', off: true }] },
@@ -960,7 +967,10 @@
     set(key, v) {
       if (key === 'view') { CFG.view = v; rerender(); }
       if (key === 'auth') { CFG.auth = v === 'in'; rerender(); }
-      if (key === 'state') { CFG.state = v; reset(); }
+      // draft / live12 / pre0 решает w-lane-2 при загрузке (_wls-st.js) — на странице с ним шаг меняем перезагрузкой с ?state=
+      if (key === 'state') { if (window.WLS_PROD && (WLSS.includes(v) || WLSS.includes(CFG.mst) || v === 'pre' || v === 'live')) { const q = new URLSearchParams(location.search); q.set('state', v); if (CASE_V.includes(CFG.state)) q.set('case', CFG.state); location.search = q.toString(); return; }
+        CFG.mst = v; CFG.state = CORE[v] || v; reset(); }
+      if (key === 'case') { CFG.state = v === 'none' ? CORE[CFG.mst] || CFG.mst : v; reset(); }
     },
     toggles: () => [{ key: 'spoiler', name: 'Анти-спойлер', value: CFG.spoiler }, ...(BAR ? [{ key: 'event', name: 'Прилетело событие (live)', value: !!CFG.event }] : []), ...(DRAFT ? [{ key: 'draft', name: 'Драфт идёт (live)', value: !!CFG.draft }] : []), ...(V19 ? [{ key: 'labels', name: 'Подписи виджетов', value: !!CFG.labels }] : [])],
     toggle(key) { if (key === 'spoiler') { CFG.spoiler = !CFG.spoiler; reset(); }

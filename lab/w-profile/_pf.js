@@ -8,7 +8,8 @@
   const PF = window.PF || 'chip', ME = { nick: 'goat_fan', bal: 1240, live: 150, match: 80 };
   const n = v => v.toLocaleString('ru-RU').replace(/ /g, ' ');
   const COIN = '<svg class="pf-coin" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7"/><circle cx="8" cy="8" r="4"/></svg>';
-  const AV = `<span class="pf-av">${ME.nick[0].toUpperCase()}</span>`;
+  // дирижёр 06.11 (финальная проверка): аватар — картинка «из доты, доброе» — Snapfire (бабушка с печеньем), вместо буквы
+  const AV = `<span class="pf-av pf-av--img"><img src="../gs-match/img/heroes/snapfire.png" alt=""></span>`;
   const WAL = `<span class="pf-w">${COIN}<b class="num">${n(ME.bal)}</b></span>`;
   const team = s => { const t = document.querySelector(`.d3-five.${s} .d3-tm`); return t ? t.title : s === 'a' ? 'Команда 1' : 'Команда 2'; };
   const html = () => {
@@ -35,7 +36,9 @@
   //   lvl — уровень и серия: кольцо уровня вокруг аватара, огонёк «3» — угадано подряд, по наведению — подсказка ·
   //   tick — над шапкой строка матчей (как ESPN): идущие, ближайшие и последние, этот — подсвечен
   const HD = window.PF_HD || '', DESK = () => document.body.classList.contains('is-desk');
-  const NAV = ['Матчи', 'Турниры', 'Фэнтези', 'Новости'].map((x, i) => `<a href="#" ${i ? `data-a="toast" data-v="${x} — отдельный раздел (демо)"` : 'aria-current="page" data-a="back"'}>${x}</a>`).join('');
+  // дирижёр 06.11 (финальная проверка): шапка как на матче — и на страницах турнира и новостей (header.portal); раздел — тот, что был выделен в шапке страницы
+  const navH = (cur = 'Матчи') => ['Матчи', 'Турниры', 'Фэнтези', 'Новости'].map(x => `<a href="#" ${x === cur ? `class="is-on" aria-current="page"${x === 'Матчи' ? ' data-a="back"' : ''}` : `data-a="toast" data-v="${x} — отдельный раздел (демо)"`}>${x}</a>`).join('');
+  const NAV = navH();
   const SRCH = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg>';
   const FIRE = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5c.4 2.2 3.5 3.6 3.5 7.2A3.5 3.5 0 0 1 8 12.2a3.5 3.5 0 0 1-3.5-3.5c0-1.6.8-2.6 1.6-3.4.2 1.2.9 1.9 1.6 2.1C7.4 5.6 7.3 3.4 8 1.5z"/></svg>';
   const LV = { n: 6, cur: 1240, from: 1000, to: 1500, streak: 3 }, ring = () => { const r = 17, c = 2 * Math.PI * r, f = (LV.cur - LV.from) / (LV.to - LV.from);
@@ -54,9 +57,14 @@
     return `<div class="pf-tk" aria-label="Матчи"><span class="pf-tkh">Dota 2</span>${L.map((m, i) => `<a href="#" class="pf-tkm${i === 0 && m.state === 'live' ? ' on' : ''}" ${i === 0 && m.state === 'live' ? 'data-a="back"' : 'data-a="toast" data-v="Другой матч (демо)"'}>
       <span class="pf-tks">${st(m)}</span><span class="pf-tkr">${lg(m.a)}${nm(m.a)}<b class="num">${m.score ? m.score[0] : ''}</b></span><span class="pf-tkr">${lg(m.b)}${nm(m.b)}<b class="num">${m.score ? m.score[1] : ''}</b></span></a>`).join('')}</div>`; };
   const esc = v => String(v ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-  const full = pt => { if (pt.querySelector('.pf') || !pt.querySelector('.pt-me')) return;
-    if (HD === 'bet' || HD === 'fly2') pt.innerHTML = `<a class="pt-brand" href="#" data-a="toast" data-v="Главная GoatScout (демо)"><span class="pt-logo">◆</span>GoatScout</a>${DESK() ? `<nav class="pt-nav" aria-label="Разделы">${NAV}</nav>` : ''}
-      <button class="pf-q" data-a="toast" data-v="Поиск (демо)">${SRCH}<span>Матчи, команды, игроки</span>${DESK() ? '<kbd>/</kbd>' : ''}</button>${right()}`;
+  // дирижёр 06.11: у гостя шапка та же (разделы, поиск), только вместо кошелька и аватара — «Войти»
+  const full = pt => { const inb = pt.querySelector('.pt-in'), other = !pt.matches('#portal'); if (pt.querySelector('.pf') || (!pt.querySelector('.pt-me') && !inb)) return;
+    const guest = other ? new URLSearchParams(location.search).get('auth') === 'guest' : inb && !pt.querySelector('.pt-me');
+    const R = guest ? `<span class="pf pf--guest">${other ? '<button class="pt-in">Войти</button>' : inb.outerHTML}</span>` : null;
+    const NV = other ? navH((pt.querySelector('.pt-nav .is-on') || {}).textContent || 'Матчи') : NAV;
+    if (R && !(HD === 'bet' || HD === 'fly2')) return;
+    if (HD === 'bet' || HD === 'fly2') pt.innerHTML = `<a class="pt-brand" href="#" data-a="toast" data-v="Главная GoatScout (демо)"><span class="pt-logo">◆</span>GoatScout</a>${DESK() ? `<nav class="pt-nav" aria-label="Разделы">${NV}</nav>` : ''}
+      <button class="pf-q" data-a="toast" data-v="Поиск (демо)">${SRCH}<span>Матчи, команды, игроки</span>${DESK() ? '<kbd>/</kbd>' : ''}</button>${R || right()}`;
     else { const me = pt.querySelector('.pt-me'); me.insertAdjacentHTML('afterend', right()); me.remove(); }
     if (HD === 'tick' && !document.querySelector('.pf-tk')) pt.insertAdjacentHTML('beforebegin', tick()); };
   // MY — прогнозы для карточки: пример + те, что дал в колонке (ждут итога → через 6 с угадал)
@@ -69,7 +77,11 @@
       <ul class="pf-c2-ls">${rows.map(x => `<li><span>${esc(x.q)}</span>${x.ok ? `<b class="num pf-up">+${x.v}</b>` : `<b class="num pf-wait">ждёт · ${x.v}</b>`}</li>`).join('')}</ul>
       <button class="pf-c2-ft" data-a="toast" data-v="История баллов (демо)"><span>Вся история баллов</span><i>›</i></button>`; };
   const c2Paint = () => { const c = document.querySelector('.pf--c2.on .pf-c2'); if (c) c.innerHTML = card2(); };
-  const paint = () => document.querySelectorAll('#portal').forEach(full);
+  const paint = () => document.querySelectorAll('#portal, header.portal').forEach(full);
+  // дирижёр 06.11: шапка «съехала» на телефоне — страница матча на телефоне сверстана на 412 px и ужата до ширины экрана (zoom у <html>),
+  // турнир и новости — нет; их шапку делаем так же: 412 px и тот же коэффициент — размеры и места кнопок совпадают
+  const zoomH = () => document.querySelectorAll('header.portal').forEach(h => { const ph = !DESK(), z = innerWidth / 412; h.style.zoom = ph && z < 1 ? z : ''; h.style.width = ph && z < 1 ? '412px' : ''; });
+  addEventListener('resize', zoomH); new MutationObserver(zoomH).observe(document.body, { attributes: true, attributeFilter: ['class'] }); addEventListener('load', zoomH); zoomH();
   // fly: «+N» с кнопки прогноза в кошелёк
   // v10–v13 (дирижёр 05.11: «не „в игре“, а иконкой — средства зарезервированы, мелко; через слэш, отдельным боксом, иконкой „плэй“»): PF_IN — как показать баллы в открытых прогнозах
   //   slash — «1 240 / 150» · box — отдельный маленький бокс рядом с кошельком · play — значок ▶ и число внутри кошелька · lock — значок замка и число бейджем в углу кошелька

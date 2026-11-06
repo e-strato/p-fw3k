@@ -17,6 +17,17 @@
   if (window.WB2_SCT) H.classList.add('wb2-sct');   // v20: счёт — как перевес, текстом на оси
   if (window.WB2_PH) H.classList.add('wb2-ph');   // v21: телефон — та же логика: шапка с золотом, пики, по центру перевес и счёт на линии
   if (window.WB2_EQ) H.classList.add('wb2-eq');   // ровные отступы: сверху, между шапкой и пиками, снизу — одинаковые
+  if (window.WB2_MARK) H.classList.add('wb2-mark');   // v28: метка момента графика
+  if (window.WB2_HL) H.classList.add('wb2-hl', 'wb2-hl--' + window.WB2_HL);
+  if (window.WB2_HL === 'soft' || window.WB2_HL === 'at') H.classList.add('wb2-quiet');   // v34–v35: подложка градиентом, без фиолетового   // v30–v33: вид выделения момента
+  if (window.WB2_ATV) H.classList.add('wb2-atv');   // v36: K/D/A и счёт — на момент и не приглушаются, тише только герои, ники, линии
+  if (window.WB2_CHIP2) H.classList.add('wb2-chip2');   // v37: «LIVE» — та же серая плашка, что и время; скругление меньше
+  if (window.WB2_CHIPW) H.classList.add('wb2-chipw');   // v39: плашка одной ширины — что время, что «LIVE»
+  if (window.WB2_SCBD) H.classList.add('wb2-scbd');   // v40: у счёта такая же рамка, как у перевеса золота
+  if (window.WB2_PHCHIP) H.classList.add('wb2-phchip');   // v41: телефон — плашка времени / «LIVE» в средней строке слева, подложка тоже
+  if (window.WB2_NOXB) H.classList.add('wb2-noxb');   // v36: время под осью графика убрано — оно теперь в плашке над перевесом
+  if (window.WB2_NOAT) H.classList.add('wb2-noat');   // v29: выделение момента без времени
+  if (window.WB2_FIX) H.classList.add('wb2-fix');   // v28: цифры фиксированной ширины — 9.9k и 100.0k занимают одно место
   if (window.WB2_CD) H.classList.add('wb2-cd--' + window.WB2_CD);   // перевес цветом стороны лидера: 'near' — у суммы лидера; 'mid' — по центру на оси; 'pill' — по центру плашкой с лого   // вся строка компактнее   // от v6: 'chip' | 'tight' | 'axis'   // золото в строке команды, в строке пиков — счёт: 'row' | 'card' | 'tug'   // вид табло: 'plain' | 'bar' | 'split'
   const k = v => (v / 1000).toFixed(1) + 'k';
   // v24: цифры не прыгают, а плавно докручиваются до нового значения (~0,3 с, замедление к концу)
@@ -60,6 +71,7 @@
     const nw = p => { const n = p.nw_t || [], j = Math.min(Math.floor(t / 60), n.length - 1); return j < 0 ? 0 : n[j] + ((n[j + 1] ?? n[j]) - n[j]) * Math.min(1, t / 60 - j); };
     let r = m.players.filter(p => p.isRadiant).reduce((s, p) => s + nw(p), 0), d = m.players.filter(p => !p.isRadiant).reduce((s, p) => s + nw(p), 0);
     if (adv >= 0) r = d + adv; else d = r - adv;   // суммы сходятся с перевесом на графике: лидер = отстающий + перевес
+    window.WB2_AT = t < now ? t : null; window.WB2_M = m; window.WB2_LIVE = S.o.state === 'live';   // v28 (дирижёр 06.11): момент под курсором графика — для метки «на 23:40» здесь и в колонке
     return { r, d };
   }
   function teamGold() {
@@ -121,6 +133,28 @@
     const cb = cd.querySelector('b');
     if (lead) setNum(cb, diff, x => '+' + k(x)); else setNum(cb, 0, k); // поровну — «0.0k» белым (дирижёр 05.11)
     cd.style.visibility = '';
+    // v28 (дирижёр 06.11, созвон с Антоном): водишь по графику — золото показано на тот момент; помечаем это у самих цифр:
+    // ячейки золота и перевес подсвечены основным цветом, над перевесом — время момента. Отпустил — снова «сейчас»
+    if (window.WB2_MARK) { const at = window.WB2_AT, on = at != null;
+      row.classList.toggle('wb2-at-on', on);
+      let ch = row.querySelector(':scope > .wb2-at');
+      if (!ch) { ch = document.createElement('small'); ch.className = 'wb2-at num'; row.appendChild(ch); }
+      // v36 (дирижёр 06.11): не наведено и карта идёт — на том же месте «LIVE» с мигающей фиолетовой точкой (WB2_LIVECHIP)
+      const lv = !on && window.WB2_LIVECHIP && window.WB2_LIVE; row.classList.toggle('wb2-live-on', !!lv); ch.classList.toggle('is-live', !!lv);
+      const tx = on ? Math.floor(at / 60) + ':' + String(Math.floor(at % 60)).padStart(2, '0') : lv ? 'LIVE' : '';
+      if (ch.__t !== tx) { ch.__t = tx; if (lv) ch.innerHTML = '<i></i>LIVE'; else ch.textContent = tx; } }
+    // v35 'at': K/D/A и счёт на момент под курсором — убийства игрока по его журналу, смерти — по журналам соперников (ключ — герой); отпустил — как было
+    if (window.WB2_HL === 'at' || window.WB2_ATV) { const on = window.WB2_AT != null, m = window.WB2_M, t = window.WB2_AT, HS = window.GS_DATA && GS_DATA.heroes;
+      const rows = [...row.querySelectorAll('.d3-h[data-hc]')], sc = row.querySelectorAll('.d3-sc b'), aRad = !!row.querySelector('.d3-tm.a.wb-rad');
+      const put = (el, v) => { if (!el) return; if (on) { if (el.__o == null) el.__o = el.textContent; if (el.textContent !== String(v)) el.textContent = v; } else if (el.__o != null) { el.textContent = el.__o; el.__o = null; } };
+      if (m) { const kl = p => (p.kills_log || []).filter(l => l.time <= t).length;
+        rows.forEach(h => { const p = m.players.find(x => x.account_id === +h.dataset.hc.split('|')[1]); if (!p) return; const key = 'npc_dota_hero_' + ((HS && HS[p.hero_id] || {}).short || '');
+          const d = m.players.filter(x => x.isRadiant !== p.isRadiant).reduce((a, x) => a + (x.kills_log || []).filter(l => l.key === key && l.time <= t).length, 0);
+          put(h.querySelector('.kk'), on ? kl(p) : 0); put(h.querySelector('.kd'), on ? d : 0); });
+        const kr = m.players.filter(x => x.isRadiant).reduce((a, x) => a + kl(x), 0), kd = m.players.filter(x => !x.isRadiant).reduce((a, x) => a + kl(x), 0);
+        put(sc[0], on ? (aRad ? kr : kd) : 0); put(sc[1], on ? (aRad ? kd : kr) : 0); } }
+    // v32 'line': вертикаль курсора графика (та же, что рисует график, с привязкой к точкам) продолжается сквозь строку
+    if (window.WB2_HL === 'line') { const vl = window.WB2_AT != null && document.querySelector('.g2 svg line[stroke="#a1a1aa"]'); if (vl) row.style.setProperty('--wb2-x', (vl.getBoundingClientRect().left - row.getBoundingClientRect().left) + 'px'); }
     for (const g2 of row.querySelectorAll(':scope > .wb2-g')) g2.classList.toggle('lead-rad', g2.classList.contains('is-lead') && !!leadRad), g2.classList.toggle('lead-dire', g2.classList.contains('is-lead') && !leadRad);
     let lb = row.querySelector(':scope > .wb2-sl');
     if (!lb) { lb = document.createElement('small'); lb.className = 'wb2-sl'; lb.textContent = 'убийства'; row.appendChild(lb); }

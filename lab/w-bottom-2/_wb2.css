@@ -244,3 +244,75 @@ html.wb2-nw .wb2-nt, html.wb2-nw .wb2-dv, html.wb2-nw .wb2-cd b { display: inlin
 html.wb2-nw .wb2-nv { overflow: hidden; }
 html.wb2-nw .wb2-od { display: inline-block; overflow: hidden; vertical-align: top; height: 1.1em; line-height: 1.1em; }
 html.wb2-nw .wb2-od > span { display: inline-block; }
+
+/* v28 (дирижёр 06.11, созвон с Антоном) — WB2_MARK: водишь по графику → золото показано на момент под курсором.
+   Помечаем у самих цифр: золото команд и перевес — основным цветом, над перевесом — время момента. Отпустил — «сейчас», метки нет */
+html.wb2-mark .wb2-at { display: none; }
+html.wb2-mark body.is-desk .d3-row .wb2-at { display: block; grid-row: 1; grid-column: 2; justify-self: center; align-self: start; position: relative; z-index: 2; transform: translateY(calc(-100% - 2px)); padding: 2px 6px; border-radius: 6px; background: #8b5cf6; color: #fff; font: 600 11px/14px 'JetBrains Mono', ui-monospace, monospace; visibility: hidden; pointer-events: none; }
+html.wb2-mark body.is-desk .d3-row.wb2-at-on .wb2-at { visibility: visible; }
+html.wb2-mark:not(.wb2-quiet) .d3-row.wb2-at-on .wb2-g .wb2-nv { color: #a78bfa !important; }
+html.wb2-mark:not(.wb2-quiet) .d3-row.wb2-at-on .wb2-cd { color: #a78bfa !important; box-shadow: 0 0 0 1px #8b5cf6 !important; }
+/* WB2_FIX — у цифр постоянная ширина: 9.9k и 100.0k, 8 и 17 занимают одно место, строка не дёргается при наведении на график */
+html.wb2-fix .wb2-nt { display: inline-block; min-width: 6ch; }
+html.wb2-fix .wb2-g.b .wb2-nt { text-align: left; }
+/* левая сумма (дирижёр 06.11: «почему у левой так далеко иконка»): запас ширины — снаружи, перед значком; значок всегда вплотную к цифре */
+html.wb2-fix .wb2-g.a .wb2-nt { min-width: 0; }
+html.wb2-fix .wb2-g.a .wb2-nv { min-width: calc(6ch + 28px); justify-content: flex-end; }
+html.wb2-fix .wb2-cd b { display: inline-block; min-width: 6ch; text-align: center; }
+html.wb2-fix .d3-row .d3-sc b { display: inline-block; min-width: 2ch; } html.wb2-fix .d3-row .d3-sc b:first-child { text-align: right; } html.wb2-fix .d3-row .d3-sc b:last-of-type { text-align: left; }
+/* v29 (дирижёр 06.11: «метки не делаем», но выделение момента нужно) — WB2_NOAT: без времени над перевесом;
+   вид выделения — WB2_HL ниже (кольца v29 сняты: дирижёр 06.11 «ужасно») */
+html.wb2-noat .wb2-at { display: none !important; }
+
+/* v30–v33 (дирижёр 06.11: кольца «ужасно, точно не так должно выделяться») — WB2_HL, вид выделения момента, без времени:
+   num — только цифры золота и перевес фиолетовым · band — мягкая фиолетовая полоса под строкой золота во всю ширину
+   line — линия курсора графика продолжается вниз сквозь строку, цифры фиолетовым · dim — что живое (счёт, K/D/A) приглушается, золото остаётся ярким */
+html.wb2-hl:not(.wb2-quiet) .d3-row.wb2-at-on .wb2-g .wb2-nv, html.wb2-hl:not(.wb2-quiet) .d3-row.wb2-at-on .wb2-cd { color: #a78bfa !important; }
+html.wb2-mark.wb2-hl .d3-row.wb2-at-on .wb2-cd { box-shadow: 0 0 0 1px var(--w-border, #ffffff1f) !important; }
+html.wb2-hl .d3-row .wb2-g .wb2-nv, html.wb2-hl .d3-row .wb2-cd, html.wb2-hl .d3-row .d3-sc, html.wb2-hl .d3-row .d3-k { transition: color .15s, opacity .15s; }
+html.wb2-hl--band body.is-desk .d3-row.wb2-at-on { background: linear-gradient(180deg, #8b5cf61f 0, #8b5cf61f 52px, transparent 52px); border-radius: 12px; }
+html.wb2-hl--line body.is-desk .d3-row::after { content: ''; position: absolute; left: var(--wb2-x, -9px); top: -16px; bottom: 0; width: 1px; background: #8b5cf6; opacity: 0; pointer-events: none; z-index: 0; }
+html.wb2-hl--line body.is-desk .d3-row.wb2-at-on::after { opacity: .7; }
+html.wb2-hl--line body.is-desk .d3-row { position: relative; }
+html.wb2-hl--dim .d3-row.wb2-at-on .d3-sc, html.wb2-hl--dim .d3-row.wb2-at-on .d3-k, html.wb2-hl--dim .d3-row.wb2-at-on .d3-n { opacity: .35; }
+
+/* v34–v35 (дирижёр 06.11: «выделял бы именно подложку… далёким градиентом на фоне, фиолетовым бы не выделял; остальное тише — или показывал бы в тот момент; маленькую плашку времени»)
+   WB2_HL = 'soft' — подложка блока мягким далёким градиентом, всё «сейчас» (герои, ники, K/D/A, счёт) тише, по центру плашка времени
+   WB2_HL = 'at' — та же подложка и плашка, но K/D/A и счёт пересчитаны на этот момент (по журналу убийств) */
+html.wb2-quiet body.is-desk .d3-row { transition: background .25s; border-radius: 14px; }
+html.wb2-quiet body.is-desk .d3-row.wb2-at-on { background: radial-gradient(70% 180% at 50% 0%, #ffffff12 0%, #ffffff06 40%, transparent 80%); }
+html.wb2-quiet body.is-desk .d3-row .wb2-at { background: #27272a; color: var(--w-fg, #fafafa); box-shadow: 0 0 0 1px #ffffff1f; font-weight: 500; }
+html.wb2-quiet .d3-row .d3-h, html.wb2-quiet .d3-row .d3-sc, html.wb2-quiet .d3-row .wb2-sl { transition: opacity .2s; }
+html.wb2-hl--soft .d3-row.wb2-at-on .d3-h, html.wb2-hl--soft .d3-row.wb2-at-on .d3-sc { opacity: .35; }
+html.wb2-hl--at .d3-row.wb2-at-on .d3-h .d3-l, html.wb2-hl--at .d3-row.wb2-at-on .d3-h > small { opacity: .35; }
+
+/* v36 (дирижёр 06.11, к v21): без скругления подложки; время в плашке крупнее; не наведено — «LIVE» с мигающей фиолетовой точкой; время под осью графика убрано */
+html.wb2-quiet body.is-desk .d3-row { border-radius: 0; }
+html.wb2-quiet body.is-desk .d3-row .wb2-at { font-size: 13px; line-height: 16px; padding: 3px 8px; }
+html.wb2-mark body.is-desk .d3-row.wb2-live-on .wb2-at { visibility: visible; }
+html.wb2-quiet body.is-desk .d3-row .wb2-at.is-live { display: inline-flex; align-items: center; gap: 6px; color: #a78bfa; background: #8b5cf61f; box-shadow: none; font-family: var(--w-font, system-ui); font-weight: 600; letter-spacing: .02em; }
+.wb2-at.is-live i { width: 6px; height: 6px; border-radius: 50%; background: #8b5cf6; animation: wb2-blink 1.2s ease-in-out infinite; }
+@keyframes wb2-blink { 50% { opacity: .2; } }
+html.wb2-noxb .g2-xb { display: none !important; }
+html.wb2-atv.wb2-hl--soft .d3-row.wb2-at-on .d3-h, html.wb2-atv.wb2-hl--soft .d3-row.wb2-at-on .d3-sc { opacity: 1; }
+html.wb2-atv.wb2-hl--soft .d3-row .d3-h > * { transition: opacity .2s; }
+html.wb2-atv.wb2-hl--soft .d3-row.wb2-at-on .d3-h > *:not(.d3-k) { opacity: .35; }
+/* v37 (дирижёр 06.11): «LIVE» — та же плашка, что и время (серая, не полупрозрачная), меняется только текст; скругление меньше */
+html.wb2-chip2 body.is-desk .d3-row .wb2-at, html.wb2-chip2 body.is-desk .d3-row .wb2-at.is-live { display: block; border-radius: 4px; background: #27272a; color: var(--w-fg, #fafafa); box-shadow: 0 0 0 1px #ffffff1f; font: 500 13px/16px 'JetBrains Mono', ui-monospace, monospace; letter-spacing: 0; }
+html.wb2-chip2 .wb2-at.is-live i { display: inline-block; vertical-align: middle; margin: -2px 6px 0 0; }
+/* v39 (дирижёр 06.11): ширина плашки не меняется — «25:38» и «● LIVE» одной ширины, текст по центру */
+html.wb2-chipw body.is-desk .d3-row .wb2-at { width: 72px; box-sizing: border-box; text-align: center; padding-left: 0; padding-right: 0; }
+/* v40 (дирижёр 06.11): у счёта рамка как у перевеса золота — появляются и пропадают вместе */
+html.wb2-scbd.wb2-sct body.is-desk .d3-row.wb2-at-on .d3-sc { box-shadow: 0 0 0 1px var(--w-border, #ffffff1f) !important; }
+/* v41 (дирижёр 06.11: телефон — наведения нет): плашка времени / «LIVE» — в средней строке слева (там, где перевес и счёт), подложка — как на компьютере */
+html.wb2-phchip body:not(.is-desk) .d3-row .wb2-at { display: block; grid-area: cd; justify-self: start; align-self: center; position: relative; z-index: 1; width: 72px; box-sizing: border-box; text-align: center; padding: 3px 0; border-radius: 4px; background: #27272a; color: var(--w-fg, #fafafa); box-shadow: 0 0 0 1px #ffffff1f; font: 500 13px/16px 'JetBrains Mono', ui-monospace, monospace; visibility: hidden; }
+html.wb2-phchip body:not(.is-desk) .d3-row.wb2-at-on .wb2-at, html.wb2-phchip body:not(.is-desk) .d3-row.wb2-live-on .wb2-at { visibility: visible; }
+html.wb2-phchip .wb2-at.is-live i { display: inline-block; vertical-align: middle; margin: -2px 6px 0 0; }
+html.wb2-phchip.wb2-quiet body:not(.is-desk) .d3-row { transition: background .25s; }
+html.wb2-phchip.wb2-quiet body:not(.is-desk) .d3-row.wb2-at-on { background: radial-gradient(90% 60% at 50% 0%, #ffffff12 0%, #ffffff06 40%, transparent 80%); }
+/* дирижёр 06.11 (телефон): время, перевес и счёт — по центру строки одной группой, рамки у всех трёх одинаковые (1 px, скругление 6, высота 24) */
+html.wb2-phchip body:not(.is-desk) .d3-row { grid-template-columns: 1fr auto auto auto 1fr !important; grid-template-areas: "ta ta ta ta ta" "ha ha ha ha ha" ". cd at sc ." "tb tb tb tb tb" "hb hb hb hb hb" !important; }
+html.wb2-phchip body:not(.is-desk) .d3-row .wb2-at { grid-area: at; justify-self: center; }
+html.wb2-phchip body:not(.is-desk) .d3-row .wb2-cd { grid-area: cd; justify-self: center; }
+html.wb2-phchip body:not(.is-desk) .d3-row .d3-sc { grid-area: sc; justify-self: center; }
+html.wb2-phchip body:not(.is-desk) .d3-row .wb2-at, html.wb2-phchip body:not(.is-desk) .d3-row .wb2-cd, html.wb2-phchip body:not(.is-desk) .d3-row .d3-sc { box-sizing: border-box; height: 24px; padding-top: 0 !important; padding-bottom: 0 !important; display: inline-flex !important; align-items: center; justify-content: center; border-radius: 6px !important; box-shadow: 0 0 0 1px var(--w-border, #ffffff1f) !important; }

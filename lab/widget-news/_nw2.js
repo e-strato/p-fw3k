@@ -95,7 +95,9 @@ window.NW2 = (() => {
   const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;')
   const mark = (s) => esc(s).replace(/\{(t|p|e):([^}|]+)(?:\|([^}]+))?\}/g, (_, k, a, b) => {
     if (k === 'p') { const [tm, h] = PL[a] || [], c = TC[tm]
-      const av = O.ava ? `<span class="n2-av">${h ? `<img src="${HERO(h)}" alt="">` : `<b>${a[0]}</b>`}</span>` : ''
+      // 06.11 (дирижёр: «такие баги тоже убрать… посмотреть, чего не хватает, и догуглить данные»): нет героя на турнире — фото игрока из базы; нет и фото — буква
+      const ph = !h && DBM ? window.DB.url(window.DB.player(a)?.photo) : null
+      const av = O.ava ? `<span class="n2-av${ph ? ' n2-av--ph' : ''}">${h ? `<img src="${HERO(h)}" alt="">` : ph ? `<img src="${ph}" alt="">` : `<b>${a[0]}</b>`}</span>` : ''
       return `<a class="n2-p" href="#" title="Страница игрока"${c ? ` style="--tc:${c}"` : ''}>${av}${a}</a>` }
     const lg = k === 't' ? LG(a) : TOUR[a].logo, nm = k === 't' ? b || a : TOUR[a].name, c = k === 't' && TC[a]
     return `<span class="n2-e${lg ? '' : ' n2-e--nl'}"${c ? ` style="--tc:${c}"` : ''}>${lg ? `<img src="${lg}" alt="">` : ''}${nm}</span>` })
@@ -119,7 +121,10 @@ window.NW2 = (() => {
   // 05.11 (лаба w-match-news, дирижёр: «тут должны быть не новости турнира, а новости матча»): NW2_TEAMS = [id, id] — новости, где есть хоть одна из команд (до загрузки виджета)
   const DBN = DBM ? (window.NW2_TEAMS ? window.DB.news().filter((n) => window.NW2_TEAMS.some((id) => n.teams.includes(id))) : window.DB.news({ tour: window.DB_TOUR || 'ti-2026' })) : []
   const T0 = Date.now()
-  const LIST = DBM ? DBN.slice(1, 16).map((n) => fromDB(n)) : N.map(([id, m, tour, t]) => { const n = REAL.find((x) => x.id === id); return { id, ts: T0 - m * 60000, tour, t, lede: n.lede, main: (n.main || []).length > 1 ? n.main : [], rich: RICH[id], img: (n.imgs || [])[0] || '' } })
+  let LIST = DBM ? DBN.slice(1, 16).map((n) => fromDB(n)) : N.map(([id, m, tour, t]) => { const n = REAL.find((x) => x.id === id); return { id, ts: T0 - m * 60000, tour, t, lede: n.lede, main: (n.main || []).length > 1 ? n.main : [], rich: RICH[id], img: (n.imgs || [])[0] || '' } })
+  // 06.11 (созвон 06.11 §2.2, дирижёр: «внутри виджета маленький сегмент „Этот матч · Все“, как в виджетах на странице турнира»): o.seg — сегмент под шапкой;
+  //   «Этот матч» — новости команд матча (NW2_TEAMS), «Все» — все новости базы; по матчу новостей нет — сразу «Все»
+  const LISTS = { m: LIST, a: DBM && window.NW2_TEAMS ? window.DB.news().slice(1, 16).map((n) => fromDB(n)) : LIST }
   // «Кратко» — кнопка в духе «✦ Пикабу ИИ» (Pikabu-AI-prototype, pikabu-post-demo): переливается, открыта — серый круг ×
   // v42+ (o.btn = 'more'): вместо пилюли — тихая серая «Подробнее» под заголовком, без подложки; значок ✦ оживает при наведении (дирижёр 02.11)
   const MORE = '<button class="n2-more" data-brief type="button"><svg class="n2-more__i" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5c.4 2.9 1.6 4.1 4.5 4.5-2.9.4-4.1 1.6-4.5 4.5-.4-2.9-1.6-4.1-4.5-4.5 2.9-.4 4.1-1.6 4.5-4.5z" fill="currentColor"/><path class="n2-more__d" d="M13 10.5c.2 1.2.7 1.7 1.9 1.9-1.2.2-1.7.7-1.9 1.9-.2-1.2-.7-1.7-1.9-1.9 1.2-.2 1.7-.7 1.9-1.9z" fill="currentColor"/></svg><span class="n2-more__t">Подробнее</span></button>'
@@ -148,11 +153,28 @@ window.NW2 = (() => {
   let timer, tick, O = {}, EL, POP
   if (DBM && DBN[0]) Object.assign(FRESH, fromDB(DBN[0], { id: 'fresh' }))
   const byId = (id) => (id === 'fresh' ? { ...FRESH, ts: NOWF() } : LIST.find((n) => n.id === id))
+  // 06.11 v16 (дирижёр: «маленький переключатель справа в шапке вверху»): o.seg = 'hd' — сегмент справа в шапке вместо «Все новости ›»;
+  //   v17 (дирижёр: «переход на все новости… делаем внизу такой же штукой, как у виджета MVP»): o.dock — «Все новости ›» строкой внизу, как «Взять в фэнтези» у MVP (.m4-dock)
+  // v20 (дирижёр 06.11: «вот такой подложкой показываем все новости… кнопка внизу, внизу справа»): o.dock = 2 — «Все новости» подложкой из-под края виджета, как «Взять в фэнтези» у MVP (.m6-dock), стрелка справа
+  const NX = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m6 3 5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+  const SEGH = (o) => o.seg === 'hd'
+  // v18 (дирижёр 06.11: «иконками, вот как здесь… логотипы команд, которые участвуют — в левую, вправо написать „Все“»): o.segi — слева лого двух команд матча, справа «Все»; выбранная — светлой плашкой
+  // v19 (дирижёр 06.11: «криво и косо»): o.segi = 2 — кнопки по содержимому одной высоты, выбранная — серой плашкой (белая съедала светлые лого), невыбранные лого приглушены
+  const SEGL = () => DBM && window.NW2_TEAMS ? `<span class="n2-sgl">${window.NW2_TEAMS.map((id) => { const l = LG(DBD.teams[id].name); return l ? `<img src="${l}" alt="">` : '' }).join('')}</span>` : 'Этот матч'
+  const SEG = (o, c) => `<div class="n2-seg${c}${o.segi ? ' n2-seg--i' + (o.segi === 2 ? ' n2-seg--i2' : '') : ''}"><div class="t5-seg">${[['m', o.segi ? SEGL() : 'Этот матч'], ['a', 'Все']].map(([v, l]) => `<button class="${v === o.sc ? 'is-on' : ''}" data-nsc="${v}"${o.segi && v === 'm' ? ' aria-label="Этот матч" title="Этот матч"' : ''}>${l}</button>`).join('')}</div></div>`
   function render(el, o = {}) { o = { pic: 'mix', fresh: true, ...o }; O = o; EL = el
+    if (o.seg) { if (!o.sc) o.sc = LISTS.m.length ? 'm' : 'a'; LIST = LISTS[o.sc] }
     clearTimeout(timer); clearInterval(tick); closePop()
-    el.classList.toggle('is-phone', !!o.phone)
-    el.innerHTML = `<div class="w nw nf n2${o.open ? ' n2--' + o.open : ''}${o.btn ? ' n2--b-' + o.btn : ''}${o.even ? ' n2--even' : ''}${o.hl ? ' n2--hl-' + o.hl : ''}${o.ava ? ' n2--ava' : ''}${o.sq ? ' n2--sq' : ''}${o.sm ? ' n2--sm' : ''}${o.pad ? ' n2--even3' : ''}${o.calm ? ' n2--calm' : ''}${o.pl ? ' n2--pl-' + o.pl : ''}"><div class="w-hd"><span class="w-hd__t">Новости</span><a class="nw-all" href="#">Все новости ›</a></div><div class="nw-feed"><div class="nw-fl">${LIST.map((n, i) => row(n, i, o)).join('')}</div></div>${o.open === 'sheet' ? '<div class="n2-sh" aria-hidden="true"></div>' : ''}</div>`
+    el.classList.toggle('is-phone', !!o.phone); el.classList.toggle('n2-hasdock', o.dock === 2)
+    el.innerHTML = `<div class="w nw nf n2${o.open ? ' n2--' + o.open : ''}${o.btn ? ' n2--b-' + o.btn : ''}${o.even ? ' n2--even' : ''}${o.hl ? ' n2--hl-' + o.hl : ''}${o.ava ? ' n2--ava' : ''}${o.sq ? ' n2--sq' : ''}${o.sm ? ' n2--sm' : ''}${o.pad ? ' n2--even3' : ''}${o.calm ? ' n2--calm' : ''}${o.nodiv ? ' n2--nodiv' : ''}${o.gap ? ' n2--gap' : ''}${o.edge ? ' n2--edge' : ''}${o.fade ? ' n2--fade' + (o.fade === 2 ? ' n2--fade2' : '') + (o.fade === 'v' ? ' n2--fade2 n2--fadev' : '') + (o.fade === 'p' ? ' n2--fade2 n2--fadev n2--fadep' : '') : ''}${o.pl ? ' n2--pl-' + o.pl : ''}"><div class="w-hd"><span class="w-hd__t">Новости</span>${SEGH(o) ? '' : '<a class="nw-all" href="#">Все новости ›</a>'}${SEGH(o) ? SEG(o, ' n2-seg--hd') : ''}</div>${o.seg && !SEGH(o) ? SEG(o, '') : ''}<div class="nw-feed"><div class="nw-fl">${LIST.map((n, i) => row(n, i, o)).join('')}</div></div>${o.dock === true ? '<a class="n2-dock" href="#">Все новости <span aria-hidden="true">›</span></a>' : ''}${o.open === 'sheet' ? '<div class="n2-sh" aria-hidden="true"></div>' : ''}</div>${o.dock === 2 ? `<a class="n2-dock2" href="#"><span>Все новости</span>${NX}</a>` : ''}`
     const fl = el.querySelector('.nw-fl')
+    // v27 (дирижёр 06.11: «чуть позже появлялась — когда первая новость уже зашла за край»): o.fadeLate — верхнее размытие начинает расти только после стольких px прокрутки; v28 o.fadeLateB — так же снизу: нижнее гаснет за столько px до конца
+    // v21 (дирижёр 06.11: «без дивайдера» · «как в „Разборе“: при скролле, когда есть куда скроллить, небольшой лёгкий блюр»): o.nodiv — у шапки нет черты; o.fade — затемнение с размытием сверху (пролистали) и снизу (есть ещё)
+    if (o.fade) { const fd = el.querySelector('.nw-feed'), w = el.querySelector('.w.n2')
+      const up = () => { w.style.setProperty('--n2-ft', fd.offsetTop + 'px'); w.classList.toggle('n2-sc-top', fd.scrollTop > 2); w.classList.toggle('n2-sc-more', fd.scrollTop + fd.clientHeight < fd.scrollHeight - 2)
+        if (o.fade === 'p') { const c = (v) => Math.max(0, Math.min(1, v / 32)).toFixed(2); w.style.setProperty('--n2-to', c(fd.scrollTop - (o.fadeLate || 0))); w.style.setProperty('--n2-bo', c(fd.scrollHeight - fd.clientHeight - fd.scrollTop - (o.fadeLateB || 0))) } }
+      fd.addEventListener('scroll', up, { passive: true }); requestAnimationFrame(up); setTimeout(up, 600) }
+    el.querySelector('.n2-seg')?.addEventListener('click', (e) => { const b = e.target.closest('[data-nsc]'); if (b && b.dataset.nsc !== o.sc) render(el, { ...o, sc: b.dataset.nsc, fresh: false }) })
     fl.addEventListener('click', (e) => { const ai = e.target.closest('[data-brief]'), r = e.target.closest('.n2-r')
       if (ai) { e.stopPropagation(); return open(fl, r, ai) }
       if (e.target.closest('a')) { e.preventDefault(); return }

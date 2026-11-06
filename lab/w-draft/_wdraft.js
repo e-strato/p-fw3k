@@ -90,9 +90,117 @@
     return `<div class="wdr wdr--card wdr--fp"><div class="wfp-hd">Пики</div><div class="wfp"><ol>${PB.slice(0, half).map(li).join('')}</ol><ol>${PB.slice(half).map((x, i) => li(x, i + half)).join('')}</ol></div></div>`;
   }
 
+
+  // w-draft-2 (дирижёр 06.11, созвон с Антоном: «отобразил бы драфт так же, как в Доте»): ход драфта в центре вместо графика, до начала карты
+  // dota — как в самой Доте (Captain's Mode): команды по краям, у каждой 5 слотов пиков и 7 банов, по центру таймер и чей ход; ниже 24 хода полосой
+  // phase — по фазам: Бан 1 · Пик 1 · …, текущая фаза раскрыта и подсвечена, крупно — чей ход
+  function dota(m, B, n) {
+    const PB = order(m), now = PB[S.step], clock = `<span class="wdr-clock">0:${String(S.left).padStart(2, '0')}</span>`;
+    const slot = (x, i, big) => i < S.step ? `<img class="wdt-s ${x.is_pick ? '' : 'is-ban'}" src="${B + H(x.hero_id).img}" alt="" title="${esc(H(x.hero_id).name)}">`
+      : `<span class="wdt-s ${x.is_pick ? '' : 'is-ban'} ${i === S.step ? 'is-now' : ''}">${i === S.step && big ? 'выбирает' : ''}</span>`;
+    const half = t => { const my = PB.map((x, i) => [x, i]).filter(([x]) => x.team === t), on = now && now.team === t, T = TM(tid(m, t));
+      return `<div class="wdt-side ${t ? 'b' : 'a'} ${on ? 'is-on' : ''}"><div class="wdt-tm"><img src="${B + T.logo}" alt=""><span><b>${esc(T.name)}</b><small class="${t ? 'dire' : 'rad'}">${t ? 'Dire' : 'Radiant'}</small></span></div>
+        <div class="wdt-pk">${my.filter(([x]) => x.is_pick).map(([x, i]) => slot(x, i, true)).join('')}</div>
+        <div class="wdt-bn">${my.filter(([x]) => !x.is_pick).map(([x, i]) => slot(x, i)).join('')}</div></div>`; };
+    const mid = now ? `<div class="wdt-mid"><small class="num">ход ${S.step + 1} из ${PB.length}</small><b class="num">${clock}</b><span class="${now.team ? 'dire' : 'rad'}">${esc(TM(tid(m, now.team)).tag)} · ${now.is_pick ? 'пик' : 'бан'}</span></div>`
+      : '<div class="wdt-mid"><b>Готово</b><small>карта начинается</small></div>';
+    const ord = `<div class="wdt-ord">${PB.map((x, i) => `<span class="wdt-o ${x.team ? 'b' : 'a'} ${x.is_pick ? 'is-pick' : 'is-ban'} ${i < S.step ? 'is-done' : i === S.step ? 'is-now' : ''}">${i < S.step ? `<img src="${B + H(x.hero_id).img}" alt="">` : ''}</span>`).join('')}</div>`;
+    return `<div class="wdr wdr--dota"><div class="wdr-hd"><b>Драфт · карта ${n}</b><span>Captain's Mode</span></div><div class="wdt">${half(0)}${mid}${half(1)}</div>${ord}<p class="wdr-note">График золота появится, когда закончится драфт</p></div>`;
+  }
+  function phase(m, B, n) {
+    const PB = order(m), now = PB[S.step]; let nb = 0, np = 0;
+    const T = now && TM(tid(m, now.team)), big = now ? `<div class="wdp-now ${now.team ? 'dire' : 'rad'}"><img src="${B + T.logo}" alt=""><span><small>сейчас ходит</small><b>${esc(T.name)} · ${now.is_pick ? 'пик' : 'бан'}</b></span><em class="num"><span class="wdr-clock">0:${String(S.left).padStart(2, '0')}</span></em></div>` : '<div class="wdp-now"><span><b>Драфт закончен</b><small>карта начинается</small></span></div>';
+    const ph = PH(m).map(f => { const cur = f.idx.includes(S.step), done = f.idx[f.idx.length - 1] < S.step;
+      return `<div class="wdp-ph ${cur ? 'is-now' : done ? 'is-done' : 'is-wait'}"><small>${f.pick ? 'Пик ' + ++np : 'Бан ' + ++nb}</small><div>${f.idx.map(i => { const x = PB[i];
+        return `<span class="wdr-o wdr-o--${x.team ? 'b' : 'a'} ${x.is_pick ? 'is-pick' : 'is-ban'} ${i === S.step ? 'is-now' : ''}">${i < S.step ? `<img src="${B + H(x.hero_id).img}" alt="">` : '<i></i>'}<small class="num">${i + 1}</small></span>`; }).join('')}</div></div>`; }).join('');
+    return `<div class="wdr wdr--phase"><div class="wdr-hd"><b>Драфт · карта ${n}</b><span class="num">${now ? `ход ${S.step + 1} из ${PB.length}` : ''}</span></div>${big}<div class="wdr-ord-t">${team(m, 0, B)}${team(m, 1, B)}</div><div class="wdp">${ph}</div><p class="wdr-note">График золота появится, когда закончится драфт</p></div>`;
+  }
+
+
+  // w-draft-2 v5–v7 (дирижёр 06.11: драфт в центре вместо графика — крупно, на весь центр)
+  // dota2 — как в Доте: сверху команды и большой таймер, ниже пятёрки высокими портретами (текущий слот светится), баны рядами, внизу 24 хода с фазами
+  // slots — пики сразу встают в строку игроков под центром (см. ../w-draft-2/_wd2.js), в центре — крупно чей ход и баны обеих команд
+  // phase2 — по фазам, крупно: «Бан 1 · Пик 1 …» карточками, текущая подсвечена
+  const clk = () => `<span class="wdr-clock">0:${String(S.left).padStart(2, '0')}</span>`;
+  const TT = (m, t, B, cls = '') => { const T = TM(tid(m, t)); return `<div class="d2-tm ${t ? 'b' : 'a'} ${cls}"><img src="${B + T.logo}" alt=""><span><b>${esc(T.name)}</b><small class="${t ? 'dire' : 'rad'}">${t ? 'Dire' : 'Radiant'}</small></span></div>`; };
+  const NOW = (m, B, now) => now ? `<div class="d2-now"><small class="num">ход ${S.step + 1} из 24</small><b class="num">${clk()}</b><span class="d2-who ${now.team ? 'dire' : 'rad'}">${esc(TM(tid(m, now.team)).tag)} · ${now.is_pick ? 'пик' : 'бан'}</span></div>`
+    : '<div class="d2-now"><b>Готово</b><small>карта начинается</small></div>';
+  const ORD = (m, B) => { const PB = order(m); let nb = 0, np = 0;
+    return `<div class="d2-ord">${PH(m).map(f => `<div class="d2-og ${f.pick ? 'is-pick' : 'is-ban'}" style="flex:${f.idx.length}"><small>${f.pick ? 'Пик ' + ++np : 'Бан ' + ++nb}</small><div>${f.idx.map(i => { const x = PB[i];
+      return `<span class="d2-o ${x.team ? 'b' : 'a'} ${i < S.step ? 'is-done' : i === S.step ? 'is-now' : ''}">${i < S.step ? `<img src="${B + H(x.hero_id).img}" alt="">` : ''}</span>`; }).join('')}</div></div>`).join('')}</div>`; };
+  function dota2(m, B, n) {
+    const PB = order(m), now = PB[S.step];
+    const card = (x, i) => i < S.step ? `<span class="d2-c is-done"><img src="${B + H(x.hero_id).img}" alt=""><b>${esc(H(x.hero_id).name)}</b><small>${esc(nick(m, x.hero_id))}</small></span>`
+      : `<span class="d2-c ${i === S.step ? 'is-now' : ''}"><i></i><b>${i === S.step ? 'выбирает…' : ''}</b><small></small></span>`;
+    const ban = (x, i) => i < S.step ? `<img class="d2-b" src="${B + H(x.hero_id).img}" alt="" title="${esc(H(x.hero_id).name)}">` : `<span class="d2-b ${i === S.step ? 'is-now' : ''}"></span>`;
+    const side = t => { const my = PB.map((x, i) => [x, i]).filter(([x]) => x.team === t), on = now && now.team === t;
+      return `<div class="d2-side ${t ? 'b' : 'a'} ${now ? (on ? 'is-on' : 'is-off') : ''}"><div class="d2-pk">${my.filter(([x]) => x.is_pick).map(([x, i]) => card(x, i)).join('')}</div><div class="d2-bn"><small>Баны</small>${my.filter(([x]) => !x.is_pick).map(([x, i]) => ban(x, i)).join('')}</div></div>`; };
+    return `<div class="wdr wdr--d2"><div class="d2-top">${TT(m, 0, B, now && now.team === 0 ? 'is-on' : '')}${NOW(m, B, now)}${TT(m, 1, B, now && now.team === 1 ? 'is-on' : '')}</div><div class="d2-mid">${side(0)}${side(1)}</div>${ORD(m, B)}</div>`;
+  }
+  function slots(m, B, n) {
+    const PB = order(m), now = PB[S.step];
+    const bans = t => PB.map((x, i) => [x, i]).filter(([x]) => x.team === t && !x.is_pick).map(([x, i]) => i < S.step ? `<img class="d3b" src="${B + H(x.hero_id).img}" alt="" title="${esc(H(x.hero_id).name)}">` : `<span class="d3b ${i === S.step ? 'is-now' : ''}"></span>`).join('');
+    return `<div class="wdr wdr--sl"><div class="d2-top">${TT(m, 0, B, now && now.team === 0 ? 'is-on' : '')}${NOW(m, B, now)}${TT(m, 1, B, now && now.team === 1 ? 'is-on' : '')}</div>
+      <div class="sl-bn"><div class="sl-bs a"><small>Баны</small><div>${bans(0)}</div></div><div class="sl-bs b"><small>Баны</small><div>${bans(1)}</div></div></div>${ORD(m, B)}<p class="sl-note">Пики встают в состав внизу ↓</p></div>`;
+  }
+  function phase2(m, B, n) {
+    const PB = order(m), now = PB[S.step]; let nb = 0, np = 0;
+    const ph = PH(m).map(f => { const cur = f.idx.includes(S.step), done = f.idx[f.idx.length - 1] < S.step;
+      return `<div class="p2-ph ${f.pick ? 'is-pick' : 'is-ban'} ${cur ? 'is-now' : done ? 'is-done' : 'is-wait'}"><small>${f.pick ? 'Пик ' + ++np : 'Бан ' + ++nb}</small><div>${f.idx.map(i => { const x = PB[i];
+        return `<span class="p2-o ${x.team ? 'b' : 'a'} ${i === S.step ? 'is-now' : ''}">${i < S.step ? `<img src="${B + H(x.hero_id).img}" alt="" title="${esc(H(x.hero_id).name)}">` : '<i></i>'}<em>${esc(x.team ? TM(m.dire_team_id).tag : TM(m.radiant_team_id).tag)}</em></span>`; }).join('')}</div></div>`; }).join('');
+    return `<div class="wdr wdr--p2"><div class="d2-top">${TT(m, 0, B, now && now.team === 0 ? 'is-on' : '')}${NOW(m, B, now)}${TT(m, 1, B, now && now.team === 1 ? 'is-on' : '')}</div><div class="p2">${ph}</div></div>`;
+  }
+
+
+  // w-draft-2 v8 (дирижёр 06.11: «как в Доте, только меньше текста и ближе к нашему визуалу» + шанс на победу по ходам драфта)
+  // dota3 — без подписей: лого сторон, таймер по центру (пик / бан — одним словом), пятёрки портретами, баны мелко; внизу график шанса Radiant по 24 ходам
+  // ‼️ шанс — пример: своей модели прогноза по героям нет; сдвиг на пике/бане — из номера героя (стабильно, не случайно)
+  const chance = m => { const PB = order(m); let v = 50; const a = [v];
+    PB.forEach(x => { const h = ((x.hero_id * 37) % 11) - 5, k = x.is_pick ? 1.6 : .5, sgn = x.team === 0 ? 1 : -1; v = Math.max(18, Math.min(82, v + sgn * h * k)); a.push(Math.round(v)); }); return a; };
+  function dota3(m, B, n) {
+    const PB = order(m), now = PB[S.step], st = Math.min(S.step, PB.length);
+    const card = (x, i) => i < S.step ? `<img class="d3c" src="${B + H(x.hero_id).img}" alt="" title="${esc(H(x.hero_id).name)} · ${esc(nick(m, x.hero_id))}">` : `<span class="d3c ${i === S.step ? 'is-now' : ''}"></span>`;
+    const ban = (x, i) => i < S.step ? `<img class="d3n" src="${B + H(x.hero_id).img}" alt="" title="${esc(H(x.hero_id).name)}">` : `<span class="d3n ${i === S.step ? 'is-now' : ''}"></span>`;
+    const side = t => { const my = PB.map((x, i) => [x, i]).filter(([x]) => x.team === t), on = now && now.team === t, T = TM(tid(m, t));
+      return `<div class="d3s ${t ? 'b' : 'a'} ${now ? (on ? 'is-on' : 'is-off') : ''}"><div class="d3s-h"><img src="${B + T.logo}" alt="" title="${esc(T.name)}"><i class="${t ? 'dire' : 'rad'}"></i></div>
+        <div class="d3s-p">${my.filter(([x]) => x.is_pick).map(([x, i]) => card(x, i)).join('')}</div><div class="d3s-b">${my.filter(([x]) => !x.is_pick).map(([x, i]) => ban(x, i)).join('')}</div></div>`; };
+    const ch = chance(m), W = 1000, Hh = 96, X = i => (i / PB.length * W).toFixed(1), Y = v => (Hh - v / 100 * Hh).toFixed(1), pts = ch.slice(0, st + 1).map((v, i) => `${X(i)},${Y(v)}`);
+    const area = `M0,${Y(50)} L${pts.join(' L')} L${X(st)},${Y(50)} Z`, cur = ch[st], lead = cur >= 50 ? 0 : 1, LT = TM(tid(m, lead));
+    const ticks = PB.map((x, i) => x.is_pick ? `<line x1="${X(i + 1)}" x2="${X(i + 1)}" y1="${Hh - 4}" y2="${Hh}" />` : '').join('');
+    const graph = `<div class="d3g"><svg viewBox="0 0 ${W} ${Hh}" preserveAspectRatio="none"><defs><clipPath id="d3u"><rect x="0" y="0" width="${W}" height="${Y(50)}"/></clipPath><clipPath id="d3d"><rect x="0" y="${Y(50)}" width="${W}" height="${Hh}"/></clipPath></defs>
+      <line class="d3g-m" x1="0" x2="${W}" y1="${Y(50)}" y2="${Y(50)}"/>${ticks}<path class="rad" d="${area}" clip-path="url(#d3u)"/><path class="dire" d="${area}" clip-path="url(#d3d)"/><polyline points="${pts.join(' ')}"/></svg>
+      <span class="d3g-v num" style="left:${(st / PB.length * 100).toFixed(1)}%;top:${(100 - cur).toFixed(0)}%"><img src="${B + LT.logo}" alt="">${Math.max(cur, 100 - cur)}%</span></div>`;
+    return `<div class="wdr wdr--d3"><div class="d3-t"><b class="num">${now ? clk() : '—'}</b><small>${now ? (now.is_pick ? 'пик' : 'бан') : 'готово'}</small></div><div class="d3-m">${side(0)}${side(1)}</div>${graph}</div>`;
+  }
+
+
+  // w-draft-2 v9 (дирижёр 06.11: «драфт происходит в нижней панели, а по центру — график шанса»): center — таймер, чей ход, баны сторон мелко; крупно график шанса по ходам.
+  // Пики встают в состав в нижней панели (../w-draft-2/_wd2.js, WD2_FILL), текущий слот там светится; золото, время, K/D/A внизу — «—» (данных ещё нет)
+  function center(m, B, n) {
+    const PB = order(m), now = PB[S.step], st = Math.min(S.step, PB.length), TA = TM(m.radiant_team_id), TB = TM(m.dire_team_id);
+    // v12+ (дирижёр 06.11: «в конце на 5 секунд выводить шанс по центру экрана»): драфт закончился — по центру крупно итог шанса по драфту, потом плавно — прогноз до 12′
+    if (!now && window.WD2_FIN) { const c = chance(m)[PB.length], ca = c, cb = 100 - c, L = ca >= cb ? 'a' : 'b';
+      return `<div class="wdr wdr--c9 is-fin"><div class="c9-fin"><small>Шанс по драфту</small>
+        <div class="c9-fr"><span class="a${L === 'a' ? ' on' : ''}"><img src="${B + TA.logo}" alt=""><em>${esc(TA.name)}</em><b class="num">${ca}%</b></span><span class="b${L === 'b' ? ' on' : ''}"><b class="num">${cb}%</b><em>${esc(TB.name)}</em><img src="${B + TB.logo}" alt=""></span></div>
+        <div class="c9-fb"><i class="rad" style="width:${ca}%"></i><i class="dire" style="width:${cb}%"></i></div></div></div>`; }
+    const ban = (x, i) => i < S.step ? `<img class="d3n" src="${B + H(x.hero_id).img}" alt="" title="${esc(H(x.hero_id).name)}">` : `<span class="d3n ${i === S.step ? 'is-now' : ''}"></span>`;
+    const bans = t => `<div class="c9-b ${t ? 'b' : 'a'}">${PB.map((x, i) => [x, i]).filter(([x]) => x.team === t && !x.is_pick).map(([x, i]) => ban(x, i)).join('')}</div>`;
+    const who = now ? `<img src="${B + TM(tid(m, now.team)).logo}" alt="">` : '';
+    const ch = chance(m), W = 1000, Hh = 300, X = i => (i / PB.length * W).toFixed(1), Y = v => (Hh - v / 100 * Hh).toFixed(1), pts = ch.slice(0, st + 1).map((v, i) => `${X(i)},${Y(v)}`);
+    const area = `M0,${Y(50)} L${pts.join(' L')} L${X(st)},${Y(50)} Z`, cur = ch[st], lead = cur >= 50 ? 0 : 1, LT = TM(tid(m, lead));
+    let nb = 0, np = 0; const ph = PH(m).map(f => { const a = f.idx[0], b = f.idx[f.idx.length - 1] + 1; return `<span class="c9-ph ${f.idx.includes(S.step) ? 'is-now' : ''}" style="left:${(a / PB.length * 100).toFixed(2)}%;width:${((b - a) / PB.length * 100).toFixed(2)}%">${f.pick ? 'Пик ' + ++np : 'Бан ' + ++nb}</span>`; }).join('');
+    const dots = PB.map((x, i) => x.is_pick && i < st ? `<circle cx="${X(i + 1)}" cy="${Y(ch[i + 1])}" r="4" class="${x.team ? 'dire' : 'rad'}"/>` : '').join('');
+    return `<div class="wdr wdr--c9"><div class="c9-top">${bans(0)}<div class="c9-t">${who}<b class="num">${now ? clk() : '—'}</b><small>${now ? (now.is_pick ? 'пик' : 'бан') : 'готово'}</small></div>${bans(1)}</div>
+      <div class="c9-g"><span class="c9-l a"><img src="${B + TA.logo}" alt="">${esc(TA.tag)}</span><span class="c9-l b"><img src="${B + TB.logo}" alt="">${esc(TB.tag)}</span>
+        <svg viewBox="0 0 ${W} ${Hh}" preserveAspectRatio="none"><defs><clipPath id="c9u"><rect x="0" y="0" width="${W}" height="${Y(50)}"/></clipPath><clipPath id="c9d"><rect x="0" y="${Y(50)}" width="${W}" height="${Hh}"/></clipPath></defs>
+        <line class="d3g-m" x1="0" x2="${W}" y1="${Y(50)}" y2="${Y(50)}"/><path class="rad" d="${area}" clip-path="url(#c9u)"/><path class="dire" d="${area}" clip-path="url(#c9d)"/><polyline points="${pts.join(' ')}"/></svg>${PB.map((x, i) => x.is_pick && i < st ? `<i class="c9-d ${x.team ? 'dire' : 'rad'}" style="left:${(i + 1) / PB.length * 100}%;top:${100 - ch[i + 1]}%"></i>` : '').join('')}
+        <span class="d3g-v num" style="left:${(st / PB.length * 100).toFixed(1)}%;top:${(100 - cur).toFixed(0)}%"><img src="${B + LT.logo}" alt="">${Math.max(cur, 100 - cur)}%</span>
+        ${window.WD2_VL ? PH(m).slice(1).map(f => `<i class="c9-vl" style="left:${(f.idx[0] / PB.length * 100).toFixed(2)}%"></i>`).join('') : ''}<div class="c9-x">${ph}</div></div></div>`;   /* WD2_VL (дирижёр 06.11): тонкие линии начала фаз через весь график — порядок ходов Captain's Mode известен заранее */
+  }
+
   function html(o) {
     const m = o.m, B = o.base || '';
-    if (o.state === 'draft') return o.look === 'cm' ? cm(m, B, o.n) : live(m, B, o.n);
+    if (o.state === 'draft') return o.look === 'cm' ? cm(m, B, o.n) : o.look === 'dota' ? dota(m, B, o.n) : o.look === 'phase' ? phase(m, B, o.n) : o.look === 'center' ? center(m, B, o.n) : o.look === 'dota3' ? dota3(m, B, o.n) : o.look === 'dota2' ? dota2(m, B, o.n) : o.look === 'slots' ? slots(m, B, o.n) : o.look === 'phase2' ? phase2(m, B, o.n) : live(m, B, o.n);
     if (o.look === 'col') { const t = o.side; return `<div class="wdr wdr--col">${team(m, t, B)}${order(m).filter(x => x.team === t && x.is_pick).map(x => pick(m, x, B, true)).join('')}<div class="wdr-bans">${order(m).filter(x => x.team === t && !x.is_pick).map(x => ban(x, B)).join('')}</div></div>`; }
     if (['cs', 'dltv', 'hawk', 'flap'].includes(o.look)) return site(o, m, B);
     if (['lanes', 'phases', 'both', 'fit'].includes(o.look)) return more(o, m, B);
@@ -110,7 +218,7 @@
     const els = [...document.querySelectorAll('[data-wdr-live]')];
     if (!els.length) { clearInterval(S.timer); S.timer = null; return; }
     S.left -= 5;
-    if (S.left <= 0) { S.left = 30; S.step = S.step >= 24 ? 0 : S.step + 1; els.forEach(el => (el.innerHTML = html(el._wdr))); }
+    if (S.left <= 0) { S.left = 30; const was = S.step; S.step = S.step >= 24 ? (window.WDR_ONCE ? 24 : 0) : S.step + 1; /* WDR_ONCE (w-draft-2 v10): драфт один раз, без повтора по кругу; закончился — больше не перерисовываем */ if (S.step !== was) { if (S.step >= 24 && window.WD2_SOFT) { /* w-draft-2 v18+: драфт сначала гаснет (0,5 с), потом появляется итог */ els.forEach(el => el.classList.add('wdr-out')); setTimeout(() => els.forEach(el => { el.innerHTML = html(el._wdr); el.classList.remove('wdr-out'); }), 500); } else els.forEach(el => (el.innerHTML = html(el._wdr))); } }
     else document.querySelectorAll('.wdr-clock').forEach(c => (c.textContent = '0:' + String(S.left).padStart(2, '0')));
   }
 
@@ -122,7 +230,9 @@
   });
 
   window.WDRAFT = {
+    step: () => S.step, order, nick: (m, h) => nick(m, h), hero: id => H(id),
     render(el, o) {
+      if (window.WDR_START && !S.st0) { S.st0 = true; S.step = window.WDR_START; }   // WDR_START (w-draft-2 v11): начать с этого хода — конец драфта и переход; флаг ставится после загрузки скрипта, поэтому читаем при первой отрисовке
       el._wdr = o; el.innerHTML = html(o);
       if (o.state === 'draft') { el.setAttribute('data-wdr-live', ''); if (!S.timer) S.timer = setInterval(tick, 250); } else el.removeAttribute('data-wdr-live');
     },

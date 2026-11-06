@@ -130,20 +130,33 @@
     const NC = o.laneGrey && o.state === 'pre' ? '#71717a' : null;
     if (TVL && edge) g += `<line x1="${L}" x2="${W - R}" y1="${yNow}" y2="${yNow}" stroke="${NC || (vNow >= 0 ? 'var(--up)' : 'var(--dn)')}" stroke-dasharray="2 3" opacity=".7"/>`;
     // события: башни и Рошан — тонкой засечкой у низа графика; драки — ромбами (pm — кружками) в полосе под графиком
-    if (S.ev) {
+    if (S.ev) { S.plotB = plotB; // низ поля графика — подсказки драки не заходят на полосу ромбов
       for (const ob of objs(m, now).filter(ob => ob.time >= a0 && ob.time <= bE)) { const x = X(ob.time), r = ob.type !== 'building_kill';
         g += r ? `<circle cx="${x}" cy="${plotB - 6}" r="3.5" fill="#eab308"/>` : `<rect x="${x - 2.5}" y="${plotB - 9}" width="5" height="7" rx="1" fill="${/goodguys/.test(ob.key) ? 'var(--dn)' : 'var(--up)'}" opacity=".85"/>`; }
       fights(S.ds, now).forEach((f, i) => { const t0 = f.ds[0].t; if (t0 < a0 || t0 > bE) return;
         const x = X(t0), y = plotB + 14, n = f.ds.length, a = f.ds.filter(q => !q.rad).length >= n / 2, c = a ? 'var(--up)' : 'var(--dn)';
         const mark = o.look === 'pm' ? `<circle cx="${x}" cy="${y}" r="${4 + Math.min(n, 5)}" fill="${c}" fill-opacity=".22" stroke="${c}" stroke-width="1.2"/>`
           : `<rect x="${x - 5}" y="${y - 5}" width="10" height="10" rx="2" transform="rotate(45 ${x} ${y})" fill="${c}" fill-opacity=".25" stroke="${c}" stroke-width="1.2"/>`;
+        // w-diamonds v1 (дирижёр 06.11: «лабу по ромбам — как у начальника»; скрины начальника 26.10 и 04.11): o.dmB — ромбы серые, одиночная смерть — маленький без числа, драка — с числом;
+        //   от каждого — пунктир вверх к линии; наведение — ромб цветом стороны, что убила больше, с белой обводкой, на линии — белая точка
+        //   v2 (дирижёр 06.11: «у начальника ромб почти полностью зелёный, чуть-чуть красного»): o.dmB = 2 — наведённый ромб закрашен долями погибших по командам, как полоски в списке: слева Radiant (зелёный), справа Dire
+        if (o.dmB) { const kR = f.ds.filter(q => !q.rad).length, win = kR >= n - kR ? 'var(--up)' : 'var(--dn)', on = S.pop === i, r = n === 1 ? 4.5 : 8, yl = Y(at(m, t0)), R3 = r + 3; S.plotB = plotB;
+          const dia = q => `M${x},${y - q}L${x + q},${y}L${x},${y + q}L${x - q},${y}Z`;
+          g += `<g class="dm dm2 dmB${on ? ' on' : ''}" data-f="${i}"><line class="dm-st" x1="${x}" x2="${x}" y1="${y - r - 1}" y2="${yl + 3}"/>${on ? `<circle cx="${x}" cy="${yl}" r="4" fill="#fff" stroke="#09090b" stroke-width="1.5"/>` : ''}
+            <circle cx="${x}" cy="${y}" r="16" fill="transparent"/>${on ? `<path class="dmB-o" d="${dia(R3)}"/>` : ''}${on && o.dmB === 2 ? `<defs><linearGradient id="dmB${id}_${i}" gradientUnits="userSpaceOnUse" x1="${x - r}" y1="0" x2="${x + r}" y2="0"><stop offset="${((n - kR) / n).toFixed(3)}" stop-color="var(--up)"/><stop offset="${((n - kR) / n).toFixed(3)}" stop-color="var(--dn)"/></linearGradient></defs>` : ''}<path class="dmB-d${n === 1 ? ' dmB-d--1' : ''}" d="${dia(r)}" style="--dmc:${on ? (o.dmB === 2 ? `url(#dmB${id}_${i})` : win) : '#8a8a93'}"/>
+            ${n > 1 ? `<text class="dm-n2 dmB-n" x="${x}" y="${y + 3.4}" text-anchor="middle">${n}</text>` : ''}</g>`; return; }
         if (o.v23) { // v23 (созвон 02.11 §1.5.5, 1.5.8): ромб долями по фрагам — доля цвета = доля убийств стороны; число всего — внутри; одиночная смерть — маленький ромб без числа; от ромба пунктир вверх к линии и точка на ней
           const kR = f.ds.filter(q => !q.rad).length, sh = kR / n, r = n === 1 ? 4.5 : 7 + Math.min(n, 6) * 0.9, gid = `fr${id}_${i}`, yl = Y(at(m, t0));
           if (o.ring && n > 1) { // v25: по краям — рамка из долей (как кольцевая диаграмма, только ромбом), внутри — число на чёрном ромбе
             const R2 = r + 2, P = 4 * Math.SQRT2 * R2, gl = sh * P, dia = `M${x},${y - R2}L${x + R2},${y}L${x},${y + R2}L${x - R2},${y}Z`, ri = R2 - 3.2;
-            g += `<g class="dm dm2${S.pop === i ? ' on' : ''}" data-f="${i}"><line class="dm-st" x1="${x}" x2="${x}" y1="${y - R2 - 2}" y2="${yl + 3}"/><circle class="dm-pt" cx="${x}" cy="${yl}" r="2.6" fill="${o.pmHov && sc != null && t0 > sc ? '#3f3f46' : at(m, t0) >= 0 ? 'var(--up)' : 'var(--dn)'}"/>
+            // w-diamonds v4 (дирижёр 06.11: «такие же доли убийств, как у начальника, только в наших ромбах; по кругу не надо»): o.dmFill — наш ромб (размер, число), серый; наведение — заливка долями убийств: слева Radiant, справа Dire
+            if (o.dmFill) { const on = S.pop === i, gid2 = `dmF${id}_${i}`;
+              g += `<g class="dm dm2 dmF${on ? ' on' : ''}" data-f="${i}"><line class="dm-st" x1="${x}" x2="${x}" y1="${y - R2 - 2}" y2="${yl + 3}"/><circle class="dm-pt" cx="${x}" cy="${yl}" r="2.6" fill="${o.pmHov && sc != null && t0 > sc ? '#3f3f46' : at(m, t0) >= 0 ? 'var(--up)' : 'var(--dn)'}"/>
+                <circle cx="${x}" cy="${y}" r="16" fill="transparent"/>${on ? `<defs><linearGradient id="${gid2}" gradientUnits="userSpaceOnUse" x1="${x - R2}" y1="0" x2="${x + R2}" y2="0"><stop offset="${sh.toFixed(3)}" stop-color="var(--up)"/><stop offset="${sh.toFixed(3)}" stop-color="var(--dn)"/></linearGradient></defs>` : ''}<path class="dmF-d" d="${dia}" style="--dmc:${on ? `url(#${gid2})` : '#3f3f46'}"/><text class="dm-n2" x="${x}" y="${y + 3.4}" text-anchor="middle">${n}</text></g>`; return; }
+            // w-diamonds v3 (дирижёр 06.11: «наши ромбы аккуратнее — сделай, чтобы и в нашей штуке было долями убийств»): o.dmShare — рамка долями видна (старое правило страницы красило всё в серый)
+            g += `<g class="dm dm2${o.dmShare ? ' dmS' : ''}${S.pop === i ? ' on' : ''}" data-f="${i}"><line class="dm-st" x1="${x}" x2="${x}" y1="${y - R2 - 2}" y2="${yl + 3}"/><circle class="dm-pt" cx="${x}" cy="${yl}" r="2.6" fill="${o.pmHov && sc != null && t0 > sc ? '#3f3f46' : at(m, t0) >= 0 ? 'var(--up)' : 'var(--dn)'}"/>
               <circle cx="${x}" cy="${y}" r="16" fill="transparent"/><path d="${dia}" fill="#09090b"/>
-              ${sh > 0 ? `<path d="${dia}" fill="none" stroke="var(--up)" stroke-width="3.2" stroke-linejoin="miter" stroke-dasharray="${gl.toFixed(2)} ${P.toFixed(2)}"/>` : ''}${sh < 1 ? `<path d="${dia}" fill="none" stroke="var(--dn)" stroke-width="3.2" stroke-linejoin="miter" stroke-dasharray="0 ${gl.toFixed(2)} ${(P - gl).toFixed(2)} ${P.toFixed(2)}"/>` : ''}
+              ${sh > 0 ? `<path class="dmS-a" d="${dia}" fill="none" stroke="var(--up)" stroke-width="3.2" stroke-linejoin="miter" stroke-dasharray="${gl.toFixed(2)} ${P.toFixed(2)}"/>` : ''}${sh < 1 ? `<path class="dmS-b" d="${dia}" fill="none" stroke="var(--dn)" stroke-width="3.2" stroke-linejoin="miter" stroke-dasharray="0 ${gl.toFixed(2)} ${(P - gl).toFixed(2)} ${P.toFixed(2)}"/>` : ''}
               <path d="M${x},${y - ri}L${x + ri},${y}L${x},${y + ri}L${x - ri},${y}Z" fill="#09090b"/><text class="dm-n2" x="${x}" y="${y + 3.4}" text-anchor="middle">${n}</text></g>`; return; }
           g += `<g class="dm dm2${S.pop === i ? ' on' : ''}" data-f="${i}"><line class="dm-st" x1="${x}" x2="${x}" y1="${y - r - 1}" y2="${yl + 3}"/><circle class="dm-pt" cx="${x}" cy="${yl}" r="2.6" fill="${o.pmHov && sc != null && t0 > sc ? '#3f3f46' : at(m, t0) >= 0 ? 'var(--up)' : 'var(--dn)'}"/>
             <defs><linearGradient id="${gid}" gradientUnits="userSpaceOnUse" x1="${x - r}" y1="0" x2="${x + r}" y2="0"><stop offset="${sh}" stop-color="var(--up)"/><stop offset="${sh}" stop-color="var(--dn)"/></linearGradient></defs>
@@ -186,9 +199,9 @@
     else if (o.look !== 'tv') ov += `<div class="g2-tm" style="top:${top + 2}px"><img src="${IMG + A.logo}" alt="">${A.tag}</div><div class="g2-tm" style="top:${plotB - 22}px"><img src="${IMG + B.logo}" alt="">${B.tag}</div>`;
     // «к текущему» — только когда приближено: не у края — к краю, у края — вся карта
     const zOff = o.laneGrey && o.state === 'pre'; // w-lane v17 (дирижёр 04.11: «кнопки просто disabled»): до матча приближать нечего
-    const zcHtml = () => { const span = bE - a0; return `<button data-zc="in" title="Приблизить"${span <= MIN + 1 || zOff ? ' disabled' : ''}>+</button><button data-zc="out" title="Отдалить"${!wn ? ' disabled' : ''}>−</button><button data-zc="reset" title="Вернуть как было"${!wn ? ' disabled' : ''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5"/></svg></button>` };
+    const zcHtml = () => { const span = bE - a0; return `<button data-zc="in" title="Приблизить"${span <= MIN + 1 || zOff ? ' disabled' : ''}>+</button><button data-zc="out" title="Отдалить"${!wn ? ' disabled' : ''}>−</button><button data-zc="reset" title="Вернуть как было"${!wn ? ' disabled' : ''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5"/></svg></button>${window.WG2_STICK && (!document.body.classList.contains('is-desk') || matchMedia('(hover: none)').matches) ? `<button data-zc="live" class="g2-zl${S.sc != null ? ' is-on' : ''}" title="${live ? 'Вернуться в лайв' : 'К концу карты'}"${S.sc == null ? ' disabled' : ''}><i></i></button>` : ''}` };
     if (o.ctl && o.ztop) { const ic = el.querySelector('.g2-ic'); let zt = ic && ic.querySelector('.g2-zt'); if (ic && !zt) { zt = document.createElement('span'); zt.className = 'g2-zt'; ic.prepend(zt) } if (zt) zt.innerHTML = zcHtml() }
-    else if (o.ctl) { const span = bE - a0; ov += `<div class="g2-zc" style="top:${plotB - 104 - (S.ev ? 0 : 0)}px;right:${R + 6}px"><button data-zc="in" title="Приблизить"${span <= MIN + 1 || zOff ? ' disabled' : ''}>+</button><button data-zc="out" title="Отдалить"${!wn ? ' disabled' : ''}>−</button><button data-zc="reset" title="Вернуть как было"${!wn ? ' disabled' : ''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5"/></svg></button></div>`; }
+    else if (o.ctl) { const span = bE - a0; ov += `<div class="g2-zc" style="top:${plotB - 104 - (S.ev ? 0 : 0)}px;right:${R + 6}px"><button data-zc="in" title="Приблизить"${span <= MIN + 1 || zOff ? ' disabled' : ''}>+</button><button data-zc="out" title="Отдалить"${!wn ? ' disabled' : ''}>−</button><button data-zc="reset" title="Вернуть как было"${!wn ? ' disabled' : ''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5"/></svg></button>${window.WG2_STICK && (!document.body.classList.contains('is-desk') || matchMedia('(hover: none)').matches) ? `<button data-zc="live" class="g2-zl${S.sc != null ? ' is-on' : ''}" title="${live ? 'Вернуться в лайв' : 'К концу карты'}"${S.sc == null ? ' disabled' : ''}><i></i></button>` : ''}</div>`; }
     else if (wn) ov += `<button class="g2-fab" data-z="${edge ? 'all' : 'now'}" style="top:${plotB - 40}px;right:${R + 6}px" title="${edge ? 'Вся карта' : live ? 'К текущему' : 'К концу'}">${edge ? ICON.all : ICON.now}</button>`;
     // Claude-A 03.11 (дирижёр: «лого под графиком мигают, наведение на них не работает»): в live поле рисуется 30 раз в секунду —
     // раньше каждый кадр пересоздавались и подписи команд с лого. Теперь линия (svg) — заменяется, а надписи поверх — сверяются по узлам: картинки не пересоздаются
@@ -200,6 +213,7 @@
     head(el, S, sc, now, A, B);
     S.geo = { L, R, W, a: a0, b: bX, now };
     el.querySelectorAll('[data-zc]').forEach(b => { b.onpointerdown = e => e.stopPropagation(); b.onclick = e => { e.stopPropagation(); const z = b.dataset.zc, span = bE - a0, nowT = now;
+      if (z === 'live') { S.sc = null; return draw(el); }   // WG2_STICK (дирижёр 06.11): на телефоне — назад в лайв
       let A1, B1; if (z === 'reset') { A1 = 0; B1 = nowT } else { const ns = Math.min(nowT, z === 'in' ? Math.max(MIN, span / 1.6) : span * 1.6), c = edge ? nowT : (a0 + bE) / 2; B1 = edge ? nowT : Math.min(nowT, c + ns / 2); A1 = Math.max(0, B1 - ns); B1 = A1 + ns }
       const fin = (a, b) => { const sp = b - a; S.o.win = sp >= S.geo.now - 1 ? null : { span: sp, end: b >= S.geo.now - 2 ? null : b } };
       if (!o.smoothZ) { fin(A1, B1); return draw(el); }
@@ -243,6 +257,12 @@
 
   function pop(S, X, W, now, IMG, Yf) {
     const f = fights(S.ds, now)[S.pop]; if (!f) return '';
+    // w-diamonds v1 (o.tip2 = 'boss', как у начальника): у точки на линии — «4 смерти», над ромбом — «4 смерти · 7:36», под ромбом — список: время, герой, ник, слева полоска цветом стороны погибшего
+    if (S.o.tip2 === 'boss') { const m = S.o.m, t0 = f.ds[0].t, n = f.ds.length, x0 = X(t0), yl = Yf(at(m, t0)), pb = S.plotB || 0, w = 236;
+      const word = n % 10 === 1 && n % 100 !== 11 ? 'смерть' : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'смерти' : 'смертей';
+      const nm = d => (d.v && D.players[d.v.account_id]?.name) || d.h.name;
+      return `<div class="g2-bk g2-bk--pt num" style="left:${x0}px;top:${yl - 30}px">${n} ${word}</div><div class="g2-bk g2-bk--dm num" style="left:${x0}px;top:${pb - 22}px">${n} ${word} · ${mmss(t0)}</div>
+        <div class="g2-pop g2-bl" style="left:${clamp(x0 - w / 2, 0, W - w)}px;top:${pb + 30}px;width:${w}px"><div class="g2-bl__hd">${n} ${word}</div>${f.ds.map(d => `<div class="g2-bl__r" style="--bc:${d.rad ? 'var(--up)' : 'var(--dn)'}"><small class="num">${mmss(d.t)}</small><img src="${IMG + d.h.img}" alt=""><span>${nm(d)}</span></div>`).join('')}</div>`; }
     if (S.o.tip2) { // v28: подсказка в стиле наших виджетов — карточка как .w: шапка (событие и время), счёт драки строкой с лого, золото — тегом; ниже плотный список «убийца → погибший» через тонкие линии
       const m = S.o.m, t0 = f.ds[0].t, t1 = f.last, n = f.ds.length, kA = f.ds.filter(q => !q.rad).length, kB = n - kA, A = team(m.radiant_team_id), B = team(m.dire_team_id);
       const sw = at(m, Math.min(now, t1 + 30)) - at(m, Math.max(0, t0 - 30)), x = clamp(X(t0) - 136, 0, W - 272), y = Yf(at(m, t0));
@@ -259,7 +279,9 @@
           const g = new Map(); L.forEach(d => { const k = d.h.img; g.set(k, g.has(k) ? [g.get(k)[0], g.get(k)[1] + 1] : [d, 1]); });
           return [...g.values()].map(([d, c]) => [d, `<span class="g2-dth">${sk}${c > 1 ? `<em class="num">×${c}</em>` : ''}</span>`]); };
         const col = (T, rad, kills, cls) => `<div class="c"><div class="ch"><img src="${IMG + T.logo}" alt=""><span>${T.tag}</span><b class="num ${cls}">${kills}</b></div>${rows(rad).map(([d, r]) => `<div class="cr"><img src="${IMG + d.h.img}" alt=""><span>${nm(d)}</span>${r}</div>`).join('') || `<div class="cr none">${S.o.tip2 === 'cols' || S.o.tip2 === 'cols2' ? 'без потерь' : '—'}</div>`}</div>`;
-        return `<div class="g2-pop g2-tip g2-tip--cols" style="left:${x}px;top:${y + 14}px"><div class="g2-tip__hd"><b>${n === 1 ? 'Смерть' : 'Драка'}</b><span class="num">${when}</span>${gTag}</div>
+        // фикс 06.11 (дирижёр: «подсказка не должна перекрывать ромбы — либо сверху, либо снизу; сейчас не понять, на какой ромб нажал»): не помещается между точкой и полосой ромбов — встаёт над точкой
+        const nr = Math.max(1, rows(true).length, rows(false).length), est = 44 + 34 + nr * 31 + (S.o.tip2 === 'cols' ? 28 : 0) + 10, up = S.plotB && y + 14 + est > S.plotB - 4
+        return `<div class="g2-pop g2-tip g2-tip--cols${up ? ' g2-tip--up' : ''}" style="left:${x}px;top:${up ? y - 14 : y + 14}px"><div class="g2-tip__hd"><b>${n === 1 ? 'Смерть' : 'Драка'}</b><span class="num">${when}</span>${gTag}</div>
           <div class="g2-tip__cols">${col(A, true, kA, 'up')}${col(B, false, kB, 'dn')}</div>${S.o.tip2 === 'cols' ? '<div class="g2-tip__ft">Погибшие · убийств у команды — справа от имени</div>' : ''}</div>`; }
       // v31 feed — лента: точка цветом стороны, «убийца убил погибшего» текстом, сверху мини-график золота за драку
       if (S.o.tip2 === 'feed') { const a = Math.max(0, t0 - 45), b = Math.min(now, t1 + 45), N = 24, vs = [...Array(N + 1)].map((_, i) => at(m, a + (b - a) * i / N)), mx = Math.max(500, ...vs.map(Math.abs));
@@ -298,28 +320,30 @@
     const sc = x => { if (S().o.laneStill && S().o.state === 'pre') { if (S().sc != null) { S().sc = null; draw(el); } return; } const t = snap(x); S().sc = x == null ? null : t ?? tOf(x); draw(el); };
     const dbl = x => { if (S().o.win) { S().o.win = null; return draw(el); } const span = Math.max(MIN, G().now / 3); setWin(tOf(x) - frac(x) * span, span); };
     let pan = null;
+    // WG2_STICK (дирижёр 06.11: «на телефоне — нажал: показалось, провёл: показалось, вернуться — кнопкой»): в виде телефона мышь ведёт себя как палец — без нажатия момент не меняется
+    const PH = () => !!window.WG2_STICK && !document.body.classList.contains('is-desk'), MS = e => e.pointerType === 'mouse' && !PH();
     box.addEventListener('pointerdown', e => {
       if (e.target.closest('.dm, .g2-pop, .g2-fab, .g2-zc, .g2-lanes, .g2-lchip, .g2-l12') || (e.pointerType === 'mouse' && e.button)) return;
       // v23: мышью — тащить, когда приближено (как карту); наведение — минута под курсором
-      if (S().o.ctl && e.pointerType === 'mouse') { if (S().o.win) { pan = { x: xIn(e), a: G().a, span: G().b - G().a }; box.setPointerCapture(e.pointerId); box.classList.add('is-pan'); } return; }
+      if (S().o.ctl && MS(e)) { if (S().o.win) { pan = { x: xIn(e), a: G().a, span: G().b - G().a }; box.setPointerCapture(e.pointerId); box.classList.add('is-pan'); } return; }
       P.set(e.pointerId, xIn(e)); kind = e.pointerType; box.setPointerCapture(e.pointerId); const xs = [...P.values()];
       if (P.size === 2) { one = null; S().sc = null; moved = true; const cx = (xs[0] + xs[1]) / 2; two = { d: Math.abs(xs[0] - xs[1]) || 1, span: G().b - G().a, t: tOf(cx) }; }
       else if (P.size === 1) { one = xs[0]; moved = false; sc(xs[0]); }
     });
     box.addEventListener('pointermove', e => {
-      if (S().o.ctl && e.pointerType === 'mouse') { if (pan) { const dx = xIn(e) - pan.x; setWin(pan.a - dx / (G().W - G().L - G().R) * pan.span, pan.span); } else if (!e.target.closest('.g2-zc, .dm, .g2-pop, .g2-lanes, .g2-lchip, .g2-l12')) sc(xIn(e)); else if (S().sc != null) sc(null); return; }
+      if (S().o.ctl && MS(e)) { if (pan) { const dx = xIn(e) - pan.x; setWin(pan.a - dx / (G().W - G().L - G().R) * pan.span, pan.span); } else if (!e.target.closest('.g2-zc, .dm, .g2-pop, .g2-lanes, .g2-lchip, .g2-l12')) sc(xIn(e)); else if (S().sc != null) sc(null); return; }
       if (!P.has(e.pointerId)) return; P.set(e.pointerId, xIn(e)); const xs = [...P.values()];
       if (two && P.size === 2) { const cx = (xs[0] + xs[1]) / 2, span = two.span * two.d / (Math.abs(xs[0] - xs[1]) || 1); setWin(two.t - frac(cx) * span, span); }
       else if (one != null && P.size === 1) { if (Math.abs(xs[0] - one) > 6) moved = true; sc(xs[0]); }
     });
     const up = e => { if (!P.has(e.pointerId)) return; const x = P.get(e.pointerId); P.delete(e.pointerId);
       if (P.size < 2) two = null;
-      if (P.size === 0) { one = null; sc(null);
+      if (P.size === 0) { one = null; if (!((PH() || window.WG2_STICK && e.pointerType !== 'mouse') && e.type === 'pointerup' && S().sc != null)) sc(null);
         if (!moved && e.type === 'pointerup' && e.pointerType !== 'mouse') { const n = Date.now();
           if (n - tap.t < 300 && Math.abs(x - tap.x) < 30) { dbl(x); tap.t = 0; } else tap = { t: n, x }; } } };
     const endPan = () => { if (pan) { pan = null; box.classList.remove('is-pan'); } };
     box.addEventListener('pointerup', e => { endPan(); up(e); }); box.addEventListener('pointercancel', e => { endPan(); up(e); });
-    box.addEventListener('pointerleave', e => { if (S().o.ctl && e.pointerType === 'mouse' && !pan && S().sc != null) sc(null); }); // палец пошёл вверх-вниз — прокрутка страницы
+    box.addEventListener('pointerleave', e => { if (S().o.ctl && MS(e) && !pan && S().sc != null) sc(null); }); // палец пошёл вверх-вниз — прокрутка страницы
     box.addEventListener('dblclick', e => { if (kind === 'mouse') dbl(xIn(e)); });
     box.addEventListener('wheel', e => { const span = G().b - G().a, x = xIn(e);
       if (e.ctrlKey) { e.preventDefault(); const s = span * Math.exp(e.deltaY * 0.01); setWin(tOf(x) - frac(x) * s, s); }

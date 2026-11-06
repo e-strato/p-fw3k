@@ -131,7 +131,7 @@
         <td class="c num">${x.wl.replace('-', '–')}</td><td class="c num">${x.maps.replace('-', '–')}</td><td>${fin(x)}</td></tr>`).join('')}</table></div>`) }
   const groups = () => {
     if (DBM && !EP7) return swiss();
-    if (EP7) return card('Групповой этап', GS_SUB + ' · серии: победы–ничьи–поражения', `<div class="grps">${G.map(g => `<div class="grp"><div class="lbl">${g.name}</div><div class="scroll">${concept(g, 'heat')}</div></div>`).join('')}</div>`.replace(/<tr class="in ?/g, '<tr class="in ').replace(/(<tr class=")(in|out)( [^"]*"><td>)([3-5])</g, '$1out$3$4<')) + playoff();
+    if (EP7) return card('Групповой этап', GS_SUB + ' · серии: победы–ничьи–поражения', `<div class="grps">${G.map(g => `<div class="grp"><div class="lbl">${g.name}</div><div class="scroll">${concept(g, 'heat')}</div></div>`).join('')}</div>`.replace(/<tr class="in ?/g, '<tr class="in ').replace(/(<tr class=")(in|out)( [^"]*"><td>)([3-5])</g, '$1out$3$4<')) + (window.TN_NOPO ? '' : playoff());   /* TN_NOPO (дирижёр 06.11): «Плей-офф и итог» у Universe не показываем */
     const k = window.TN_GS;
     if (k === 'seg') { const g = G.find(x => x.name.endsWith(CFG.g)) || G[0];
       return card('Групповая стадия', GS_SUB, `${seg('g', [['A', 'Группа A'], ['B', 'Группа B']], CFG.g)}<div class="grp-row">${standings(g)}<div class="scroll">${cross(g)}</div></div>`); }

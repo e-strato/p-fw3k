@@ -1,0 +1,237 @@
+/* w-draft-2 — ход драфта поверх места графика (состояние «Драфт») */
+html.wd2 .wl-pre .d3 { position: relative; }
+html.wd2 .wl-pre [data-wd="gold"] > * { visibility: hidden; }
+.wd2-box { position: absolute; left: 0; right: 0; z-index: 3; display: flex; flex-direction: column; overflow: auto; }
+.wd2-box > .wdr { flex: 1; display: flex; flex-direction: column; margin: 0; border: 0; background: none; }
+.wd2-box .wdr-note { margin-top: auto; }
+
+/* dota — как в самой Доте: стороны по краям, таймер по центру, ходящая сторона светлее */
+.wdt { display: grid; grid-template-columns: 1fr auto 1fr; gap: 24px; align-items: start; padding: 8px 0 16px; }
+.wdt-side { display: flex; flex-direction: column; gap: 10px; transition: opacity .2s; }
+.wdt-side:not(.is-on) { opacity: .55; }
+.wdt-side.b { align-items: flex-end; }
+.wdt-tm { display: flex; align-items: center; gap: 10px; } .wdt-side.b .wdt-tm { flex-direction: row-reverse; text-align: right; }
+.wdt-tm img { width: 32px; height: 32px; object-fit: contain; } .wdt-tm span { display: flex; flex-direction: column; }
+.wdt-tm b { font: 600 15px/18px var(--w-font, system-ui); } .wdt-tm small { font: 600 11px/14px var(--w-font, system-ui); }
+.rad { color: #3dd68c; } .dire { color: #ff6369; }
+.wdt-pk { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; width: 100%; }
+.wdt-side.b .wdt-pk { direction: rtl; }
+.wdt-pk .wdt-s { width: 100%; aspect-ratio: 16 / 9; }
+.wdt-bn { display: flex; gap: 4px; } .wdt-side.b .wdt-bn { flex-direction: row-reverse; }
+.wdt-bn .wdt-s { width: 36px; height: 20px; }
+.wdt-s { display: grid; place-items: center; border-radius: 4px; object-fit: cover; background: #141417; box-shadow: inset 0 0 0 1px #ffffff10; font: 500 10px/1 var(--w-font, system-ui); color: #a78bfa; }
+img.wdt-s.is-ban { filter: grayscale(1) brightness(.5); }
+.wdt-s.is-now { box-shadow: inset 0 0 0 1px #8b5cf6; background: #1c1b26; animation: wdt-p 1.2s ease-in-out infinite; }
+@keyframes wdt-p { 50% { background: #2a2540; } }
+.wdt-mid { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 120px; padding-top: 4px; text-align: center; }
+.wdt-mid small { font: 500 12px/16px var(--w-font, system-ui); color: var(--w-muted-fg, #a1a1aa); }
+.wdt-mid b { font: 700 36px/1 'JetBrains Mono', ui-monospace, monospace; }
+.wdt-mid span { font: 600 13px/16px var(--w-font, system-ui); }
+.wdt-ord { display: grid; grid-template-columns: repeat(24, 1fr); gap: 3px; padding: 12px 0 0; border-top: 1px solid var(--w-border, #ffffff10); }
+.wdt-o { height: 22px; border-radius: 3px; background: #141417; overflow: hidden; border-top: 2px solid; }
+.wdt-o.a { border-top-color: #30a46c; } .wdt-o.b { border-top-color: #e5484d; }
+.wdt-o.is-ban img { filter: grayscale(1) brightness(.5); }
+.wdt-o img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.wdt-o.is-now { background: #2a2540; box-shadow: inset 0 0 0 1px #8b5cf6; }
+
+/* phase — по фазам, крупно — чей ход */
+.wdp-now { display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 12px; padding: 14px 16px; margin: 4px 0 16px; border-radius: 12px; background: #ffffff0a; }
+.wdp-now.rad { background: #30a46c1f; } .wdp-now.dire { background: #e5484d1f; }
+.wdp-now img { width: 40px; height: 40px; object-fit: contain; } .wdp-now span { display: flex; flex-direction: column; }
+.wdp-now small { font: 500 12px/16px var(--w-font, system-ui); color: var(--w-muted-fg, #a1a1aa); } .wdp-now b { font: 600 18px/24px var(--w-font, system-ui); }
+.wdp-now em { font: 700 28px/1 'JetBrains Mono', ui-monospace, monospace; font-style: normal; }
+.wdp { display: flex; flex-wrap: wrap; gap: 12px 16px; }
+.wdp-ph { display: flex; flex-direction: column; gap: 6px; padding: 8px; border-radius: 10px; }
+.wdp-ph > small { font: 600 11px/14px var(--w-font, system-ui); color: var(--w-muted-fg, #a1a1aa); }
+.wdp-ph > div { display: flex; gap: 4px; }
+.wdp-ph.is-now { background: #1c1b26; box-shadow: inset 0 0 0 1px #8b5cf6; } .wdp-ph.is-now > small { color: #a78bfa; }
+.wdp-ph.is-wait { opacity: .4; }
+.wdp-ph .wdr-o i { display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 3px; background: #141417; }
+.wdp-ph .wdr-o.is-now i { background: #2a2540; animation: wdt-p 1.2s ease-in-out infinite; }
+.wdp-ph .wdr-o i { width: 44px; height: 25px; } .wdp-ph .wdr-o.is-ban i { width: 30px; height: 17px; margin-top: 8px; }
+
+/* v5–v7 — крупно, на весь центр */
+.wd2-box > .wdr--d2, .wd2-box > .wdr--sl, .wd2-box > .wdr--p2 { justify-content: space-evenly; gap: 20px; padding: 8px 4px 12px; }
+.wl-slot.wd2-in .d3-n { color: var(--w-fg, #fafafa); }
+.d2-top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; }
+.d2-tm { display: flex; align-items: center; gap: 12px; opacity: .55; transition: opacity .2s; } .d2-tm.is-on { opacity: 1; }
+.d2-tm.b { flex-direction: row-reverse; text-align: right; }
+.d2-tm img { width: 44px; height: 44px; object-fit: contain; } .d2-tm span { display: flex; flex-direction: column; }
+.d2-tm b { font: 600 20px/24px var(--w-font, system-ui); } .d2-tm small { font: 600 12px/16px var(--w-font, system-ui); }
+.d2-now { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 160px; }
+.d2-now small { font: 500 12px/16px var(--w-font, system-ui); color: var(--w-muted-fg, #a1a1aa); }
+.d2-now > b { font: 700 48px/1 'JetBrains Mono', ui-monospace, monospace; }
+.d2-who { padding: 3px 10px; border-radius: 999px; font: 600 13px/18px var(--w-font, system-ui); background: #ffffff0f; }
+.d2-who.rad { color: #3dd68c; background: #30a46c1f; } .d2-who.dire { color: #ff6369; background: #e5484d1f; }
+.d2-mid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.d2-side { display: flex; flex-direction: column; gap: 12px; transition: opacity .2s; } .d2-side.is-off { opacity: .6; }
+.d2-pk { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.d2-side.b .d2-pk { direction: rtl; } .d2-side.b .d2-pk > * { direction: ltr; }
+.d2-c { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.d2-c img, .d2-c i { display: block; width: 100%; aspect-ratio: 3 / 4; border-radius: 8px; object-fit: cover; background: #141417; box-shadow: inset 0 0 0 1px #ffffff12; }
+.d2-c b { font: 600 13px/16px var(--w-font, system-ui); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-height: 16px; }
+.d2-c small { font: 500 12px/14px var(--w-font, system-ui); color: var(--w-muted-fg, #a1a1aa); min-height: 14px; }
+.d2-c.is-now i { background: #1c1b26; box-shadow: inset 0 0 0 2px #8b5cf6, 0 0 24px #8b5cf640; animation: wdt-p 1.2s ease-in-out infinite; } .d2-c.is-now b { color: #a78bfa; font-weight: 500; }
+.d2-bn { display: flex; align-items: center; gap: 6px; } .d2-side.b .d2-bn { flex-direction: row-reverse; }
+.d2-bn small { font: 500 12px/1 var(--w-font, system-ui); color: var(--w-muted-fg, #71717a); margin: 0 4px; }
+.d2-b { display: block; width: 48px; height: 27px; border-radius: 4px; object-fit: cover; background: #141417; box-shadow: inset 0 0 0 1px #ffffff12; }
+img.d2-b { filter: grayscale(1) brightness(.55); } .d2-b.is-now { box-shadow: inset 0 0 0 2px #8b5cf6; background: #1c1b26; animation: wdt-p 1.2s ease-in-out infinite; }
+.d2-ord { display: flex; gap: 10px; padding-top: 14px; border-top: 1px solid var(--w-border, #ffffff10); }
+.d2-og { display: flex; flex-direction: column; gap: 6px; min-width: 0; } .d2-og > small { font: 500 11px/1 var(--w-font, system-ui); color: var(--w-muted-fg, #71717a); }
+.d2-og > div { display: flex; gap: 3px; }
+.d2-o { flex: 1; height: 26px; border-radius: 3px; background: #141417; overflow: hidden; border-top: 2px solid; }
+.d2-o.a { border-top-color: #30a46c; } .d2-o.b { border-top-color: #e5484d; }
+.d2-o img { width: 100%; height: 100%; object-fit: cover; display: block; } .d2-og.is-ban .d2-o img { filter: grayscale(1) brightness(.55); }
+.d2-o.is-now { background: #2a2540; box-shadow: inset 0 0 0 1px #8b5cf6; }
+/* slots */
+.sl-bn { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.sl-bs { display: flex; flex-direction: column; gap: 10px; } .sl-bs.b { align-items: flex-end; }
+.sl-bs small { font: 500 12px/1 var(--w-font, system-ui); color: var(--w-muted-fg, #71717a); }
+.sl-bs > div { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; width: 100%; }
+.d3b { display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 6px; object-fit: cover; background: #141417; box-shadow: inset 0 0 0 1px #ffffff12; }
+img.d3b { filter: grayscale(1) brightness(.55); } .d3b.is-now { box-shadow: inset 0 0 0 2px #8b5cf6; background: #1c1b26; animation: wdt-p 1.2s ease-in-out infinite; }
+.sl-note { margin: 0; text-align: center; font: 500 13px/16px var(--w-font, system-ui); color: var(--w-muted-fg, #a1a1aa); }
+/* phase2 */
+.p2 { display: grid; grid-template-columns: repeat(4, auto); justify-content: center; gap: 14px 18px; }
+.p2-ph { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 12px; background: #ffffff05; box-shadow: inset 0 0 0 1px #ffffff0d; }
+.p2-ph > small { font: 600 12px/14px var(--w-font, system-ui); color: var(--w-muted-fg, #a1a1aa); }
+.p2-ph > div { display: flex; gap: 6px; }
+.p2-ph.is-now { background: #1c1b26; box-shadow: inset 0 0 0 1px #8b5cf6; } .p2-ph.is-now > small { color: #a78bfa; } .p2-ph.is-wait { opacity: .45; }
+.p2-o { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 4px; border-top: 2px solid; }
+.p2-o.a { border-color: #30a46c; } .p2-o.b { border-color: #e5484d; }
+.p2-o img, .p2-o i { display: block; width: 64px; height: 36px; border-radius: 4px; object-fit: cover; background: #141417; }
+.p2-ph.is-ban .p2-o img, .p2-ph.is-ban .p2-o i { width: 48px; height: 27px; } .p2-ph.is-ban .p2-o img { filter: grayscale(1) brightness(.55); }
+.p2-o.is-now i { background: #2a2540; box-shadow: inset 0 0 0 1px #8b5cf6; animation: wdt-p 1.2s ease-in-out infinite; }
+.p2-o em { font: 500 10px/1 var(--w-font, system-ui); font-style: normal; color: var(--w-muted-fg, #71717a); }
+.p2 { display: flex; flex-wrap: wrap; justify-content: center; }
+
+/* v8 dota3 — как в Доте, без подписей, в нашем визуале; внизу шанс по ходам */
+.wd2-box > .wdr--d3 { justify-content: space-evenly; gap: 24px; padding: 8px 4px 12px; }
+.d3-t { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.d3-t b { font: 600 40px/1 'JetBrains Mono', ui-monospace, monospace; letter-spacing: -.02em; }
+.d3-t small { font: 500 13px/16px var(--w-font, system-ui); color: var(--w-muted-fg, #a1a1aa); }
+.d3-m { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+.d3s { display: flex; flex-direction: column; gap: 12px; transition: opacity .2s; } .d3s.is-off { opacity: .5; }
+.d3s-h { display: flex; align-items: center; gap: 8px; } .d3s.b .d3s-h { flex-direction: row-reverse; }
+.d3s-h img { width: 28px; height: 28px; object-fit: contain; }
+.d3s-h i { width: 6px; height: 6px; border-radius: 50%; } .d3s-h i.rad { background: #30a46c; } .d3s-h i.dire { background: #e5484d; }
+.d3s.is-on .d3s-h i { box-shadow: 0 0 0 3px #ffffff14; animation: wdt-p 1.2s ease-in-out infinite; }
+.d3s-p { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; } .d3s.b .d3s-p { direction: rtl; }
+.d3c { display: block; width: 100%; aspect-ratio: 3 / 4; border-radius: 10px; object-fit: cover; background: var(--w-card, #0f0f11); box-shadow: inset 0 0 0 1px var(--w-border, #ffffff14); }
+.d3c.is-now { box-shadow: inset 0 0 0 1px #8b5cf6, 0 0 0 4px #8b5cf61f; animation: wdt-p 1.2s ease-in-out infinite; }
+.d3s-b { display: flex; gap: 6px; } .d3s.b .d3s-b { flex-direction: row-reverse; }
+.d3n { display: block; width: 40px; height: 23px; border-radius: 4px; object-fit: cover; background: var(--w-card, #0f0f11); box-shadow: inset 0 0 0 1px var(--w-border, #ffffff14); }
+img.d3n { filter: grayscale(1) brightness(.5); } .d3n.is-now { box-shadow: inset 0 0 0 1px #8b5cf6; animation: wdt-p 1.2s ease-in-out infinite; }
+.d3g { position: relative; height: 96px; margin: 0 40px 0 0; }
+.d3g svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.d3g-m { stroke: var(--w-border, #ffffff1f); stroke-dasharray: 3 4; } .d3g line:not(.d3g-m) { stroke: #ffffff26; }
+.d3g path.rad { fill: #30a46c26; } .d3g path.dire { fill: #e5484d26; }
+.d3g polyline { fill: none; stroke: #fafafa; stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.d3g-v { position: absolute; transform: translate(8px, -50%); display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 4px; background: #27272a; box-shadow: 0 0 0 1px #ffffff1f; font: 500 12px/16px 'JetBrains Mono', ui-monospace, monospace; white-space: nowrap; transition: left .3s, top .3s; }
+.d3g-v img { width: 14px; height: 14px; object-fit: contain; }
+
+/* v9 center — по центру таймер, баны и крупно шанс по ходам; драфт — в нижней панели */
+.wd2-box > .wdr--c9 { gap: 16px; padding: 8px 4px 52px; }
+.c9-top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; }
+.c9-b { display: flex; gap: 6px; } .c9-b.b { justify-content: flex-end; flex-direction: row-reverse; }
+.c9-t { display: flex; align-items: center; gap: 10px; } .c9-t img { width: 28px; height: 28px; object-fit: contain; }
+.c9-t b { font: 600 36px/1 'JetBrains Mono', ui-monospace, monospace; } .c9-t small { font: 500 13px/16px var(--w-font, system-ui); color: var(--w-muted-fg, #a1a1aa); }
+.c9-g { position: relative; flex: 1; min-height: 180px; margin-right: 48px; }
+.c9-g svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.c9-g path.rad { fill: #30a46c26; } .c9-g path.dire { fill: #e5484d26; }
+.c9-g polyline { fill: none; stroke: #fafafa; stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.c9-g circle { vector-effect: non-scaling-stroke; } .c9-g circle.rad { fill: #3dd68c; } .c9-g circle.dire { fill: #ff6369; }
+.c9-l { position: absolute; left: 0; display: inline-flex; align-items: center; gap: 6px; font: 500 12px/16px var(--w-font, system-ui); color: var(--w-muted-fg, #a1a1aa); z-index: 1; }
+.c9-l.a { top: 0; } .c9-l.b { bottom: 0; } .c9-l img { width: 16px; height: 16px; object-fit: contain; }
+.c9-x { position: absolute; left: 0; right: 0; bottom: -24px; height: 20px; }
+.c9-ph { position: absolute; top: 4px; padding-left: 4px; border-left: 1px solid var(--w-border, #ffffff1f); font: 500 11px/14px var(--w-font, system-ui); color: var(--w-muted-fg, #71717a); white-space: nowrap; overflow: hidden; }
+.c9-ph.is-now { color: #a78bfa; border-color: #8b5cf6; }
+/* нижняя панель: текущий слот пика светится; данных ещё нет — «—» */
+.wl-slot.wd2-now .d3-i > i { box-shadow: inset 0 0 0 2px #8b5cf6, 0 0 16px #8b5cf640; background: #1c1b26; animation: wdt-p 1.2s ease-in-out infinite; }
+html.wd2-nodata .wl-pre .d3-row .wb2-nt, html.wd2-nodata .wl-pre .d3-row .wb2-cd b, html.wd2-nodata .wl-pre .d3-row .d3-sc b, html.wd2-nodata .wl-pre .d3-row .d3-k { color: var(--w-muted-fg, #71717a) !important; }
+html.wd2-nodata .wl-pre .d3-row .wb2-at { visibility: visible !important; }
+.c9-d { position: absolute; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; } .c9-d.rad { background: #3dd68c; } .c9-d.dire { background: #ff6369; }
+/* v10 — драфт закончился: драфт в центре гаснет, под ним график с прогнозом до 12′ */
+.wd2-box { transition: opacity .6s; } html.wd2-done .wd2-box { opacity: 0; pointer-events: none; }
+html.wd2-done .wl-pre [data-wd="gold"] > * { visibility: visible; }
+
+/* v12+ — финал драфта: 5 с по центру шанс по драфту, потом плавно прогноз до 12′ */
+.wdr--c9.is-fin { justify-content: center; align-items: center; }
+.c9-fin { display: flex; flex-direction: column; align-items: center; gap: 16px; width: min(640px, 100%); animation: c9-in .6s ease-out both; }
+@keyframes c9-in { from { opacity: 0; transform: translateY(8px); } }
+.c9-fin > small { font: 500 13px/16px var(--w-font, system-ui); color: var(--w-muted-fg, #a1a1aa); }
+.c9-fr { display: flex; justify-content: space-between; width: 100%; }
+.c9-fr span { display: flex; align-items: center; gap: 10px; opacity: .55; } .c9-fr span.on { opacity: 1; }
+.c9-fr img { width: 32px; height: 32px; object-fit: contain; } .c9-fr em { font: 600 16px/20px var(--w-font, system-ui); font-style: normal; }
+.c9-fr b { font: 600 44px/1 'JetBrains Mono', ui-monospace, monospace; letter-spacing: -.02em; }
+.c9-fb { display: flex; width: 100%; height: 6px; border-radius: 3px; overflow: hidden; gap: 2px; }
+.c9-fb i { display: block; height: 100%; transition: width .6s; } .c9-fb .rad { background: #30a46c; } .c9-fb .dire { background: #e5484d; }
+html.wd2-skin .wd2-box { transition: opacity 1.2s ease; }
+html.wd2-skin.wd2-done .wl-pre [data-wd="gold"] > * { animation: wd2-fade 1.2s ease both; }
+@keyframes wd2-fade { from { opacity: 0; } }
+
+/* виды без фиолетового — ближе к нижней панели (серые плашки с рамкой, белый, цвета сторон) */
+html.wd2-skin .wdr-clock { color: var(--w-fg, #fafafa); }
+html.wd2-skin .c9-ph.is-now { color: var(--w-fg, #fafafa); border-color: #ffffff66; }
+html.wd2-skin .d3n.is-now, html.wd2-skin .wl-slot.wd2-now .d3-i > i { background: #ffffff0d; box-shadow: inset 0 0 0 1px #ffffffb3; animation: wd2-p 1.2s ease-in-out infinite; }
+@keyframes wd2-p { 50% { background: #ffffff1f; } }
+html.wd2-skin .wd2-box > .wdr--c9 { padding: 16px 0 48px; gap: 20px; }
+html.wd2-skin .c9-top { padding: 0 2px; }
+html.wd2-skin .c9-g { margin: 0 56px 0 0; }
+/* panel — таймер серой плашкой, как время в нижней панели */
+html.wd2-skin--panel .c9-t b { padding: 4px 12px; border-radius: 4px; background: #27272a; box-shadow: 0 0 0 1px #ffffff1f; font-size: 28px; font-weight: 500; }
+html.wd2-skin--panel .c9-t small { padding: 3px 8px; border-radius: 4px; box-shadow: 0 0 0 1px #ffffff1f; font-size: 12px; }
+/* quiet — без плашек, всё тише: таймер белым, текущий слот пунктиром */
+html.wd2-skin--quiet .c9-t b { font-size: 32px; font-weight: 500; }
+html.wd2-skin--quiet .d3n.is-now, html.wd2-skin--quiet .wl-slot.wd2-now .d3-i > i { box-shadow: none; outline: 1px dashed #ffffff80; outline-offset: -1px; animation: none; background: #ffffff08; }
+html.wd2-skin--quiet .c9-g polyline { stroke-width: 1.5; } html.wd2-skin--quiet .c9-g path.rad { fill: #30a46c1a; } html.wd2-skin--quiet .c9-g path.dire { fill: #e5484d1a; }
+/* card — верх и график отдельными карточками, как блоки страницы */
+html.wd2-skin--card .c9-top { padding: 12px 16px; border-radius: 12px; background: var(--w-card, #0f0f11); box-shadow: inset 0 0 0 1px var(--w-border, #ffffff14); }
+html.wd2-skin--card .c9-t b { font-size: 28px; font-weight: 500; }
+html.wd2-skin--card .c9-g { margin: 0 56px 0 16px; }
+/* дирижёр 06.11: баны Dire прижаты к правому краю, напротив Radiant (при row-reverse «начало» — справа) */
+.c9-b.b { justify-content: flex-start; }
+/* отступы (дирижёр 06.11: «все отступы проверить»): слева и справа — по 16 px, вровень с шапкой и нижней панелью; у карточки — внутренний 16 */
+html.wd2-skin .wd2-box > .wdr--c9 { padding: 16px 16px 48px; }
+html.wd2-skin--card .wd2-box > .wdr--c9 { padding: 16px 0 48px; }
+html.wd2-skin--card .c9-g { margin: 0 72px 0 16px; } html.wd2-skin--card .c9-x { left: 0; }
+/* v18+ — итог шанса по драфту съезжает к низу графика (место ромбиков событий — до начала их нет) и остаётся до старта */
+.c9-fin { transition: transform 1.2s cubic-bezier(.2,.8,.2,1); }
+html.wd2-dock.wd2-done .wd2-box { opacity: 1; background: none; }
+html.wd2-dock.wd2-done .c9-fin { transform: translateY(var(--dy, 0)) scale(.6); }
+html.wd2-dock.wd2-done .c9-fin > small { opacity: .8; }
+/* v18+ (WD2_SOFT) — плавно: драфт гаснет 0,5 с → итог проявляется 0,9 с → через 5 с медленно съезжает вниз (1,8 с) → матч начался: растворяется (1,4 с) */
+html.wd2-soft [data-wd="draft"] > .wdr { transition: opacity .5s ease; } html.wd2-soft [data-wd="draft"].wdr-out > .wdr { opacity: 0; }
+html.wd2-soft .c9-fin { animation: c9-in2 .9s ease-out both; transition: transform 1.8s cubic-bezier(.4,0,.2,1), opacity 1.4s ease, filter 1.4s ease; }
+@keyframes c9-in2 { from { opacity: 0; transform: scale(.96); filter: blur(4px); } }
+html.wd2-soft.wd2-go .c9-fin { opacity: 0; filter: blur(4px); }
+/* дирижёр 06.11: «из большого в маленькое — плавный съезд вниз, и график проявляется в момент съезда, а не переключением»
+   — анимация появления держала transform и съезд прыгал: после появления её снимаем; график проявляется прозрачностью вместе со съездом (1,8 с) */
+html.wd2-soft.wd2-done .c9-fin { animation: none; }
+html.wd2-soft .wl-pre [data-wd="gold"] > * { visibility: visible !important; opacity: 0; pointer-events: none; transition: opacity 1.8s cubic-bezier(.4,0,.2,1); }
+html.wd2-soft.wd2-done .wl-pre [data-wd="gold"] > * { opacity: 1; pointer-events: auto; animation: none; }
+html.wd2-soft.wd2-fin-in .c9-fin { animation: none; }
+/* телефон / узко (дирижёр 06.11: «размеры на телефоне проверь»): таймер — отдельной строкой по центру, баны сторон — ниже в две колонки, мельче; итог шанса — мельче */
+body:not(.is-desk) .c9-top { grid-template-columns: 1fr 1fr; grid-template-areas: "t t" "a b"; gap: 10px 12px; }
+body:not(.is-desk) .c9-t { grid-area: t; justify-self: center; } body:not(.is-desk) .c9-b.a { grid-area: a; } body:not(.is-desk) .c9-b.b { grid-area: b; }
+body:not(.is-desk) .c9-b { gap: 3px; min-width: 0; } body:not(.is-desk) .c9-b .d3n { width: auto; flex: 1 1 0; min-width: 0; max-width: 40px; aspect-ratio: 16 / 9; height: auto; }
+body:not(.is-desk) .c9-t b { font-size: 26px; } body:not(.is-desk) .c9-t img { width: 22px; height: 22px; }
+html.wd2-skin body:not(.is-desk) .wd2-box > .wdr--c9 { padding: 12px 12px 44px; gap: 12px; }
+html.wd2-skin body:not(.is-desk) .c9-g { margin-right: 52px; min-height: 140px; }
+body:not(.is-desk) .c9-ph { font-size: 10px; }
+body:not(.is-desk) .c9-fr b { font-size: 30px; } body:not(.is-desk) .c9-fr em { font-size: 13px; max-width: 30vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } body:not(.is-desk) .c9-fr img { width: 24px; height: 24px; }
+body:not(.is-desk) .c9-fin { width: 100%; padding: 0 4px; box-sizing: border-box; }
+/* телефон 390: баны — каждая сторона своей строкой во всю ширину (крупнее); в итоге — только лого и проценты, без названий */
+@media (max-width: 560px) {
+  body:not(.is-desk) .c9-top { grid-template-columns: 1fr; grid-template-areas: "t" "a" "b"; }
+  body:not(.is-desk) .c9-b.b { flex-direction: row; justify-content: flex-start; }
+  body:not(.is-desk) .c9-b .d3n { max-width: none; }
+  body:not(.is-desk) .c9-fr em { display: none; }
+}
+/* WD2_VL — начало каждой фазы тонкой линией через весь график, как отметки 12′ / 30′ на графике золота */
+.c9-vl { position: absolute; top: 0; bottom: -24px; width: 1px; background: var(--w-border, #ffffff14); pointer-events: none; }
+/* дирижёр 06.11: подписи фаз и линии — убрать, только график */
+html.wd2-noph .c9-x, html.wd2-noph .c9-vl { display: none; }
+html.wd2-noph.wd2-skin .wd2-box > .wdr--c9 { padding-bottom: 32px; }
+/* WD2_PRE — «Пики готовы» открыто сразу: всё на местах без анимаций */
+html.wd2-instant .wd2-box, html.wd2-instant .c9-fin, html.wd2-instant .wl-pre [data-wd="gold"] > * { transition: none !important; animation: none !important; }

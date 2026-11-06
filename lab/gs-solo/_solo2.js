@@ -16,14 +16,18 @@
   const LIST = {
     'site-header': { place: 'all', get: () => [document.querySelector('#portal')] },
     header: { place: 'main', get: () => [q('.bw-bar'), q('.h3-tabrow')] },
-    map: { place: 'main', get: () => (notPreview() ? [page().firstElementChild] : []) },
-    about: { place: 'main', get: () => [q('.bw-page > .cd:has(> .top-bd.ws2)')] },
-    lineups: { place: 'main', get: () => [q('.bw-page > .ws24-cd')] },
-    stat: { place: 'main', get: () => [q('.bw-page > .ws-cd')] },
+    map: { place: 'main', get: () => (q('.bw-page > .wl-pre') ? [q('.bw-page > .wl-pre')] : notPreview() ? [page().firstElementChild] : []) }, // v35: до матча (Драфт, Пики готовы) карта — блок w-lane .wl-pre
+    about: { place: 'main', tab: '0', get: () => [q('.bw-page > .cd:has(> .top-bd.ws2)')] },
+    lineups: { place: 'main', tab: '0', get: () => [q('.bw-page > .ws24-cd')] },
+    stat: { place: 'main', tab: '0', get: () => [q('.bw-page > .ws-cd')] },
     drill: { place: 'side', get: side(has('.rz-host')) },
     stream: { place: 'side', get: side(has('.dc2-host')) },
-    predict: { place: 'side', get: side(has('.pq-host')) },
-    mvp: { place: 'side', get: side((e) => /^MVP/.test((e.innerText || '').trim())) },
+    predict: { place: 'side', get: side((e) => e.querySelector(':scope > .pq-host, .pc-host')) },
+    // v35 (дирижёр 06.11, финальная проверка: «только актуальные виджеты») — по странице матча v84; tab: '0' — открыть вкладку «Статистика» один раз при загрузке
+    series: { place: 'main', tab: '0', get: () => [q('.bw-page > .wsg')] },
+    before: { place: 'main', tab: '0', get: () => [q('.bw-page > .wmp-past')] },
+    news: { place: 'side', get: side((e) => e.matches('.mn-side')) },
+    mvp: { place: 'side', get: side((e) => /^MVP/.test((e.innerText || '').trim()) || !!e.querySelector('[data-wd="mvp"]') || e.matches('[data-wd="mvp"]')) },
   };
   const it = LIST[W]; if (!it) return;
   document.documentElement.classList.add('so2'); if (Q.get('cols') === '0') document.documentElement.classList.add('so2-nocol');
@@ -46,5 +50,6 @@
   addEventListener('DOMContentLoaded', () => { apply(); new MutationObserver(later).observe(document.body, { childList: true, subtree: true }); });
   // вид страницы — по ширине окна, как в v33: уже 800 — телефон (сама страница по ширине его не включает)
   const view = () => { const L = window.LAB, v = innerWidth < 800 ? 'phone' : 'desk', a = L?.axes?.().find((x) => x.key === 'view'); if (a && a.value !== v) L.set('view', v); };
-  addEventListener('load', () => { view(); apply(); }); addEventListener('resize', () => { view(); later(); });
+  let tabbed = false; const tab = () => { if (tabbed || !it.tab) return; const b = document.querySelector(`.ws-tabs [data-a="mseg"][data-v="${it.tab}"]`); if (b && !b.classList.contains('on')) { tabbed = true; b.click(); } else if (b) tabbed = true; };
+  addEventListener('load', () => { view(); tab(); setTimeout(() => { tab(); apply(); }, 400); apply(); }); addEventListener('resize', () => { view(); later(); });
 })();

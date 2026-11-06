@@ -546,3 +546,82 @@ body:not(.is-desk) .w.pc.pc--mob .qz-dc .qz-q { margin-bottom: 6px; font-size: 1
 body:not(.is-desk) .w.pc.pc--mob .qz-dbt { height: 46px; }
 body:not(.is-desk) .w.pc.pc--mob .qz-z { min-height: 0; } body:not(.is-desk) .w.pc.pc--mob .qz-zl { flex: none; }
 body:not(.is-desk) .w.pc.pc--mob .qz-w { padding: 24px 16px; }
+/* w-predict-3 v1 (созвон 06.11 §5.2): «Закрыть» — крестик справа в шапке карточки, высотой с кнопки «Да» / «Нет» (50); стрелки — слева */
+.w.pc .qz-dh--close { justify-content: space-between; align-items: center; }
+.w.pc .qz-dh--close .qz-cls { display: grid; place-items: center; flex: none; width: 50px; height: 50px; margin-left: auto; border: 0; border-radius: 10px; background: var(--w-mid-bg); color: var(--w-muted-fg); cursor: pointer; transition: color .12s, background .12s; }
+.w.pc .qz-dh--close .qz-cls:hover { color: var(--w-fg); background: var(--w-muted); }
+.w.pc .qz-dh--close .qz-cls:disabled { visibility: hidden; }
+.w.pc .qz-zback { display: flex; align-items: center; gap: 6px; width: 100%; height: 40px; margin-top: 8px; padding: 0 12px; border: 0; border-radius: 10px; background: var(--w-mid-bg); color: var(--w-fg); font: 500 13px/16px var(--w-font); cursor: pointer; }
+.w.pc .qz-zback i { margin-left: auto; font-style: normal; color: var(--w-muted-fg); }
+/* w-predict-3 v2 (дирижёр 06.11): PC_CARDGLOW — у виджета рамка обычная, блик (8 с) и вспышка нового — по рамке карточки прогноза */
+.pc-host .w.pc.pc--cg.pc--edge.pc--still.pc--act.pc--spin, .pc-host .w.pc.pc--cg.pc--edge.pc--still.pc--act.pc--spin.pc--ping, .pc-host .w.pc.pc--cg.pc--k.pc--ping, .pc-host .w.pc.pc--cg.pc--edge.pc--still.pc--act.pc--ping { animation: none; box-shadow: none; background: var(--w-bg); }
+.w.pc.pc--cg { --pc-cb: color-mix(in srgb, var(--w-fg) 8%, var(--w-bg)); }
+.w.pc.pc--cg.pc--act .qz-dc:not(.is-out) { border: 1px solid transparent; box-shadow: 0 8px 24px -8px rgba(0,0,0,.6); animation: pc-spin 8s linear infinite;
+  background: linear-gradient(var(--pc-cb), var(--pc-cb)) padding-box, conic-gradient(from var(--pc-a), var(--w-border) 0 72%, color-mix(in srgb, var(--pc-ac) 70%, transparent) 86%, var(--w-border) 100%) border-box; }
+.w.pc.pc--cg.pc--act.pc--ping .qz-dc:not(.is-out) { animation: pc-spin 8s linear infinite, qz-ping 3s ease-out; }
+/* PC_CLS_SM — крестик «Закрыть» меньше: 32 × 32 */
+.w.pc.pc--clsm .qz-dh--close .qz-cls { width: 32px; height: 32px; border-radius: 8px; }
+.w.pc.pc--clsm .qz-dh--close .qz-cls svg { width: 14px; height: 14px; }
+/* фикс v2 (дирижёр 06.11: «какой-то бордер должен быть у виджета — такой же, как у новостей»): у PC_CARDGLOW рамка виджета — обычная, 1px var(--w-border), как у остальных виджетов колонки */
+.pc-host .w.pc.pc--cg.pc--edge { animation: none !important; border: 1px solid var(--w-border) !important; background: var(--w-bg) !important; box-shadow: none !important; }
+/* w-predict-3 v3 (дирижёр 06.11: «закрытия поменьше, стрелочки побольше — одного размера примерно; заголовок пониже — прямо возле кнопок»): PC_EVEN — стрелки и крестик по 32; вопрос и подпись события — внизу карточки, над «Да» / «Нет» */
+.w.pc.pc--even .qz-dh--close .qz-dn--s { height: 32px; padding: 0 3px; border-radius: 8px; }
+.w.pc.pc--even .qz-dh--close .qz-dn--s button { width: 28px; height: 32px; } .w.pc.pc--even .qz-dh--close .qz-dn--s button svg { width: 14px; height: 14px; }
+.w.pc.pc--even .qz-dh--close .qz-dn--s .num { line-height: 32px; font-size: 13px; }
+.w.pc.pc--even .qz-dh--close .qz-cls { width: 32px; height: 32px; border-radius: 8px; } .w.pc.pc--even .qz-dh--close .qz-cls svg { width: 14px; height: 14px; }
+.w.pc.pc--even .qz-dc > .qz-ev { margin-top: auto; } .w.pc.pc--even .qz-dc .qz-q { margin-bottom: 4px; }
+/* w-predict-3 v4 (дирижёр 06.11): PC_FLAT — без серой карточки; рамка виджета обычная, блик — отдельным кольцом поверх рамки, фаза от часов; гаснет у отвеченного */
+.pc-host .w.pc.pc--flat.pc--edge { position: relative; animation: none; border: 1px solid var(--w-border) !important; background: var(--w-bg) !important; box-shadow: none; }
+.pc-host .w.pc.pc--flat::before { content: ''; position: absolute; inset: -1px; z-index: 4; border-radius: inherit; padding: 1px; pointer-events: none; opacity: 0;
+  background: conic-gradient(from var(--pc-a), transparent 0 72%, color-mix(in srgb, var(--pc-ac) 75%, transparent) 86%, transparent 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: pc-spin 8s linear infinite; animation-delay: var(--pc-d, 0ms); }
+.pc-host .w.pc.pc--flat.pc--gl::before { opacity: 1; }
+.pc-host .w.pc.pc--flat.pc--glout::before { animation: pc-spin 8s linear infinite, qz-glout .45s linear forwards; animation-delay: var(--pc-d, 0ms), var(--pc-go, 0ms); }
+@keyframes qz-glout { from { opacity: 1; } to { opacity: 0; } }
+.pc-host .w.pc.pc--flat.pc--ping { animation: qz-ping 3s ease-out !important; }
+.w.pc.pc--flat .qz-d { padding-top: 0; }
+.w.pc.pc--flat .qz-dk { overflow: hidden; } .w.pc.pc--flat .qz-dk::before, .w.pc.pc--flat .qz-dk::after { display: none; }
+.w.pc.pc--flat .qz-dc, .w.pc.pc--flat .qz-dc:not(.is-out) { padding: 0; border: 0; border-radius: 0; background: var(--w-bg); box-shadow: none; }
+.w.pc.pc--flat .qz-d--flip .qz-dc.is-in, .w.pc.pc--flat .qz-d--flip .qz-dc.is-in.qz--bk, .w.pc.pc--flat .qz-d--flip .qz-dc.is-in.qz--r, .w.pc.pc--flat .qz-d--flip .qz-dc.is-in.qz--l, .w.pc.pc--flat .qz-d--flip .qz-dc.is-in.qz--d { animation: qz-up .45s cubic-bezier(.2,.7,.3,1); }
+.w.pc.pc--flat .qz-d--flip .qz-dc.is-out, .w.pc.pc--flat .qz-d--flip .qz-dc.is-out.qz--r, .w.pc.pc--flat .qz-d--flip .qz-dc.is-out.qz--l, .w.pc.pc--flat .qz-d--flip .qz-dc.is-out.qz--d { animation: qz-away .45s cubic-bezier(.5,0,.75,0) forwards; }
+.w.pc.pc--flat .qz-z { animation: qz-up .45s cubic-bezier(.2,.7,.3,1); }
+@keyframes qz-up { from { transform: translateY(100%); } }
+@keyframes qz-away { to { transform: translateY(-100%); opacity: 0; } }
+/* w-predict-3 v5 (дирижёр 06.11): PC_FULL — серая карточка как в v3, но во весь виджет (шапки не видно); итог — чёрная карточка снизу, из чуть меньшей, шапка — следом */
+.pc-host .w.pc.pc--full { position: relative; }
+.w.pc.pc--full.pc--card .pc-hd { display: none; }
+.w.pc.pc--full.pc--card .pc-bd { padding: 0; }
+.w.pc.pc--full.pc--card .qz-d { padding-top: 0; }
+.w.pc.pc--full.pc--card .qz-dk::before, .w.pc.pc--full.pc--card .qz-dk::after { display: none; }
+.w.pc.pc--full.pc--card .qz-dc { border-radius: 9px; }
+.w.pc.pc--full .qz-dc:not(.is-out) { animation-delay: var(--pc-d, 0ms); }
+.w.pc.pc--full.pc--ping .qz-dc:not(.is-out) { animation-delay: var(--pc-d, 0ms), 0ms; }
+.w.pc.pc--full.pc--sum .qz-d--z .qz-dc.is-out { inset: -42px -12px -12px; border-radius: 9px; } /* последняя улетает своим размером — во весь виджет */
+.w.pc.pc--full.pc--sumin .pc-bd .qz-z { animation: qz-sum .55s cubic-bezier(.2,.7,.3,1) both; animation-delay: var(--pc-so, 0ms); }
+.w.pc.pc--full.pc--sumin .pc-hd { animation: qz-sumhd .9s ease-out both; animation-delay: var(--pc-so, 0ms); }
+@keyframes qz-sum { from { transform: translateY(40px) scale(.92); opacity: .3; } }
+@keyframes qz-sumhd { 0%, 45% { opacity: 0; transform: translateY(6px); } 100% { opacity: 1; transform: none; } }
+/* w-predict-3 v6 (дирижёр 06.11): PC_ALLSUM — в итоге и неотвеченные: «Не ответил», строка кликается — к прогнозу можно вернуться */
+.w.pc button.qz-zr.is-skip { width: 100%; border: 0; text-align: left; color: var(--w-fg); font: inherit; cursor: pointer; background: color-mix(in srgb, var(--w-mid-bg) 60%, transparent); }
+.w.pc button.qz-zr.is-skip:hover { background: var(--w-mid-bg); }
+.w.pc .qz-zr.is-skip .qz-zc { color: var(--w-muted-fg); font-weight: 500; }
+/* w-predict-3 v7 (дирижёр 06.11): PC_ICONS — меньше слов в итоге: у неотвеченного — значок «вернуться», у отвеченного — ✓ +N · ✕ · часы +N */
+.w.pc .qz-za--ic { align-self: center; }
+.w.pc .qz-zb { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: var(--w-mid-bg); color: var(--w-muted-fg); transition: color .12s, background .12s; }
+.w.pc button.qz-zr.is-skip:hover .qz-zb { color: var(--w-fg); background: var(--w-muted); }
+.w.pc .qz-za .qz-zi { display: inline-flex; align-items: center; justify-content: flex-end; gap: 3px; }
+.w.pc .qz-zi--ok { color: var(--pc-y); } .w.pc .qz-zi--no { color: var(--w-muted-fg); } .w.pc .qz-zi--wait { color: var(--w-muted-fg); }
+/* w-predict-3 v8 (дирижёр 06.11): PC_NOPCT — без процентов на кнопках исхода */
+.w.pc.pc--nopct .qz-dbt { grid-template-columns: minmax(0, 1fr) auto; } .w.pc.pc--nopct .qz-dbt small { display: none; }
+/* фикс 06.11 (дирижёр: «при нажатии сдвигается на пиксели — ни на пиксель не должно»): у PC_CARDGLOW рамка карточки 1px есть всегда — блик горит или нет, размер один */
+.w.pc.pc--cg .qz-dc, .w.pc.pc--cg .qz-dc.is-out { border: 1px solid transparent; box-shadow: 0 8px 24px -8px rgba(0,0,0,.6);
+  background: linear-gradient(var(--pc-cb), var(--pc-cb)) padding-box, linear-gradient(var(--w-border), var(--w-border)) border-box; }
+.w.pc.pc--cg.pc--act .qz-dc:not(.is-out) { background: linear-gradient(var(--pc-cb), var(--pc-cb)) padding-box, conic-gradient(from var(--pc-a), var(--w-border) 0 72%, color-mix(in srgb, var(--pc-ac) 70%, transparent) 86%, var(--w-border) 100%) border-box; }
+/* w-predict-3 v10 (дирижёр 06.11): PC_MOBH = 2 — телефон: минимум — высота с одной карточкой; карточка тянется на всю высоту виджета, вопрос и кнопки внизу; итог — сверху, суммы внизу */
+body:not(.is-desk) .pc-host .w.pc.pc--mobh2 { display: flex; flex-direction: column; }
+body:not(.is-desk) .w.pc.pc--mobh2 .pc-bd { flex: 1; display: flex; flex-direction: column; }
+body:not(.is-desk) .w.pc.pc--mobh2 .pc-bd > .qz { flex: 1; display: flex; flex-direction: column; }
+body:not(.is-desk) .w.pc.pc--mobh2 .qz-dk { flex: 1 1 auto; }
+body:not(.is-desk) .w.pc.pc--mobh2 .qz-dc { flex: 1; } body:not(.is-desk) .w.pc.pc--mobh2 .qz-dc > .qz-ev { margin-top: auto; }
+body:not(.is-desk) .w.pc.pc--mobh2 .qz-z .qz-zs { margin-top: auto; }

@@ -74,10 +74,13 @@
       return Math.round(Math.max(window.WS_GMIN || 220, Math.min(900, cur + free))); /* WS_GMIN (w-bottom v11): ниже этой высоты график не ужимается — страница прокручивается, как на телефоне */ } }; }
   const nCount = hd => { try { const D = window.DB; if (!D || !D.news) return 7; const ids = new Set(); [hd.a, hd.b].forEach(t => { const x = D.team(t.name); if (x) D.news({ team: x.id }).forEach(n => ids.add(n.id || n.title)); }); return ids.size; } catch (e) { return 7; } };
 
-  const tab = (s, cur) => { const dis = s.st === 'future' || s.st === 'skip' ? ' disabled' : '', on = !S.news && s.i === cur;
+  // дирижёр 06.11: «До матча» (WLS_ST = pre0) — карты с замком, при наведении «Будет доступна, когда начнётся матч»; не disabled — иначе подсказка не всплывает
+  const LOCKI = '<svg class="ws-lk" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>';
+  const tab = (s, cur) => { const lock = /^(pre0|draft|pre)$/.test(window.WLS_ST || '') && s.st === 'future' && new URLSearchParams(location.search).get('case') !== 'cancel', /* отмена — карты просто погашены, без «будет доступна» */ /* до матча — замки и в «Драфте», «Пики готовы» (Map 1 там открывает w-lane) */ dis = lock ? ' aria-disabled="true" data-tip="Будет доступна, когда начнётся матч"' : s.st === 'future' || s.st === 'skip' ? ' disabled' : '', on = !S.news && s.i === cur;
     const t = s.st === 'pre' ? 'Статистика' : `Map ${s.i}`;
     const sub = s.st === 'live' ? `<i class="h3-dot"></i><small class="num">${esc(s.time)}</small>` : s.st === 'done' && s.win && s.win.logo ? `<img src="${esc(s.win.logo)}" alt="" title="Взяла ${esc(s.win.name)}" />` : '';
-    return `<button class="h3-tab ws-t is-${s.st}${on ? ' on' : ''}" data-a="mseg" data-v="${s.i}"${dis} aria-pressed="${on}"><span>${t}</span>${sub}</button>`; };
+    return `<button class="h3-tab ws-t is-${s.st}${lock ? ' is-lock' : ''}${on ? ' on' : ''}" data-a="mseg" data-v="${s.i}"${dis} aria-pressed="${on}">${lock ? LOCKI : ''}<span>${t}</span>${sub}</button>`; };
+  document.addEventListener('click', e => { if (e.target.closest && e.target.closest('.ws-tabs .h3-tab.is-lock')) { e.preventDefault(); e.stopPropagation(); } }, true);
   const news = (n) => `<button class="h3-tab ws-t ws-t--news${S.news ? ' on' : ''}" data-ws="news" aria-pressed="${S.news}"><span>Новости</span>${n ? `<em class="ws-cnt num">${n > 99 ? '99+' : n}</em>` : ''}</button>`;
   const sep = '<i class="ws-sep" aria-hidden="true"></i>';
   const nav = (ms, key) => { const pre = ms.segs.filter(s => s.st === 'pre'), maps = ms.segs.filter(s => s.st !== 'pre');
@@ -107,7 +110,7 @@
   }, true);
 
   // свайп / прокрутка вбок / стрелки ← → — соседний таб серии (1a.3)
-  const step = (bw, d) => { const ts = [...bw.querySelectorAll('.ws-tabs .h3-tab:not([disabled])')], i = ts.findIndex(t => t.classList.contains('on')); const t = ts[i + d]; if (t) t.click(); };
+  const step = (bw, d) => { const ts = [...bw.querySelectorAll('.ws-tabs .h3-tab:not([disabled]):not(.is-lock)')], i = ts.findIndex(t => t.classList.contains('on')); const t = ts[i + d]; if (t) t.click(); };
   let acc = 0, lock = 0;
   document.addEventListener('wheel', e => { if (VS || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return; const bw = e.target.closest && e.target.closest('.bw'); if (!bw || e.target.closest('.g2-plot, .h3-tabs')) return;
     e.preventDefault(); if (performance.now() < lock) return; acc += e.deltaX; if (Math.abs(acc) > 80) { step(bw, acc > 0 ? 1 : -1); acc = 0; lock = performance.now() + 700; } }, { passive: false });
@@ -118,7 +121,7 @@
 
   // v17 · прокрутка вверх-вниз за край центральной колонки — соседний таб
   if (VS) {
-    const nb = (bw, d) => { const ts = [...bw.querySelectorAll('.ws-tabs .h3-tab:not([disabled])')], i = ts.findIndex(t => t.classList.contains('on')); return ts[i + d] || null; };
+    const nb = (bw, d) => { const ts = [...bw.querySelectorAll('.ws-tabs .h3-tab:not([disabled]):not(.is-lock)')], i = ts.findIndex(t => t.classList.contains('on')); return ts[i + d] || null; };
     const lbl = t => t ? t.querySelector('span').textContent : '';
     let pull = { bw: null, d: 0, v: 0, t: 0 }, hide = 0;
     const show = (bw, d, v) => { let el = bw.querySelector(':scope > .ws-pull'); const t = nb(bw, d); if (!t) { if (el) el.remove(); return null; }

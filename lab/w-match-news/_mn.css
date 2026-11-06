@@ -225,3 +225,5 @@ body:not(.is-desk) .mn-main .mn-mmd { display: grid; grid-template-columns: 1fr 
 body:not(.is-desk) .mn-mm { gap: 6px; padding: 10px 12px 12px; }
 body:not(.is-desk) .mn-mmi { border-radius: 6px; } body:not(.is-desk) .mn-mmi.mn-bv img { width: 28px; height: 28px; }
 body:not(.is-desk) .mn-mmt { font: 600 13px/18px var(--w-font, system-ui); }
+/* дирижёр 06.11 (финальная проверка): «одинаковые отступы между виджетами в правой колонке» — у «Новостей» лишних отступов сверху нет, только общий шаг колонки (16 px) */
+.gm-side > .gm-wd.mn-side { margin-top: 0; } .gm-side > .gm-wd.mn-side > :first-child { margin-top: 0; }

@@ -62,7 +62,27 @@ window.NP2 = (() => {
   ]
   if (DBM) { const T = (id) => ({ id, name: DBD.teams[id].name, logo: window.DB.logo(id), t: (n) => nb(n).teams.includes(id) })
     TOP.splice(0, 5, { id: 'uni', name: 'The International 2026', logo: TOURS[0].logo, t: (n) => n.tour.id === 'uni' }, T('team-spirit'), T('parivision'), T('team-yandex'), T('betboom-team')) }
-  const on = (n) => (CFG.o.topics ? !CFG.sel || TOP.find((x) => x.id === CFG.sel).t(n) : !CFG.off.has(n.tour.id))
+  // w-news-match (o.mf, созвон 06.11 §2.4): фильтр по матчу — новости о любой из двух команд; ?match=<id матча>, без него — идущий матч, ?match=0 — без фильтра
+  // дирижёр 06.11: «выключил — и не могу зайти обратно» → матчи дня всегда стоят чипами в начале ряда (chip/page/split), выбранный — с ×
+  // o.mf: 'chip' — матч первым чипом · 'head' — шапка матча над лентой · 'chips' — матчи дня чипами перед темами
+  const MM = DBM ? window.DB.matches({ state: ['live', 'soon'] }) : [], mOf = (id) => MM.find((m) => m.id === id) || null
+  const inM = (m) => (n) => { const t = nb(n).teams; return t.includes(m.a) || t.includes(m.b) }
+  const MX = '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 2l6 6M8 2l-6 6"/></svg>'
+  const mTeam = (id) => `<img class="n2-tl" src="${window.DB.logo(id)}" alt="">${window.DB.name(id, 'mid')}`
+  const mWhen = (m) => (m.state === 'live' ? `<i class="n2-lv"></i>${m.score[0]}:${m.score[1]}` : m.start.slice(11, 16))
+  const mChip = (m, x) => `<button class="n2-chip n2-mc${CFG.m === m ? ' is-on' : ''}" data-mm="${m.id}">${mTeam(m.a)}<span class="n2-mc__s">${mWhen(m)}</span>${mTeam(m.b)}<small>${F.filter(inM(m)).length}</small>${x && CFG.m === m ? `<span class="n2-mc__x" data-mx>${MX}</span>` : ''}</button>`
+  const mHead = () => { const m = CFG.m; return !m ? '' : `<div class="n2-mh"><span class="n2-mh__k">Новости матча</span><span class="n2-mh__t">${mTeam(m.a)}<span class="n2-mc__s">${mWhen(m)}</span>${mTeam(m.b)}</span><span class="n2-mh__i">${m.state === 'live' ? 'Live · ' + m.live.replace(/^Карта (\d+)/, 'карта $1') : 'Сегодня ' + m.start.slice(11, 16)} · ${m.stage} · ${F.filter(inM(m)).length} новостей</span><a class="n2-mh__go" href="#">К матчу ›</a><button class="n2-mh__x" data-mx aria-label="Все новости">${MX}</button></div>` }
+  // 'page' — страница новостей матча: заголовок — сам матч, «‹ Все новости», без чипов
+  const mPage = () => { const m = CFG.m; return `<div class="np-h n2-mp"><a class="n2-mp__bk" href="#" data-mx>‹ Все новости</a><h1 class="n2-mh__t">${mTeam(m.a)}<span class="n2-mc__s">${mWhen(m)}</span>${mTeam(m.b)}</h1><small>Новости матча · ${m.stage} · ${m.state === 'live' ? 'Live, ' + m.live.replace(/^Карта (\d+)/, 'карта $1') : 'сегодня ' + m.start.slice(11, 16)} · ${F.filter(inM(m)).length} новостей</small><a class="n2-mh__go" href="#">К матчу ›</a></div>` }
+  // 'split' — вместо «Главного» три колонки: обе команды · первая · вторая (свежие сверху), дальше лента по дням
+  const mSplit = () => { const m = CFG.m, has = (id) => (n) => nb(n).teams.includes(id), L = tm(F.filter(inM(m)))
+    const cols = [['Обе команды', '', L.filter((n) => has(m.a)(n) && has(m.b)(n))], [window.DB.name(m.a, 'mid'), m.a, L.filter((n) => has(m.a)(n) && !has(m.b)(n))], [window.DB.name(m.b, 'mid'), m.b, L.filter((n) => has(m.b)(n) && !has(m.a)(n))]].map(([t, id, l]) => [t, id, l.slice(0, 6), l.length])
+    // дирижёр 06.11: на телефоне — сегмент «Обе · команда · команда», видна одна колонка
+    const PH = CFG.view !== 'desk', j = CFG.spc || 0, segH = PH ? `<div class="mn-seg n2-sps">${cols.map(([t, , , k], i) => `<button data-spc="${i}" class="${i === j ? 'on' : ''}">${i ? t : 'Обе'}<small class="num">${k}</small></button>`).join('')}</div>` : ''
+    return { main: [], used: new Set(cols.flatMap((c) => c[2])), html: `${segH}<section class="n2-sp${PH ? ' is-sw' : ''}">${cols.map(([t, id, l, k]) => `<div class="n2-sp__c"><div class="n2-sp__h">${id ? `<img class="n2-tl" src="${window.DB.logo(id)}" alt="">` : `<img class="n2-tl" src="${window.DB.logo(m.a)}" alt=""><img class="n2-tl" src="${window.DB.logo(m.b)}" alt="">`}${t}<small>${k}</small></div><div class="n2-sp__l">${l.map(it).join('')}</div></div>`).join('')}</section>` } }
+  // 'drop' — выбор матча списком справа от заголовка; выбранный матч подсвечен в строке матчей
+  const mDrop = () => `<div class="n2-dd${CFG.dd ? ' is-open' : ''}"><button class="n2-dd__b" data-dd>${CFG.m ? `<span class="n2-dd__k">Матч</span>${mTeam(CFG.m.a)}<span class="n2-mc__s">${mWhen(CFG.m)}</span>${mTeam(CFG.m.b)}` : '<span class="n2-dd__k">Матч</span>Любой'}<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2.5 4l2.5 2.5L7.5 4"/></svg></button>${CFG.dd ? `<div class="n2-dd__m"><button class="n2-dd__i${CFG.m ? '' : ' is-on'}" data-mx>Любой матч<small>${F.length}</small></button>${MM.map((m) => `<button class="n2-dd__i${CFG.m === m ? ' is-on' : ''}" data-mm="${m.id}">${mTeam(m.a)}<span class="n2-mc__s">${mWhen(m)}</span>${mTeam(m.b)}<span class="n2-dd__s">${m.state === 'live' ? 'Live' : 'Сегодня ' + m.start.slice(11, 16)}</span><small>${F.filter(inM(m)).length}</small></button>`).join('')}</div>` : ''}</div>`
+  const on = (n) => (CFG.m ? inM(CFG.m)(n) : CFG.o.topics ? !CFG.sel || TOP.find((x) => x.id === CFG.sel).t(n) : !CFG.off.has(n.tour.id))
   const sc = (L) => [...L].sort((a, b) => score(b) - score(a)), tm = (L) => [...L].sort((a, b) => (a.t < b.t ? 1 : -1))
   const src = (n) => `<a class="n2-src" href="${n.url}" target="_blank" rel="noopener" data-pop="Источник · cybersport.ru|Откроется на сайте издания">cybersport.ru<svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M3 7l4-4M4 3h3v3"/></svg></a>`
   const meta = (n, o = {}) => `<span class="n2-m">${o.tour ? `${logo(n.tour.logo, n.tour.name, 'n2-tl')}<span class="n2-tn">${n.tour.name}</span>` : ''}${rum(n) ? '<i class="n2-rum" data-pop="Слух|Не подтверждено — проверяйте">?</i>' : ''}<span class="f-heat" data-pop="Читают: ${k1(n.views)}|Просмотры на cybersport.ru">${FIRE}${k1(n.views)}</span><time>${when(n)}</time>${o.src ? src(n) : ''}</span>`
@@ -154,12 +174,12 @@ window.NP2 = (() => {
     stT = setTimeout(() => openStory(CFG.o.st1 ? (d[k + 1] ? STO.indexOf(d[k + 1]) : -1) : i + 1), 5000) }
 
   // §3.2 чипы турниров — все включены; нажал — выключил/включил; «Все» — вернуть все
-  const chips = () => CFG.o.topics ? `<div class="n2-ch"><button class="n2-chip${CFG.sel ? '' : ' is-on'}" data-tall>Все</button>${TOP.map((t) => `<button class="n2-chip${CFG.sel === t.id ? ' is-on' : ''}" data-top="${t.id}">${t.logo ? `<img class="n2-tl" src="${t.logo}" alt="">` : ''}${t.name}<small>${F.filter(t.t).length}</small></button>`).join('')}</div>` : `<div class="n2-ch"><button class="n2-chip${CFG.off.size ? '' : ' is-on'}" data-tall>Все</button>${TOURS.map((t) => `<button class="n2-chip${CFG.off.has(t.id) ? '' : ' is-on'}" data-tour="${t.id}">${t.id === 'etc' ? '' : logo(t.logo, t.name, 'n2-tl')}${t.name}<small>${F.filter((n) => n.tour === t).length}</small></button>`).join('')}</div>`
+  const chips = () => CFG.o.topics ? `${CFG.o.mf === 'head' ? mHead() : ''}<div class="n2-ch"><button class="n2-chip${CFG.sel || CFG.m ? '' : ' is-on'}" data-tall>Все</button>${CFG.o.mf && CFG.o.mf !== 'drop' && CFG.o.mf !== 'head' ? MM.map((m) => mChip(m, true)).join('') + '<i class="n2-ch__sep"></i>' : ''}${TOP.map((t) => `<button class="n2-chip${CFG.sel === t.id ? ' is-on' : ''}" data-top="${t.id}">${t.logo ? `<img class="n2-tl" src="${t.logo}" alt="">` : ''}${t.name}<small>${F.filter(t.t).length}</small></button>`).join('')}</div>` : `<div class="n2-ch"><button class="n2-chip${CFG.off.size ? '' : ' is-on'}" data-tall>Все</button>${TOURS.map((t) => `<button class="n2-chip${CFG.off.has(t.id) ? '' : ' is-on'}" data-tour="${t.id}">${t.id === 'etc' ? '' : logo(t.logo, t.name, 'n2-tl')}${t.name}<small>${F.filter((n) => n.tour === t).length}</small></button>`).join('')}</div>`
 
   // главное: §3.6 плотная колонка (10 строк, мелко, без превью) · §3.7 слайдер 5 главных · 2 средние с фото
   const top = () => { const L = sc(F.filter(on)), main = L.filter((n) => n.img).slice(0, 5), rest = L.filter((n) => !main.includes(n))
     const list = CFG.o.sep ? rest.slice(0, CFG.o.sep) : [...main, ...rest.slice(0, 10 - main.length)], meds = rest.filter((n) => n.img && !list.includes(n)).slice(0, 2)
-    return { main, used: new Set([...list, ...meds]), html: !main.length ? '' : `${CFG.o.hd === 'out' ? '<h2 class="n2-oh">Главное</h2>' : ''}<section class="n2-top${CFG.o.eq ? ' is-eq' : ''}${CFG.o.fill ? ' is-fill' : ''}${CFG.o.low ? ' is-low' : ''}${CFG.o.m4 ? ' is-ov2' : ''}">
+    return { main, used: new Set([...list, ...meds]), html: !main.length ? '' : `${CFG.o.hd === 'out' ? '<h2 class="n2-oh">Главное</h2>' : ''}<section class="n2-top${CFG.o.eq ? ' is-eq' : ''}${CFG.o.fill ? ' is-fill' : ''}${CFG.o.low ? ' is-low' : ''}${CFG.o.m4 ? ' is-ov2' : ''}${CFG.o.mfUnder ? ' is-under' : ''}">
       <div class="n2-ls">${CFG.o.hd ? '' : '<div class="n2-sh">Главное</div>'}${list.map((n) => { const j = main.indexOf(n)
         return CFG.o.w && j < 0 ? it(n) : j >= 0 ? `<button class="n2-li is-main${j === CFG.slide ? ' is-on' : ''}" data-sl="${j}"><span class="n2-li__t">${n.title}</span>${meta(n)}<i class="n2-li__pg"></i></button>`
           : `<a class="n2-li" href="${n.url}" target="_blank" rel="noopener"><span class="n2-li__t">${n.title}</span>${meta(n)}</a>` }).join('')}</div>
@@ -303,6 +323,22 @@ window.NP2 = (() => {
       else body = RULES.map((r) => [r, D.filter((n) => n.topic2 === r)]).filter(([, N]) => N.length).sort((a, b) => b[1].reduce((x, n) => x + score(n), 0) - a[1].reduce((x, n) => x + score(n), 0)).map(([r, N]) => `<div class="n2-grp">${gl('', r.name, N.length, r.col)}${comp(N, { tour: 1 })}</div>`).join('')
       return `<div class="n2-day n2-day--alt"><div class="n2-day__h"><b>${dayName(d)}</b><small>${D.length} новостей</small></div>${body}</div>` }).join('') }
   // §3.3 + §3.8 лента по дням, внутри дня — блок турнира: подборка новостей (крупная с фото + строки со ссылкой на источник)
+  // w-news-match v7/v8 (o.mfRow, дирижёр 06.11: «ниже — как новости на странице матча»): под верхним виджетом — карточки как в табе «Новости» матча (w-match-news v14, row3):
+  //   по две в ряд, слева фото или лого команд «× », сверху время моно и «Tier 1», в заголовке команды и игроки — плашками; по дням (свежие сверху), до конца ленты — «Показать ещё»
+  const rChips = (n) => { const W = []; nb(n).teams.forEach((id) => { const x = window.DB.team(id); if (!x) return; [x.name, x.mid, x.tag].filter((v, i, a) => v && v.length > 2 && a.indexOf(v) === i).forEach((w) => W.push([w, `<span class="mn-ch"><img src="${window.DB.logo(id)}" alt="">$&</span>`])) })
+    nb(n).players.forEach((id) => { const q = window.DB.player(id); if (q && q.nick && q.nick.length > 2) W.push([q.nick, `<span class="mn-ch mn-ch--p">${q.photo ? `<img src="../${q.photo}" alt="">` : ''}$&</span>`]) })
+    if (!W.length) return n.title; W.sort((x, y) => y[0].length - x[0].length)
+    const re = new RegExp(`(?<![\\wА-Яа-яЁё])(${W.map((w) => w[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?![\\wА-Яа-яЁё])`, 'g')
+    return n.title.replace(re, (x) => { const w = W.find((q) => q[0] === x); return w ? w[1].replace('$&', x) : x }) }
+  // v9/v10 (o.mfPic, дирижёр 06.11: «побольше фоток, поменьше логотипов»): у 2 из 3 новостей без фото — фото из других новостей (‼️ пример, не их фото)
+  const PIC = F.filter((n) => n.img).map((n) => n.img), pic = (n) => { if (n.img || !CFG.o.mfPic || !PIC.length) return n.img; const h = [...n.title].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7); return h % 3 ? PIC[h % PIC.length] : null }
+  const rCov = (n) => { const im = pic(n); if (im) return `<img class="mn-bi" src="${im}" alt="" loading="lazy">`; const T = nb(n).teams.slice(0, 2), I = T.length ? T.map((id) => window.DB.logo(id)) : n.tour.logo ? [n.tour.logo] : []
+    return `<span class="mn-bi mn-bv${I.length > 1 ? ' is-two' : ''}">${I.map((x) => `<img src="${x}" alt="">`).join('<i>×</i>')}</span>` }
+  const rTier = (n) => (nb(n).tours.includes('ti-2026') ? '<span class="t5-tier t5-tier--fill t5-tier--1">Tier 1</span>' : '')
+  const rows = (used) => { const L = tm(F.filter((n) => on(n) && !used.has(n))), N = CFG.rn || 16, S = L.slice(0, N)
+    return `<div class="mn mn--big mn--row mn--row2 mn--row3 n2-rw${CFG.o.mfBox ? ' is-box' : ''}">${[...new Set(S.map((n) => n.t.slice(0, 10)))].map((d) => { const D = S.filter((n) => n.t.startsWith(d))
+      return `<div class="n2-day__h"><b>${dayName(d)}</b><small>${L.filter((n) => n.t.startsWith(d)).length} новостей</small></div><div class="mn-bg">${D.map((n) => `<a class="mn-bc" href="${n.url}" target="_blank" rel="noopener">${rCov(n)}<span class="mn-bb"><span class="mn-wm"><time>${n.t.slice(11, 16)}</time>${rTier(n)}</span><span class="mn-bt">${rChips(n)}</span></span></a>`).join('')}</div>` }).join('')}
+      ${L.length > N ? `<button class="mn-bmore" data-rmore>Показать ещё ${Math.min(16, L.length - N)} из ${L.length - N}</button>` : ''}</div>` }
   const days = (used) => { const L = F.filter((n) => on(n) && !used.has(n))
     return [...new Set(L.map((n) => n.t.slice(0, 10)))].map((d) => { const D = L.filter((n) => n.t.startsWith(d))
       const blocks = TOURS.map((t) => [t, sc(D.filter((n) => n.tour === t))]).filter(([, N]) => N.length).map(([t, N]) => { const m = N.find((n) => n.img), R = tm(N.filter((n) => n !== m))
@@ -325,25 +361,33 @@ window.NP2 = (() => {
     document.querySelectorAll('.n2-sl__dots button, .n2-li.is-main').forEach((x) => x.classList.toggle('is-on', +x.dataset.sl === j))
     tickSlide() }
 
+  // w-news-match (o.mfGame, дирижёр 06.11): переключатель игр «Dota 2 ▾» — из шапки сайта в заголовок «Новости»
+  const GE = () => document.querySelector('.n2-hg') || document.querySelector('.pt-games')
   function render() {
     document.body.classList.toggle('is-desk', CFG.view === 'desk'); document.body.classList.toggle('n2s', !!CFG.o.simple)
-    document.querySelector('.pt-games').innerHTML = games()
-    const m = document.getElementById('main'), T = top(), side = `<aside class="top-r n2-side">${CFG.o.stR ? (CFG.o.stBare ? `<div class="n2-stb">${CFG.o.hl ? hlRow() : stories1()}</div>` : `<div class="w n2-stw"><div class="w-hd"><span class="w-hd__t">Сторис</span></div>${CFG.o.st1 ? stories1() : stories()}</div>`) : ''}<div id="np-t4"></div><div id="np-tr"></div></aside>`; CFG.nMain = T.main.length; if (CFG.slide >= CFG.nMain) CFG.slide = 0
+    document.body.classList.toggle('n2-hgame', !!CFG.o.mfGame); if (!CFG.o.mfGame) document.querySelector('.pt-games').innerHTML = games()
+    const m = document.getElementById('main'), T = CFG.o.mf === 'split' && CFG.m ? mSplit() : top(), side = `<aside class="top-r n2-side">${CFG.o.stR ? (CFG.o.stBare ? `<div class="n2-stb">${CFG.o.hl ? hlRow() : stories1()}</div>` : `<div class="w n2-stw"><div class="w-hd"><span class="w-hd__t">Сторис</span></div>${CFG.o.st1 ? stories1() : stories()}</div>`) : ''}<div id="np-t4"></div><div id="np-tr"></div></aside>`; CFG.nMain = T.main.length; if (CFG.slide >= CFG.nMain) CFG.slide = 0
     if (!CFG.o.mbExt) document.getElementById('mbar').innerHTML = mbar() // v60 (o.mbExt): строка матчей — из лабы match-bar (v5), рисует MB
-    m.innerHTML = `<div class="np-h"><h1>Новости</h1><small>Dota 2 · cybersport.ru · ${DBM ? `${+F[F.length - 1]?.t.slice(8, 10) || ''}–${TDN} ${['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'][+TODAY.slice(5, 7) - 1]}` : '25–30 октября'}</small></div>${CFG.o.stR ? '' : stories()}${chips()}
-      <div class="top n2-lay${CFG.o.right ? ' is-right' : ''}">${CFG.o.right ? '' : side}<div class="top-l">${T.html}${CFG.o.feed ? daysAlt(T.used) : days(T.used)}</div>${CFG.o.right ? side : ''}</div>`
+    const MP = CFG.o.mf === 'page' && CFG.m
+    if (CFG.o.mf === 'drop') { let st = document.getElementById('n2-mms'); if (!st) { st = document.createElement('style'); st.id = 'n2-mms'; document.head.append(st) } st.textContent = CFG.m ? `.mb-k[data-mm="${CFG.m.id}"]{ background:var(--w-muted); box-shadow:inset 0 -2px 0 var(--w-fg); }` : '' }
+    m.innerHTML = `${MP ? mPage() : `<div class="np-h"><h1>Новости</h1>${CFG.o.mfGame ? `<div class="pt-games n2-hg">${games()}</div>` : ''}<small>${CFG.o.mfGame ? '' : 'Dota 2 · '}cybersport.ru · ${DBM ? `${+F[F.length - 1]?.t.slice(8, 10) || ''}–${TDN} ${['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'][+TODAY.slice(5, 7) - 1]}` : '25–30 октября'}</small>${CFG.o.mf === 'drop' ? mDrop() : ''}</div>`}${CFG.o.stR ? '' : stories()}${MP ? '' : chips()}
+      <div class="top n2-lay${CFG.o.right ? ' is-right' : ''}">${CFG.o.right ? '' : side}<div class="top-l">${T.html}${CFG.o.mfRow ? rows(T.used) : CFG.o.feed ? daysAlt(T.used) : days(T.used)}</div>${CFG.o.right ? side : ''}</div>`
     const t4 = document.getElementById('np-t4'), tr = document.getElementById('np-tr'); if (t4 && window.T4) window.T4.render(t4, T4O); if (tr && window.TR2) window.TR2.render(tr, TRO)
+    // дирижёр 06.11: на телефоне колонки едут за сегментом, как слайдер фото — лента со щелчком; листаешь пальцем — сегмент переключается сам
+    const sw = m.querySelector('.n2-sp.is-sw'); if (sw) { sw.scrollLeft = (CFG.spc || 0) * sw.clientWidth
+      sw.addEventListener('scroll', () => { const k = Math.round(sw.scrollLeft / sw.clientWidth); if (k === CFG.spc && sw._k === k) return; sw._k = k; CFG.spc = k; m.querySelectorAll('.n2-sps [data-spc]').forEach((b) => b.classList.toggle('on', +b.dataset.spc === k)) }, { passive: true }) }
     window.NFEED.pops(m); tickSlide()
     if (CFG.o.w && !CFG.freshDone) { clearTimeout(CFG.fT); CFG.fT = setTimeout(() => { const ls = document.querySelector('.n2-ls'); if (!ls) return; CFG.freshDone = true
       const t = document.createElement('div'); t.innerHTML = it(FRESH); const r = t.firstChild; ls.prepend(r); const all = ls.querySelectorAll('.np3-i'); if (all.length > 5) all[all.length - 1].remove()
       requestAnimationFrame(() => requestAnimationFrame(() => r.classList.add('is-in'))); setTimeout(() => r.classList.remove('is-new', 'is-in'), 600); setTimeout(() => r.classList.add('is-seen'), 10000) }, 4000) }
   }
   function mount(o = {}) {
-    CFG.o = o; render()
+    CFG.o = o; if (o.mf) { const id = new URLSearchParams(location.search).get('match'); CFG.m = id === '0' ? null : mOf(id) || MM.find((m) => m.state === 'live') || null }
+    render()
     document.addEventListener('click', (e) => {
       const q = (s) => e.target.closest(s)
-      if (q('[data-gm]')) { CFG.gm = !CFG.gm; document.querySelector('.pt-games').innerHTML = games(); return }
-      if (CFG.gm && !q('.n2-gm')) { CFG.gm = false; document.querySelector('.pt-games').innerHTML = games() }
+      if (q('[data-gm]')) { CFG.gm = !CFG.gm; GE().innerHTML = games(); return }
+      if (CFG.gm && !q('.n2-gm')) { CFG.gm = false; GE().innerHTML = games() }
       const sl = q('[data-sl]'); if (sl) { e.preventDefault(); setSlide(+sl.dataset.sl); return }
       const ex = q('[data-exp]'); if (ex) { (CFG.exp ||= new Set()).add(+ex.dataset.exp); render(); return }
       const br = q('[data-brief]'); if (br) { brief3(br.closest('.np3-i')); return }
@@ -353,8 +397,14 @@ window.NP2 = (() => {
       const st = q('[data-st]'); if (st) { openStory(+st.dataset.st); return }
       const sg = q('[data-sgo]'); if (sg) { openStory(+sg.dataset.sgo); return }
       if (q('[data-sx]') || (e.target.classList?.contains('n2-sv'))) { clearTimeout(stT); document.querySelector('.n2-sv')?.remove(); render(); return }
-      const tp = q('[data-top]'); if (tp) { CFG.sel = CFG.sel === tp.dataset.top ? null : tp.dataset.top; CFG.slide = 0; render(); return }
-      if (q('[data-tall]')) { CFG.sel = null; CFG.off.clear(); CFG.slide = 0; render(); return }
+      if (CFG.o.mf === 'drop') { if (q('[data-dd]')) { CFG.dd = !CFG.dd; render(); return } if (CFG.dd && !q('.n2-dd')) { CFG.dd = false; render() } else if (q('.n2-dd [data-mm], .n2-dd [data-mx]')) CFG.dd = false }
+      const spc = q('[data-spc]'); if (spc) { const tr = document.querySelector('.n2-sp.is-sw'); CFG.spc = +spc.dataset.spc; if (tr) tr.scrollTo({ left: CFG.spc * tr.clientWidth, behavior: 'smooth' }); else render(); return }
+      if (q('[data-rmore]')) { CFG.rn = (CFG.rn || 16) + 16; render(); return }
+      if (CFG.o.mf) { if (q('[data-mx]')) { e.preventDefault(); CFG.m = null; CFG.rn = 0; CFG.slide = 0; render(); return }
+        const mm = q('[data-mm]'); if (mm) { e.preventDefault(); const m = mOf(mm.dataset.mm); CFG.m = CFG.m === m ? null : m; CFG.sel = null; CFG.rn = 0; CFG.slide = 0; render(); return }
+        if (q('.n2-mh__go')) { e.preventDefault(); return } }
+      const tp = q('[data-top]'); if (tp) { CFG.sel = CFG.sel === tp.dataset.top ? null : tp.dataset.top; CFG.m = null; CFG.slide = 0; render(); return }
+      if (q('[data-tall]')) { CFG.sel = null; CFG.m = null; CFG.off.clear(); CFG.slide = 0; render(); return }
       const t = q('[data-tour]'); if (t) { const id = t.dataset.tour; CFG.off.has(id) ? CFG.off.delete(id) : CFG.off.add(id); if (CFG.off.size === TOURS.length) CFG.off.clear(); CFG.slide = 0; render() }
     })
     addEventListener('keydown', (e) => { if (e.key === 'Escape' && document.querySelector('.n2-sv')) { clearTimeout(hlT); clearTimeout(stT); document.querySelector('.n2-sv').remove(); render() } })

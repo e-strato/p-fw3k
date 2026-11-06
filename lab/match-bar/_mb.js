@@ -24,7 +24,7 @@ window.MB = (() => {
       out.push([m.when === 'live' ? 'live' : 'soon', w, m.a, m.b, m.when === 'live' ? 0 : null, m.when === 'live' ? 0 : null, '', [t.name, '../widget-tournament-4/' + t.logo]]) }
     return out }
   // v6 (o.db): матчи — из общей базы (_db): идут и скоро на «сейчас» (21.08.2026 16:08, TI), время — по Москве; лого и имена — из базы
-  const DBL = () => window.DB.matches({ state: ['live', 'soon'] }).map((m) => [m.state, m.state === 'live' ? m.live || 'Live' : (m.start.slice(0, 10) === window.DB.data.now.slice(0, 10) ? '' : m.start.slice(8, 10) + '.' + m.start.slice(5, 7) + ' ') + m.start.slice(11, 16), m.a, m.b, m.score?.[0] ?? null, m.score?.[1] ?? null, m.stage])
+  const DBL = () => window.DB.matches({ state: ['live', 'soon'] }).map((m) => [m.state, m.state === 'live' ? m.live || 'Live' : (m.start.slice(0, 10) === window.DB.data.now.slice(0, 10) ? '' : m.start.slice(8, 10) + '.' + m.start.slice(5, 7) + ' ') + m.start.slice(11, 16), m.a, m.b, m.score?.[0] ?? null, m.score?.[1] ?? null, m.stage, undefined, m.id]) // 9-й — id матча (w-news-match: тап по матчу фильтрует новости)
   const ALL = () => { if (S.o.db) return DBL()
     const L = [...M, ...(S.o.more ? EXTRA() : [])]; return S.o.more ? [...L.filter((m) => m[0] === 'live'), ...L.filter((m) => m[0] === 'soon').sort((a, b) => key(shortW('soon', a[1])) - key(shortW('soon', b[1]))), ...L.filter((m) => m[0] === 'done')] : L }
   const key = (w) => { const m = w.match(/(?:(\d+)\.(\d+) )?(\d+):(\d+)/) || w.match(/(\d+) окт (\d+):(\d+)/); if (!m) return 0; return m.length === 5 ? (m[1] ? (+m[2] === 11 ? 31 + +m[1] : +m[1]) * 1440 : 30 * 1440) + +m[3] * 60 + +m[4] : 31 * 1440 + +m[2] * 60 + +m[3] }
@@ -39,10 +39,11 @@ window.MB = (() => {
   // v5 (o.tick) — как 99damage.de: одна тонкая строка 40 px, бежит сама (наведение — стоп), элемент «лого Команда [счёт] Команда лого», между — черта;
   //   в окошке счёта: Live — счёт и красная точка, скоро — время. Без плиток и подложки (дирижёр 03.11: «сделай версию 99damage»)
   const SH2 = (n) => (S.o.db ? window.DB.name(n, 'mid') : SH[n] || n.replace(/^Team /, ''))
-  const tk = ([st, when, a, b, x, y]) => { const live = st === 'live', box = live ? `<i class="mb-k__lv"></i>${x}<s>:</s>${y}` : shortW(st, when)
-    return `<a class="mb-k${live ? ' is-live' : ''}" href="#">${lg(a)}<b>${SH2(a)}</b><span class="mb-k__s">${box}</span><b>${SH2(b)}</b>${lg(b)}</a>` }
-  function renderTick(el) { const L = ALL().filter((m) => m[0] !== 'done'), row = L.map(tk).join('')
-    el.innerHTML = `<div class="mb mb--tick"><div class="mb-k__in" style="--d:${L.length * 4}s">${row}${row}</div></div>` }
+  const tk = ([st, when, a, b, x, y, , , id]) => { const live = st === 'live', box = live ? `<i class="mb-k__lv"></i>${x}<s>:</s>${y}` : shortW(st, when)
+    return `<a class="mb-k${live ? ' is-live' : ''}" href="#"${id ? ` data-mm="${id}"` : ''}>${lg(a)}<b>${SH2(a)}</b><span class="mb-k__s">${box}</span><b>${SH2(b)}</b>${lg(b)}</a>` }
+  // дирижёр 06.11: строка не должна кончаться — матчей мало (2) → повторяем, пока половина ленты не шире экрана (≥ 12 плиток); медленнее — 6 с на плитку
+  function renderTick(el) { const L = ALL().filter((m) => m[0] !== 'done'), k = Math.max(1, Math.ceil(12 / (L.length || 1))), row = L.map(tk).join('').repeat(k)
+    el.innerHTML = `<div class="mb mb--tick"><div class="mb-k__in" style="--d:${L.length * k * 6}s">${row}${row}</div></div>` }
   function render(el) { if (S.o.tick) return renderTick(el)
     const T = TOURS[S.t], has = T[2]
     el.innerHTML = `<div class="mb"><div class="mb-in">

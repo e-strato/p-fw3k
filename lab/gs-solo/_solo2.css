@@ -12,3 +12,5 @@ html.so2:not(.so2-nocol) :is(.so-k, .so-v)[data-so]::before { content:attr(data-
 /* нет виджета в этом состоянии */
 html.so2.so2-none .app { display:none !important; }
 html.so2.so2-none body::before { content:'В этом состоянии этого виджета нет'; position:fixed; inset:0; display:grid; place-items:center; color:rgba(255,255,255,.5); font:500 14px 'Google Sans Flex', system-ui, sans-serif; }
+/* v35 (06.11): в невидимой колонке ничего не проступает (чип LIVE нижней строки ставит себе visibility:visible) */
+html.so2 .so-v *:not([data-so]) { visibility:hidden !important; }

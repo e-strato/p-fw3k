@@ -88,3 +88,34 @@ html.wtc-br body.is-desk .bw .d3-row .d3-tm .ws-tn { min-width: 0; max-width: 10
 .wtc-big img { width: 36px; height: 36px; object-fit: contain; } .wtc-big > span { display: flex; flex-direction: column; min-width: 0; } .wtc-big b { font: 600 16px/20px var(--w-font); color: var(--w-fg, #fafafa); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wtc-big em { font: 700 24px/1 'JetBrains Mono', ui-monospace, monospace; font-style: normal; } .wtc-big.rad { background: #30a46c1f; } .wtc-big.rad em { color: #3dd68c; } .wtc-big.dire { background: #e5484d1f; } .wtc-big.dire em { color: #ff6369; }
 .wtc-od { display: inline-block; overflow: hidden; vertical-align: top; height: 1.1em; line-height: 1.1em; } .wtc-od > span { display: inline-block; }
+
+/* v13 (дирижёр 06.11, созвон с Антоном) — WTC_MARK: водишь по графику → золото и перевес на момент под курсором; рамка и цифры основным цветом, в углу время */
+html.wtc .wtc-w { position: relative; }
+.wtc-at { position: absolute; top: 10px; right: 10px; padding: 2px 6px; border-radius: 6px; background: #8b5cf6; color: #fff; font: 600 11px/14px 'JetBrains Mono', ui-monospace, monospace; visibility: hidden; pointer-events: none; z-index: 2; }
+.wtc-w.is-at .wtc-at { visibility: visible; }
+.wtc-w.is-at { box-shadow: inset 0 0 0 1px #8b5cf6 !important; }
+.wtc-w.is-at .wtc-bg [data-n], .wtc-w.is-at .wtc-big em, .wtc-w.is-at .wtc-ld em { color: #a78bfa !important; }
+/* WTC_FIX — у цифр постоянная ширина, виджет не дёргается при наведении на график */
+html.wtc-fix .wtc-w [data-n] { display: inline-block; text-align: center; }
+html.wtc-fix .wtc-bs [data-n] { min-width: 2ch; }
+html.wtc-fix .wtc-bg [data-n], html.wtc-fix .wtc-big [data-n], html.wtc-fix .wtc-ld [data-n] { min-width: 6ch; }
+html.wtc-fix .wtc-bg .a [data-n], html.wtc-fix .wtc-bg > span:first-of-type [data-n] { text-align: right; }
+/* v15–v16 (дирижёр 06.11: «метки не делаем», выделение нужно) — WTC_NOAT: без времени в углу, рамка и цифры фиолетовым остаются */
+html.wtc-noat .wtc-at { display: none !important; }
+
+/* v28 (дирижёр 06.11: «v12 как v27 — в правой колонке, при наведении фризится, так же выделяется и время показывается») — WTC_SOFT:
+   подложка мягким далёким градиентом (без фиолетового), плашка времени серая, по центру сверху; не наведено — «LIVE» с мигающей фиолетовой точкой; ширина плашки постоянная */
+html.wtc-soft .wtc-w { transition: background .25s; }
+html.wtc-soft .wtc-w.is-at { box-shadow: inset 0 0 0 1px var(--w-border, #ffffff14) !important; background: radial-gradient(80% 120% at 50% 0%, #ffffff12 0%, #ffffff06 40%, transparent 80%), var(--w-card, #0f0f11); }
+html.wtc-soft .wtc-w.is-at .wtc-bg [data-n], html.wtc-soft .wtc-w.is-at .wtc-big em, html.wtc-soft .wtc-w.is-at .wtc-ld em { color: inherit !important; }
+html.wtc-soft .wtc-at { top: -12px; right: auto; left: 50%; transform: translateX(-50%); width: 72px; box-sizing: border-box; text-align: center; padding: 3px 0; border-radius: 4px; background: #27272a; color: var(--w-fg, #fafafa); box-shadow: 0 0 0 1px #ffffff1f; font: 500 13px/16px 'JetBrains Mono', ui-monospace, monospace; }
+html.wtc-soft .wtc-w.is-live .wtc-at { visibility: visible; }
+html.wtc-soft .wtc-at.is-live i { display: inline-block; vertical-align: middle; width: 6px; height: 6px; margin: -2px 6px 0 0; border-radius: 50%; background: #8b5cf6; animation: wtc-blink 1.2s ease-in-out infinite; }
+@keyframes wtc-blink { 50% { opacity: .2; } }
+/* v28: плашка — не над краем (обрезалась), а внутри табло между «ведёт» и командами, по центру; счёт в одну строку (с фиксированной шириной цифр переносился) */
+html.wtc-soft .wtc-w > * { order: 2; } html.wtc-soft .wtc-w > .wtc-big { order: 0; }
+html.wtc-soft .wtc-at { position: static; order: 1; align-self: center; transform: none; margin: -2px 0 10px; }
+html.wtc-fix .wtc-bs, html.wtc-fix .wtc-bs b { white-space: nowrap; }
+html.wtc-fix .wtc-bs { width: 90px; }
+/* v30: табло наверху — плашка времени только в табло; в нижней строке (там золота и перевеса нет) её не показываем */
+html.wtc-soft body.is-desk .d3-row .wb2-at { display: none !important; }

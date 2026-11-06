@@ -274,3 +274,6 @@ body.is-desk .wsp{ bottom:84px; }
 
 /* v40 (GS_FLUID): подложка под пилюлями — на всю ширину */
 body.fluid:has(.pl-pillsI)::after, body.fluid:has(.pl-pillsH)::after{ left:0; right:0; }
+/* дирижёр 06.11 (финальная проверка): «размытие в мобилке — до высоты таббара, и пусть улетает вместе с таббаром» */
+body:not(.is-desk):has(.pl-pillsI)::after{ height:calc(60px + env(safe-area-inset-bottom)); -webkit-mask-image:none; mask-image:none; transition:transform .3s ease; }
+body.bar-off:not(.is-desk):has(.pl-pillsI)::after{ height:calc(60px + env(safe-area-inset-bottom)); transform:translateY(100%); }

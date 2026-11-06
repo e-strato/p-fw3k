@@ -75,7 +75,7 @@
   const RICH = !!window.SD_RICH, LAY = window.SD_LAY || 'now', SBD = window.SB_DATA || {}, GD = () => window.GS_DATA || {}
   // страница без лабы прогнозов (продукт, gs-match-2 v55): матч берём из того же места колонки — оборачиваем GS_VOTE, он получает матч от _gs.js
   { const gv = window.GS_VOTE; if (gv) window.GS_VOTE = (el, M) => { el._sdM = M; el.dataset.sdm = '1'; return gv(el, M) } }
-  const live = () => { const M = st.sec?.querySelector('.pc-host')?._pcM || st.sec?.querySelector('[data-sdm]')?._sdM; if (!M) return null; const L = M.maps.filter((x) => x.m), x = L.find((y) => y.st === 'live') || L.at(-1); return x && { m: x.m, t: x.st === 'live' ? x.t : x.m.duration, live: x.st === 'live', n: x.i + 1 } }
+  const live = () => { const M = st.sec?.querySelector('.pc-host')?._pcM || st.sec?.querySelector('[data-sdm]')?._sdM; if (!M) return null; const L = M.maps.filter((x) => x.m), sv = window.SD_GOLD1 === 2 ? +(document.querySelector('.h3-tab.on')?.dataset.v ?? NaN) : NaN, x = (window.SD_GOLD1 === 2 && L.find((y) => y.i === sv)) || L.find((y) => y.st === 'live') || L.at(-1); /* w-gold-pl v2: выбран таб сыгранной карты — её итог */ return x && { m: x.m, t: x.st === 'live' ? x.t : x.m.duration, live: x.st === 'live', n: x.i + 1 } }
   const mmss = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`
   const kk = (v) => (Math.abs(v) >= 1000 ? fmt(v / 1000, 1) + 'k' : String(Math.round(v)))
   const hShort = (od) => GD().heroes?.[od]?.short
@@ -186,9 +186,11 @@
   const hi = (k, cls = 'h') => `<img class="${cls}" src="${heroImg(k)}" alt="">`
   function ptPlayer(id) { const p = DB.player(id), t = DB.team(p.team), s0 = ps(id) || {}, L = live(), lp0 = L && L.m.players.find((q) => q.account_id === p.steam), m = min(st.sec), maps = Math.max(1, s0.maps || 1)
     let now = ''; if (lp0) { const a = at(L.m, lp0, L.t), h = DB.hero(lp0.hero_id)?.id, gpm = Math.round(a.nw / Math.max(1, L.t / 60))
-      now = SH('Сейчас', when(L)) + R({ lead: hi(h), n: esc(heroName(h)), sub: 'в этом матче', v: kda(a), sd: 'hero:' + h })
+      // w-gold-pl v1 (созвон 06.11 §3.5, дирижёр: «на табе карты в сайдбаре у игрока золото на этот момент — главный показатель»): SD_GOLD1 — первым крупно золото на эту минуту и золото в минуту
+      const g1 = window.SD_GOLD1 ? `<div class="sd-g1${window.SD_G1BD ? ' sd-g1--bd' : ''}"><img src="../w-bottom-2/gold.png" alt=""><b class="num">${kk(a.nw)}</b><span>золото ${L.live ? 'сейчас' : 'к концу карты'}<small class="num">${gpm} в минуту${s0.gpm ? ' · обычно ' + s0.gpm : ''}</small></span></div>` : ''
+      now = SH('Сейчас', when(L)) + g1 + R({ lead: hi(h), n: esc(heroName(h)), sub: 'в этом матче', v: kda(a), sd: 'hero:' + h })
         + R({ n: `Убийства к ${Math.floor(m)}-й`, v: a.K, u: 'обычно ' + fmt((s0.k / maps) * (m / AVG)) }) + R({ n: `Смерти к ${Math.floor(m)}-й`, v: a.D, u: 'обычно ' + fmt((s0.d / maps) * (m / AVG)) })
-        + R({ n: 'Золото в минуту', v: gpm, u: s0.gpm ? 'обычно ' + s0.gpm : '' }) + (PLUS ? '' : R({ n: 'Состояние', v: kk(a.nw) })) }
+        + (window.SD_GOLD1 ? '' : R({ n: 'Золото в минуту', v: gpm, u: s0.gpm ? 'обычно ' + s0.gpm : '' }) + (PLUS ? '' : R({ n: 'Состояние', v: kk(a.nw) }))) }
     return { title: p.nick, kind: 'Игрок', html: `<div class="sd-id"><img class="sd-ph" src="${url(p.photo || p.avatar)}" alt=""><div><b>${esc(p.nick)}</b><small><img src="${url(t?.logo)}" alt="">${esc(t?.name)} · позиция ${p.role ?? '—'}</small></div></div>`
       + now + SH('Его герои на турнире') + (s0.heroes || []).slice(0, 3).map((x) => R({ lead: hi(x.hero), n: esc(heroName(x.hero)), sub: x.maps + ' карт', v: `${x.wins}–${x.maps - x.wins}`, sd: 'hero:' + x.hero })).join('') } }
   function ptTeam(id) { const t = DB.team(id), s = DB.teamStats(TOUR, id) || {}, L = live(), m = min(st.sec), all = DB.players({ team: id }).filter((p) => typeof p.role === 'number').sort((a, b) => a.role - b.role), inM = all.filter((p) => rowOf(st.sec, p.steam)), roster = inM.length >= 5 ? inM : all.slice(0, 5)
@@ -220,7 +222,7 @@
   const hh = (x) => { let v = 7; for (const ch of String(x)) v = (v * 31 + ch.charCodeAt(0)) >>> 0; return v }
   function plusP(p, L, lp0) { if (!lp0) return ''; const a = at(L.m, lp0, L.t), ser = lp0.nw_t.slice(0, Math.floor(L.t / 60) + 1), s0 = ps(p.id) || {}
     const r = (n) => 38 + (hh(p.steam + n) % 55), Rt = [['Фарм', r('f')], ['Драки', r('g')], ['Пул героев', r('p')], ['Выживание', r('s')], ['Объекты', r('o')], ['Форма', r('m')]], all = Math.round(Rt.reduce((n, x) => n + x[1], 0) / 6), tone = (v) => (v >= 75 ? 'up' : v < 50 ? 'dn' : '')
-    return SH('Состояние по минутам', when(L)) + `<div class="sd-dyn"><div class="sd-1"><b class="num">${kk(a.nw)}</b><span>${L.live ? 'сейчас' : 'к концу карты'}</span></div>${spark(ser)}</div>`
+    return SH(window.SD_GOLD1 ? 'Золото по минутам' : 'Состояние по минутам', when(L)) + `<div class="sd-dyn">${window.SD_GOLD1 ? '' : `<div class="sd-1"><b class="num">${kk(a.nw)}</b><span>${L.live ? 'сейчас' : 'к концу карты'}</span></div>`}${spark(ser)}</div>`
       + SH('Рейтинг за период', (s0.maps || 0) + ' карт турнира · пример') + `<div class="sd-rt"><div class="sd-1"><b class="num">${all}</b><span>${ROLE[p.role] || 'игрок'}</span></div><div class="sd-r6">${Rt.map(([t, v]) => `<div><b class="num ${tone(v)}">${v}</b><span>${t}</span></div>`).join('')}</div></div>` }
   const card = (e) => { const [k, v] = e.split(':'); if (PT && FLAT && k === 'player') return flatPlayer(v); if (PT) return k === 'team' ? ptTeam(v) : k === 'player' ? ptPlayer(v) : ptHero(v); if (SHORT) return k === 'team' ? shortTeam(v) : k === 'player' ? shortPlayer(v) : shortHero(v); return k === 'team' ? (RICH ? richTeam(v) : teamCard(v)) : k === 'player' ? (RICH ? richPlayer(v) : playerCard(v)) : RICH ? richHero(v) : heroCard(v) }
 

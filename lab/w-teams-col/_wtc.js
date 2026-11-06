@@ -4,7 +4,7 @@
 // Данные — из нижней строки страницы (она остаётся в разметке, на компьютере скрыта) и из карты графика (золото игрока по минутам)
 // v4–v6 (дирижёр 05.11: «слабоватая… может быть именно золото показывать, без пиков; пики оставим на месте»): WTC_KEEP — нижняя строка остаётся; в колонке только золото команд
 //   WTC_V: 'gold' — две команды строками, суммы золота и перевес · 'split' — доли золота полосой · 'pos' — золото по позициям: 1 против 1 … 5 против 5
-(() => { if (!window.WTC) return; const H = document.documentElement, V = window.WTC_V || 'list'; H.classList.add('wtc', 'wtc--' + V); if (window.WTC_KEEP) H.classList.add('wtc-keep'); if (window.WTC_BR) H.classList.add('wtc-br');
+(() => { if (!window.WTC) return; const H = document.documentElement, V = window.WTC_V || 'list'; H.classList.add('wtc', 'wtc--' + V); if (window.WTC_KEEP) H.classList.add('wtc-keep'); if (window.WTC_BR) H.classList.add('wtc-br'); if (window.WTC_FIX) H.classList.add('wtc-fix'); if (window.WTC_NOAT) H.classList.add('wtc-noat'); if (window.WTC_SOFT) H.classList.add('wtc-soft');
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
   const k = v => (v / 1000).toFixed(1) + 'k';
   const team = (row, side) => { const t = row.querySelector(`.d3-five.${side} .d3-tm`) || {}, im = t.querySelector && t.querySelector('img'), sm = t.querySelector && t.querySelector('small');
@@ -63,10 +63,17 @@
     return `<div class="wtc-hd"><b>Команды</b><small>${V === 'pts' ? 'K / D / A · очки' : 'K / D / A · золото'}</small></div>${thd(A, 'a')}${PA.map(p => prow(p, metric)).join('')}${mid}${thd(B, 'b')}${PB.map(p => prow(p, metric)).join('')}${V === 'pts' ? '<div class="wtc-ft">Очки — пример</div>' : ''}`; };
   const tick = () => { const col = document.querySelector('aside.gm-side'); if (!col) return; let w = col.querySelector(':scope > .wtc-w');
     if (!w) { w = document.createElement('div'); w.className = 'wtc-w'; col.prepend(w); } else if (col.firstElementChild !== w) col.prepend(w);
+    // v13 (дирижёр 06.11, созвон с Антоном): водишь по графику — золото и перевес тут на момент под курсором (берутся из нижней строки);
+    // помечаем: рамка и цифры основным цветом, в углу — время момента. Отпустил — снова «сейчас»
+    if (window.WTC_MARK) { const at = window.WB2_AT, on = at != null; w.classList.toggle('is-at', on);
+      let c = w.querySelector(':scope > .wtc-at'); if (!c) { c = document.createElement('small'); c.className = 'wtc-at num'; w.appendChild(c); }
+      // v28 (дирижёр 06.11: «v12 как v27»): WTC_SOFT — без фиолетового: подложка градиентом, плашка серая; не наведено и карта идёт — «LIVE» с мигающей точкой
+      const lv = !on && window.WTC_SOFT && window.WB2_LIVE; w.classList.toggle('is-live', !!lv); c.classList.toggle('is-live', !!lv);
+      const tx = on ? Math.floor(at / 60) + ':' + String(Math.floor(at % 60)).padStart(2, '0') : lv ? 'LIVE' : ''; if (c.__t !== tx) { c.__t = tx; if (lv) c.innerHTML = '<i></i>LIVE'; else c.textContent = tx; } }
     const h = build(); if (w.__h === h) return; w.__h = h;
     // дирижёр 05.11: «убери мигание… показывай обновление нормально» — разметку не пересобираем: если устроена так же, меняем только числа (табло, как в нижней строке) и точки мини-графика
     const sk = x => x.replace(/(<span data-n>)[^<]*/g, '$1').replace(/(data-p[^>]*points=")[^"]*/g, '$1');
-    if (w.__sk !== sk(h)) { w.__sk = sk(h); w.innerHTML = h; w.querySelectorAll('[data-n]').forEach(e => { e.__t = e.textContent; }); return; }
+    if (w.__sk !== sk(h)) { w.__sk = sk(h); const keep = w.querySelector(':scope > .wtc-at'); w.innerHTML = h; if (keep) w.appendChild(keep); w.querySelectorAll('[data-n]').forEach(e => { e.__t = e.textContent; }); return; }
     const tp = document.createElement('div'); tp.innerHTML = h;
     const nn = tp.querySelectorAll('[data-n]'), on = w.querySelectorAll('[data-n]'); nn.forEach((n, i) => on[i] && odo(on[i], n.textContent));
     const np = tp.querySelectorAll('[data-p]'), op = w.querySelectorAll('[data-p]'); np.forEach((n, i) => op[i] && op[i].setAttribute('points', n.getAttribute('points'))); };

@@ -208,6 +208,8 @@ window.WP = (() => {
   }
 
   function render() {
+    // дирижёр 06.11 (финальная проверка): «на мобилке базово свёрнуто» — первый показ на телефоне: составы свёрнуты; дальше — как нажал
+    if (S.phone && !S.phInit) { S.phInit = true; S.colAll = true; S.open = {}; S.shut = {} }
     w.classList.toggle('is-phone', !!S.phone)
     const n = S.n16 === 'on' ? 16 : TEAMS.length
     w.innerHTML = `<div class="w pt${S.fit ? ' pt--fit' : ''}${S.fit === 'w4' ? ' pt--fit4' : ''}${S.colMode === 'icon' ? ' pt--hov' : ''}${S.flt ? ' pt--flt' : ''}${S.r4 ? ' pt--r4' : ''}${S.r6 ? ' pt--r6' : ''}${S.r7 ? ' pt--r7' : ''}${S.r10 ? ' pt--r10' : ''}"><div class="w-hd"><span class="w-hd__t">Участники${S.flt ? '' : ` <span class="pt-who pt-who--${S.who}">${WHO.find((x) => x.id === S.who).name}</span>`}</span>${S.flt ? '' : `<span class="sub">${canDrag() && S.view !== 'pos' ? 'Тяни ⋮⋮ — задашь посев' : `${n} команд · рейтинг на этот турнир`}</span>`}${S.flt ? '' : `${S.colLeft && S.colMode && S.view === 'teams' ? colCtl() : ''}${S.view !== 'pos' ? sortSeg() : ''}${!S.colLeft && S.colMode && S.view === 'teams' ? colCtl() : ''}`}

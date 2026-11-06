@@ -222,6 +222,34 @@
   // v31–v33 (дирижёр 05.11: «кнопку пропуска выделить отдельно; несколько версий на основе v30»): PC_SK3 — «Пропуск» своей кнопкой, не в плашке со стрелками:
   //   'sep' — круглая кнопка рядом с плашкой справа · 'split' — пропуск в левом углу, стрелки в правом · 'label' — отдельная кнопка с иконкой и словом «Пропустить» рядом со стрелками
   const SK3 = window.PC_SK3 || ''
+  // w-predict-3 v1 (созвон 06.11 §5.1–5.2, дирижёр: «не „пропустить“, а „закрыть“; к закрытому можно вернуться, пока он не прошёл»): PC_SK3 = 'close' —
+  //   в шапке карточки слева стрелки ‹ › и «2 / 5», справа крестик «Закрыть» высотой с кнопки «Да» / «Нет»; «Закрыть» — не ответ: карточка уходит, сверху следующая без ответа;
+  //   стрелками листаются все живые прогнозы, закрытые тоже, — на закрытом можно ответить; всё отвечено или закрыто — итог и строка «Закрытые · N — вернуться»
+  // v2 (дирижёр 06.11: «у виджета бордер обычный, а светящийся перенесём в карточку прогноза; кнопку закрытия поменьше»): PC_CARDGLOW — блик и вспышка по рамке карточки, у виджета рамка обычная; PC_CLS_SM — крестик 32
+  // v3 (дирижёр 06.11: «стрелочки побольше, одного размера с крестиком; заголовок пониже — возле кнопок»): PC_EVEN — стрелки и крестик по 32, вопрос над кнопками
+  // v4 (дирижёр 06.11: «без серой карточки: открыта — на всю ширину окна и уезжает вместе с окном, из-за низа появляется следующее»; «при клике блик не должен сбиваться — у этого прогноза он просто гаснет, не появляется сверху сначала»):
+  //   PC_FLAT — карточка без подложки, во весь виджет; следующая и итог выезжают снизу; блик — по рамке виджета, фаза от часов (--pc-d), поэтому перерисовка его не сбрасывает;
+  //   ответил или закрыл — блик гаснет за 0,45 с (--pc-go — сколько уже прошло), у следующего без ответа загорается снова с той же фазы
+  const FLAT = !!window.PC_FLAT
+  const flatCls = () => { const L = open(), x = L[Math.min(st.i, L.length - 1)], on = EVT && st.tab !== 'mine' && !st.allDone && x && st.pick[x.id] == null && !st.skip?.[x.id], out = st.glT && Date.now() - st.glT < 450
+    return ' pc--flat' + (on ? ' pc--gl' : out ? ' pc--glout' : '') }
+  // v5 (дирижёр 06.11: «серая карточка — один в один как сейчас, только размером во весь виджет; улетает — а чёрная, где все прогнозы, появляется снизу, из чуть меньшей; потом появляется её заголовок — как две разные карточки»):
+  //   PC_FULL — пока есть прогноз, серая карточка занимает весь виджет (шапки «Прогнозы» не видно); итог — чёрная карточка: выезжает снизу из чуть меньшей, шапка проявляется следом;
+  //   блик по рамке карточки — фаза от часов (--pc-d), перерисовка его не сбрасывает
+  const FULL = !!window.PC_FULL
+  const fullCls = () => { const L = open(); if (st.tab === 'mine' || !L.length) return ''; const done = EVT && st.allDone && !kOpen(L).length; if (done && !st.sumOn) { st.sumT = Date.now(); st.sumOn = 1 }
+    return done ? ' pc--full pc--sum' + (st.sumT && Date.now() - st.sumT < 900 ? ' pc--sumin' : '') : ' pc--full pc--card' }
+  // v6 (дирижёр 06.11: «отвеченные прям тут показываю; крутить по кругу можем; все должны быть — и прогнозы, на которые не успели ответить»; основа — v3):
+  //   PC_LOOP — стрелки листают по кругу (с последнего — на первый); PC_ALLSUM — в итоге все прогнозы карты: отвеченные с результатом и неотвеченные («Не ответил» — строка кликается, к прогнозу можно вернуться)
+  const LOOP = !!window.PC_LOOP, ALLSUM = !!window.PC_ALLSUM
+  // v7 (дирижёр 06.11: «„Не ответил · ответить“ и „Сбылось +14“ — аккуратными иконками, без стольких слов»): PC_ICONS — у неотвеченного значок «вернуться», у отвеченного: ✓ +14 · ✕ мимо · часы +13 (в игре)
+  const ICONS = !!window.PC_ICONS
+  // v8 (дирижёр 06.11: «эти проценты уберём»): PC_NOPCT — на кнопках «Да» / «Нет» нет процентов, только исход и «+баллы»
+  const IC = { back: '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4 3 7l3 3"/><path d="M3 7h6.5a3.5 3.5 0 0 1 0 7H8"/></svg>',
+    ok: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2.5 6.5 2.3 2.3 4.7-5"/></svg>',
+    no: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m3 3 6 6M9 3 3 9"/></svg>',
+    wait: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="6" cy="6" r="4.5"/><path d="M6 3.5V6l1.6 1"/></svg>' }
+  const CLS = SK3 === 'close'
   // v35 (дирижёр 05.11: «на телефоне покороче, чтобы помещалось в экран, и без рамки»): PC_MOB — в виде «Телефон» виджет по высоте содержимого (без 4 : 3), без рамки и свечения; вопрос сразу над кнопками
   // v34 (дирижёр 05.11: «пропустить как в v33, только слева; стрелки в каждой версии криво лежат на подложке»): 'labelL' — кнопка со словом в левом углу, стрелки в правом;
   //   стрелки — SVG-шевроны по центру квадрата 26 × 26 (символы ‹ › в шрифте сидят несимметрично — отсюда и криво)
@@ -232,26 +260,28 @@
   //   внизу — «Следующий прогноз — к следующему событию». В переключалке четвёртое состояние — «Всё собрано»
   const DONEV = !!window.PC_DONE
   const kRes = () => { if (st.resT) return; st.res = {}; st.resT = 1; open().filter((x) => st.pick[x.id] != null).forEach((x, n) => setTimeout(() => { if (!st.resT) return; st.res[x.id] = n % 2 ? 'no' : 'ok'; draw() }, 2500 + n * 2000)) }
-  const kDone = (L) => { const D = L.filter((x) => st.pick[x.id] != null), pp = (x) => pts(x.o[st.pick[x.id]][1]), R = st.res || {}
-    const inG = D.filter((x) => !R[x.id]).reduce((a, x) => a + pp(x), 0), got = D.filter((x) => R[x.id] === 'ok').reduce((a, x) => a + pp(x), 0)
+  const kDone = (L) => { const D = ALLSUM ? L : L.filter((x) => st.pick[x.id] != null), pp = (x) => pts(x.o[st.pick[x.id]][1]), R = st.res || {}
+    const DA = D.filter((x) => st.pick[x.id] != null), inG = DA.filter((x) => !R[x.id]).reduce((a, x) => a + pp(x), 0), got = DA.filter((x) => R[x.id] === 'ok').reduce((a, x) => a + pp(x), 0)
     return `<div class="qz qz-z">${window.PC_NOMY ? '' : `<div class="qz-zh"><b>Всё собрано</b><span class="num">${D.length} из ${L.length}</span></div>`}
-      <div class="qz-zl">${D.map((x) => { const p = st.pick[x.id], r = R[x.id]; return `<div class="qz-zr${r ? ' is-' + r : ''}"><span class="qz-zq"><small>${esc(x.ev)} · до ${esc(x.t)}</small><b>${esc(x.q)}</b></span><span class="qz-za"><em class="qz-zc qz-zc--${p ? 'n' : 'y'}">${esc(x.o[p][0])}</em><i class="num">${r === 'ok' ? 'Сбылось +' + pp(x) : r === 'no' ? 'Мимо' : '+' + pp(x) + ' в игре'}</i></span></div>` }).join('')}</div>
+      <div class="qz-zl">${D.map((x) => { const p = st.pick[x.id], r = R[x.id]; if (p == null) return `<button class="qz-zr is-skip" data-back-id="${x.id}"><span class="qz-zq"><small>${esc(x.ev)} · до ${esc(x.t)}</small><b>${esc(x.q)}</b></span>${ICONS ? '<span class="qz-za qz-za--ic"><span class="qz-zb" title="Не ответил — вернуться и ответить">' + IC.back + '</span></span>' : '<span class="qz-za"><em class="qz-zc">Не ответил</em><i>ответить ›</i></span>'}</button>`
+        return `<div class="qz-zr${r ? ' is-' + r : ''}"><span class="qz-zq"><small>${esc(x.ev)} · до ${esc(x.t)}</small><b>${esc(x.q)}</b></span><span class="qz-za"><em class="qz-zc qz-zc--${p ? 'n' : 'y'}">${esc(x.o[p][0])}</em>${ICONS ? `<i class="num qz-zi qz-zi--${r || 'wait'}" title="${r === 'ok' ? 'Сбылось' : r === 'no' ? 'Мимо' : 'В игре'}">${IC[r || 'wait']}${r === 'no' ? '' : '+' + pp(x)}</i>` : `<i class="num">${r === 'ok' ? 'Сбылось +' + pp(x) : r === 'no' ? 'Мимо' : '+' + pp(x) + ' в игре'}</i>`}</span></div>` }).join('')}</div>
       <div class="qz-zs"><span>${inG ? `В игре <b class="num">+${inG}</b>` : 'Все закрылись'}</span><span>Получено <b class="num">+${got}</b></span></div>
+      ${CLS && !ALLSUM && L.some((x) => st.skip?.[x.id] && st.pick[x.id] == null) ? `<button class="qz-zback" data-back-closed>Закрытые · <b class="num">${L.filter((x) => st.skip?.[x.id] && st.pick[x.id] == null).length}</b> — вернуться <i>›</i></button>` : ''}
       ${window.PC_QUIET ? '' : '<div class="qz-zn"><i class="qz-wi"></i>Следующий прогноз — к следующему событию карты</div>'}</div>` }
   const kBody = (L) => { if (EVT && (!L.length || (st.allDone && !kOpen(L).length))) { const pc = kCur; kCur = null; kLast = ''; if (DONEV && L.length) { kRes()
       // v30 (дирижёр 05.11: «третья карточка тоже уходит в сторону, а за ней уже результаты»): последняя улетает поверх итога
       if (SKIP2 && FLIP && K === 'deck' && pc) { const d = st.outDir || 'fw'; st.outDir = ''; return `<div class="qz qz-d qz-d--flip qz-d--z"><div class="qz-dk"><div class="qz-dc is-out qz--${d}" aria-hidden="true">${pc.html}</div>${kDone(L)}</div></div>` }
-      return kDone(L) } return kWait() } st.i = Math.min(st.i, L.length - 1); const x = L[st.i], left = kOpen(L).length, inn = x.id !== kLast; kLast = x.id
+      return kDone(L) } return kWait() } st.sumOn = 0; st.i = Math.min(st.i, L.length - 1); const x = L[st.i], left = kOpen(L).length, inn = x.id !== kLast; kLast = x.id
     if (K === 'timer') { const f = [0.62, 0.35, 0.8, 0.5, 0.2, 0.7][st.i % 6]
       return `<div class="qz qz-t${inn ? ' is-in' : ''}"><span class="qz-ev">${esc(x.ev)}</span><b class="qz-q">${esc(x.q)}</b><span class="qz-bar"><i style="width:${f * 100}%"></i></span><span class="qz-tl num">до ${esc(x.t)} · осталось ${left}</span>
         <div class="qz-tb">${x.o.map((o, i) => `${kBtn(x, o, i, 'qz-tbt')}<span class="qz-l">${lg(o)}${esc(o[0])}</span><span class="qz-r"><small class="num">${o[1]}%</small><b class="num">+${pts(o[1])}</b></span></button>`).join('')}</div></div>` }
     if (K === 'deck') { const n = L.length, O = kOpen(L)
-      const skB = (c, t) => `<button class="${c}" data-skip="${x.id}" title="Пропустить" aria-label="Пропустить"${st.pick[x.id] != null ? ' disabled' : ''}><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3 3.5v9l6-4.5zM9 3.5v9l6-4.5z"/></svg>${t}</button>`
+      const skB = (c, t) => CLS ? `<button class="qz-cls" data-skip="${x.id}" title="Закрыть" aria-label="Закрыть"${st.pick[x.id] != null ? ' disabled' : ''}><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>` : `<button class="${c}" data-skip="${x.id}" title="Пропустить" aria-label="Пропустить"${st.pick[x.id] != null ? ' disabled' : ''}><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3 3.5v9l6-4.5zM9 3.5v9l6-4.5z"/></svg>${t}</button>`
       const evl = `<span class="qz-ev">${x.fresh && EVT ? '<em>Новый</em> · ' : ''}${esc(x.ev)} · до ${esc(x.t)}</span>`
-      const inner = `<div class="qz-dh${SKIP2 ? ' qz-dh--s' : ''}${SK3 ? ' qz-dh--' + SK3 : ''}">${SKIP2 ? '' : evl}${n > 1 ? (SKIP && !SKIP2 ? `<span class="qz-dn num">${st.i + 1} / ${n}</span>` : `<span class="qz-dn${SKIP2 ? ' qz-dn--s' : ''}"><button data-nav="-1" ${st.i ? '' : 'disabled'} aria-label="Назад">${SKIP2 ? CHV(-1) : '‹'}</button><span class="num">${st.i + 1} / ${n}</span><button data-nav="1" ${st.i < n - 1 ? '' : 'disabled'} aria-label="Дальше">${SKIP2 ? CHV(1) : '›'}</button>${SKIP2 && !SK3 ? skB('qz-sk2', '') : ''}</span>`) : ''}${SK3 ? skB('qz-sk3', SK3 === 'label' || SK3 === 'labelL' ? '<span>Пропустить</span>' : '') : ''}</div>${SKIP2 ? evl : ''}<b class="qz-q">${esc(x.q)}</b>
+      const inner = `<div class="qz-dh${SKIP2 ? ' qz-dh--s' : ''}${SK3 ? ' qz-dh--' + SK3 : ''}">${SKIP2 ? '' : evl}${n > 1 ? (SKIP && !SKIP2 ? `<span class="qz-dn num">${st.i + 1} / ${n}</span>` : `<span class="qz-dn${SKIP2 ? ' qz-dn--s' : ''}"><button data-nav="-1" ${st.i || LOOP ? '' : 'disabled'} aria-label="Назад">${SKIP2 ? CHV(-1) : '‹'}</button><span class="num">${st.i + 1} / ${n}</span><button data-nav="1" ${st.i < n - 1 || LOOP ? '' : 'disabled'} aria-label="Дальше">${SKIP2 ? CHV(1) : '›'}</button>${SKIP2 && !SK3 ? skB('qz-sk2', '') : ''}</span>`) : ''}${SK3 ? skB('qz-sk3', SK3 === 'label' || SK3 === 'labelL' ? '<span>Пропустить</span>' : '') : ''}</div>${SKIP2 ? evl : ''}<b class="qz-q">${esc(x.q)}</b>
         <div class="qz-db">${x.o.map((o, i) => `${kBtn(x, o, i, 'qz-dbt')}<span class="qz-l">${lg(o)}${esc(o[0])}</span><small class="num">${o[1]}%</small><b class="num">+${pts(o[1])}</b></button>`).join('')}</div>${SKIP && !SKIP2 ? `<button class="qz-skip" data-skip="${x.id}"${st.pick[x.id] != null ? ' disabled' : ''}>Пропустить</button>` : ''}`
-      const prev = kCur, dir = SKIP && st.outDir ? st.outDir : prev && st.i < prev.i ? 'bk' : 'fw', out = FLIP && inn && prev && prev.id !== x.id ? `<div class="qz-dc is-out qz--${dir}" aria-hidden="true">${prev.html}</div>` : ''
-      kCur = { id: x.id, i: st.i, html: inner }; if (out) st.outDir = ''; const left = O.length - (st.pick[x.id] == null ? 1 : 0)
+      const prev = kCur, dir = SKIP && st.outDir ? st.outDir : st.navDir ? st.navDir : prev && st.i < prev.i ? 'bk' : 'fw', out = FLIP && inn && prev && prev.id !== x.id ? `<div class="qz-dc is-out qz--${dir}" aria-hidden="true">${prev.html}</div>` : ''
+      kCur = { id: x.id, i: st.i, html: inner }; if (out) { st.outDir = ''; st.navDir = '' } const left = O.length - (st.pick[x.id] == null ? 1 : 0)
       return `<div class="qz qz-d${FLIP ? ' qz-d--flip' : ''}"><div class="qz-dk${left > 1 ? ' has-2' : left > 0 ? ' has-1' : ''}">${out}<div class="qz-dc${inn ? ' is-in qz--' + dir : ''}">${inner}</div></div></div>` }
     if (K === 'duel') { const [a, b] = x.o
       const V = LIVE ? vOf(x) : null
@@ -283,23 +313,34 @@
   function draw() {
     HOSTS.forEach((el) => { if (!el.isConnected) HOSTS.delete(el) })
     HOSTS.forEach((el) => { MM = el._pcM; const nOpen = EVT ? open().filter((x) => st.pick[x.id] == null).length : open().length, nMine = mineOpen().length + DONE().length
-      el.innerHTML = `<div class="w pc${window.PC_V18 ? ' pc--v18' : ''}${window.PC_V19 ? ' pc--v19' : ''}${window.PC_V20 ? ' pc--v20' : ''}${window.PC_V21 ? ' pc--v21' : ''}${window.PC_V22 ? ' pc--v22' : ''}${window.PC_V23 ? ' pc--v23' : ''}${window.PC_V24 ? ' pc--v24' : ''} pc--${MODE}${window.PC_STILL ? ' pc--still' : ''}${SLIP ? ' pc--slip' : ''}${SL ? ' pc--sl' : ''}${K ? ' pc--k pc--k-' + K : ''}${window.PC_NOBAR ? ' pc--nobar' : ''}${window.PC_ACT && EVT ? (kOpen(open()).length ? ' pc--act' : ' pc--calm') : ''}${window.PC_SPIN ? ' pc--spin' : ''}${window.PC_MOB ? ' pc--mob' : ''}${st.ping && Date.now() - st.ping < 3000 ? ' pc--ping' : ''}${st.full ? ' is-full' : ''}${window.PC_EDGE ? ' pc--edge' : ''}"><div class="pc-hd"><b>Прогнозы</b>${window.PC_NOMY && EVT && DONEV && st.allDone && open().length && !kOpen(open()).length ? `<span class="qz-hc num">${open().length} из ${open().length}</span>` : ''}
+      el.innerHTML = `<div class="w pc${window.PC_V18 ? ' pc--v18' : ''}${window.PC_V19 ? ' pc--v19' : ''}${window.PC_V20 ? ' pc--v20' : ''}${window.PC_V21 ? ' pc--v21' : ''}${window.PC_V22 ? ' pc--v22' : ''}${window.PC_V23 ? ' pc--v23' : ''}${window.PC_V24 ? ' pc--v24' : ''} pc--${MODE}${window.PC_STILL ? ' pc--still' : ''}${SLIP ? ' pc--slip' : ''}${SL ? ' pc--sl' : ''}${K ? ' pc--k pc--k-' + K : ''}${window.PC_NOBAR ? ' pc--nobar' : ''}${window.PC_ACT && EVT ? (kOpen(open()).length ? ' pc--act' : ' pc--calm') : ''}${window.PC_SPIN ? ' pc--spin' : ''}${window.PC_CARDGLOW ? ' pc--cg' : ''}${window.PC_CLS_SM ? ' pc--clsm' : ''}${window.PC_EVEN ? ' pc--even' : ''}${window.PC_NOPCT ? ' pc--nopct' : ''}${window.PC_MOB ? ' pc--mob' : ''}${st.ping && Date.now() - st.ping < 3000 ? ' pc--ping' : ''}${st.full ? ' is-full' : ''}${window.PC_EDGE ? ' pc--edge' : ''}${FLAT ? flatCls() : ''}${FULL ? fullCls() : ''}"${FLAT || FULL ? ` style="--pc-d:-${Date.now() % 8000}ms;--pc-go:-${st.glT ? Math.min(450, Date.now() - st.glT) : 450}ms;--pc-so:-${st.sumT ? Math.min(900, Date.now() - st.sumT) : 900}ms"` : ''}><div class="pc-hd"><b>Прогнозы</b>${window.PC_NOMY && EVT && DONEV && st.allDone && open().length && !kOpen(open()).length ? `<span class="qz-hc num">${open().length} из ${open().length}</span>` : ''}
         ${MYB || window.PC_NOMY ? '' : `<div class="pc-tabs"><button class="${st.tab === 'open' ? 'is-on' : ''}" data-tab="open">Открытые <i class="num">${nOpen}</i></button><button class="${st.tab === 'mine' ? 'is-on' : ''}" data-tab="mine">Мои <i class="num">${nMine}</i></button></div>`}
         ${window.PC_NOFULL ? '' : `<button class="pc-x" data-full title="${st.full ? 'Свернуть' : 'Развернуть на колонку'}">${st.full ? ic.min : ic.full}</button>`}</div>
         <div class="pc-bd">${body()}</div></div>`
     })
+    // v9 (дирижёр 06.11: «на телефоне скачет размер: был минимальным — мог расти, растёт плавно»): PC_MOBH — на телефоне виджет не становится ниже, чем уже был; растёт — плавно (0,3 с)
+    // v10 (дирижёр 06.11: «не должно быть пустоты снизу; минимальный размер — с одной карточкой, а карточка прижата книзу»): PC_MOBH = 2 — минимум = высота с первой карточкой (не больше),
+    //   виджет флексом: карточка тянется на всю высоту, вопрос и кнопки — внизу; итог — сверху, «В игре · Получено» — внизу; больше места нужно — растёт плавно
+    if (window.PC_MOBH === 2 && !document.body.classList.contains('is-desk')) HOSTS.forEach((el) => { const w = el.querySelector('.w.pc'); if (!w) return; w.classList.add('pc--mobh2'); w.style.minHeight = (st.mobMin || 0) + 'px'; const h = w.offsetHeight
+      if (st.mobLast && h > st.mobLast) { w.style.height = st.mobLast + 'px'; w.style.overflow = 'hidden'; void w.offsetHeight; w.style.transition = 'height .3s ease'; w.style.height = h + 'px'; setTimeout(() => { w.style.height = ''; w.style.overflow = ''; w.style.transition = '' }, 320) }
+      if (!st.mobMin && w.querySelector('.qz-dc:not(.is-out)')) { st.mobMin = h; w.style.minHeight = h + 'px' } st.mobLast = Math.max(h, st.mobMin || 0) })
+    else if (window.PC_MOBH && !document.body.classList.contains('is-desk')) HOSTS.forEach((el) => { const w = el.querySelector('.w.pc'); if (!w) return; w.style.minHeight = (st.mobH || 0) + 'px'; const h = w.offsetHeight
+      if (st.mobH && h > st.mobH) { w.style.height = st.mobH + 'px'; w.style.overflow = 'hidden'; void w.offsetHeight; w.style.transition = 'height .3s ease'; w.style.height = h + 'px'; setTimeout(() => { w.style.height = ''; w.style.overflow = ''; w.style.transition = '' }, 320) }
+      st.mobH = Math.max(st.mobH || 0, h); w.style.minHeight = st.mobH + 'px' })
     document.body.classList.toggle('pc-colfull', st.full)
   }
   document.addEventListener('click', (e) => {
     const host = e.target.closest('.pc-host'); if (!host) return
     const b = e.target.closest('[data-pc]'), t = e.target.closest('[data-tab]'), f = e.target.closest('[data-full]'), nv = e.target.closest('[data-nav]'), go = e.target.closest('[data-go]')
     const cf = e.target.closest('[data-conf]')
-    const sk = e.target.closest('[data-skip]'); if (sk) { const id = sk.dataset.skip; st.skip = st.skip || {}; st.skip[id] = true; st.outDir = 'd'; const L = open(), nx = L.findIndex((x) => st.pick[x.id] == null && !st.skip[x.id]); if (nx >= 0) st.i = nx; else if (EVT) st.allDone = true; draw(); return }
+    const bi = e.target.closest('[data-back-id]'); if (bi) { const L = open(), k = L.findIndex((x) => x.id === bi.dataset.backId); if (k >= 0) { st.allDone = false; st.i = k; kLast = ''; draw() } return }
+    const bc = e.target.closest('[data-back-closed]'); if (bc) { const L = open(), k = L.findIndex((x) => st.skip?.[x.id] && st.pick[x.id] == null); if (k >= 0) { st.allDone = false; st.i = k; kLast = ''; draw() } return }
+    const sk = e.target.closest('[data-skip]'); if (sk) { const id = sk.dataset.skip; if (FLAT) st.glT = Date.now(); st.skip = st.skip || {}; st.skip[id] = true; st.outDir = 'd'; const L = open(), nx = L.findIndex((x) => st.pick[x.id] == null && !st.skip[x.id]); if (nx >= 0) st.i = nx; else if (EVT) st.allDone = true; draw(); return }
     const sp = e.target.closest('[data-sp]'); if (sp) { const id = sp.dataset.sp, i = +sp.dataset.i, L = open(); st.i = L.findIndex((x) => x.id === id); st.pick[id] = st.pick[id] === i && sp.closest('.pc-slc') ? null : i; draw(); return }
     if (cf) { const id = cf.dataset.conf; st.conf = st.conf || {}; if (st.pick[id] == null || st.conf[id]) return; st.conf[id] = true; if (SLIP || SL) { cf.textContent = 'Прогноз принят ✓'; cf.classList.add('is-ok'); setTimeout(() => { const L = open(), nx = L.findIndex((x) => !st.conf[x.id]); if (nx >= 0) st.i = nx; draw() }, 900); return } draw(); if (ONE && !st.full) setTimeout(() => { const L = open(), nx = L.findIndex((x) => st.pick[x.id] == null && !st.skip?.[x.id]); if (nx >= 0) { st.i = nx; draw() } }, 1000); return }
-    if (b) { const id = b.dataset.pc, i = +b.dataset.i; if (st.conf?.[id]) return; if (SKIP) st.outDir = i ? 'l' : 'r'; if (LIVE && VT[id] && st.pick[id] !== i) VT[id][i]++; st.pick[id] = st.pick[id] === i ? null : i; draw()
+    if (b) { const id = b.dataset.pc, i = +b.dataset.i; if (st.conf?.[id]) return; if (FLAT) st.glT = Date.now(); if (CLS && st.skip) delete st.skip[id]; if (SKIP) st.outDir = i ? 'l' : 'r'; if (LIVE && VT[id] && st.pick[id] !== i) VT[id][i]++; st.pick[id] = st.pick[id] === i ? null : i; draw()
       if (ONE && !st.full && st.pick[id] != null && !(MODE === 'pm' || MODE === 'cp' || MODE === 'strip' || MODE === 'swipe' || MODE === 'lst')) setTimeout(() => { const L = open(), nx = L.findIndex((x) => st.pick[x.id] == null && !st.skip?.[x.id]); if (nx >= 0) { st.i = nx; draw() } else if (EVT) { st.allDone = true; draw() } else if (window.PC_V20) { st.tab = 'mine'; draw() } /* v20: ответил на все — сразу «Мои» */ }, 1000) }
-    else if (nv) { st.i = Math.max(0, st.i + +nv.dataset.nav); draw() }
+    else if (nv) { st.navDir = +nv.dataset.nav < 0 ? 'bk' : 'fw'; /* фикс 06.11 (дирижёр: «крутим в одну сторону — уходят в одну»): направление — по стрелке, а не по номеру, по кругу тоже */ const n = open().length; st.i = LOOP && n ? (st.i + +nv.dataset.nav + n) % n : Math.max(0, st.i + +nv.dataset.nav); draw() }
     else if (go) { st.i = +go.dataset.go; draw() }
     else if (t) { st.tab = t.dataset.tab; st.myT = Date.now(); draw() }
     else if (f) { st.full = !st.full; draw() }
@@ -322,5 +363,7 @@
         window.LAB = { ...B, _pc: 1, axes: () => [...B.axes(), { key: 'pcev', name: 'Прогнозы', value: st.sw || st.evt, options: O.map(([v, label]) => ({ v, label })) }], set: (k, v) => (k === 'pcev' ? set(v) : B.set(k, v)) } }
       wrap(); addEventListener('DOMContentLoaded', wrap) }
     else { addEventListener('DOMContentLoaded', paintSw); if (document.body) paintSw() } }
-  window.GS_VOTE = (el, M) => { el._pcM = M || el._pcM; MM = el._pcM; HOSTS.add(el); el.className = 'pc-host'; draw() }
+  // дирижёр 06.11 (финальная проверка): «прогнозы показываем только в лайве» — до матча (До матча · Драфт · Пики готовы) и после матча блока нет
+  window.GS_VOTE = (el, M) => { const off = ['pre', 'post'].includes((M || el._pcM || {}).state); el.style.display = off ? 'none' : ''; const w = el.parentElement && el.parentElement.children.length === 1 ? el.parentElement : null; if (w) w.style.display = off ? 'none' : ''; if (off) { HOSTS.delete(el); return }
+    el._pcM = M || el._pcM; MM = el._pcM; HOSTS.add(el); el.className = 'pc-host'; draw() }
 })()

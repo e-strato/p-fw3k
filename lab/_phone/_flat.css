@@ -1,0 +1,22 @@
+/* Финальная проверка 06.11 (дирижёр): «на мобиле не должно быть контейнеров — тянется на всю ширину; между виджетами — просто разделитель по странице».
+   Страница матча, вид «Телефон»: без боковых полей, у окна матча и виджетов колонки нет рамок, скруглений и подложек; между блоками — линия во всю ширину. */
+body:not(.is-desk) #feed .gm { padding-left: 0; padding-right: 0; }
+body:not(.is-desk) .gm .bw { border-radius: 0; }
+body:not(.is-desk) .gm :is(.wt-row, .bw-page) { border-radius: 0; background: transparent; }
+body:not(.is-desk) .gm .bw-bar { background: var(--w-page, #000); }
+body:not(.is-desk) .gm .gm-side { gap: 0; }
+body:not(.is-desk) .gm .gm-side > .gm-wd { border-top: 1px solid var(--w-border); padding-top: 4px; }
+body:not(.is-desk) .gm .gm-side > .gm-wd .w { border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+body:not(.is-desk) .gm .n2-dock2 { border-radius: 0; background: transparent; border-top: 1px solid var(--w-border); }
+body:not(.is-desk) .gm :is(.wt-row, .bw-page, .bw-bar) { background: var(--w-page, #000) !important; border-radius: 0 !important; }
+body:not(.is-desk) .gm .gm-side > .gm-wd :is(.w, .pc-host) { background: transparent !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
+/* дирижёр 06.11: «отступы у разделителей — равные везде»: у прогнозов нет запаса 96 px снизу (он для таббара — его держит последний блок), колонка встык к окну матча */
+
+body:not(.is-desk) .gm .gm-side > .gm-wd .pc-host { margin-bottom: 0 !important; }
+body:not(.is-desk) .gm .gm-side > .gm-wd { padding-top: 4px; padding-bottom: 12px; }
+body:not(.is-desk) .gm .gm-side > .gm-wd:last-child { padding-bottom: 96px; }
+html body:not(.is-desk) section.gm > .gm-side { margin-top: -9px !important; }
+body:not(.is-desk) .gm .gm-side > .gm-wd:has(.pc-host) { padding-top: 8px; padding-bottom: 0; }
+body:not(.is-desk) .gm .gm-side .pc-bd { padding-bottom: 0; }
+body:not(.is-desk) .gm .gm-side > .gm-wd.mn-side { padding-top: 12px; }
+body:not(.is-desk) .gm .gm-side > .gm-wd:has(.pc-host) { margin-bottom: -8px; }

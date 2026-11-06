@@ -113,3 +113,12 @@ html.ws-nopip .wsc-pip, html.ws-nopip .pip-fab { display: none !important; } /* 
 html.ws-stick body:not(.is-desk) .bw-bar.ws-h { position: sticky; top: var(--h3-top, 0px); z-index: 7; }
 html.ws-stick body:not(.is-desk) .bw { overflow: clip; }
 html.ws-nobd .bw { border: 0; }
+/* дирижёр 06.11: «До матча» — карты с замком, подсказка при наведении */
+.ws-tabs .h3-tab.is-lock { position: relative; overflow: visible; cursor: default; gap: 5px; }
+.ws-tabs .h3-tab.is-lock > * { opacity: .45; } .ws-tabs .h3-tab.is-lock:hover > * { opacity: .7; }
+.ws-tabs .h3-tab.is-lock .ws-lk { width: 11px; height: 11px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
+.ws-tabs .h3-tab.is-lock::after { content: attr(data-tip); position: absolute; z-index: 30; top: calc(100% + 8px); left: 50%; transform: translateX(-50%); padding: 6px 10px; border-radius: 8px; background: var(--w-mid-bg, #27272a); box-shadow: 0 0 0 1px var(--w-border), 0 8px 24px #0008; color: var(--w-fg); font: 500 12px/1.3 var(--w-font, system-ui); white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .15s; }
+.ws-tabs .h3-tab.is-lock:hover::after { opacity: 1; }
+/* дирижёр 06.11: подсказка замка — поверх всего и не вылезает за окно матча (у правых карт — от правого края) */
+.ws-tabs .h3-tab.is-lock::after { z-index: 1000; left: auto; right: 0; transform: none; }
+.ws-h:has(.h3-tab.is-lock:hover), .bw-bar:has(.h3-tab.is-lock:hover) { position: relative; z-index: 1000; }

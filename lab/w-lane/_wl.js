@@ -43,14 +43,17 @@
     return `<div class="d3-row">${five('a')}<div class="d3-mid"><div class="d3-sc num"><b>0</b><i>:</i><b>0</b></div></div>${five('b')}</div>`; };
   // v7 (дирижёр 04.11: «показывай сразу Map 1»): WL_OPEN — до матча страница открывается на Map 1
   if (window.WL_NOLIVE) document.documentElement.classList.add('wl-nolive');
-  if (window.WL_PRE) { let on = !!window.WL_OPEN, q = 0;
-    const isPre = nav => { const ts = [...nav.querySelectorAll('.h3-tab[data-a="mseg"]')].filter(t => +t.dataset.v >= 1); return ts.length && ts.every(t => t.disabled || t.classList.contains('wl-pt')); };
+  // дирижёр 06.11 (финальная проверка): «До матча» (WLS_ST = pre0) — карты ещё нет: Map 1 не открываем, показываем только «Статистику» (замки — w-series)
+  // + особые случаи без карты (финальная проверка 06.11): «Анонс», «Перенос», «Отмена» — тоже только «Статистика», Map 1 не открываем
+  const CASE0 = /^(announce|delayed|cancel)$/.test(new URLSearchParams(location.search).get('case') || '');
+  if (window.WL_PRE && window.WLS_ST !== 'pre0' && !CASE0) { let on = !!window.WL_OPEN, q = 0;
+    const isPre = nav => { const ts = [...nav.querySelectorAll('.h3-tab[data-a="mseg"]')].filter(t => +t.dataset.v >= 1); return ts.length && ts.every(t => t.disabled || t.classList.contains('wl-pt') || t.classList.contains('is-lock')); };
     const thumb = (nav, t) => { const th = nav.querySelector('.h3-thumb'); if (th && t) { th.style.width = t.offsetWidth + 'px'; th.style.transform = `translateX(${t.offsetLeft}px)`; } };
     const apply = () => document.querySelectorAll('.ws-h .ws-tabs').forEach(nav => { const bw = nav.closest('.bw'), pg = bw && bw.querySelector('.bw-page'); if (!pg) return;
       const m1 = nav.querySelector('.h3-tab[data-a="mseg"][data-v="1"]'); if (!m1) return;
       document.documentElement.classList.toggle('wl-is-pre', !!isPre(nav));
       if (!isPre(nav)) { on = false; pg.querySelectorAll(':scope > .wl-pre').forEach(n => n.remove()); pg.classList.remove('wl-hide'); return; }
-      m1.disabled = false; m1.classList.add('wl-pt');
+      m1.disabled = false; m1.classList.add('wl-pt'); if (m1.classList.contains('is-lock')) { m1.classList.remove('is-lock'); m1.removeAttribute('aria-disabled'); m1.removeAttribute('data-tip'); m1.querySelector('.ws-lk')?.remove(); } // 06.11: замок с Map 1 снимаем — её открываем
       let box = pg.querySelector(':scope > .wl-pre');
       // v18 (дирижёр 04.11: «на телефоне в маленьком разрешении — по-другому, может вообще без графика, просто списком»): WL_PHLIST — на телефоне вместо графика блок «Линии» списком, под ним пустые пики
       const ph = !!window.WL_PHLIST && !document.body.classList.contains('is-desk'), mode = ph ? 'list' : 'graph';

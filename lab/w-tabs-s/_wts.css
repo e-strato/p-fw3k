@@ -64,7 +64,7 @@ html.wts-mapnum.wts-tight body:not(.is-desk) .ws-tabs .h3-tab[data-a="mseg"]:not
 html.wts-v11.wts-t--ic.wts-tight body:not(.is-desk) .ws-tabs .ws-t--news > span::before, html.wts-v11.wts-t--ic.wts-tight body:not(.is-desk) .ws-tabs .h3-tab[data-v="0"] > span::before { width: 15px; height: 15px; }
 html.wts-v11 body:not(.is-desk) .ws-tabs .h3-tab img { width: 16px; height: 16px; }
 html.wts-v11 .ws-tabs .h3-tab[data-v="0"] { position: relative; overflow: visible; }
-html.wts-v11 .ws-tabs .h3-tab[data-v="0"]::after { content: ""; position: absolute; right: 0; top: 28%; bottom: 28%; width: 1px; background: #ffffff33; pointer-events: none; }
+/* черта после «Статистики» снята (дирижёр 06.11, финальная проверка: «полоску из компонента уберём») */
 /* иконки «Новостей» / «Статистики» — ровно по центру по высоте (были чуть выше) */
 html.wts-t--ic .ws-tabs .ws-t--news > span, html.wts-t--ic .ws-tabs .h3-tab[data-v="0"] > span { display: inline-flex; align-items: center; }
 html.wts-t--ic .ws-tabs .ws-t--news > span::before, html.wts-t--ic .ws-tabs .h3-tab[data-v="0"] > span::before { vertical-align: middle; flex: none; }

@@ -152,9 +152,15 @@
   //   таба «Новости» нет; в правой колонке последним — виджет «Новости» со страницы турнира (widget-news v73, NW2, те же опции, что в gs-tournament v45), заголовок — «Новости турнира»
   if (MN === 'side') { document.documentElement.classList.add('mn-notab');
     const NWO = { pic: 'mix', fresh: true, btn: 'more', icon: 'doc', open: 'inline', reveal: 'type', pts: 2, even: true, rich: true, para2: true, hl: 'chip', ava: true, sq: true, sm: true, pad: true, calm: true, pl: 'logos' };
-    const side = () => { const as = document.querySelector('aside.gm-side'); if (!as || !window.NW2 || as.querySelector(':scope > .mn-side')) return;
-      const w = document.createElement('div'); w.className = 'gm-wd mn-side'; as.append(w); NW2.render(w, { ...NWO, phone: !document.body.classList.contains('is-desk') });
-      const t = w.querySelector('.w-hd__t'); if (t) t.textContent = window.NW2_TEAMS ? 'Новости матча' : 'Новости турнира'; };
+    // v15 (созвон 06.11 §2.1–2.3, дирижёр: «новости — под прогнозами, в правой колонке» · «внутри виджета маленький сегмент „Этот матч · Все“»): MN_SEG — сегмент, заголовок «Новости»; встаёт сразу под прогнозами (.pc-host); v16 MN_SEG = 'hd' — сегмент справа в шапке; v17 MN_DOCK — «Все новости ›» внизу
+    const SEG = !!window.MN_SEG;
+    const side = () => { const as = document.querySelector(SEG ? '.gm-side' : 'aside.gm-side'); if (!as || !window.NW2) return;
+      // дирижёр 06.11 (финальная проверка): «MVP должно быть выше» — есть MVP матча (после матча) → новости под ним, иначе — под прогнозами
+      const mvp = [...as.children].find(c => c.matches('[data-wd="mvp"]') || c.querySelector('[data-wd="mvp"]')), pc = mvp || (SEG && [...as.children].find(c => c.matches('.pc-host') || c.querySelector('.pc-host'))), had = as.querySelector(':scope > .mn-side');
+      if (had) { if (pc && pc.nextElementSibling !== had) pc.after(had); return; }
+      const w = document.createElement('div'); w.className = 'gm-wd mn-side'; if (pc) pc.after(w); else as.append(w);
+      NW2.render(w, { ...NWO, seg: window.MN_SEG || false, dock: window.MN_DOCK === 2 ? 2 : !!window.MN_DOCK, segi: window.MN_SEGI || false, nodiv: !!window.MN_NODIV, gap: !!window.MN_GAP, edge: !!window.MN_EDGE, fadeLate: window.MN_FADE_LATE || 0, fadeLateB: window.MN_FADE_LATE_B || 0, fade: window.MN_FADE === 2 || window.MN_FADE === 'v' || window.MN_FADE === 'p' ? window.MN_FADE : !!window.MN_FADE, phone: !document.body.classList.contains('is-desk') });
+      const t = w.querySelector('.w-hd__t'); if (t) t.textContent = SEG ? 'Новости' : window.NW2_TEAMS ? 'Новости матча' : 'Новости турнира'; };
     new MutationObserver(() => side()).observe(document.documentElement, { childList: true, subtree: true }); }
   const paint = () => !V[MN] ? 0 : document.querySelectorAll('.ws-ph').forEach(ph => { const C = ctx(ph); if (!C) return; const h = V[MN](C); if (ph._mn !== h) { ph.innerHTML = h; ph._mn = h; ph.classList.add('mn-on'); } });
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-mn]'); if (b) { e.preventDefault(); F = b.dataset.mn; paint(); return; }

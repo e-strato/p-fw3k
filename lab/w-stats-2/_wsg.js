@@ -173,7 +173,10 @@
     //   mirror — одна строка на карту зеркально: лого, пики и баны первой команды · по центру золото и полоса · баны, пики и лого второй
     else if (['lanes', 'spark', 'big', 'mirror'].includes(SV)) body = L.map(d => { const mh = `<div class="wr-m"><b>Map ${d.i + 1}</b><small>${mstate(d)}</small>${d.W ? `<span class="wr-w"><img src="${esc(d.W.T.logo)}" alt="">Win</span>` : ''}</div>`;
       if (d.off) return `<div class="wr-r wx--${SV} is-off">${mh}<div class="wr-0">Ещё не сыграна</div></div>`;
-      const P = (X, cls) => X.P.map(x => himg(H, x, cls)).join(''), Bn = (X, cls) => X.B.map(x => himg(H, x, cls)).join('');
+      // w-gold-pl v1 (созвон 06.11 §3.5, дирижёр: «золото у каждого игрока — в статистике»): WSG_PGOLD — под каждым пиком сыгранной карты нетворс игрока на конец карты; идущая карта — без чисел
+      const nwOf = x => (d.m.players.find(q => q.hero_id === x.hero_id) || {}).net_worth || 0, mx = d.done ? Math.max(...d.m.players.map(q => q.net_worth || 0), 1) : 1;
+      const nkOf = x => { const a = (d.m.players.find(q => q.hero_id === x.hero_id) || {}).account_id, p = a && window.DB && DB.players().find(y => y.steam === a); return p ? esc(p.nick) : ''; }; // w-gold-pl v3 (дирижёр 06.11: «ник мелким серым»): WSG_PNICK — под пиком ник серым, рядом золото; идущая карта — только ник
+      const P = (X, cls) => X.P.map(x => window.WSG_PNICK ? `<span class="wpg wpg--nk">${himg(H, x, cls)}<span><small>${nkOf(x)}</small>${d.done ? `<b class="num${nwOf(x) === mx ? ' is-top' : ''}">${k1(nwOf(x))}</b>` : ''}</span></span>` : window.WSG_PGOLD && d.done ? `<span class="wpg">${himg(H, x, cls)}<b class="num${nwOf(x) === mx ? ' is-top' : ''}">${k1(nwOf(x))}</b></span>` : himg(H, x, cls)).join(''), Bn = (X, cls) => X.B.map(x => himg(H, x, cls)).join('');
       if (SV === 'lanes') { const lane = X => `<div class="wq-l${X.win ? ' is-win' : ''}"><img class="wr-lg" src="${esc(X.T.logo)}" alt=""><span class="wq-n">${esc(X.T.name)}</span><span class="wr-p">${P(X, 'wr-pk')}</span><span class="wr-b">${Bn(X, 'wr-bn')}</span><span class="wq-g">${d.done ? `<b class="num">${k1(X.now)}</b>${dvs(dv(X))}` : '<small>—</small>'}</span></div>`;
         return `<div class="wr-r wx--lanes${d.live ? ' is-live' : ''}">${mh}<div class="wr-d">${lane(d.A)}${lane(d.B)}${d.live ? '<small class="wq-wait">Золото — после карты</small>' : ''}</div></div>`; }
       if (SV === 'spark') { const adv = d.m.radiant_gold_adv || [], T = d.done ? adv : adv.slice(0, Math.floor(d.t / 60) + 1), mx = Math.max(1000, ...T.map(Math.abs)), w = 240, h = 56, x = j => (j / Math.max(1, T.length - 1) * w).toFixed(1), y = v => (h / 2 - v / mx * (h / 2 - 3)).toFixed(1);
@@ -204,11 +207,11 @@
       //   top — шапка карты строкой сверху (Map · время · Win), ниже на всю ширину: две команды строками | вертикальная полоса золота | карта 200
       //   mid — карта посередине между командами: слева столбиком 5 пиков первой команды и её баны, справа — второй; шапка и золото — одной строкой над ними
       //   card — карточки по две в ряд: в карточке слева карта 180, справа две команды строками и между ними полоса золота
-      const LTXT = `${LT < 600 ? 'на ' + Math.floor(LT / 60) + '′' : 'к 10′'}`, MAP = () => LMAP.map(d.m, LT, d.done ? d.m.duration : d.t);
+      const LTXT = `${LT < 600 ? 'на ' + Math.floor(LT / 60) + '′' : 'к 10′'}`, MAP = () => LMAP.map(d.m, LT, d.done ? d.m.duration : window.WSG_PGOLD === 2 ? null : d.t); // w-gold-pl v2: на идущей карте — только расстановка, золото после карты
       const hline = (gold) => `<div class="wz-h"><b>Map ${d.i + 1}</b><small>${mstate(d)}</small>${d.W ? `<span class="wr-w"><img src="${esc(d.W.T.logo)}" alt="">Win</span>` : ''}${gold || ''}</div>`;
       const tugH = d.done ? `<span class="wz-gold"><b class="num${d.A.now > d.B.now ? ' on' : ''}">${GC}${k1(d.A.now)}</b><span class="wr-tug"><i style="width:${p}%"></i><i></i></span><b class="num${d.B.now > d.A.now ? ' on' : ''}">${GC}${k1(d.B.now)}</b></span>` : '<span class="wz-gold is-wait">Золото — после карты</span>';
       const tugV = d.done ? `<div class="wsx-g"><b class="num${d.A.now > d.B.now ? ' on' : ''}">${GC}${k1(d.A.now)}</b><span class="wsx-bar"><i style="height:${p}%;--h:${p}%"></i></span><b class="num${d.B.now > d.A.now ? ' on' : ''}">${GC}${k1(d.B.now)}</b></div>` : '<div class="wsx-g is-wait"><span class="wsx-bar"></span><small>Золото — после карты</small></div>';
-      const team = X => `<div class="wsx-s${X.win ? ' is-win' : ''}"><div class="wsx-th"><img src="${esc(X.T.logo)}" alt=""><b>${esc(X.T.name)}</b></div><span class="wr-p">${P(X, 'wr-pk')}</span><span class="wsx-bn">${Bn(X, 'wr-bn')}</span></div>`;
+      const team = X => `<div class="wsx-s${X.win ? ' is-win' : ''}"><div class="wsx-th"><img src="${esc(X.T.logo)}" alt=""><b>${esc(X.T.name)}</b>${window.WSG_SIDE ? `<small class="wsx-sd is-${X.rad ? 'r' : 'd'}">${X.rad ? 'Radiant' : 'Dire'}</small>` : ''}</div><span class="wr-p">${P(X, 'wr-pk')}</span><span class="wsx-bn">${Bn(X, 'wr-bn')}</span></div>`;
       if (WSG_LM === 'top') return `<div class="wr-r wz wz--top${d.live ? ' is-live' : ''}">${hline()}<div class="wz-row"><div class="wsx-p">${team(d.A)}${team(d.B)}</div>${tugV}<div class="wz-map">${MAP()}</div></div></div>`;
       if (WSG_LM === 'mid') { const col = (X, r) => `<div class="wz-col${r ? ' is-r' : ''}${X.win ? ' is-win' : ''}"><div class="wsx-th"><img src="${esc(X.T.logo)}" alt=""><b>${esc(X.T.name)}</b></div><div class="wz-cp"><span class="wz-pk">${P(X, 'wr-pk')}</span><span class="wz-bn">${Bn(X, 'wr-bn')}</span></div></div>`;
         return `<div class="wr-r wz wz--mid${d.live ? ' is-live' : ''}">${hline(tugH)}<div class="wz-row">${col(d.A, false)}<div class="wz-map">${MAP()}</div>${col(d.B, true)}</div></div>`; }
@@ -235,11 +238,32 @@
       return `<div class="wp-r${d.live ? ' is-live' : ''}"><div class="wp-h"><b>Map ${d.i + 1}</b><small>${mstate(d)}${d.live ? ' · золото после карты' : ''}</small></div><div class="wp-sides">${side(d.A)}${side(d.B)}</div></div>`; }).join('');
     if (WSG_LM === 'card') body = `<div class="wz-cards">${body}</div>`;
     return `<section class="cd wsg wmp wmv wmv--${SV}">${head}${body}</section>`; };
+  // w-stats-3 v1 (созвон 06.11 §3.1–3.3, дирижёр: «сделать как в задаче»): WSG_ST — вкладка по состоянию матча (состояние — data-st у секции матча, _gs.js):
+  //   до матча (и анонс, лента, нет данных) — «Этой серии» нет, «До серии» без своего заголовка: «Шансы», «Составы», «На турнире»;
+  //   начался (live, пауза) — только «Эта серия», «До серии» целиком нет (шансы — прогноз, нужен только до начала);
+  //   v2 (WSG_ST = 2): начался — из «До серии» убираем только «Шансы», «Составы» и «На турнире» остаются;
+  //   после — сверху «MVP серии» (по всем картам серии: (убийства + помощь) / смерти, из победившей команды), ниже «Эта серия»
+  const ST = !!window.WSG_ST, ON = st => ['live', 'pause', 'post'].includes(st);
+  const mvpS = S => { if (!S) return ''; const H = heroBy(), acc = new Map(), wins = {};
+    S.maps.forEach(m => { const w = m.radiant_win ? m.radiant_team_id : m.dire_team_id; wins[w] = (wins[w] || 0) + 1;
+      m.players.forEach(p => { const tm = p.isRadiant ? m.radiant_team_id : m.dire_team_id, a = acc.get(p.account_id) || { id: p.account_id, tm, k: 0, d: 0, a: 0, gpm: 0, dmg: 0, n: 0, heroes: [] };
+        a.k += p.kills; a.d += p.deaths; a.a += p.assists; a.gpm += p.gold_per_min; a.dmg += p.hero_damage || 0; a.n++; a.heroes.push(p.hero_id); acc.set(p.account_id, a); }); });
+    const W = +Object.entries(wins).sort((x, y) => y[1] - x[1])[0][0], L = [...acc.values()].filter(x => x.tm === W).sort((x, y) => (y.k + y.a) / Math.max(1, y.d) - (x.k + x.a) / Math.max(1, x.d));
+    const x = L[0]; if (!x) return ''; const pl = window.DB && DB.player(x.id), T = teamOf(W), ph = pl && pl.photo && DB.url(pl.photo), kda = ((x.k + x.a) / Math.max(1, x.d)).toFixed(1).replace('.', ',');
+    return `<section class="cd wsg-mvp"><div class="wmp-hd"><b>MVP серии</b><small>по всем ${S.maps.length} ${S.maps.length > 4 ? 'картам' : 'картам'} серии · (убийства + помощь) / смерти</small></div>
+      <div class="wsm-r">${ph ? `<img class="wsm-ph" src="${esc(ph)}" alt="">` : '<span class="wsm-ph"></span>'}<div class="wsm-n"><b>${esc(pl ? pl.nick : x.id)}</b><span><img src="${esc(T.logo)}" alt="">${esc(T.name)}</span></div>
+      <div class="wsm-s"><span><b class="num">${x.k}/${x.d}/${x.a}</b><small>У / С / П</small></span><span><b class="num">${kda}</b><small>KDA</small></span><span><b class="num">${Math.round(x.gpm / x.n)}</b><small>GPM</small></span><span><b class="num">${k1(x.dmg)}</b><small>Урон героям</small></span></div>
+      <div class="wsm-h">${x.heroes.map((h, i) => { const hh = H.get(h) || {}; return `<span><img src="${esc(hh.img || hh.icon || '')}" alt="" title="${esc(hh.name || '')}"><small>Map ${i + 1}</small></span>`; }).join('')}</div></div></section>`; };
+  const stPaint = lu => { if (!ST) return; const pg = lu.parentElement, sec = lu.closest('[data-st]'), st = sec ? sec.dataset.st : 'live', on = ON(st);
+    pg.classList.toggle('wsg-st-pre', !on); pg.classList.toggle('wsg-st-on', on); pg.classList.toggle('wsg-st-on2', on && window.WSG_ST === 2);
+    const mv = pg.querySelector(':scope > .wsg-mvp');
+    if (st === 'post') { const h = mvpS(seriesOf()); if (!mv && h) pg.insertAdjacentHTML('afterbegin', h); else if (mv && h && mv._h !== h) mv.outerHTML = h; const m2 = pg.querySelector(':scope > .wsg-mvp'); if (m2) { m2._h = h; if (pg.firstElementChild !== m2) pg.prepend(m2); } }
+    else if (mv) mv.remove(); };
   const COLS = window.WSG === 'cols';
   const PAST = window.WSG === 'past';
   const paint = (force) => { if (window.WSG === 'none') return; /* оригинал в лабе — только открыть вкладку */ const lu = document.querySelector('section.cd.ws24-cd'); if (!lu) return;
-    const box = lu.parentElement.querySelector(':scope > section.wsg'); rename(); const h = COLS ? (SV ? variant() : cols3()) : PAST ? past() : build(); if (!h) { if (box) box.remove(); LAST = ''; return; }
-    if (COLS) { const pg = lu.parentElement, top = pg.firstElementChild; if (!box) { LAST = h; pg.insertAdjacentHTML('afterbegin', h); } else if (force || h !== LAST) { LAST = h; box.outerHTML = h; }
+    const box = lu.parentElement.querySelector(':scope > section.wsg'); rename(); stPaint(lu); const h = COLS ? (SV ? variant() : cols3()) : PAST ? past() : build(); if (!h) { if (box) box.remove(); LAST = ''; return; }
+    if (COLS) { const pg = lu.parentElement, top = pg.firstElementChild; if (!box) { LAST = h; const mv = pg.querySelector(':scope > .wsg-mvp'); mv ? mv.insertAdjacentHTML('afterend', h) : pg.insertAdjacentHTML('afterbegin', h); } else if (force || h !== LAST) { LAST = h; box.outerHTML = h; }
       const about = pg.querySelector(':scope > .wstA') || pg.querySelector(':scope > .wst-about'); if (about && !pg.querySelector(':scope > .wmp-past')) about.insertAdjacentHTML('beforebegin', `<section class="cd wmp-past"><div class="wmp-ph"><b>${HIER ? 'До серии' : 'Прошлые матчи'}</b><small>${HIER ? 'Команды на The International 2026 до этого матча' : 'до этой серии · The International 2026'}</small></div></section>`); return; }
     if (!box) { LAST = h; lu.insertAdjacentHTML(PAST ? 'beforebegin' : 'afterend', h); return; } if (force || h !== LAST) { LAST = h; box.outerHTML = h; } };
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-wsg]'); if (!b) return; e.preventDefault(); SEL = +b.dataset.wsg; paint(true); }, true);

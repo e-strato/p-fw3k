@@ -224,7 +224,7 @@ body:has(.sd--over2.is-on){ overflow-x:hidden; }
 .sd-1{ display:flex; flex-direction:column; gap:2px; } .sd-1 b{ font:600 22px/26px var(--w-font); color:var(--w-fg); } .sd-1 span{ font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; }
 .sd-dyn{ display:grid; grid-template-columns:auto minmax(0,1fr); align-items:end; gap:16px; padding:4px 0 8px !important; }
 .sd-dyn .sd-sp{ height:40px; margin:0; }
-.sd-rt{ display:grid; grid-template-columns:56px 1fr; gap:8px; align-items:center; padding:4px 0 8px !important; }
+.sd-rt{ display:grid; grid-template-columns:minmax(56px,auto) 1fr; gap:8px 16px; align-items:center; padding:4px 0 8px !important; }
 .sd-rt .sd-1 b{ font-size:26px; line-height:30px; }
 .sd-r6{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:4px 12px; }
 .sd-r6 > div{ display:flex; align-items:center; gap:6px; height:24px; min-width:0; }
@@ -310,3 +310,11 @@ body:has(.sd--over2.is-on){ overflow-x:hidden; }
 
 /* v37 SD_NOTAB — без язычка: крестик в шапке справа */
 .sd--notab .sd-hd .sd-x{ margin-left:auto; }
+/* w-gold-pl v1 (созвон 06.11 §3.5): SD_GOLD1 — в «Сейчас» первым крупно золото игрока на эту минуту */
+.sd-g1 { display: flex; align-items: center; gap: 10px; padding: 6px 0 12px; }
+.sd-g1 img { width: 28px; height: 28px; object-fit: contain; }
+.sd-g1 > b { color: #facc15; font: 700 30px/32px var(--w-font, system-ui); }
+.sd-g1 > span { display: flex; flex-direction: column; color: var(--w-fg); font: 500 13px/16px var(--w-font, system-ui); }
+.sd-g1 > span small { color: var(--w-muted-fg); font: 500 12px/16px var(--w-font, system-ui); }
+/* w-gold-pl v3 (дирижёр 06.11: «между золотом и строкой героя — дивайдер») */
+.sd-bd .sd-g1.sd-g1--bd { border-bottom: 1px solid var(--w-border) !important; padding-bottom: 12px !important; } /* .sd--pt .sd-bd > * гасит border */

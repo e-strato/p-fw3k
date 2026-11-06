@@ -198,3 +198,34 @@
 .g2-tip__cols .cr .g2-dth .g2-skl--dagger{ -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M11.8%201.5l2.7.1.1%202.7-6.3%206.3-2.8-2.8Z%22/%3E%3Cpath%20d%3D%22M3.6%208.2l4.2%204.2-1%201-1.3-1.3-2%202a1%201%200%200%201-1.4-1.4l2-2-1.5-1.5Z%22/%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M11.8%201.5l2.7.1.1%202.7-6.3%206.3-2.8-2.8Z%22/%3E%3Cpath%20d%3D%22M3.6%208.2l4.2%204.2-1%201-1.3-1.3-2%202a1%201%200%200%201-1.4-1.4l2-2-1.5-1.5Z%22/%3E%3C/svg%3E"); }
 /* v38 dWh — иконка смерти белая, «×2» тоже */
 .g2-tip__cols .cr .g2-dth:has(.g2-skl--wh){ color:var(--w-fg); }
+/* WG2_STICK (дирижёр 06.11): на телефоне наведения нет — тронул график, момент остаётся; вернуться — кнопкой в группе «+ −»: фиолетовая точка мигает, пока смотришь не «сейчас» */
+.g2-zc .g2-zl i { width: 8px; height: 8px; border-radius: 50%; background: #71717a; }
+.g2-zc .g2-zl.is-on i { background: #8b5cf6; animation: g2-zl 1.2s ease-in-out infinite; }
+@keyframes g2-zl { 50% { opacity: .25; } }
+/* дирижёр 06.11: смотришь не «сейчас» — кнопка «в лайв» ярко: фиолетовая, белая мигающая точка; группа «+ −» при этом не полупрозрачная */
+.g2-zc:has(.g2-zl.is-on) { opacity: 1 !important; }
+.g2-zc .g2-zl.is-on { background: #8b5cf6 !important; }
+.g2-zc .g2-zl.is-on i { background: #fff; }
+/* w-diamonds v1 (дирижёр 06.11, скрины начальника): o.dmB + tip2 'boss' — серые ромбы, наведение: цвет стороны, белая обводка; подписи у точки и над ромбом, список под ромбом */
+.g2-plot svg text.dmB-n { font: 700 10px/1 var(--w-font, system-ui); stroke: none; }
+.g2-bk { position: absolute; z-index: 6; transform: translateX(-50%); padding: 3px 8px; border-radius: 7px; background: #09090bee; color: #fff; font: 600 12px/16px var(--w-font, system-ui); white-space: nowrap; pointer-events: none; }
+.g2-bk--dm { padding: 6px 12px; border: 1px solid #ffffff38; border-radius: 10px; font-size: 13px; transform: translate(-50%, -100%); }
+.g2-bl { position: absolute; z-index: 7; padding: 10px 12px 8px; border: 1px solid #ffffff1f; border-radius: 10px; background: #0f0f12f2; box-shadow: 0 12px 32px -12px #000; }
+.g2-bl__hd { margin-bottom: 6px; color: var(--w-muted-fg, #a1a1aa); font: 500 12px/16px var(--w-font, system-ui); }
+.g2-bl__r { display: grid; grid-template-columns: 40px 20px 1fr; align-items: center; gap: 8px; height: 26px; padding-left: 8px; border-left: 2px solid var(--bc); }
+.g2-bl__r small { color: var(--w-muted-fg, #a1a1aa); font: 500 12px/1 var(--w-font, system-ui); } .g2-bl__r img { width: 20px; height: 20px; border-radius: 4px; object-fit: cover; }
+.g2-bl__r span { overflow: hidden; color: #fff; font: 500 13px/16px var(--w-font, system-ui); white-space: nowrap; text-overflow: ellipsis; }
+.g2-pop.g2-bl { bottom: auto; transform: none; z-index: 30; padding: 10px 12px 8px; background: #0f0f12; }
+/* ромбы dmB перекрывают старое правило страницы (w-bottom: все ромбы серые #3f3f46) */
+html .g2-plot .dm.dmB > path.dmB-d { fill: var(--dmc) !important; stroke: none !important; }
+html .g2-plot .dm.dmB:not(.on) > path.dmB-d--1 { fill-opacity: .8; }
+html .g2-plot .dm.dmB > path.dmB-o { display: block !important; fill: #09090b !important; stroke: #fff !important; stroke-width: 1.5px; stroke-linejoin: round; }
+/* w-diamonds v3: o.dmShare — наш ромб (чёрный, число внутри), рамка долями убийств видна: зелёная доля — убийства Radiant, красная — Dire */
+html .g2-plot .dm.dmS > path.dmS-a, html .g2-plot .dm.dmS > path.dmS-b { display: block !important; fill: none !important; stroke-width: 3.2px; }
+html .g2-plot .dm.dmS > path.dmS-a { stroke: var(--up) !important; } html .g2-plot .dm.dmS > path.dmS-b { stroke: var(--dn) !important; }
+html .g2-plot .dm.dmS > path:not(.dmS-a):not(.dmS-b) { fill: #09090b !important; }
+html .g2-plot .dm.dmS.on > path.dmS-a, html .g2-plot .dm.dmS.on > path.dmS-b { stroke-width: 4px; }
+/* w-diamonds v4: o.dmFill — наш ромб серый, наведение — заливка долями убийств (как у начальника, без рамки) */
+html .g2-plot .dm.dmF > path.dmF-d { fill: var(--dmc) !important; stroke: none !important; }
+/* фикс 06.11: подсказка драки над точкой, если под ней не помещается до полосы ромбов */
+.g2-pop.g2-tip.g2-tip--up { transform: translateY(-100%); }
