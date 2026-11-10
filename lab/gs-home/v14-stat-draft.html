@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ru"><head>
+<!-- gs-home v14-stat-draft — v11, мини-виджеты раскрытой строки статистические, вариант «draft» (дирижёр 11.11). Основа v11-expand — основа v9 (дирижёр 10.11): сверху крупный блок новостей; матчи без общей карточки, строка раскрывается (мини-виджеты, оттуда — к матчу); после матчей Турниры и «Главные турниры · скоро» карточками; дальше новости как на странице новостей v62 и «Читать все новости». Раньше: две колонки, «Матчи» первыми строками как v1, раскладка «live» + футер (дирижёр 10.11: «две колонки обязательно, матчи первые и главные, отображение сложнее, как в старых версиях»). Основа v5 — плотная главная + футер (дирижёр 10.11: «много воздуха, нет футера, три версии кардинально по-другому, основа v4»). Основа v4-more — v3 + блоки 2 из 6 (дирижёр 10.11: «скудно»): сверху крупно live-матч (база), справа Топ игроков (база, TI 2026) и Стримы (‼️ пример).
+     v3-blocks — главная из блоков конкурентов (дирижёр 10.11: «всё, что есть у 3 из 6 и выше»): слева Матчи · Главное (новости с фото) · Турниры (идут · скоро); справа Рейтинг команд (‼️ пример) и Трансферы. Чёрно-белое, фиолетовый — только точка «идёт». Основа — v2-portal: реальная главная (дирижёр 10.11: «блок матчей основной, но не всю страницу; чёрно-белое, фиолетовый — точечно»).
+     Слева: «Матчи» плитками в 2 колонки (Сегодня · Завтра, игры значками), 8 штук + «Ещё» и «Всё расписание» (→ v1); ниже «Главное» — новости с фото из базы.
+     Справа — Турниры, Новости (лента без фото), Трансферы. Фиолетовый — только точка «идёт». Dota 2 и новости — база; ‼️ CS2, LoL, Valorant, MLBB — пример -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>v14 · Главная — статистика: пики и баны</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" />
+<link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="../widgets-unified/_type.css" /><link rel="stylesheet" href="../widget-tournament-5/_t5.css" />
+<link rel="stylesheet" href="../widgets-unified/_cons.css" /><link rel="stylesheet" href="../widget-tournament-6/_t6.css" /><link rel="stylesheet" href="../gs-tournament/_ours.css" />
+<link rel="stylesheet" href="../widget-news/_feed.css" /><link rel="stylesheet" href="../widget-news/_nw2.css" /><link rel="stylesheet" href="../widget-transfers-2/_tr4.css" />
+<link rel="stylesheet" href="../w-profile/_pf.css" /><link rel="stylesheet" href="_home.css?v=2" /><link rel="stylesheet" href="_home2.css?v=8" /><link rel="stylesheet" href="../gs-tours/_tours2.css?v=1" /><link rel="stylesheet" href="../w-match-news/_mn.css" />
+</head>
+<body>
+<div class="app">
+  <header class="portal"><a class="pt-brand" href="#"><span class="pt-logo">◆</span>GoatScout</a>
+    <nav class="pt-nav"><a href="#" class="is-on">Матчи</a><a href="../gs-tours/v4-gantt.html">Турниры</a><a href="#">Фэнтези</a><a href="#">Новости</a></nav>
+    <div class="pt-games"></div><a class="pt-in" href="#">Войти</a></header>
+  <main id="main"></main>
+</div>
+<script src="../_db/_db.js"></script><script src="../_db/_fake.js"></script><script src="../_db/db.js"></script><script src="../_db/compat.js"></script>
+<script src="../widgets-unified/_cons.js"></script><script src="../widget-tournament-6/_t6.js"></script>
+<script>window.TR2_BASE = '../widget-transfers-2/'</script><script src="../widget-transfers-2/_tr4.js"></script>
+<script src="../widget-news/_feed.js"></script><script src="../widget-news/_nw2.js"></script>
+<script src="_sch.js?v=1"></script><script src="_home2.js?v=8"></script>
+<script>HOME2.mount({ v3: true, v4: true, lay: 'v11', ex: 'draft' })</script>
+<script>window.PF_HD = 'fly2'; window.PF_IN = 'box2'; window.PF_MONO = true</script><script src="../w-profile/_pf.js"></script>
+<script src="../_phone/_nohover.js"></script>
+</body></html>

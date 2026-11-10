@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ru"><head>
+<!-- gs-home v1-schedule — главная = расписание всех матчей 5 игр (дирижёр 10.11: «собираем главное расписание»; исследование — внутренняя документация/исследование-главная-турниры).
+     Шапка «Матчи» · день · счётчики «идут · скоро · сыграно» · антиспойлер; игры со счётчиками (live — фиолетовой точкой) и «Tier 1 · Все»;
+     «Идут сейчас» — главный live-матч карточкой (команды строками, счёт карт, раунды, шанс %, листается ‹ ›), справа остальные live; дальше дни — заголовок липнет, внутри турниры (игра, лого, тир, стадия) и строки матчей:
+     время / состояние слева (Map 2 · Драфт · Пауза · Перерыв · Задержан · Перенос · Отменён · время уточнят), команды, счёт по центру, шанс и Bo, ★ — следить. Вчера — по кнопке.
+     Справа — готовые виджеты: Турниры (widget-tournament-6), Новости (widget-news v73), Трансферы (widget-transfers-2). Телефон — команды друг под другом, счёт справа.
+     Dota 2 — настоящее (база ../_db, TI 2026); ‼️ CS2, LoL, Valorant, MLBB — пример, шанс — пример -->
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>v1 · Главная — расписание</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" />
+<link rel="stylesheet" href="../widget-tournament/_w.css" /><link rel="stylesheet" href="../widgets-unified/_type.css" /><link rel="stylesheet" href="../widget-tournament-5/_t5.css" />
+<link rel="stylesheet" href="../widgets-unified/_cons.css" /><link rel="stylesheet" href="../widget-tournament-6/_t6.css" /><link rel="stylesheet" href="../gs-tournament/_ours.css" />
+<link rel="stylesheet" href="../widget-news/_feed.css" /><link rel="stylesheet" href="../widget-news/_nw2.css" /><link rel="stylesheet" href="../widget-transfers-2/_tr4.css" />
+<link rel="stylesheet" href="../w-profile/_pf.css" /><link rel="stylesheet" href="_home.css?v=1" />
+</head>
+<body>
+<div class="app">
+  <header class="portal"><a class="pt-brand" href="#"><span class="pt-logo">◆</span>GoatScout</a>
+    <nav class="pt-nav"><a href="#" class="is-on">Матчи</a><a href="#">Турниры</a><a href="#">Фэнтези</a><a href="#">Новости</a></nav>
+    <div class="pt-games"></div><a class="pt-in" href="#">Войти</a></header>
+  <main id="main"></main>
+</div>
+<script src="../_db/_db.js"></script><script src="../_db/_fake.js"></script><script src="../_db/db.js"></script><script src="../_db/compat.js"></script>
+<script src="../widgets-unified/_cons.js"></script><script src="../widget-tournament-6/_t6.js"></script>
+<script>window.TR2_BASE = '../widget-transfers-2/'</script><script src="../widget-transfers-2/_tr4.js"></script>
+<script src="../widget-news/_feed.js"></script><script src="../widget-news/_nw2.js"></script>
+<script src="_sch.js?v=1"></script><script src="_home.js?v=1"></script>
+<script>HOME.mount({})</script>
+<script>window.PF_HD = 'fly2'; window.PF_IN = 'box2'; window.PF_MONO = true</script><script src="../w-profile/_pf.js"></script>
+<script src="../_phone/_nohover.js"></script>
+</body></html>

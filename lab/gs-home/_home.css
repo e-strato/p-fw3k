@@ -1,0 +1,200 @@
+/* Главная с расписанием (gs-home) и «Все турниры» (gs-tours) — дирижёр 10.11, исследование: внутренняя документация/исследование-главная-турниры.
+   Каркас и шапка — ../gs-tournament/_ours.css, токены — ../widget-tournament/_w.css, тексты — ../widgets-unified/_type.css.
+   Стиль страницы матча v85: тёмные карточки с рамкой 1 px, цифры моно, мало слов, цвет — только смысл (фиолетовый — идёт, золото — баллы). */
+:root{ --sc-live:#a78bfa; --sc-mono:'JetBrains Mono', ui-monospace, monospace; }
+.num, .mono{ font-variant-numeric:tabular-nums; }
+.mono{ font-family:var(--sc-mono); letter-spacing:-.02em; }
+.sc-lg{ flex:none; display:inline-grid; place-items:center; border-radius:50%; object-fit:contain; }
+.sc-lg--stub{ background:color-mix(in srgb, var(--c) 18%, var(--w-mid-bg)); color:color-mix(in srgb, var(--c) 80%, #fff); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--c) 30%, transparent); font-weight:700; letter-spacing:-.03em; line-height:1; }
+.sc-gi{ flex:none; display:block; border-radius:4px; object-fit:contain; }
+.sc-tl{ flex:none; display:inline-grid; place-items:center; border-radius:5px; object-fit:contain; }
+.sc-tl--stub{ background:var(--w-muted); color:var(--w-muted-fg); font:700 8px/1 var(--w-font); }
+.sc-tier{ flex:none; height:16px; padding:0 5px; border-radius:4px; font:600 10px/16px var(--w-font); white-space:nowrap; }
+.sc-tier--1{ background:#facc15; color:#1a1400; } .sc-tier--2{ background:#60a5fa33; color:#bfdbfe; } .sc-tier--3{ background:#b4530933; color:#fdba74; }
+.sc-dot{ flex:none; display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--sc-live); box-shadow:0 0 0 3px color-mix(in srgb, var(--sc-live) 22%, transparent); animation:sc-pulse 1.6s ease-in-out infinite; }
+@keyframes sc-pulse{ 50%{ box-shadow:0 0 0 5px color-mix(in srgb, var(--sc-live) 0%, transparent); } }
+
+/* ── Шапка страницы: заголовок, день, счётчики · фильтры */
+.hm-h{ display:flex; align-items:baseline; flex-wrap:wrap; gap:6px 14px; margin:12px 0 12px; }
+.hm-h h1{ margin:0; font:700 24px/32px var(--w-font); }
+.is-desk .hm-h{ margin:20px 0 16px; } .is-desk .hm-h h1{ font-size:32px; line-height:40px; }
+.hm-d{ font:var(--t-sub); color:var(--w-muted-fg); }
+.hm-cnt{ display:inline-flex; align-items:center; gap:12px; font:500 12px/16px var(--w-font); color:var(--w-muted-fg); }
+.hm-cnt span{ display:inline-flex; align-items:center; gap:6px; } .hm-cnt b{ color:var(--w-fg); font:600 13px/16px var(--sc-mono); }
+.hm-cnt .is-live b{ color:var(--sc-live); }
+.hm-tools{ margin-left:auto; display:flex; align-items:center; gap:8px; align-self:center; }
+.hm-ib{ display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 10px; border-radius:var(--w-r-sm); color:var(--w-muted-fg); font:500 12px/16px var(--w-font); }
+.hm-ib:hover{ background:var(--w-mid-bg); color:var(--w-fg); } .hm-ib.is-on{ background:var(--w-muted); color:var(--w-fg); }
+.hm-ib svg{ width:16px; height:16px; }
+.hm-f{ display:flex; align-items:center; gap:8px; margin:0 0 16px; overflow-x:auto; scrollbar-width:none; }
+.is-desk .hm-f{ margin-bottom:20px; }
+.sc-seg{ flex:none; display:inline-flex; gap:2px; padding:3px; border-radius:10px; background:var(--w-mid-bg); }
+.sc-seg button{ display:inline-flex; align-items:center; gap:6px; height:30px; padding:0 10px; border-radius:7px; color:var(--w-muted-fg); font:var(--t-seg); white-space:nowrap; transition:background .15s, color .15s; }
+.sc-seg button:hover{ color:var(--w-fg); } .sc-seg button.is-on{ background:var(--w-muted); color:var(--w-fg); }
+.sc-seg button small{ font:500 11px/14px var(--sc-mono); color:var(--w-muted-fg); } .sc-seg button.is-on small{ color:var(--w-fg); }
+.sc-seg button .sc-l{ display:inline-flex; align-items:center; gap:4px; font:500 11px/14px var(--sc-mono); color:var(--sc-live); }
+.sc-seg .sc-gi{ opacity:.85; } .sc-seg button.is-on .sc-gi{ opacity:1; }
+
+/* ── Раскладка: главная + правая 360 (как страница матча) */
+.hm-lay{ display:flex; flex-direction:column; gap:16px; }
+.is-desk .hm-lay{ display:grid; grid-template-columns:minmax(0, 1fr) 360px; gap:16px; align-items:start; }
+.hm-main{ display:flex; flex-direction:column; gap:16px; min-width:0; }
+.hm-side{ display:flex; flex-direction:column; gap:16px; min-width:0; }
+.hm-side > div > .w, .hm-side .w{ width:100%; }
+
+/* ── Идут сейчас: главный live-матч карточкой + остальные live списком справа */
+.hm-live{ display:grid; grid-template-columns:1fr; border:1px solid var(--w-border); border-radius:var(--w-r); background:var(--w-bg); overflow:hidden; }
+.is-desk .hm-live{ grid-template-columns:minmax(0, 1fr) 300px; }
+.hm-hero{ position:relative; display:flex; flex-direction:column; gap:14px; padding:16px; min-width:0; }
+.hm-hero__top{ display:flex; align-items:center; gap:8px; min-width:0; font:var(--t-sub); color:var(--w-muted-fg); }
+.hm-hero__top .hm-tn{ color:var(--w-fg); font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.hm-st{ display:inline-flex; align-items:center; gap:6px; color:var(--sc-live); font:600 12px/16px var(--w-font); white-space:nowrap; }
+.hm-st .mono{ font-weight:500; }
+.hm-st--mut{ color:var(--w-muted-fg); } .hm-st--warn{ color:#fbbf24; }
+.hm-nav{ margin-left:auto; display:inline-flex; align-items:center; gap:2px; }
+.hm-nav button{ display:grid; place-items:center; width:28px; height:28px; border-radius:7px; color:var(--w-muted-fg); }
+.hm-nav button:hover{ background:var(--w-muted); color:var(--w-fg); }
+.hm-nav span{ min-width:34px; text-align:center; font:500 11px/14px var(--sc-mono); color:var(--w-muted-fg); }
+.hm-tms{ display:flex; flex-direction:column; gap:10px; }
+.hm-tm{ display:grid; grid-template-columns:36px minmax(0, 1fr) auto 56px; align-items:center; column-gap:12px; }
+.hm-tm__n{ min-width:0; display:flex; flex-direction:column; gap:6px; }
+.hm-tm__n b{ font:600 16px/20px var(--w-font); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.hm-tm__bar{ display:block; height:3px; border-radius:2px; background:var(--w-muted); overflow:hidden; }
+.hm-tm__bar i{ display:block; height:100%; border-radius:2px; background:var(--w-muted-fg); transition:width .4s; }
+.hm-tm.is-fav .hm-tm__bar i{ background:var(--w-fg); }
+.hm-tm__s{ display:flex; align-items:baseline; gap:8px; }
+.hm-tm__s b{ font:700 22px/24px var(--sc-mono); } .hm-tm__s small{ font:500 12px/16px var(--sc-mono); color:var(--w-muted-fg); }
+.hm-tm__p{ justify-self:end; font:600 14px/18px var(--sc-mono); color:var(--w-muted-fg); } .hm-tm.is-fav .hm-tm__p{ color:var(--w-fg); }
+.hm-hero__ft{ display:flex; align-items:center; gap:8px; margin-top:auto; font:var(--t-sub); color:var(--w-muted-fg); }
+.hm-go{ margin-left:auto; display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 12px; border-radius:var(--w-r-sm); background:var(--w-fg); color:var(--w-primary-fg); font:var(--t-btn); }
+.hm-go:hover{ background:#fff; }
+.hm-lv{ display:flex; flex-direction:column; border-top:1px solid var(--w-border); }
+.is-desk .hm-lv{ border-top:0; border-left:1px solid var(--w-border); }
+.hm-lv__h{ display:flex; align-items:center; height:40px; padding:0 12px; font:var(--t-label); color:var(--w-muted-fg); }
+.hm-lv__r{ display:grid; grid-template-columns:16px minmax(0, 1fr) auto; align-items:center; column-gap:8px; padding:8px 12px; text-align:left; transition:background .15s; }
+.hm-lv__r:hover{ background:var(--w-mid-bg); } .hm-lv__r.is-on{ background:var(--w-muted); }
+.hm-lv__t{ min-width:0; display:flex; flex-direction:column; gap:2px; }
+.hm-lv__t span{ display:flex; align-items:center; gap:6px; font:500 12px/16px var(--w-font); white-space:nowrap; overflow:hidden; }
+.hm-lv__t span em{ font-style:normal; overflow:hidden; text-overflow:ellipsis; }
+.hm-lv__s{ display:flex; flex-direction:column; align-items:flex-end; gap:2px; font:600 12px/16px var(--sc-mono); }
+.hm-lv__r .hm-st{ font-size:11px; }
+
+/* ── День: заголовок липнет, внутри — группы турниров */
+.hm-days{ display:flex; flex-direction:column; gap:20px; }
+.hm-day{ display:flex; flex-direction:column; gap:8px; }
+.hm-day__h{ position:sticky; top:0; z-index:4; display:flex; align-items:baseline; gap:10px; padding:10px 0 8px; background:color-mix(in srgb, var(--w-page) 92%, transparent); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+.hm-day__h b{ font:700 16px/20px var(--w-font); } .hm-day__h small{ font:500 11px/14px var(--sc-mono); color:var(--w-muted-fg); }
+.hm-tg{ border:1px solid var(--w-border); border-radius:var(--w-r); background:var(--w-bg); overflow:hidden; }
+.hm-tg__h{ display:flex; align-items:center; gap:8px; height:40px; padding:0 12px; border-bottom:1px solid var(--w-border); min-width:0; }
+.hm-tg__h b{ font:600 13px/18px var(--w-font); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.hm-tg__h small{ font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.hm-tg__go{ margin-left:auto; flex:none; display:grid; place-items:center; width:28px; height:28px; border-radius:7px; color:var(--w-muted-fg); }
+.hm-tg__go:hover{ background:var(--w-muted); color:var(--w-fg); }
+
+/* ── Строка матча (одна на главную, турнир, шапку матча). Компьютер — в линию; телефон — команды друг под другом */
+.hm-r{ position:relative; display:grid; grid-template-columns:72px minmax(0, 1fr) 104px minmax(0, 1fr) 96px 28px; align-items:center; column-gap:12px; min-height:48px; padding:6px 8px 6px 12px; cursor:pointer; transition:background .15s; }
+.hm-r + .hm-r{ border-top:1px solid color-mix(in srgb, var(--w-border) 60%, transparent); }
+.hm-r:hover{ background:var(--w-mid-bg); }
+.hm-r__t{ display:flex; flex-direction:column; gap:1px; font:600 13px/16px var(--sc-mono); }
+.hm-r__t small{ font:500 11px/14px var(--sc-mono); color:var(--w-muted-fg); } .hm-r__t s{ color:var(--w-muted-fg); font-weight:500; }
+.hm-r__t .hm-st{ font-size:11px; line-height:14px; }
+.hm-r__a, .hm-r__b{ display:flex; align-items:center; gap:8px; min-width:0; font:500 13px/18px var(--w-font); }
+.hm-r__a{ justify-content:flex-end; text-align:right; }
+.hm-r__a span, .hm-r__b span{ min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.hm-r.is-done .hm-r__a, .hm-r.is-done .hm-r__b{ color:var(--w-muted-fg); }
+.hm-r.is-done .is-win{ color:var(--w-fg); font-weight:600; }
+.hm-r__c{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; min-height:36px; text-align:center; }
+.hm-sc{ display:inline-flex; align-items:center; gap:6px; font:700 15px/18px var(--sc-mono); }
+.hm-sc i{ font-style:normal; color:var(--w-muted-fg); font-weight:500; }
+.hm-sc .is-lose{ color:var(--w-muted-fg); }
+.hm-r__c small{ font:500 11px/14px var(--sc-mono); color:var(--w-muted-fg); white-space:nowrap; }
+.hm-r__c .hm-vs{ font:500 12px/16px var(--w-font); color:var(--w-muted-fg); }
+.hm-r__c .hm-in{ font:500 12px/16px var(--sc-mono); color:var(--w-fg); }
+.hm-r__c .hm-hide{ display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 8px; border-radius:6px; background:var(--w-mid-bg); color:var(--w-muted-fg); font:500 11px/22px var(--w-font); }
+.hm-r__c .hm-hide:hover{ color:var(--w-fg); background:var(--w-muted); }
+.hm-r__m{ display:flex; align-items:center; justify-content:flex-end; gap:8px; }
+.hm-bo{ flex:none; height:18px; padding:0 5px; border-radius:4px; background:var(--w-mid-bg); color:var(--w-muted-fg); font:600 10px/18px var(--w-font); }
+.hm-ch{ display:flex; gap:2px; width:44px; height:4px; border-radius:2px; overflow:hidden; }
+.hm-ch i{ display:block; background:var(--w-muted); } .hm-ch i.is-fav{ background:var(--w-muted-fg); }
+.hm-ch-w{ display:inline-flex; align-items:center; gap:6px; font:500 11px/14px var(--sc-mono); color:var(--w-muted-fg); }
+.hm-star{ display:grid; place-items:center; width:28px; height:28px; border-radius:7px; color:var(--w-muted-fg); opacity:.5; transition:opacity .15s, color .15s; }
+.hm-r:hover .hm-star, .hm-star.is-on{ opacity:1; } .hm-star:hover{ color:var(--w-fg); } .hm-star.is-on{ color:var(--w-fg); }
+.hm-star svg{ width:15px; height:15px; } .hm-star.is-on svg{ fill:currentColor; }
+.hm-r.is-live{ background:color-mix(in srgb, var(--sc-live) 5%, transparent); } .hm-r.is-live:hover{ background:color-mix(in srgb, var(--sc-live) 9%, var(--w-mid-bg)); }
+.hm-r.is-cancel .hm-r__a, .hm-r.is-cancel .hm-r__b, .hm-r.is-cancel .hm-r__t{ opacity:.45; }
+.hm-r.is-cancel .hm-r__a span, .hm-r.is-cancel .hm-r__b span{ text-decoration:line-through; text-decoration-color:var(--w-muted-fg); }
+/* телефон */
+body:not(.is-desk) .hm-r{ grid-template-columns:52px minmax(0, 1fr) auto 28px; column-gap:10px; padding:8px 4px 8px 10px; min-height:56px; }
+body:not(.is-desk) .hm-r__c, body:not(.is-desk) .hm-r__m{ display:none; }
+.hm-r__tm{ display:none; }
+body:not(.is-desk) .hm-r__a, body:not(.is-desk) .hm-r__b{ display:none; }
+body:not(.is-desk) .hm-r__tm{ display:flex; flex-direction:column; gap:6px; min-width:0; }
+.hm-r__tm > span{ display:flex; align-items:center; gap:8px; min-width:0; font:500 13px/18px var(--w-font); }
+.hm-r__tm > span em{ font-style:normal; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.hm-r.is-done .hm-r__tm > span{ color:var(--w-muted-fg); } .hm-r.is-done .hm-r__tm > span.is-win{ color:var(--w-fg); font-weight:600; }
+.hm-r__sc{ display:none; }
+body:not(.is-desk) .hm-r__sc{ display:flex; flex-direction:column; align-items:flex-end; gap:6px; font:700 14px/18px var(--sc-mono); }
+.hm-r__sc .is-lose{ color:var(--w-muted-fg); }
+.hm-r__sc small{ font:500 11px/18px var(--w-font); color:var(--w-muted-fg); }
+
+/* ── Пусто, нет сети, загрузка */
+.hm-empty{ display:flex; flex-direction:column; align-items:center; gap:10px; padding:40px 16px; border:1px dashed var(--w-border); border-radius:var(--w-r); color:var(--w-muted-fg); font:var(--t-cell); text-align:center; }
+.hm-empty b{ color:var(--w-fg); font:var(--t-title); }
+.hm-empty button{ height:32px; padding:0 12px; border-radius:var(--w-r-sm); background:var(--w-muted); color:var(--w-fg); font:var(--t-btn); }
+.hm-more{ align-self:center; height:36px; padding:0 16px; border-radius:var(--w-r-sm); background:var(--w-mid-bg); color:var(--w-fg); font:var(--t-btn); }
+.hm-more:hover{ background:var(--w-muted); }
+.hm-off{ position:fixed; left:50%; bottom:20px; z-index:30; transform:translateX(-50%); display:flex; align-items:center; gap:12px; height:40px; padding:0 8px 0 14px; border-radius:10px; background:#7f1d1d; color:#fecaca; font:500 13px/18px var(--w-font); box-shadow:0 12px 32px rgba(0,0,0,.5); }
+.hm-off b{ color:#fff; font-weight:600; } .hm-off button{ height:28px; padding:0 10px; border-radius:7px; color:#fff; } .hm-off button:hover{ background:#ffffff1f; }
+.sk{ display:block; border-radius:6px; background:linear-gradient(90deg, var(--w-mid-bg) 0, var(--w-muted) 40%, var(--w-mid-bg) 80%) 0 0 / 300% 100%; animation:sk 1.4s linear infinite; }
+@keyframes sk{ to{ background-position:-150% 0; } }
+.hm-toast{ position:fixed; left:50%; bottom:24px; z-index:40; transform:translateX(-50%); max-width:420px; padding:10px 14px; border-radius:10px; background:#1b1b1f; color:var(--w-fg); font:500 13px/18px var(--w-font); box-shadow:0 0 0 1px #2c2c33, 0 12px 32px rgba(0,0,0,.5); }
+.hm-ex{ display:inline-block; margin-left:6px; padding:0 5px; border-radius:4px; background:var(--w-mid-bg); color:var(--w-muted-fg); font:500 10px/16px var(--w-font); vertical-align:middle; }
+
+/* ── «Все турниры» (gs-tours) */
+.tr-q{ display:inline-flex; align-items:center; gap:8px; height:32px; padding:0 10px; margin-left:auto; align-self:center; border-radius:var(--w-r-sm); background:var(--w-mid-bg); color:var(--w-muted-fg); box-shadow:inset 0 0 0 1px var(--w-border); }
+.tr-q:focus-within{ box-shadow:inset 0 0 0 1px var(--w-ring); color:var(--w-fg); }
+.tr-q input{ width:200px; border:0; outline:0; background:none; color:var(--w-fg); font:var(--t-cell); }
+.tr-q input::placeholder{ color:var(--w-muted-fg); }
+body:not(.is-desk) .tr-q{ width:100%; margin-left:0; } body:not(.is-desk) .tr-q input{ width:100%; }
+.tr-sec{ display:flex; flex-direction:column; gap:10px; }
+.tr-sec__h{ display:flex; align-items:center; gap:10px; min-height:32px; } .tr-sec__h > b{ font:700 16px/20px var(--w-font); } .tr-sec__h > small{ font:500 11px/14px var(--sc-mono); color:var(--w-muted-fg); }
+.tr-tiles{ display:grid; grid-template-columns:1fr; gap:12px; }
+.is-desk .tr-tiles{ grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); }
+body:not(.is-desk) .tr-tiles{ grid-auto-flow:column; grid-auto-columns:86%; grid-template-columns:none; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; }
+body:not(.is-desk) .tr-tile{ scroll-snap-align:start; }
+.tr-tile{ display:flex; flex-direction:column; gap:14px; padding:14px; border:1px solid var(--w-border); border-radius:var(--w-r); background:var(--w-bg); text-align:left; transition:background .15s, border-color .15s; }
+.tr-tile:hover{ background:var(--w-mid-bg); border-color:var(--w-hover); }
+.tr-tile__top{ display:flex; align-items:center; gap:8px; } .tr-tile__top .hm-st{ margin-left:auto; font-size:11px; }
+.tr-tile__n{ display:flex; align-items:center; gap:12px; min-width:0; }
+.tr-tile__n > span{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.tr-tile__n b{ font:600 15px/20px var(--w-font); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.tr-tile__n small{ font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tr-prog{ display:flex; flex-direction:column; gap:6px; }
+.tr-prog__bar{ height:4px; border-radius:2px; background:var(--w-muted); overflow:hidden; } .tr-prog__bar i{ display:block; height:100%; border-radius:2px; background:var(--sc-live); }
+.tr-prog__d{ display:flex; justify-content:space-between; font:500 11px/14px var(--sc-mono); color:var(--w-muted-fg); } .tr-prog__d span:nth-child(2){ color:var(--w-fg); }
+.tr-tile__ft{ display:flex; align-items:center; flex-wrap:wrap; gap:6px 12px; font:var(--t-sub); color:var(--w-muted-fg); }
+.tr-tile__ft > span{ display:inline-flex; align-items:center; gap:4px; } .tr-tile__ft > .mono:first-child{ color:var(--w-fg); font:600 13px/16px var(--sc-mono); }
+.tr-list{ border:1px solid var(--w-border); border-radius:var(--w-r); background:var(--w-bg); overflow:hidden; }
+.tr-mo__h{ display:flex; align-items:baseline; gap:8px; padding:12px 12px 6px; } .tr-mo__h b{ font:600 13px/18px var(--w-font); } .tr-mo__h small{ font:500 11px/14px var(--sc-mono); color:var(--w-muted-fg); }
+.tr-mo + .tr-mo{ border-top:1px solid var(--w-border); }
+.tr-r{ display:grid; grid-template-columns:112px minmax(0, 1fr) 56px 96px 112px 112px 20px; align-items:center; column-gap:12px; min-height:52px; padding:6px 12px; cursor:pointer; transition:background .15s; }
+.tr-r--done{ grid-template-columns:112px minmax(0, 1fr) 56px 160px 112px 20px; }
+.tr-r:not(.tr-r--h):hover{ background:var(--w-mid-bg); }
+.tr-r--h{ min-height:32px; cursor:default; border-bottom:1px solid var(--w-border); font:var(--t-label); color:var(--w-muted-fg); }
+.tr-r__d{ font:500 12px/16px var(--sc-mono); color:var(--w-muted-fg); white-space:nowrap; }
+.tr-r__n{ display:flex; align-items:center; gap:10px; min-width:0; }
+.tr-r__n > span{ display:flex; flex-direction:column; min-width:0; } .tr-r__n b{ font:var(--t-title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tr-r__n small{ font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tr-r__k, .tr-r__w{ display:inline-flex; align-items:center; gap:6px; min-width:0; font:500 12px/16px var(--w-font); color:var(--w-muted-fg); }
+.tr-r__w b{ color:var(--w-fg); font:var(--t-title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .tr-r__w svg{ flex:none; color:#facc15; }
+.tr-r__p{ justify-self:end; font:600 13px/16px var(--sc-mono); white-space:nowrap; } .tr-r--h .tr-r__p, .tr-r--h .tr-r__s{ font:var(--t-label); }
+.tr-r__s{ justify-self:end; font:500 12px/16px var(--sc-mono); color:var(--w-muted-fg); white-space:nowrap; }
+.tr-r__go{ display:grid; place-items:center; color:var(--w-muted-fg); }
+/* телефон: строка в две линии — турнир сверху, даты · фонд · старт снизу */
+body:not(.is-desk) .tr-r{ grid-template-columns:minmax(0, 1fr) auto; grid-template-areas:"n p" "d s"; row-gap:4px; padding:10px 12px; }
+body:not(.is-desk) .tr-r__n{ grid-area:n; } body:not(.is-desk) .tr-r__d{ grid-area:d; } body:not(.is-desk) .tr-r__p{ grid-area:p; }
+body:not(.is-desk) .tr-r__s, body:not(.is-desk) .tr-r__w{ grid-area:s; justify-self:end; }
+body:not(.is-desk) .tr-r__t, body:not(.is-desk) .tr-r__k, body:not(.is-desk) .tr-r__go{ display:none; }
+/* значки игр — чёрные SVG (в шапке портала они маска): на тёмном фоне — белыми; на белой кнопке — как есть (дирижёр 10.11: «значков не видно») */
+img.sc-gi[src$=".svg"]{ filter:invert(1) !important; }
+.h2-g button.is-on img.sc-gi[src$=".svg"]{ filter:none !important; }

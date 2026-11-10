@@ -1,0 +1,179 @@
+/* gs-upgrade v1 — доработки страницы матча (_upm.js). Цвета — переменными страницы: --w-* (widgets-unified), фиолетовый — --wts-violet (w-tabs-s) */
+:root { --upm-v: var(--wts-violet, #8b5cf6); --upm-vf: var(--wts-violet-fg, #a78bfa); --upm-ui: #18181bdd; --upm-ring: 0 0 0 1px #ffffff1a, 0 6px 16px #0008; }
+
+/* 1 · 7 — линия шанса и опыт поверх графика */
+.upm-ov { position: absolute; left: 0; top: 0; z-index: 1; pointer-events: none; overflow: visible; }
+.upm-wl { fill: none; stroke: var(--upm-v); stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round; opacity: .95; }
+.upm-wd { fill: var(--w-bg, #09090b); stroke: var(--upm-v); stroke-width: 1.8; }
+.upm-wdot { fill: var(--upm-v); stroke: var(--w-bg, #09090b); stroke-width: 2; }
+.upm-wt { font: 600 11px/1 var(--w-font, system-ui); fill: var(--upm-vf); paint-order: stroke; stroke: var(--w-bg, #09090b); stroke-width: 3px; stroke-linejoin: round; font-variant-numeric: tabular-nums; }
+.upm-xp { fill: none; stroke: #d4d4d8; stroke-width: 1.5; stroke-dasharray: 4 3; stroke-linejoin: round; opacity: .85; }
+.upm-xpd { fill: #d4d4d8; stroke: var(--w-bg, #09090b); stroke-width: 2; }
+
+/* плашка шанса — сверху слева на поле графика */
+.upm-wp { position: absolute; left: 8px; top: 6px; z-index: 4; display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 10px;
+  background: var(--upm-ui); box-shadow: var(--upm-ring); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  font: var(--t-seg, 500 12px/16px system-ui); color: var(--w-muted-fg, #a1a1aa); white-space: nowrap; pointer-events: none; }
+.g2-plot:has(.g2-lanes) .upm-wp { display: none; } /* открыт блок «Линии» — плашка не мешает */
+.upm-wp img { width: 16px; height: 16px; border-radius: 4px; object-fit: contain; }
+.upm-wp b { font-weight: 600; color: var(--w-fg, #fafafa); }
+.upm-wp .upm-wp-v { color: var(--upm-vf); }
+.upm-wp-k { display: inline-flex; align-items: center; gap: 6px; }
+.upm-wp-s { width: 1px; height: 14px; margin: 0 4px; background: #ffffff1f; }
+.upm-sw { display: inline-block; width: 12px; height: 2px; border-radius: 1px; background: var(--upm-v); }
+.upm-sw--g { background: linear-gradient(90deg, var(--w-up, #22c55e) 50%, var(--w-down, #ef4444) 50%); }
+.upm-sw--x { background: repeating-linear-gradient(90deg, #d4d4d8 0 4px, transparent 4px 7px); }
+
+/* кнопки «Опыт · Итог карты · История» — рядом с «+ −» графика, тем же видом */
+.upm-ctl { position: absolute; z-index: 6; display: flex; border-radius: 10px; overflow: hidden; background: var(--upm-ui); box-shadow: var(--upm-ring);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.upm-ctl.is-ph { left: 8px; top: 6px; }
+.upm-ctl button { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border: 0; background: none; color: var(--w-fg, #fafafa);
+  font: var(--t-seg, 500 12px/16px system-ui); white-space: nowrap; cursor: pointer; }
+.upm-ctl button + button { border-left: 1px solid #ffffff14; }
+.upm-ctl button:hover { background: #ffffff14; }
+.upm-ctl button.on { background: #fafafa; color: #09090b; }
+.upm-ctl button.on .upm-sw--x { background: repeating-linear-gradient(90deg, #09090b 0 4px, transparent 4px 7px); }
+
+/* 5 · 8 — панели поверх поля графика */
+.upm-pn { position: absolute; left: 8px; right: 8px; z-index: 5; display: flex; flex-direction: column; border-radius: 12px; overflow: hidden;
+  background: #0c0c0ef2; box-shadow: var(--upm-ring); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); color: var(--w-fg, #fafafa); }
+.upm-pn-hd { display: flex; align-items: baseline; gap: 10px; padding: 12px 12px 10px 16px; border-bottom: 1px solid var(--w-border, #27272a); }
+.upm-pn-hd b { font: var(--t-title, 600 13px/18px system-ui); font-size: 15px; }
+.upm-pn-hd small { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--t-sub, 400 11px/16px system-ui); font-size: 12px; color: var(--w-muted-fg, #a1a1aa); font-variant-numeric: tabular-nums; }
+.upm-pn-hd button { align-self: center; width: 28px; height: 28px; border: 0; border-radius: 8px; background: none; color: var(--w-muted-fg, #a1a1aa); font: 400 20px/1 var(--w-font, system-ui); cursor: pointer; }
+.upm-pn-hd button:hover { background: #ffffff14; color: var(--w-fg, #fafafa); }
+.upm-pn-bd { flex: 1; min-height: 0; overflow: auto; padding: 12px 16px 16px; scrollbar-width: thin; scrollbar-color: #3f3f46 transparent; }
+.upm-pn h4 { margin: 0 0 4px; font: 600 13px/18px var(--w-font, system-ui); color: var(--w-fg, #fafafa); }
+.upm-pn h4 small { margin-left: 4px; font-weight: 500; color: var(--w-muted-fg, #a1a1aa); }
+.upm-mu { margin: 0 0 10px; font: var(--t-sub, 400 11px/16px system-ui); color: var(--w-muted-fg, #a1a1aa); }
+
+/* итог карты: две колонки на компьютере */
+.upm-sum2 { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 28px; align-items: start; }
+.upm-km { border-collapse: collapse; font: 500 12px/16px var(--w-font, system-ui); }
+.upm-km th, .upm-km td { padding: 3px; text-align: center; }
+.upm-km thead th:first-child { text-align: left; }
+.upm-km thead th:first-child span { display: block; font: 400 11px/14px var(--w-font, system-ui); color: var(--w-muted-fg, #a1a1aa); white-space: nowrap; }
+.upm-km img { display: block; width: 28px; height: 28px; margin: 0 auto; border-radius: 6px; }
+.upm-km img.upm-tl { width: 16px; height: 16px; margin: 0 0 2px; border-radius: 4px; object-fit: contain; }
+.upm-km td { min-width: 40px; height: 34px; border-radius: 6px; background: #ffffff08; box-shadow: inset 0 0 0 2px #0c0c0e; }
+.upm-km td.z { color: #52525b; background: none; }
+.upm-km td i { font-style: normal; color: #52525b; margin: 0 1px; }
+.upm-km b { font-weight: 600; } .upm-km b.r { color: var(--w-up, #22c55e); } .upm-km b.d { color: var(--w-down, #ef4444); }
+.upm-km td.t, .upm-km tr.t td { background: none; color: var(--w-muted-fg, #a1a1aa); }
+.upm-km tr.t th, .upm-km tbody tr:not(.t) th + td { }
+.upm-km tr.t th, .upm-km thead th:last-child { font: 400 11px/14px var(--w-font, system-ui); color: var(--w-muted-fg, #a1a1aa); }
+
+.upm-fh, .upm-fr { display: grid; grid-template-columns: 44px minmax(0, 1fr) 40px 76px; align-items: center; gap: 10px; }
+.upm-fh { padding: 0 0 6px; font: 400 11px/14px var(--w-font, system-ui); color: var(--w-muted-fg, #a1a1aa); border-bottom: 1px solid var(--w-border, #27272a); }
+.upm-fh span:nth-child(n+3) { text-align: right; }
+.upm-fr { min-height: 34px; padding: 4px 0; border-bottom: 1px solid #ffffff0a; font: 500 12px/16px var(--w-font, system-ui); }
+.upm-fr time { color: var(--w-muted-fg, #a1a1aa); }
+.upm-fd { display: flex; flex-wrap: wrap; gap: 3px; }
+.upm-fd img { width: 22px; height: 22px; border-radius: 5px; filter: grayscale(.5); }
+.upm-fd img.r { box-shadow: 0 -2px 0 var(--w-up, #22c55e) inset; }
+.upm-fd img.d { box-shadow: 0 -2px 0 var(--w-down, #ef4444) inset; }
+.upm-fr > b, .upm-fg { text-align: right; }
+.upm-fg { display: inline-flex; justify-content: flex-end; align-items: center; gap: 4px; color: var(--w-muted-fg, #a1a1aa); }
+.upm-fg img { width: 14px; height: 14px; border-radius: 3px; object-fit: contain; }
+.upm-pn .is-r { color: var(--w-up, #22c55e); } .upm-pn .is-d { color: var(--w-down, #ef4444); }
+
+/* история — строками, как лента новостей */
+.upm-st { padding-top: 4px; }
+.upm-sr { display: grid; grid-template-columns: 44px 18px minmax(0, 1fr); gap: 10px; align-items: start; padding: 10px 0; border-bottom: 1px solid #ffffff0a; }
+.upm-sr:last-child { border-bottom: 0; }
+.upm-sr time { padding-top: 1px; font: 500 12px/16px var(--w-font, system-ui); color: var(--w-muted-fg, #a1a1aa); }
+.upm-sr img { width: 18px; height: 18px; border-radius: 4px; object-fit: contain; }
+.upm-sr b { display: block; font: 600 13px/18px var(--w-font, system-ui); color: var(--w-fg, #fafafa); }
+.upm-sr span { display: block; margin-top: 2px; font: 400 12px/16px var(--w-font, system-ui); color: var(--w-muted-fg, #a1a1aa); }
+.upm-sr span b { display: inline; font: inherit; font-weight: 500; color: var(--w-fg, #fafafa); }
+.upm-sr.is-end b { color: var(--upm-vf); }
+
+/* 2 — итог линии под игроком */
+.wb-ln.upm-ln.eq { color: var(--w-muted-fg, #a1a1aa); }
+
+/* 3 — подсказка с предметами */
+.upm-tip { position: fixed; z-index: 1000; left: 0; top: 0; width: max-content; max-width: 300px; padding: 10px 12px 8px; border-radius: 12px; background: #18181bf5;
+  box-shadow: var(--upm-ring); color: var(--w-fg, #fafafa); font: var(--t-cell, 400 12px/16px system-ui); pointer-events: none; opacity: 0; transform: translateY(4px); transition: opacity .12s, transform .12s; }
+.upm-tip.on { opacity: 1; transform: none; }
+.upm-tip-hd { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.upm-tip-hd img { width: 22px; height: 22px; border-radius: 5px; }
+.upm-tip-hd b { font: 600 13px/18px var(--w-font, system-ui); }
+.upm-tip-hd small { color: var(--w-muted-fg, #a1a1aa); }
+.upm-tip-hd em { margin-left: auto; padding-left: 8px; font-style: normal; color: var(--w-muted-fg, #a1a1aa); }
+.upm-tip-it { display: grid; grid-template-columns: repeat(6, 38px); gap: 6px; }
+.upm-it { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.upm-it img, .upm-it0 { width: 38px; height: 28px; border-radius: 4px; object-fit: cover; }
+.upm-it0 { display: grid; place-items: center; background: var(--w-muted, #27272a); font: 600 11px/1 var(--w-font, system-ui); font-style: normal; color: var(--w-muted-fg, #a1a1aa); }
+.upm-it em { font: 500 10px/12px var(--w-font, system-ui); font-style: normal; color: var(--w-muted-fg, #a1a1aa); }
+.upm-tip-0 { color: var(--w-muted-fg, #a1a1aa); }
+.upm-tip-ft { margin-top: 8px; padding-top: 6px; border-top: 1px solid #ffffff12; font: 400 11px/14px var(--w-font, system-ui); color: #71717a; }
+
+/* 4 — телефон: суть над графиком */
+.upm-sum { display: flex; align-items: center; gap: 10px; padding: 8px 4px 10px; font: var(--t-cell, 400 12px/16px system-ui); color: var(--w-muted-fg, #a1a1aa); white-space: nowrap; }
+.upm-sum > i { width: 1px; height: 14px; background: var(--w-border, #27272a); }
+.upm-s { display: inline-flex; align-items: center; gap: 5px; min-width: 0; }
+.upm-s img { width: 16px; height: 16px; border-radius: 4px; object-fit: contain; }
+.upm-s b { font: 600 14px/18px var(--w-font, system-ui); color: var(--w-fg, #fafafa); }
+.upm-s small { font: inherit; }
+.upm-s.is-r b { color: var(--w-up, #22c55e); } .upm-s.is-d b { color: var(--w-down, #ef4444); }
+.upm-sum em { margin-left: auto; padding: 1px 6px; border-radius: 6px; background: var(--w-muted, #27272a); font: 500 11px/16px var(--w-font, system-ui); font-style: normal; color: var(--w-fg, #fafafa); }
+body:not(.is-desk) .upm-sum2 { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+body:not(.is-desk) .upm-km td { min-width: 34px; }
+body:not(.is-desk) .upm-km img { width: 24px; height: 24px; }
+body:not(.is-desk) .upm-pn { left: 4px; right: 4px; }
+body:not(.is-desk) .upm-ctl button { padding: 0 10px; }
+
+/* 6 — «Статистика»: здания на карте линий, контроль карты */
+.upm-b { position: absolute; width: 7px; height: 7px; border-radius: 2px; transform: translate(-50%, -50%); box-shadow: 0 0 0 1.5px #09090bcc; pointer-events: auto; }
+.upm-b--r { background: var(--w-up, #22c55e); } .upm-b--d { background: var(--w-down, #ef4444); }
+.upm-b--x { width: 5px; height: 5px; border-radius: 1px; }
+.upm-b--f { width: 11px; height: 11px; border-radius: 3px; }
+.upm-b.is-dead { background: #3f3f46; box-shadow: 0 0 0 1.5px #09090bcc; opacity: .8; }
+.upm-mc { margin-top: 12px; font: var(--t-cell, 400 12px/16px system-ui); color: var(--w-muted-fg, #a1a1aa); }
+.upm-mc-t { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.upm-mc-t b { font: 600 13px/18px var(--w-font, system-ui); color: var(--w-fg, #fafafa); }
+.upm-mc-t small { font: 400 11px/14px var(--w-font, system-ui); }
+.upm-mc-bar { display: flex; gap: 2px; height: 6px; border-radius: 3px; overflow: hidden; }
+.upm-mc-bar i { display: block; min-width: 2px; }
+.upm-mc-bar .r { background: var(--w-up, #22c55e); } .upm-mc-bar .c { background: #52525b; } .upm-mc-bar .d { background: var(--w-down, #ef4444); }
+.upm-mc-l { display: flex; justify-content: space-between; gap: 6px; margin-top: 6px; font: 500 11px/14px var(--w-font, system-ui); white-space: nowrap; }
+.upm-mc-l span { display: inline-flex; align-items: center; gap: 4px; }
+.upm-mc-l img { width: 14px; height: 14px; border-radius: 3px; object-fit: contain; }
+.upm-mc-l .r { color: var(--w-up, #22c55e); } .upm-mc-l .d { color: var(--w-down, #ef4444); }
+
+/* баг: телефон, до матча — «О матче» в две строки и лого Nigma Galaxy обрезано справа.
+   Сетка «команда · шанс · команда» была 1fr auto 1fr — колонки не сжимались меньше слов и вылезали за край; на телефоне лого — над названием */
+body:not(.is-desk) .ws24-hd b { flex: none; white-space: nowrap; }
+body:not(.is-desk) .ws24-hd small { min-width: 0; text-align: right; }
+body:not(.is-desk) .ws47-top { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 8px; }
+body:not(.is-desk) .ws47-top .ws45-t { min-width: 0; flex-direction: column; align-items: flex-start; gap: 6px; }
+body:not(.is-desk) .ws47-top .ws45-t.b { flex-direction: column-reverse; align-items: flex-end; text-align: right; }
+body:not(.is-desk) .ws47-top .ws45-t b { min-width: 0; max-width: 100%; overflow-wrap: break-word; }
+body:not(.is-desk) .ws47-top .ws45-t img { flex: none; }
+body:not(.is-desk) .ws47-big { gap: 8px; }
+body:not(.is-desk) .ws47-big small { max-width: 72px; white-space: normal; text-align: center; }
+
+/* ── v26: шанс и опыт — значками, одним рядом с «+ − ↔» графика (стык без зазора) ── */
+.upm-ctl .upm-ib { width: 36px; padding: 0; justify-content: center; } .upm-ctl .upm-ib svg { width: 16px; height: 16px; }
+.upm-ctl.is-join { border-radius: 0 10px 10px 0; } .upm-ctl.is-join button { height: var(--upm-h, 32px); }
+.upm-ctl.is-join .upm-ib:first-child { border-left: 1px solid #ffffff14; }
+.g2-zc.upm-zj { border-top-right-radius: 0 !important; border-bottom-right-radius: 0 !important; }
+.upm-ctl .upm-ib[data-upm="wp"].on { background: var(--upm-v, #8b5cf6); color: #fff; }
+.upm-wp[hidden] { display: none; }
+
+/* ── v27: подписи у значков на компьютере; прогноз шанса на 5′ вперёд ── */
+.upm-ctl .upm-ib:has(span) { width: auto; padding: 0 12px 0 10px; gap: 6px; }
+.upm-fz { fill: #ffffff06; }
+.upm-fb { fill: var(--upm-v, #8b5cf6); opacity: .16; stroke: none; }
+.upm-fl { fill: none; stroke: var(--upm-v, #8b5cf6); stroke-width: 2; stroke-dasharray: 5 4; stroke-linecap: round; }
+.upm-ft { fill: var(--w-muted-fg, #a1a1aa); font: 500 11px/1 var(--w-font, system-ui); }
+.upm-sw--f { background: repeating-linear-gradient(90deg, var(--upm-v, #8b5cf6) 0 4px, transparent 4px 7px); }
+
+/* ── v28–v30: прогноз золота от реальной линии — пунктир и коридор ── */
+.upm-gf { color: var(--up, #22c55e); } .upm-gf.is-dn { color: var(--dn, #ef4444); }
+.upm-gb { fill: currentColor; stroke: none; } .upm-gb--80 { opacity: .12; } .upm-gb--50 { opacity: .18; }
+.upm-gl { fill: none; stroke: currentColor; stroke-width: 2; stroke-dasharray: 5 4; stroke-linecap: round; }
+.upm-ge { fill: none; stroke: currentColor; stroke-width: 1; stroke-dasharray: 3 3; opacity: .6; }
+.upm-gd { fill: currentColor; stroke: var(--w-bg, #09090b); stroke-width: 2; }
+.upm-gt { fill: currentColor; font: 600 11px/1 var(--w-font, system-ui); font-variant-numeric: tabular-nums; }

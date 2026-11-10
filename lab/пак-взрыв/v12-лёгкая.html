@@ -1,10 +1,12 @@
 <!doctype html>
 <html lang="ru"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>v9 · Открытие пака — плавнее</title>
+<title>v12 · Открытие пака — лёгкая</title>
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
 <style>
 html, body { margin: 0; height: 100%; background: #000; overflow: hidden; font: 500 13px/1.35 Inter, system-ui, sans-serif; color: #e4e4e7; }
 #c { position: fixed; inset: 0; width: 100%; height: 100%; display: block; cursor: pointer; }
+.fps { position: fixed; left: 12px; bottom: 12px; z-index: 2; padding: 6px 10px; border-radius: 8px; background: rgba(15, 15, 18, .8); color: #e4e4e7; font: 500 12px/1.5 Inter, system-ui, sans-serif; font-variant-numeric: tabular-nums; pointer-events: none; white-space: pre; }
+.fps b.bad { color: #f87171; } .fps b.mid { color: #facc15; } .fps b.ok { color: #4ade80; }
 .hint { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); color: #a1a1aa; font-size: 14px; pointer-events: none; transition: opacity .3s; }
 .pn { position: fixed; top: 12px; right: 12px; width: 276px; max-height: calc(100% - 24px); overflow: auto; box-sizing: border-box; background: rgba(15, 15, 18, .86); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, .08); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; z-index: 2; }
 .pn.is-min > :not(.pn-hd) { display: none; }
@@ -27,7 +29,15 @@ input[type=range] { width: 100%; accent-color: #8b5cf6; margin: 0; }
 .note { color: #f59e0b; font-size: 12px; }
 </style></head>
 <body>
-<!-- v9 · Плавнее (дирижёр 06.11: «как будто у нас 20 кадров в секунду»): размер картинки подстраивается под видеокарту — держим ~60 кадров
+<!-- v12 · Лёгкая (дирижёр 06.11: у него 15 кадров/с в момент разрыва 1,9–2,5 с на размере 1,5): размер не выше 1,25;
+     подстройка за 10 кадров, а не за 30, и сразу на шаг 0,2 — успевает до разрыва; без сглаживания внутри обработки (его даёт сам размер);
+     звезда-вспышка на меньшей плоскости и с 7 лучами вместо 11; прогрев — один кадр со всем сразу до клика (иначе замирание на 2,3 с).
+     v11 · Без просадок (дирижёр 06.11: «можно ещё оптимизировать» — было 60 с просадками до 56): ключевые кадры заранее, а не новыми массивами каждый кадр;
+     размер картинки во время открытия только уменьшается, увеличивается — когда стоим (пересоздание буферов дёргало кадр);
+     в конце карта без ореола свечения на тексте — чётче.
+     v10 · Счётчик кадров (дирижёр 06.11: «в каких-то моментах просадка — можем её вывести»): слева внизу — кадров в секунду сейчас; шейдеры собираются заранее (просадка на 2,3 с была из-за сборки при появлении сферы);
+     размер картинки; после открытия — до 6 моментов по таймлайну, где кадров меньше 60 («2,15 с — 31»), чтобы знать, что упрощать.
+     v9 · Плавнее (дирижёр 06.11: «как будто у нас 20 кадров в секунду»): размер картинки подстраивается под видеокарту — держим ~60 кадров
      (тормозит — рисуем мельче, тянет — крупнее); сглаживание 2× вместо 4×; радужное расслоение и свечение считаются только когда видны;
      рубашка пака, сфера и карта — на простых материалах (без радужной плёнки и лака), лицевая сторона пака — как была; сетка пака реже.
      v8 · Наша карточка (дирижёр 06.11: «давай карточку нашу поставим» → «Карточка v3 — технологичная»): из пака выходит карта из лабы «Карточка v3», v1 «Хайперглитч» (9Class, Legend) —
@@ -49,6 +59,7 @@ input[type=range] { width: 100%; accent-color: #8b5cf6; margin: 0; }
      карта — с толщиной, золотым торцом и рубашкой, раскручивается. Панель и настройки — общие с v1. -->
 <canvas id="c"></canvas>
 <div class="hint" id="hint">Нажми на пак</div>
+<div class="fps" id="fps"></div>
 <div class="pn" id="pn">
   <div class="pn-hd"><b>Настройки</b><button class="btn" id="min">Свернуть</button></div>
   <div class="btns"><button class="btn btn--p" id="play">Открыть</button><button class="btn" id="pause">Пауза</button></div>
@@ -90,7 +101,7 @@ const col = (h) => new THREE.Color(h)
 // ── рендер ──
 const cv = document.getElementById('c')
 const R = new THREE.WebGLRenderer({ canvas: cv, antialias: false, powerPreference: 'high-performance' })
-let dpr = Math.min(devicePixelRatio, 1.25), DPR_MAX = Math.min(devicePixelRatio, 1.5)
+let dpr = Math.min(devicePixelRatio, 1.25), DPR_MAX = Math.min(devicePixelRatio, 1.25)
 R.setPixelRatio(dpr)
 R.toneMapping = THREE.ACESFilmicToneMapping
 const scene = new THREE.Scene()
@@ -103,7 +114,7 @@ const key = new THREE.DirectionalLight(0xffffff, 1.8); key.position.set(3, 4, 6)
 const rim = new THREE.PointLight(0xffffff, 0, 14); rim.position.set(0, .5, -1.6); scene.add(rim)
 const fill = new THREE.PointLight(0xffffff, 0, 10); fill.position.set(-2, -1, 3); scene.add(fill)
 
-const composer = new EffectComposer(R, new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 2 }))
+const composer = new EffectComposer(R, new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType }))
 composer.addPass(new RenderPass(scene, cam))
 // защита от NaN / бесконечности перед свечением (иначе свечение разносит чёрные квадраты)
 composer.addPass(new ShaderPass({ uniforms: { tDiffuse: { value: null } }, vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }', fragmentShader: 'uniform sampler2D tDiffuse; varying vec2 vUv; void main(){ vec4 c = texture2D(tDiffuse, vUv); if (isnan(c.r) || isnan(c.g) || isnan(c.b)) c.rgb = vec3(0.); gl_FragColor = vec4(min(c.rgb, vec3(40.)), 1.); }' }))
@@ -188,11 +199,11 @@ const starMat = new THREE.ShaderMaterial({
   vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.); }',
   fragmentShader: `uniform float uA, uT; varying vec2 vUv; ${GL_N}
     void main(){ vec2 p = (vUv - .5) * 2.; float r = length(p), a = atan(p.y, p.x), st = 0.;
-      for (int i = 0; i < 11; i++) { float fi = float(i); float d = adiff(a, fi * .571 + h1(fi + 11.) * .35 + uT * .1); float len = .45 + .55 * h1(fi + 5.); st += exp(-d * (40. + r * 150.)) * smoothstep(len, 0., r); }
+      for (int i = 0; i < 7; i++) { float fi = float(i); float d = adiff(a, fi * .898 + h1(fi + 11.) * .35 + uT * .1); float len = .45 + .55 * h1(fi + 5.); st += exp(-d * (40. + r * 150.)) * smoothstep(len, 0., r); }
       vec3 c = vec3(.9, 1., 1.) * (st * 1.7 + exp(-r * 6.) * 1.3 + exp(-r * 1.6) * .25);
       gl_FragColor = vec4(c * uA, 1.); }`,
 })
-const star = new THREE.Mesh(new THREE.PlaneGeometry(9, 9), starMat); star.renderOrder = 50; scene.add(star)
+const star = new THREE.Mesh(new THREE.PlaneGeometry(6.5, 6.5), starMat); star.renderOrder = 50; scene.add(star)
 const whMat = new THREE.ShaderMaterial({ uniforms: { uA: { value: 0 }, uC: { value: col(S.white) } }, transparent: true, depthTest: false, depthWrite: false,
   vertexShader: 'void main(){ gl_Position = vec4(position.xy, 0., 1.); }', fragmentShader: 'uniform float uA; uniform vec3 uC; void main(){ gl_FragColor = vec4(uC * 3., uA); }' })
 const wh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), whMat); wh.frustumCulled = false; wh.renderOrder = 100; scene.add(wh)
@@ -370,25 +381,67 @@ addEventListener('pointermove', (e) => { mx = e.clientX / innerWidth * 2 - 1; my
 const hint = document.getElementById('hint')
 function setHint() { hint.style.opacity = mode === 'play' ? 0 : 1; hint.textContent = mode === 'done' ? 'Нажми — ещё раз' : 'Нажми на пак' }
 
+// ключевые кадры — заранее, а не новым массивом в каждом кадре (меньше мусора — меньше подёргиваний)
+const KF0 = [[.5, 6], [1.2, 14], [2, 34], [2.42, 60], [2.5, 10], [4.2, 26], [4.8, 4]]
+const KF1 = [[0, .15], [.8, 1], [2.18, 1], [2.22, 0, 'l']]
+const KF2 = [[1.6, 0], [1.85, .9], [2, .6], [2.15, 0]]
+const KF3 = [[3, 0], [3.4, 1], [4.4, 1]]
+const KF4 = [[4.35, 0], [5.1, 1]]
+const KF5 = [[1.2, 0], [1.8, .5], [2.1, 1.2], [2.3, .4], [3, .4], [3.5, 2.2], [4.4, 3], [4.9, 0]]
+const KF6 = [[0, .2], [.8, .18], [2.18, .18], [2.22, 0, 'l']]
+const KF7 = [[4.7, 0], [5.4, .3]]
+const KF8 = [[1.1, 0], [1.3, 1], [1.8, 1], [2, .25], [2.15, 0]]
+const KF9 = [[1.1, .4], [1.4, 1, 'o']]
+const KF10 = [[1.85, 0], [2, .3], [2.12, .2], [2.25, 0]]
+const KF11 = [[0, 0], [2.12, 0], [2.2, .12, 'i'], [2.35, 0, 'o'], [4.3, 0], [4.6, .28, 'i'], [5.1, 0, 'o']]
+const KF12 = [[1.2, 0], [1.7, .04], [2, .09], [2.4, .05], [2.8, 0]]
+const KF13 = [[.8, 0], [1.2, 1]]
+const KF14 = [[0, 1], [.7, 0]]
+const KF15 = [[0, 7.4], [1.2, 7.6], [2.1, 6.4]]
+const KF16 = [[2.2, 5.6], [3.9, 5.1], [5.6, 5.8]]
+const KF17 = [[4.4, 1], [5.6, 0]]
+const KF18 = [[1.1, 0], [1.9, -.12], [2.2, 0]]
+const KF19 = [[0, 1], [.35, .9], [.9, 1, 'o'], [1.2, 1], [1.75, 1.12], [2.05, 1.02]]
+const KF20 = [[1.4, 0], [1.6, .03], [2, .06], [2.4, .12]]
+const KF21 = [[0, 1], [.6, 0]]
+const KF22 = [[0, 0], [1.1, Math.PI * 4, 'io']]
+const KF23 = [[1.1, 0], [1.45, -.42], [1.75, -.32], [2.05, .18]]
+const KF24 = [[0, 0], [.35, .7], [.8, 0], [1.85, 0], [2.15, .5], [2.5, 0]]
+const KF25 = [[1.75, 0], [2, 2], [2.15, 4], [2.5, 0]]
+const KF26 = [[2.15, 0], [2.9, 1, 'o']]
+const KF27 = [[2.4, 1], [2.9, 0]]
+const KF28 = [[1.7, 0], [2.12, .3, 'i']]
+const KF29 = [[.4, 0], [.8, 7], [2.05, 16]]
+const KF30 = [[.9, 0], [1.4, 4]]
+const KF31 = [[0, 1.5], [.5, 0]]
+const KF32 = [[2.2, .05], [2.55, 1, 'b'], [3.9, 1.06], [4.7, 5, 'i']]
+const KF33 = [[2.2, 3], [2.6, 1.4], [4.1, 1.4], [4.7, 0]]
+const KF34 = [[4, 1], [4.55, 0]]
+const KF35 = [[2.25, 1], [4.6, 1.3], [5.6, .25]]
+const KF36 = [[2.25, 0], [2.6, .3, 'o'], [3.9, .36], [5.4, 1], [6, 1]]
+const KF37 = [[2.25, 3], [4.3, 3], [4.6, 5], [5.7, 0, 'o']]
+const KF38 = [[4.3, 1], [4.72, 0]]
+const KF_TH = [[5, 1.1], [5.8, 3]]
 function frame(dt) {
   clock += dt; smx += (mx - smx) * Math.min(1, dt * 4); smy += (my - smy) * Math.min(1, dt * 4)
   if (playing) { t = Math.min(T_END, t + dt * S.speed); if (t >= T_END) { playing = false; mode = 'done'; doneAt = clock; setHint() } }
   const idle = mode === 'idle', done = mode === 'done', tt = idle ? 0 : t, sp = playing ? S.speed : 0
   // скорость туннеля
-  const tv = idle ? 3 : K(tt, [[.5, 6], [1.2, 14], [2, 34], [2.42, 60], [2.5, 10], [4.2, 26], [4.8, 4]])
+  const tv = idle ? 3 : K(tt, KF0)
   zoom += dt * (idle ? .25 : tv * .06) * (idle ? 1 : sp)
   U.uTime.value = clock; U.uZoom.value = zoom
   // фон
   U.uIntro.value = 1
-  U.uTunnel.value = idle ? .15 : K(tt, [[0, .15], [.8, 1], [2.18, 1], [2.22, 0, 'l']])
-  U.uRain.value = idle ? 0 : K(tt, [[1.6, 0], [1.85, .9], [2, .6], [2.15, 0]])
+  U.uTunnel.value = idle ? .15 : K(tt, KF1)
+  U.uRain.value = idle ? 0 : K(tt, KF2)
   U.uStage.value = !idle && tt >= 2.2 ? 1 : 0
-  U.uChroma.value = idle ? 0 : K(tt, [[3, 0], [3.4, 1], [4.4, 1]])
-  U.uFin.value = idle ? 0 : K(tt, [[4.35, 0], [5.1, 1]])
-  chroma.uniforms.uAmt.value = idle ? 0 : K(tt, [[1.2, 0], [1.8, .5], [2.1, 1.2], [2.3, .4], [3, .4], [3.5, 2.2], [4.4, 3], [4.9, 0]])
+  U.uChroma.value = idle ? 0 : K(tt, KF3)
+  U.uFin.value = idle ? 0 : K(tt, KF4)
+  chroma.uniforms.uAmt.value = idle ? 0 : K(tt, KF5)
   chroma.enabled = chroma.uniforms.uAmt.value > .002
+  bloom.threshold = idle ? 1.1 : K(tt, KF_TH)
   // туннель 3D
-  const tA = idle ? .2 : done ? .3 : Math.max(K(tt, [[0, .2], [.8, .18], [2.18, .18], [2.22, 0, 'l']]), K(tt, [[4.7, 0], [5.4, .3]]))
+  const tA = idle ? .2 : done ? .3 : Math.max(K(tt, KF6), K(tt, KF7))
   tunMat.opacity = tA; tun.visible = tA > .01
   if (tun.visible) {
     const L = 1 + tv * .09
@@ -397,39 +450,39 @@ function frame(dt) {
   }
   rings.forEach((m, i) => { if (playing || idle || done) { m.userData.z += dt * (idle || done ? 4 : tv * sp * .8); if (m.userData.z > 9) m.userData.z -= 68 } m.position.z = m.userData.z; m.material.opacity = tA * .35 * Math.min(1, (m.userData.z + 60) / 20); m.material.color.copy(U.uC1.value).multiplyScalar(1.6) })
   // лучи
-  const bA = idle ? 0 : K(tt, [[1.1, 0], [1.3, 1], [1.8, 1], [2, .25], [2.15, 0]])
-  beams.visible = bA > .01; beamMat.uniforms.uA.value = bA; beams.rotation.z = clock * .35; beams.scale.setScalar(K(tt, [[1.1, .4], [1.4, 1, 'o']]))
+  const bA = idle ? 0 : K(tt, KF8)
+  beams.visible = bA > .01; beamMat.uniforms.uA.value = bA; beams.rotation.z = clock * .35; beams.scale.setScalar(K(tt, KF9))
   // звезда и белый экран
-  starMat.uniforms.uA.value = idle ? 0 : K(tt, [[1.85, 0], [2, .3], [2.12, .2], [2.25, 0]]); starMat.uniforms.uT.value = clock; star.visible = starMat.uniforms.uA.value > .01
-  whMat.uniforms.uA.value = idle ? 0 : K(tt, [[0, 0], [2.12, 0], [2.2, .12, 'i'], [2.35, 0, 'o'], [4.3, 0], [4.6, .28, 'i'], [5.1, 0, 'o']])
+  starMat.uniforms.uA.value = idle ? 0 : K(tt, KF10); starMat.uniforms.uT.value = clock; star.visible = starMat.uniforms.uA.value > .01
+  whMat.uniforms.uA.value = idle ? 0 : K(tt, KF11)
   // камера
-  const shk = idle ? 0 : K(tt, [[1.2, 0], [1.7, .04], [2, .09], [2.4, .05], [2.8, 0]])
+  const shk = idle ? 0 : K(tt, KF12)
   if (idle) { cam.position.set(smx * .5, -smy * .3, 7.4); LOOK.set(0, 0, 0) }
-  else if (tt < 2.2) { const orb = K(tt, [[.8, 0], [1.2, 1]]), c0 = K(tt, [[0, 1], [.7, 0]]); cam.position.set(Math.sin(clock * .7) * .7 * orb + cam0.x * c0, Math.cos(clock * .5) * .2 * orb + cam0.y * c0, K(tt, [[0, 7.4], [1.2, 7.6], [2.1, 6.4]])); LOOK.set(0, 0, 0) }
-  else { const a = (tt - 2.2) * .45, z = K(tt, [[2.2, 5.6], [3.9, 5.1], [5.6, 5.8]]), f = K(tt, [[4.4, 1], [5.6, 0]]); cam.position.set(Math.sin(a) * z * .12 * f, Math.sin(a * .7) * .2 * f, z); LOOK.set(0, 0, 0) }
+  else if (tt < 2.2) { const orb = K(tt, KF13), c0 = K(tt, KF14); cam.position.set(Math.sin(clock * .7) * .7 * orb + cam0.x * c0, Math.cos(clock * .5) * .2 * orb + cam0.y * c0, K(tt, KF15)); LOOK.set(0, 0, 0) }
+  else { const a = (tt - 2.2) * .45, z = K(tt, KF16), f = K(tt, KF17); cam.position.set(Math.sin(a) * z * .12 * f, Math.sin(a * .7) * .2 * f, z); LOOK.set(0, 0, 0) }
   cam.position.x += (Math.random() - .5) * shk; cam.position.y += (Math.random() - .5) * shk
-  cam.lookAt(LOOK); cam.rotation.z += idle ? 0 : K(tt, [[1.1, 0], [1.9, -.12], [2.2, 0]])
+  cam.lookAt(LOOK); cam.rotation.z += idle ? 0 : K(tt, KF18)
   star.position.copy(cam.position).addScaledVector(cam.getWorldDirection(V2), 3); star.quaternion.copy(cam.quaternion)
   // пак
   const pv = idle || tt < 2.95
   pack.visible = pv
   if (pv) {
-    const h = PH * (idle ? 1 : K(tt, [[0, 1], [.35, .9], [.9, 1, 'o'], [1.2, 1], [1.75, 1.12], [2.05, 1.02]]))
+    const h = PH * (idle ? 1 : K(tt, KF19))
     pack.scale.set(h * packAspect, h, h)
-    const sh = idle ? 0 : K(tt, [[1.4, 0], [1.6, .03], [2, .06], [2.4, .12]])
+    const sh = idle ? 0 : K(tt, KF20)
     pack.position.set((Math.random() - .5) * sh, Math.sin(clock * 1.4) * .06 + (Math.random() - .5) * sh, 0)
     const wob = 1
-    const r0 = idle ? 1 : K(tt, [[0, 1], [.6, 0]]); pack.rotation.set(Math.sin(clock * 1.7) * .1 + (idle ? smy * .35 : rot0.x * r0), (idle ? smx * .6 : rot0.y * r0 + K(tt, [[0, 0], [1.1, Math.PI * 4, 'io']])) + Math.sin(clock * 1.1) * .3, idle ? 0 : K(tt, [[1.1, 0], [1.45, -.42], [1.75, -.32], [2.05, .18]]))
-    { const em = idle ? 0 : K(tt, [[0, 0], [.35, .7], [.8, 0], [1.85, 0], [2.15, .5], [2.5, 0]]); HALF.forEach((m) => (m.emissiveIntensity = em)) }
+    const r0 = idle ? 1 : K(tt, KF21); pack.rotation.set(Math.sin(clock * 1.7) * .1 + (idle ? smy * .35 : rot0.x * r0), (idle ? smx * .6 : rot0.y * r0 + K(tt, KF22)) + Math.sin(clock * 1.1) * .3, idle ? 0 : K(tt, KF23))
+    { const em = idle ? 0 : K(tt, KF24); HALF.forEach((m) => (m.emissiveIntensity = em)) }
     // разрыв: шов загорается, половинки расходятся в стороны и назад, гаснут
-    tearU.uGlow.value = idle ? 0 : K(tt, [[1.75, 0], [2, 2], [2.15, 4], [2.5, 0]])
-    const op = idle ? 0 : K(tt, [[2.15, 0], [2.9, 1, 'o']]), fd = idle ? 1 : K(tt, [[2.4, 1], [2.9, 0]])
+    tearU.uGlow.value = idle ? 0 : K(tt, KF25)
+    const op = idle ? 0 : K(tt, KF26), fd = idle ? 1 : K(tt, KF27)
     halfL.position.set(-op * 2.4, op * .25, -op * 1.4); halfL.rotation.set(0, op * 1.2, op * .45)
     halfR.position.set(op * 2.4, -op * .1, -op * 1.4); halfR.rotation.set(0, -op * 1.2, -op * .45)
     HALF.forEach((m) => (m.userData.fade.value = fd))
-    deform(.22 + (idle ? 0 : K(tt, [[1.7, 0], [2.12, .3, 'i']])))
-    rim.intensity = idle ? 4 : K(tt, [[.4, 0], [.8, 7], [2.05, 16]]); rim.color.copy(U.uC1.value)
-    fill.intensity = idle ? 2 : K(tt, [[.9, 0], [1.4, 4]]); fill.color.copy(U.uC2.value)
+    deform(.22 + (idle ? 0 : K(tt, KF28)))
+    rim.intensity = idle ? 4 : K(tt, KF29); rim.color.copy(U.uC1.value)
+    fill.intensity = idle ? 2 : K(tt, KF30); fill.color.copy(U.uC2.value)
   }
   // куски пака
   const tau = tt - 2.2, fv = false // v6: кусков-треугольников нет — пак рвётся пополам
@@ -439,21 +492,21 @@ function frame(dt) {
     FD.forEach((d, i) => { Q.setFromAxisAngle(d.ax, d.w * tau); const cxw = d.c[0] * sx, cyw = d.c[1] * sy
       for (let j = 0; j < 3; j++) { const [x, y] = FR[i][j]; V.set(x * sx - cxw, y * sy - cyw, 0).applyQuaternion(Q); A[i * 9 + j * 3] = cxw + d.v.x * k + V.x; A[i * 9 + j * 3 + 1] = cyw + d.v.y * k + V.y; A[i * 9 + j * 3 + 2] = d.v.z * k + V.z } })
     fragGeo.attributes.position.needsUpdate = true; fragGeo.computeVertexNormals()
-    fragMat.opacity = Math.max(0, 1 - tau / 1.6); fragMat.emissiveIntensity = K(tau, [[0, 1.5], [.5, 0]])
+    fragMat.opacity = Math.max(0, 1 - tau / 1.6); fragMat.emissiveIntensity = K(tau, KF31)
   }
   // сфера
   const sv = !idle && tt >= 2.2 && tt < 4.75
   sph.visible = sphRim.visible = sphIn.visible = sv
-  if (sv) { const s = K(tt, [[2.2, .05], [2.55, 1, 'b'], [3.9, 1.06], [4.7, 5, 'i']]); sph.scale.setScalar(s); sphRim.scale.setScalar(s); sphIn.scale.setScalar(s); sph.rotation.y = clock * .3; rimMat.uniforms.uA.value = K(tt, [[2.2, 3], [2.6, 1.4], [4.1, 1.4], [4.7, 0]]); inMat.uniforms.uA.value = K(tt, [[4, 1], [4.55, 0]]); sphMat.opacity = .25 * K(tt, [[4, 1], [4.55, 0]]); cray.position.copy(card.position); cray.position.z -= .3; cray.quaternion.copy(cam.quaternion); cray.scale.setScalar(card.scale.y * 2.2); crayMat.uniforms.uT.value = clock }
+  if (sv) { const s = K(tt, KF32); sph.scale.setScalar(s); sphRim.scale.setScalar(s); sphIn.scale.setScalar(s); sph.rotation.y = clock * .3; rimMat.uniforms.uA.value = K(tt, KF33); inMat.uniforms.uA.value = K(tt, KF34); sphMat.opacity = .25 * K(tt, KF34); cray.position.copy(card.position); cray.position.z -= .3; cray.quaternion.copy(cam.quaternion); cray.scale.setScalar(card.scale.y * 2.2); crayMat.uniforms.uT.value = clock }
   cray.visible = !idle && tt >= 2.25; if (cray.visible && !sv) { cray.position.copy(card.position); cray.position.z -= .3; cray.quaternion.copy(cam.quaternion); cray.scale.setScalar(card.scale.y * 2.2); crayMat.uniforms.uT.value = clock }
-  crayMat.uniforms.uA.value = K(tt, [[2.25, 1], [4.6, 1.3], [5.6, .25]])
+  crayMat.uniforms.uA.value = K(tt, KF35)
   // карта
   const cvz = !idle && tt >= 2.25
   card.visible = cvz
   if (cvz) {
-    const h = CH * K(tt, [[2.25, 0], [2.6, .3, 'o'], [3.9, .36], [5.4, 1], [6, 1]])
+    const h = CH * K(tt, KF36)
     card.scale.set(h * cardAspect, h, h)
-    const em = K(tt, [[2.25, 3], [4.3, 3], [4.6, 5], [5.7, 0, 'o']]); cardFront.emissiveIntensity = cardBackM.emissiveIntensity = cardEdge.emissiveIntensity = em
+    const em = K(tt, KF37); cardFront.emissiveIntensity = cardBackM.emissiveIntensity = cardEdge.emissiveIntensity = em
     const dk = done ? Math.min(1, (clock - doneAt) * 1.5) : 0; card.rotation.set(Math.sin(clock * 1.3) * .04 + dk * smy * .2, Math.sin(clock * .9) * .06 + dk * smx * .35, 0)
     card.position.set(0, Math.sin(clock * 1.4) * .04, 0)
   }
@@ -462,7 +515,7 @@ function frame(dt) {
   shards.visible = shv
   if (shv) {
     const k = (1 - Math.exp(-tau * 1.5)) / 1.5
-    for (let i = 0; i < NS; i++) { const s = SH[i]; V.copy(s.d).multiplyScalar(SR * .3 + s.v * k + .35 * tau); Q2.setFromAxisAngle(s.ax, s.w * tau); Q.copy(s.q0).multiply(Q2); SC.copy(s.sc).multiplyScalar(Math.min(1, tau * 7) * K(tt, [[4.3, 1], [4.72, 0]])); M.compose(V, Q, SC); shards.setMatrixAt(i, M) }
+    for (let i = 0; i < NS; i++) { const s = SH[i]; V.copy(s.d).multiplyScalar(SR * .3 + s.v * k + .35 * tau); Q2.setFromAxisAngle(s.ax, s.w * tau); Q.copy(s.q0).multiply(Q2); SC.copy(s.sc).multiplyScalar(Math.min(1, tau * 7) * K(tt, KF38)); M.compose(V, Q, SC); shards.setMatrixAt(i, M) }
     shards.instanceMatrix.needsUpdate = true
   }
   // крошки
@@ -482,15 +535,27 @@ addEventListener('resize', resize); resize()
 let last = performance.now()
 // подстройка размера картинки под видеокарту: среднее за 30 кадров; медленно — мельче, быстро два раза подряд — крупнее
 let acc = 0, nAcc = 0, good = 0
-R.setAnimationLoop((now) => { const raw = (now - last) / 1000, dt = Math.min(.05, raw); last = now; frame(dt)
-  acc += raw; nAcc++; if (nAcc >= 30) { const avg = acc / nAcc; acc = 0; nAcc = 0
-    if (avg > 1 / 48 && dpr > .7) { dpr = Math.max(.7, dpr - .15); good = 0; resize() }
-    else if (avg < 1 / 58 && dpr < DPR_MAX) { if (++good >= 2) { dpr = Math.min(DPR_MAX, dpr + .1); good = 0; resize() } } else good = 0 } })
+// счётчик кадров: сейчас (сглажено) и худшие моменты открытия по таймлайну (корзины по 0,1 с)
+const fpsEl = document.getElementById('fps'); let fpsS = 60, fpsT = 0, worst = {}, report = ''
+const cls = (f) => (f < 40 ? 'bad' : f < 59 ? 'mid' : 'ok')
+// в лабе открыты все версии сразу — рисует только видимая и та, что под мышью или играет; остальные — раз в 20 кадров
+let onScreen = true, hot = document.hasFocus(), skip = 0
+new IntersectionObserver((e) => { onScreen = e[0].isIntersecting }).observe(document.body)
+document.documentElement.addEventListener('pointerenter', () => (hot = true)); document.documentElement.addEventListener('pointerleave', () => (hot = false))
+const awake = () => onScreen && (hot || playing || ++skip % 20 === 0)
+R.setAnimationLoop((now) => { if (!awake()) { last = now; return } const raw = (now - last) / 1000, dt = Math.min(.05, raw); last = now; frame(dt)
+  const f = 1 / Math.max(raw, 1e-3); fpsS += (f - fpsS) * .1
+  if (playing) { const k = (Math.floor(t * 10) / 10).toFixed(1); worst[k] = Math.min(worst[k] ?? 999, f); report = '' }
+  else if (mode === 'done' && !report && Object.keys(worst).length) { report = Object.entries(worst).filter(([, v]) => v < 59).sort((a, b) => a[1] - b[1]).slice(0, 6).map(([k, v]) => `${k.replace('.', ',')} с — <b class="${cls(v)}">${Math.round(v)}</b>`).join('\n') || 'просадок нет'; }
+  if (now - fpsT > 250) { fpsT = now; fpsEl.innerHTML = `<b class="${cls(fpsS)}">${Math.round(fpsS)}</b> кадров/с · размер ${dpr.toFixed(2)}` + (report ? '\nПросадки ниже 60:\n' + report : '') }
+  acc += raw; nAcc++; if (nAcc >= 10) { const avg = acc / nAcc; acc = 0; nAcc = 0
+    if (avg > 1 / 50 && dpr > 1) { dpr = Math.max(1, dpr - .2); /* не ниже 1 — иначе мыло */ good = 0; resize() }
+    else if (avg < 1 / 58 && dpr < DPR_MAX && !playing) { if (++good >= 2) { dpr = Math.min(DPR_MAX, dpr + .1); good = 0; resize() } } else good = 0 } })
 
 // ── управление ──
 const pauseB = document.getElementById('pause')
 const cam0 = new THREE.Vector3(), rot0 = { x: 0, y: 0 }
-const start = () => { cam0.copy(cam.position); rot0.x = smy * .35; rot0.y = smx * .6; mode = 'play'; t = 0; playing = true; setHint(); pauseB.textContent = 'Пауза' }
+const start = () => { worst = {}; report = ''; cam0.copy(cam.position); rot0.x = smy * .35; rot0.y = smx * .6; mode = 'play'; t = 0; playing = true; setHint(); pauseB.textContent = 'Пауза' }
 cv.addEventListener('click', () => { if (mode === 'idle') start(); else if (mode === 'done') { mode = 'idle'; setHint() } })
 document.getElementById('play').onclick = start
 pauseB.onclick = () => { if (mode !== 'play') return; playing = !playing; pauseB.textContent = playing ? 'Пауза' : 'Дальше' }
@@ -508,7 +573,7 @@ applyColors()
 async function setImg(kind, src) {
   const def = kind === 'pack' ? DEF_PACK : DEF_CARD
   let im; try { im = await loadImg(src || def) } catch (e) { note('Картинка не грузится по ссылке — скачай её и загрузи файлом'); return false }
-  const tex = texOf(im)
+  const tex = texOf(im); R.initTexture(tex) // загрузить в видеокарту сразу, а не в момент появления
   if (kind === 'pack') { packMat.map?.dispose(); packMat.map = tex; backMat.map = tex; fragMat.map = tex; [packMat, backMat, fragMat].forEach((m) => (m.needsUpdate = true)); HALF.forEach((m) => { m.map = tex; m.needsUpdate = true }); packAspect = im.width / im.height }
   else { cardFront.map?.dispose(); cardFront.map = tex; cardFront.needsUpdate = true; cardAspect = im.width / im.height }
   document.getElementById(kind + 'I').src = src || def
@@ -528,6 +593,11 @@ document.getElementById('reset').onclick = async () => {
 }
 DEF_CARD = '_карта-v3.png'
 await setImg('pack', S.pack); await setImg('card', S.card)
+// заранее собрать шейдеры всего, что появится позже (сфера, лучи карты, звезда…) — иначе в момент появления кадр замирает
+{ const hid = []; scene.traverse((o) => { if (!o.visible) { hid.push(o); o.visible = true } })
+  // прогрев: один кадр со всем сразу — шейдеры, сетки и картинки уходят в видеокарту до клика, а не в момент разрыва
+  await R.compileAsync(scene, cam); chroma.enabled = true; composer.render(); chroma.enabled = false
+  hid.forEach((o) => (o.visible = false)) }
 setHint()
 </script>
 </body></html>

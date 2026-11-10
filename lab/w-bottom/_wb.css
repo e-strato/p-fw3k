@@ -91,7 +91,7 @@ html.wb-eqh .d3-tm.ws-tm { box-sizing: border-box; justify-content: center; }
 html.wb-ptfix body.pt-off .pt { transform: none !important; }
 /* v32 · без прокрутки страницы на компьютере: правая колонка прокручивается сама, в высоту окна */
 html.wb-lock, html.wb-lock body { overflow: hidden; }
-html.wb-lock .gm-side { max-height: calc(100vh - var(--wb-top, 64px) - 16px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+html.wb-lock .gm-side { max-height: calc(100vh - var(--wb-top, 64px) - 16px); overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; scrollbar-width: none; }
 html.wb-lock .gm-side::-webkit-scrollbar { display: none; }
 /* v33 · у лого столбик: тег золота сверху (если ведёт), форма снизу; у Dire — зеркально */
 .wb-lc { display: inline-flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 4px; min-height: 28px; }

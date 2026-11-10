@@ -1,0 +1,180 @@
+/* gs-upgrade v3-news — доработки страницы новостей поверх news-page v62 (код — _upn.js). Чужие файлы не правим — только перекрываем. */
+:root{
+  /* цвет точки у типа новости — переменные страницы, от токенов виджетов (_w.css) */
+  --upn-match:var(--w-a); --upn-op:var(--w-muted-fg); --upn-prog:var(--w-star); --upn-tr:#c084fc; --upn-patch:var(--w-up);
+  --upn-rum:var(--w-down-fg); --upn-scene:#71717a; --upn-wrap:#2dd4bf;
+  --upn-line:var(--w-border); --upn-soft:#ffffff12; --upn-mono:'JetBrains Mono', ui-monospace, "SF Mono", Menlo, monospace;
+}
+[class*="upn-"] .num, .upn-a .num{ font-variant-numeric:tabular-nums; }
+
+/* ── 1. тип новости ── */
+.upn-ty{ display:inline-flex; align-items:center; gap:5px; height:16px; padding:0 6px 0 5px; border-radius:4px; background:var(--upn-soft); color:var(--w-fg); font:var(--t-tag); white-space:nowrap; }
+.upn-ty::before, .upn-dot{ content:""; flex:none; width:6px; height:6px; border-radius:50%; background:var(--c, var(--upn-scene)); }
+.upn-dot{ display:inline-block; }
+.upn-ty--match{ --c:var(--upn-match); } .upn-ty--op{ --c:var(--upn-op); } .upn-ty--prog{ --c:var(--upn-prog); } .upn-ty--tr{ --c:var(--upn-tr); }
+.upn-ty--patch{ --c:var(--upn-patch); } .upn-ty--rum{ --c:var(--upn-rum); } .upn-ty--scene{ --c:var(--upn-scene); } .upn-ty--wrap{ --c:var(--upn-wrap); }
+.upn-own{ color:var(--w-muted-fg); font:var(--t-sub); }
+/* тематические чипы, которые на деле — типы, уходят в сегмент типов (ряд чипов теперь влезает) */
+.n2-chip[data-top="tr"], .n2-chip[data-top="op"], .n2-chip[data-top="game"], .n2-chip[data-top="rum"], .n2-chip[data-top="scene"]{ display:none; }
+.upn-tf{ margin:-4px 0 16px; } .upn-tf .mn-seg{ display:flex; width:max-content; }
+.upn-tf .mn-seg button{ height:28px; padding:0 10px; font:var(--t-seg); }
+.upn-tf .mn-seg small{ font:500 11px/1 var(--upn-mono); color:#71717a; } .upn-tf .mn-seg button.on small{ color:var(--w-muted-fg); }
+body:not(.is-desk) .upn-tf{ margin:-2px 0 12px; } body:not(.is-desk) .upn-tf .mn-seg{ width:auto; }
+#main.upn-typed .n2-top, #main.upn-typed .n2-sp, #main.upn-typed .n2-sps, #main.upn-typed .n2-rw:not(.upn-feed){ display:none; }
+.upn-empty{ padding:32px 0; color:var(--w-muted-fg); font:var(--t-title); }
+
+/* ── 5. комментарии ── */
+.upn-cm{ display:inline-flex; align-items:center; gap:3px; margin-left:auto; color:var(--w-muted-fg); font:500 11px/1 var(--upn-mono); white-space:nowrap; }
+.upn-cm svg{ flex:none; }
+.n2-sl__b .upn-cm{ color:#e4e4e7cc; }
+
+/* ── 2. вводки ── */
+.upn-ld{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; color:var(--w-muted-fg); font:400 14px/20px var(--w-font); }
+.np3-i .upn-ld{ -webkit-line-clamp:3; font-size:12px; line-height:17px; }
+
+/* ── 3. обложка из данных (на месте .mn-bi: та же ширина и 16:9) ── */
+.upn-cv{ position:relative; display:flex; align-items:center; gap:8px; box-sizing:border-box; padding:8px; overflow:hidden; container-type:inline-size;
+  background:radial-gradient(120% 120% at 50% 0%, #27272a, #111113); box-shadow:inset 0 0 0 1px #ffffff0d; color:var(--w-fg); }
+.upn-lg{ width:22px; height:22px; object-fit:contain; flex:none; } .upn-lg--s{ width:14px; height:14px; vertical-align:-3px; margin-right:4px; } .upn-lg--b{ width:36px; height:36px; }
+.upn-h{ width:22px; height:12px; flex:none; border-radius:2px; object-fit:cover; background:#27272a; }
+.upn-lv{ display:inline-block; width:6px; height:6px; margin-right:4px; border-radius:50%; background:var(--w-down); vertical-align:1px; }
+.upn-cv__s{ display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:100%; color:var(--w-muted-fg); font:500 10px/13px var(--w-font); }
+.upn-cv__sc{ display:flex; align-items:center; justify-content:center; gap:8px; }
+.upn-cv__sc b{ font:700 17px/1 var(--w-font); }
+.upn-cv__hs{ display:flex; gap:3px; }
+.upn-fm{ display:inline-flex; gap:3px; } .upn-fm i{ width:7px; height:7px; border-radius:2px; background:var(--w-down); opacity:.75; } .upn-fm i.is-w{ background:var(--w-up); opacity:1; }
+/* серия */
+.upn-cv--mt{ flex-direction:column; justify-content:center; gap:4px; text-align:center; }
+.upn-cv__maps{ display:none; gap:4px; }
+.upn-cv__maps span{ display:inline-flex; align-items:baseline; gap:4px; height:18px; padding:0 6px; border-radius:4px; background:var(--upn-soft); font:600 10px/18px var(--w-font); }
+.upn-cv__maps span::before{ content:""; width:6px; height:6px; border-radius:50%; align-self:center; background:var(--w-a); } .upn-cv__maps span.is-b::before{ background:var(--w-b); }
+.upn-cv__maps small{ color:var(--w-muted-fg); font:500 10px/18px var(--upn-mono); }
+.upn-cv__pk{ display:flex; flex-direction:column; gap:2px; } .upn-cv__pk > span{ display:flex; gap:2px; justify-content:center; }
+.upn-cv__f{ display:none; color:var(--w-muted-fg); font:400 10px/12px var(--w-font); }
+/* игрок, команда, турнир */
+.upn-cv--pl{ padding:0 8px 0 0; }
+.upn-cv__ph{ flex:none; align-self:stretch; width:38%; object-fit:cover; object-position:50% 20%; background:#1c1c1f; }
+.upn-cv__ph.is-ini{ display:grid; place-items:center; color:var(--w-muted-fg); font:700 16px/1 var(--w-font); }
+.upn-cv__in{ display:flex; flex-direction:column; gap:3px; min-width:0; flex:1; }
+.upn-cv__in > b{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:700 12px/15px var(--w-font); }
+.upn-cv__k{ display:flex; flex-direction:column; } .upn-cv__k b{ font:600 11px/14px var(--upn-mono); } .upn-cv__k small{ display:none; color:var(--w-muted-fg); font:400 10px/12px var(--w-font); }
+.upn-cv__x{ display:none; gap:8px; color:var(--w-muted-fg); font:400 10px/13px var(--w-font); } .upn-cv__x b{ color:var(--w-fg); font-weight:600; }
+.upn-cv--tm, .upn-cv--ti{ padding:8px 10px; }
+@container (max-width:140px){ .upn-cv__s{ display:none; } .upn-cv--pl .upn-cv__hs img:nth-child(3){ display:none; } .upn-lg--b{ width:28px; height:28px; } .upn-cv--tm .upn-cv__hs img:nth-child(n+3), .upn-cv--ti .upn-cv__hs img:nth-child(n+3){ display:none; } .upn-cv__pk .upn-h{ width:18px; height:10px; } }
+@container (min-width:280px){
+  .upn-cv{ padding:16px; gap:14px; }
+  .upn-lg{ width:44px; height:44px; } .upn-lg--b{ width:64px; height:64px; } .upn-lg--s{ width:16px; height:16px; }
+  .upn-h{ width:36px; height:20px; border-radius:3px; }
+  .upn-cv__sc{ gap:18px; } .upn-cv__sc b{ font-size:34px; }
+  .upn-cv__s{ font-size:12px; line-height:16px; }
+  .upn-cv__maps{ display:flex; } .upn-cv__f{ display:block; } .upn-cv--mt{ gap:8px; }
+  .upn-cv--pl{ padding:0 16px 0 0; } .upn-cv__in{ gap:6px; } .upn-cv__in > b{ font-size:20px; line-height:24px; }
+  .upn-cv__k b{ font-size:18px; line-height:22px; } .upn-cv__k small{ display:block; }
+  .upn-cv__x{ display:flex; font-size:12px; line-height:16px; } .upn-cv__hs{ gap:4px; } .upn-fm i{ width:10px; height:10px; }
+}
+
+/* ── лид: первая в ленте — на всю ширину: обложка | заголовок, вводка, «Ещё по теме» ── */
+.mn-bg:has(> .upn-lead, > .upn-wcard) > :nth-child(2){ border-top:1px solid var(--w-border); padding-top:14px; }
+.mn--row .mn-bc.upn-lead{ grid-column:1 / -1; display:grid; grid-template-columns:minmax(0, 420px) minmax(0, 1fr); grid-template-rows:auto 1fr; column-gap:24px; row-gap:12px; padding-bottom:16px; }
+.upn-lead__a{ display:contents; }
+.upn-lead .mn-bi{ grid-row:1 / 3; width:100%; border-radius:12px; }
+.upn-lead .mn-bb{ gap:10px; padding-top:2px; }
+.upn-lead .mn-bt{ font:700 22px/28px var(--w-font); -webkit-line-clamp:3; }
+.upn-lead .upn-lead__a:hover .mn-bt{ color:#fff; }
+.upn-rel{ display:flex; flex-direction:column; align-self:end; }
+.upn-rel__h{ padding-bottom:6px; color:var(--w-muted-fg); font:var(--t-hsub); }
+.upn-rel a{ display:flex; align-items:baseline; gap:10px; min-width:0; padding:8px 0; border-top:1px solid var(--w-border); color:var(--w-fg); text-decoration:none; font:500 13px/18px var(--w-font); }
+.upn-rel a span{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .upn-rel a:hover span{ text-decoration:underline; }
+.upn-rel time{ flex:none; width:44px; color:var(--w-muted-fg); font:500 11px/1 var(--upn-mono); } .upn-rel .upn-cm{ margin-left:0; }
+body:not(.is-desk) .mn--row .mn-bc.upn-lead{ display:flex; flex-direction:column; gap:12px; }
+body:not(.is-desk) .upn-lead .mn-bi{ width:100%; } body:not(.is-desk) .upn-lead .mn-bt{ font-size:19px; line-height:25px; }
+body:not(.is-desk) .upn-rel{ align-self:stretch; min-width:0; } /* телефон: «Ещё по теме» не вылезает влево (дирижёр 10.11) */
+body:not(.is-desk) .upn-lead .upn-lead__a{ display:flex; flex-direction:column; gap:12px; color:inherit; text-decoration:none; }
+
+/* ── 4. «Итог в цифрах»: карточка в ленте ── */
+.upn-wcard{ appearance:none; border:0; background:none; color:inherit; text-align:left; font:inherit; cursor:pointer; }
+.mn--row .upn-wcard{ grid-column:1 / -1; display:grid; grid-template-columns:minmax(0, 420px) minmax(0, 1fr); column-gap:24px; align-items:start; padding-bottom:16px; }
+.upn-wcard .mn-bb{ gap:10px; padding-top:2px; } .upn-wcard .mn-bt{ font:700 20px/26px var(--w-font); -webkit-line-clamp:3; }
+.upn-wcard:hover .mn-bt{ color:#fff; } .upn-wcard:hover .upn-go{ color:var(--w-fg); }
+.upn-wcard .upn-ld{ -webkit-line-clamp:3; }
+.upn-go{ color:var(--w-muted-fg); font:500 13px/18px var(--w-font); }
+body:not(.is-desk) .mn--row .upn-wcard{ display:flex; flex-direction:column; gap:12px; }
+body:not(.is-desk) .upn-wcard .mn-bt{ font-size:17px; line-height:23px; }
+/* мини-инфографика */
+.upn-wc{ display:flex; flex-direction:column; justify-content:center; gap:7px; width:100%; aspect-ratio:16 / 9; box-sizing:border-box; padding:16px 18px; border-radius:12px;
+  background:radial-gradient(140% 120% at 0% 0%, #1f2937, #0c0c0e 70%); box-shadow:inset 0 0 0 1px #ffffff12; color:var(--w-fg); }
+.upn-wc__h{ display:flex; align-items:center; gap:8px; color:var(--w-muted-fg); font:var(--t-hsub); } .upn-wc__h img{ width:18px; height:18px; object-fit:contain; }
+.upn-wc__r{ display:flex; align-items:center; gap:10px; } .upn-wc__r .upn-h{ width:40px; height:22px; }
+.upn-wc__r i, .upn-bar i{ position:relative; flex:1; height:8px; border-radius:4px; background:var(--upn-soft); overflow:hidden; }
+.upn-wc__r i::after, .upn-bar i::after{ content:""; position:absolute; inset:0 auto 0 0; width:var(--w); border-radius:4px; background:var(--upn-wrap); }
+.upn-wc__r b{ width:40px; text-align:right; font:600 12px/1 var(--upn-mono); }
+.upn-wc--ser{ gap:8px; } .upn-wc--ser .upn-cv__sc{ margin-bottom:4px; } .upn-wc--ser .upn-lg{ width:36px; height:36px; } .upn-wc--ser .upn-cv__sc b{ font-size:28px; }
+.upn-wc__m{ display:flex; align-items:center; gap:10px; } .upn-wc__m small{ width:52px; color:var(--w-muted-fg); font:var(--t-sub); } .upn-wc__m > span{ display:flex; gap:3px; flex:1; }
+.upn-wc__m .upn-h{ width:34px; height:19px; } .upn-wc__m b{ font:600 12px/1 var(--upn-mono); } .upn-wc__m b::before{ content:""; display:inline-block; width:6px; height:6px; margin-right:6px; border-radius:50%; background:var(--w-a); vertical-align:1px; } .upn-wc__m b.is-b::before{ background:var(--w-b); }
+.upn-wc--pair{ flex-direction:row; gap:12px; }
+.upn-wc__t{ flex:1; display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; } .upn-wc__t .upn-lg{ width:44px; height:44px; }
+.upn-wc__t b{ font:700 15px/18px var(--w-font); } .upn-wc__t .num{ font:700 22px/1 var(--w-font); } .upn-wc__t .upn-fm i{ width:9px; height:9px; } .upn-wc__t .upn-h{ width:34px; height:19px; }
+body:not(.is-desk) .upn-wc{ padding:12px 14px; gap:5px; } body:not(.is-desk) .upn-wc__r .upn-h{ width:32px; height:18px; }
+
+/* ── 6. закреп + 7. строка «турнир · трансферы» (телефон) ── */
+#upn-top{ display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+.is-desk #upn-top{ margin-top:16px; }
+.upn-pin{ display:flex; align-items:center; border:1px solid var(--w-border); border-radius:10px; background:var(--w-bg); }
+.upn-pin__b{ appearance:none; border:0; background:none; color:var(--w-fg); cursor:pointer; flex:1; min-width:0; display:flex; align-items:center; gap:10px; height:40px; padding:0 4px 0 12px; text-align:left; font:inherit; }
+.upn-pin__i{ display:grid; place-items:center; color:var(--w-muted-fg); }
+.upn-pin__b b{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:600 13px/18px var(--w-font); }
+.upn-pin__m{ color:var(--w-muted-fg); font:var(--t-sub); white-space:nowrap; } .upn-pin__go{ color:var(--w-muted-fg); font:var(--t-link); white-space:nowrap; }
+.upn-pin__b:hover .upn-pin__go, .upn-pin__b:hover b{ color:#fff; }
+.upn-pin__x{ appearance:none; border:0; background:none; color:var(--w-muted-fg); cursor:pointer; display:grid; place-items:center; width:36px; height:36px; } .upn-pin__x:hover{ color:var(--w-fg); }
+body:not(.is-desk) .upn-pin__m, body:not(.is-desk) .upn-pin__go{ display:none; } body:not(.is-desk) .upn-pin__b .upn-ty{ display:none; }
+.upn-qs{ display:none; }
+body:not(.is-desk) .upn-qs{ display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; } .upn-qs::-webkit-scrollbar{ display:none; }
+.upn-q{ appearance:none; flex:none; display:flex; align-items:center; gap:8px; max-width:250px; height:44px; padding:0 12px 0 8px; border:1px solid var(--w-border); border-radius:10px; background:var(--w-bg); color:var(--w-fg); text-align:left; font:inherit; cursor:pointer; }
+.upn-q > span{ display:flex; flex-direction:column; min-width:0; } .upn-q b{ font:600 12px/16px var(--w-font); }
+.upn-q small{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--w-muted-fg); font:var(--t-sub); }
+.upn-q .upn-lg{ width:24px; height:24px; } .upn-q__ph{ width:28px; height:28px; border-radius:6px; object-fit:cover; flex:none; }
+
+/* ── 4. разворот «Итога» ── */
+body.upn-lock{ overflow:hidden; }
+.upn-ov{ position:fixed; inset:0; z-index:200; overflow-y:auto; background:#000000c2; backdrop-filter:blur(4px); }
+.upn-a{ position:relative; box-sizing:border-box; max-width:880px; margin:40px auto; padding:32px 40px 40px; border:1px solid var(--w-border); border-radius:16px; background:var(--w-bg); color:var(--w-fg); font-family:var(--w-font); }
+body:not(.is-desk) .upn-a{ margin:0; min-height:100%; padding:20px 16px 32px; border:0; border-radius:0; }
+.upn-a__x{ position:absolute; top:16px; right:16px; display:grid; place-items:center; width:36px; height:36px; border:0; border-radius:10px; background:var(--w-mid-bg); color:var(--w-fg); cursor:pointer; } .upn-a__x:hover{ background:var(--w-muted); }
+.upn-a__m{ display:flex; flex-wrap:wrap; align-items:center; gap:6px 12px; padding-right:44px; color:var(--w-muted-fg); font:var(--t-sub); } .upn-a__m time{ font-family:var(--upn-mono); }
+.upn-a__t{ margin:12px 0 8px; font:700 30px/36px var(--w-font); } body:not(.is-desk) .upn-a__t{ font-size:22px; line-height:28px; }
+.upn-a__l{ margin:0 0 20px; color:#e4e4e7; font:400 16px/24px var(--w-font); }
+.upn-a__p{ margin:20px 0; color:#d4d4d8; font:400 15px/23px var(--w-font); }
+.upn-a__src{ margin:24px 0 0; color:#71717a; font:var(--t-sub); }
+.upn-a__s{ margin-top:28px; } .upn-a__s h3{ display:flex; align-items:baseline; gap:10px; margin:0 0 12px; font:700 18px/24px var(--w-font); } .upn-a__s h3 small{ color:var(--w-muted-fg); font:var(--t-hsub); }
+.upn-kpi{ display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:1px; overflow:hidden; border:1px solid var(--w-border); border-radius:12px; background:var(--w-border); }
+.upn-kpi > div{ display:flex; flex-direction:column; gap:4px; padding:14px 16px; background:var(--w-bg); } .upn-kpi b{ font:700 24px/28px var(--w-font); } .upn-kpi small{ color:var(--w-muted-fg); font:var(--t-sub); }
+.upn-tb{ display:flex; flex-direction:column; }
+.upn-tb__h, .upn-tb__r{ display:grid; grid-template-columns:minmax(0, 1.5fr) minmax(0, 2fr) 56px 56px 64px; align-items:center; gap:12px; padding:8px 0; border-top:1px solid var(--w-border); }
+.upn-tb__h{ border-top:0; color:var(--w-muted-fg); font:var(--t-label); } .upn-tb__h .num, .upn-tb__r > .num{ text-align:right; }
+.upn-tb__r{ font:var(--t-title); } .upn-tb__r > span:first-child{ display:flex; align-items:center; gap:10px; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .upn-tb__r .upn-h{ width:40px; height:22px; }
+.upn-bar{ display:flex; align-items:center; gap:10px; } .upn-bar b{ width:36px; font:600 12px/1 var(--upn-mono); }
+body:not(.is-desk) .upn-tb__h, body:not(.is-desk) .upn-tb__r{ grid-template-columns:minmax(0, 1.4fr) minmax(0, 1fr) 36px 40px; gap:8px; } body:not(.is-desk) .upn-tb__h > :nth-child(4), body:not(.is-desk) .upn-tb__r > :nth-child(4){ display:none; }
+body:not(.is-desk) .upn-tb__r .upn-h{ width:30px; height:17px; } body:not(.is-desk) .upn-bar b{ display:none; }
+.upn-two{ display:grid; grid-template-columns:1fr 1fr; gap:0 32px; } body:not(.is-desk) .upn-two{ grid-template-columns:1fr; }
+.upn-rr{ display:flex; align-items:center; gap:12px; min-width:0; padding:8px 0; border-top:1px solid var(--w-border); font:var(--t-title); }
+.upn-a__s h3 + .upn-rr, .upn-rec .upn-rr{ border-top:0; }
+.upn-rr__ph{ flex:none; width:36px; height:36px; border-radius:8px; object-fit:cover; background:#1c1c1f; } img.upn-h.upn-rr__ph{ width:52px; height:30px; } .upn-rr > .upn-lg.upn-rr__ph{ object-fit:contain; background:none; }
+.upn-rr__n{ display:flex; flex-direction:column; flex:1; min-width:0; } .upn-rr__n b{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .upn-rr__n small{ color:var(--w-muted-fg); font:var(--t-sub); }
+.upn-rr > b.num{ font:600 14px/1 var(--upn-mono); } .upn-rr__hs{ display:flex; gap:3px; } .upn-rr__hs .upn-h{ width:30px; height:17px; }
+.upn-recs{ display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:12px; } body:not(.is-desk) .upn-recs{ grid-template-columns:1fr 1fr; }
+.upn-rec{ padding:12px 14px 4px; border:1px solid var(--w-border); border-radius:12px; } .upn-rec > small{ color:var(--w-muted-fg); font:var(--t-sub); }
+.upn-rec .upn-rr{ flex-wrap:wrap; gap:8px; } .upn-rec .upn-rr > b.num{ width:100%; font-size:20px; line-height:24px; }
+.upn-maps{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:12px; } body:not(.is-desk) .upn-maps{ grid-template-columns:1fr; }
+.upn-map{ display:flex; flex-direction:column; gap:8px; padding:12px 14px; border:1px solid var(--w-border); border-radius:12px; }
+.upn-map__h{ display:flex; align-items:center; gap:10px; font:var(--t-title); } .upn-map__h > span{ color:var(--w-muted-fg); font:500 12px/1 var(--upn-mono); } .upn-map__w{ margin-left:auto; font:var(--t-sub) !important; }
+.upn-map__t{ display:flex; align-items:center; gap:8px; } .upn-map__p{ display:flex; gap:2px; flex:1; } .upn-map__p .upn-h{ width:30px; height:17px; } .upn-map__t b{ font:600 13px/1 var(--upn-mono); }
+.upn-map__n{ color:var(--w-muted-fg); font:var(--t-sub); }
+.upn-pair{ display:grid; grid-template-columns:1fr 1fr; gap:16px; } body:not(.is-desk) .upn-pair{ grid-template-columns:1fr; }
+.upn-pc{ display:flex; flex-direction:column; gap:10px; padding:16px; border:1px solid var(--w-border); border-radius:12px; }
+.upn-pc__h{ display:flex; align-items:center; gap:10px; font:700 17px/22px var(--w-font); } .upn-pc__h .upn-lg{ width:32px; height:32px; }
+.upn-pc .upn-kpi b{ font-size:20px; line-height:24px; }
+.upn-pc__r{ display:flex; align-items:center; justify-content:space-between; gap:12px; } .upn-pc__r small{ color:var(--w-muted-fg); font:var(--t-sub); } .upn-pc__r .upn-h{ width:30px; height:17px; } .upn-pc__r .upn-fm i{ width:10px; height:10px; }
+.upn-a__g{ display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:16px; } body:not(.is-desk) .upn-a__g{ grid-template-columns:1fr 1fr; gap:12px; }
+.upn-a__g a{ display:flex; flex-direction:column; gap:8px; min-width:0; color:var(--w-fg); text-decoration:none; }
+.upn-a__g a > img, .upn-a__g .upn-cv{ display:flex; width:100%; aspect-ratio:16 / 9; border-radius:10px; object-fit:cover; }
+.upn-a__gt{ display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; font:600 13px/18px var(--w-font); } .upn-a__g a:hover .upn-a__gt{ color:#fff; }

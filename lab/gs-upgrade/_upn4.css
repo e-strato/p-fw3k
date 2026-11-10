@@ -1,0 +1,111 @@
+/* gs-upgrade v4–v7 news (код — _upn4.js) — поверх _upn.css: «Итог в цифрах» виджетом справа и четыре вида блока фильтров (body.upn-f-<вид>) */
+.is-desk #upn-top{ margin-top:0; }
+
+/* ── «Итог в цифрах» — виджет вверху правой колонки ── */
+.n2-side .upn-ww, .n2-side .upn-fw{ width:100%; }
+.upn-ww__s{ color:var(--w-muted-fg); font:var(--t-hsub); white-space:nowrap; }
+.w .upn-ww__m{ display:flex; flex-direction:column; gap:8px; width:100%; padding:12px 16px 14px; text-align:left; }
+.upn-ww .upn-wc{ aspect-ratio:auto; padding:12px 14px; gap:6px; border-radius:10px; }
+.upn-ww .upn-wc__r .upn-h{ width:32px; height:18px; } .upn-ww .upn-wc__r i{ height:6px; }
+.upn-ww .upn-wc--ser .upn-lg{ width:28px; height:28px; } .upn-ww .upn-wc--ser .upn-cv__sc b{ font-size:22px; }
+.upn-ww .upn-wc__m{ gap:8px; } .upn-ww .upn-wc__m small{ width:auto; flex:none; } .upn-ww .upn-wc__m .upn-h{ width:26px; height:15px; }
+.upn-ww .upn-wc__t .upn-lg{ width:32px; height:32px; } .upn-ww .upn-wc__t .num{ font-size:18px; } .upn-ww .upn-wc__t b{ font-size:13px; line-height:16px; } .upn-ww .upn-wc__t .upn-h{ width:26px; height:15px; }
+.upn-ww__m > b{ display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; font:600 15px/20px var(--w-font); }
+.upn-ww__k{ color:var(--w-muted-fg); font:500 11px/1 var(--upn-mono); }
+.w .upn-ww__r{ display:flex; flex-direction:column; gap:6px; width:100%; padding:10px 16px 12px; border-top:1px solid var(--w-border); text-align:left; }
+.upn-ww__r > b{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; font:500 13px/18px var(--w-font); }
+.upn-ww__m:hover > b, .upn-ww__r:hover > b{ color:#fff; }
+
+/* ── список-фильтр: строки с числами (v5 — виджет «Фильтры», v6 — выпадашка, v7 — «Команды и турниры», телефон — нижний лист) ── */
+.upn-fw__rs{ color:var(--w-muted-fg); font:var(--t-link); white-space:nowrap; } .upn-fw__rs:hover{ color:var(--w-fg); }
+button.upn-fw__rs{ appearance:none; border:0; background:none; padding:0; cursor:pointer; }
+.upn-fw__b{ display:flex; flex-direction:column; gap:4px; padding:4px 8px 10px; }
+.upn-fs{ display:flex; flex-direction:column; } .upn-fs + .upn-fs{ margin-top:4px; padding-top:4px; border-top:1px solid var(--w-border); }
+.upn-fs__h{ padding:8px 8px 4px; color:var(--w-muted-fg); font:var(--t-label); }
+.upn-fr{ appearance:none; display:flex; align-items:center; gap:8px; width:100%; min-height:34px; padding:0 8px; border:0; border-radius:8px; background:none; color:var(--w-fg); font:var(--t-title); text-align:left; cursor:pointer; }
+.upn-fr:hover{ background:var(--w-mid-bg); } .w .upn-fr.is-on, .upn-fr.is-on{ background:var(--w-muted); }
+.upn-fr small{ margin-left:auto; color:var(--w-muted-fg); font:500 11px/1 var(--upn-mono); }
+.upn-fr__x{ display:grid; place-items:center; color:var(--w-muted-fg); } .upn-fr__x svg{ width:10px; height:10px; }
+.upn-fr__n{ display:flex; align-items:center; gap:6px; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.upn-fr__n .upn-lg--s, .upn-ml .upn-lg--s, .upn-sel .upn-lg--s, .upn-dd__b .upn-lg--s{ margin:0; vertical-align:0; }
+.upn-ml{ display:flex; align-items:center; gap:5px; min-width:0; overflow:hidden; white-space:nowrap; }
+.upn-ml b{ padding:0 4px; font:600 12px/1 var(--upn-mono); } .upn-ml .upn-lv{ margin-right:3px; }
+
+/* выбранное — маленькие чипы с крестиком (v5; телефон v7) */
+.upn-selr{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+.upn-sel, .upn-shb{ appearance:none; display:inline-flex; align-items:center; gap:6px; height:28px; padding:0 10px; border:0; border-radius:999px; background:var(--w-muted); color:var(--w-fg); font:var(--t-seg); cursor:pointer; white-space:nowrap; }
+.upn-sel svg{ width:9px; height:9px; color:var(--w-muted-fg); } .upn-sel:hover svg{ color:var(--w-fg); }
+.upn-shb{ background:none; border:1px solid var(--w-border); color:var(--w-fg); } .upn-shb small{ min-width:16px; height:16px; padding:0 4px; border-radius:999px; background:var(--w-fg); color:var(--w-primary-fg); font:600 10px/16px var(--w-font); text-align:center; }
+
+/* ── v4 · центр: обе строки шириной центральной колонки, с переносом ── */
+.upn-fc{ display:flex; flex-direction:column; gap:8px; }
+.upn-fc .n2-ch{ margin:0; flex-wrap:wrap; overflow:visible; }
+.upn-fc .upn-tf{ margin:0; } .upn-fc .upn-tf .mn-seg{ display:inline-flex; flex-wrap:wrap; width:auto; max-width:100%; }
+body:not(.is-desk) .upn-fc .n2-ch{ flex-wrap:nowrap; overflow-x:auto; }
+body:not(.is-desk) .upn-fc .upn-tf .mn-seg{ flex-wrap:nowrap; overflow-x:auto; }
+
+/* ── v5–v7: верхний ряд чипов _np2.js спрятан (состояние остаётся в нём) ── */
+.upn-f-right .n2-ch, .upn-f-row .n2-ch, .upn-f-split .n2-ch{ display:none; }
+
+/* ── v6, v7: одна строка — выпадашка / чип матча + табы типа ── */
+.upn-r1{ display:flex; align-items:center; gap:8px; min-width:0; border-bottom:1px solid var(--w-border); }
+.upn-r1 > .n2-chip{ flex:none; }
+.upn-r1__sep{ flex:none; width:1px; height:20px; background:var(--w-border); }
+.upn-tabs{ display:flex; flex:1; min-width:0; overflow-x:auto; scrollbar-width:none; } .upn-tabs::-webkit-scrollbar{ display:none; }
+.upn-tabs button{ appearance:none; flex:none; display:inline-flex; align-items:center; gap:5px; height:40px; padding:0 10px; border:0; border-bottom:2px solid transparent; background:none; color:var(--w-muted-fg); font:500 13px/1 var(--w-font); cursor:pointer; white-space:nowrap; }
+.upn-tabs button:hover{ color:var(--w-fg); } .upn-tabs button.on{ border-bottom-color:var(--w-fg); color:var(--w-fg); }
+.upn-tabs small{ color:#71717a; font:500 11px/1 var(--upn-mono); } .upn-tabs button.on small{ color:var(--w-muted-fg); }
+body:not(.is-desk) .upn-r1{ flex-wrap:wrap; gap:8px 6px; border-bottom:0; }
+body:not(.is-desk) .upn-r1__sep{ display:none; }
+body:not(.is-desk) .upn-tabs{ flex:none; width:100%; border-bottom:1px solid var(--w-border); }
+body:not(.is-desk) .upn-tabs button{ height:36px; padding:0 8px; }
+.upn-r1 + .upn-selr{ margin-top:-8px; }
+/* выпадашка (v6) */
+.upn-dd{ position:relative; flex:none; }
+.upn-dd__b{ appearance:none; display:inline-flex; align-items:center; gap:6px; height:28px; max-width:320px; padding:0 10px; border:1px solid var(--w-border); border-radius:999px; background:none; color:var(--w-fg); font:var(--t-seg); cursor:pointer; white-space:nowrap; overflow:hidden; }
+.upn-dd__b:hover, .upn-dd.is-open .upn-dd__b{ background:var(--w-mid-bg); } .upn-dd__b.is-on{ border-color:transparent; background:var(--w-muted); }
+.upn-dd__b svg{ flex:none; color:var(--w-muted-fg); }
+.upn-dd__m{ position:absolute; top:34px; left:0; z-index:60; width:320px; max-height:460px; overflow-y:auto; padding:6px; border:1px solid var(--w-border); border-radius:12px; background:var(--w-bg); box-shadow:0 12px 32px #000a; }
+body:not(.is-desk) .upn-dd__m{ position:fixed; top:auto; left:12px; right:12px; width:auto; max-height:70vh; }
+
+/* ── телефон: нижний лист (v5, v7) ── */
+.upn-sh{ position:fixed; inset:0; z-index:190; display:flex; align-items:flex-end; background:#000000a6; }
+.upn-sh__p{ width:100%; max-height:80vh; overflow-y:auto; border-radius:16px 16px 0 0; background:var(--w-bg); border-top:1px solid var(--w-border); }
+.upn-sh__h{ position:sticky; top:0; z-index:1; display:flex; align-items:center; gap:12px; height:52px; padding:0 16px; border-bottom:1px solid var(--w-border); background:var(--w-bg); }
+.upn-sh__h b{ flex:1; font:600 15px/20px var(--w-font); }
+.upn-sh__ok{ appearance:none; height:32px; padding:0 14px; border:0; border-radius:8px; background:var(--w-fg); color:var(--w-primary-fg); font:600 13px/32px var(--w-font); cursor:pointer; }
+.upn-sh__b{ display:flex; flex-direction:column; gap:4px; padding:4px 8px 24px; }
+
+/* телефонная строка: «Итог в цифрах» */
+.upn-q__ic{ position:relative; flex:none; width:28px; height:28px; border-radius:6px; background:var(--upn-soft); }
+.upn-q__ic::after{ content:""; position:absolute; inset:11px; border-radius:50%; background:var(--c); }
+
+/* ── v8 · выбор управляет только верхним блоком, ниже — «Все новости» с табами типа (body.upn-f-scoped) ── */
+.upn-f-scoped .n2-rw:not(.upn-feed), .upn-f-scoped .upn-hid{ display:none; }
+.upn-sp8{ margin-bottom:0; } .upn-empty8{ display:block; padding:10px 0; color:var(--w-muted-fg); font:var(--t-sub); }
+.upn-f8{ display:flex; flex-direction:column; margin-top:12px; }
+.upn-f8__h{ position:sticky; top:0; z-index:20; display:flex; align-items:flex-end; gap:16px; padding-top:8px; border-bottom:1px solid var(--w-border); background:var(--w-page); }
+.upn-f8__h h2{ flex:none; margin:0 8px 10px 0; font:700 20px/26px var(--w-font); }
+.upn-f8__h .upn-tabs .upn-dot{ margin-right:1px; }
+.upn-f8 .n2-rw .n2-day__h:first-child{ margin-top:16px; }
+body:not(.is-desk) .upn-f8__h{ flex-direction:column; align-items:stretch; gap:4px; margin:0 -12px; padding:8px 12px 0; }
+body:not(.is-desk) .upn-f8__h h2{ margin:0; font-size:18px; line-height:24px; }
+body:not(.is-desk) .upn-f8__h .upn-tabs button{ height:36px; padding:0 8px; }
+.upn-w8{ appearance:none; border:0; background:none; color:inherit; font:inherit; text-align:left; cursor:pointer; }
+.upn-w8:hover .mn-bt{ color:#fff; }
+/* ── v9 · без «Все», ряд выбора в одну строку, справа кнопка «›» (body.upn-one) ── */
+.upn-one .upn-fc__ch{ position:relative; }
+.upn-one .upn-fc .n2-ch{ --ml:36px; --mr:36px; flex-wrap:nowrap; overflow-x:auto; padding-right:48px; -webkit-mask-image:linear-gradient(90deg, transparent var(--ml), #000 calc(var(--ml) + 36px), #000 calc(100% - var(--mr) - 36px), transparent calc(100% - var(--mr))); mask-image:linear-gradient(90deg, transparent var(--ml), #000 calc(var(--ml) + 36px), #000 calc(100% - var(--mr) - 36px), transparent calc(100% - var(--mr))); }
+.upn-one .is-start .n2-ch{ --ml:-36px; } .upn-one .is-end .n2-ch{ --mr:-36px; }
+.upn-one .upn-fc .n2-ch [data-tall], .upn-one .upn-fc .n2-ch [data-tall] + .n2-ch__sep, .upn-one .n2-mc__x{ display:none; }
+.upn-chn{ position:absolute; top:0; right:0; width:32px; height:32px; display:flex; align-items:center; justify-content:center; padding:0 0 2px 2px; border:1px solid var(--w-border); border-radius:50%; background:var(--w-page); color:var(--w-fg, #fff); font:500 20px/1 var(--w-font); cursor:pointer; }
+.upn-chn:hover{ background:var(--w-border); }
+.upn-chn--l{ right:auto; left:0; padding:0 2px 2px 0; }
+.is-end > .upn-chn:not(.upn-chn--l), .is-start > .upn-chn--l{ display:none; }
+/* ── v11 · телефон: ряд колонок матча — высотой видимой колонки (swH в _upn4.js), меньше отступ до «Все новости» ── */
+body:not(.is-desk).upn-f-scoped .n2-sp.is-sw{ overflow-y:hidden; margin-bottom:12px; }
+body:not(.is-desk) .upn-f8{ margin-top:0; }
+/* ── v12 · «Итог в цифрах» справа — только карточка с командами, на всю ширину колонки ── */
+.upn-wo{ display:block; width:100%; padding:0; border:0; background:none; color:inherit; font:inherit; text-align:inherit; cursor:pointer; }
+.upn-wo .upn-wc{ width:100%; aspect-ratio:auto; padding:20px 16px; border-radius:16px; }
+.upn-wo:hover .upn-wc{ filter:brightness(1.12); }

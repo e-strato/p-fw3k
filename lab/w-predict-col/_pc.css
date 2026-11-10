@@ -445,7 +445,7 @@ body.pc-colfull .gm-side > .gm-wd:not(:has(.pc-host)){ display:none; }
 .w.pc .qz-zh { display: flex; align-items: baseline; justify-content: space-between; } .w.pc .qz-zh b { font: 600 18px/24px var(--w-font); color: var(--w-fg); } .w.pc .qz-zh span { color: var(--w-muted-fg); font: 500 12px/16px var(--w-font); }
 .w.pc .qz-zl { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; display: flex; flex-direction: column; gap: 6px; }
 .w.pc .qz-zr { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: var(--w-mid-bg); transition: background .3s, opacity .3s; }
-.w.pc .qz-zr.is-ok { background: color-mix(in srgb, var(--pc-y) 14%, var(--w-mid-bg)); } .w.pc .qz-zr.is-no { opacity: .5; }
+.w.pc .qz-zr.is-ok { background: color-mix(in srgb, var(--pc-y) 14%, var(--w-mid-bg)); } .w.pc .qz-zr.is-no { opacity: .5; } .w.pc .qz-zr.is-gone { opacity: .5; } .w.pc .qz-zr.is-gone .qz-zc { color: var(--w-muted-fg); font-weight: 500; }
 .w.pc .qz-zq { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; } .w.pc .qz-zq small { color: var(--w-muted-fg); font: 500 11px/14px var(--w-font); } .w.pc .qz-zq b { color: var(--w-fg); font: 500 13px/17px var(--w-font); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .w.pc .qz-za { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
 .w.pc .qz-zc { font-style: normal; font: 600 13px/16px var(--w-font); } .w.pc .qz-zc--y { color: var(--pc-y); } .w.pc .qz-zc--n { color: var(--pc-n); }
@@ -625,3 +625,200 @@ body:not(.is-desk) .w.pc.pc--mobh2 .pc-bd > .qz { flex: 1; display: flex; flex-d
 body:not(.is-desk) .w.pc.pc--mobh2 .qz-dk { flex: 1 1 auto; }
 body:not(.is-desk) .w.pc.pc--mobh2 .qz-dc { flex: 1; } body:not(.is-desk) .w.pc.pc--mobh2 .qz-dc > .qz-ev { margin-top: auto; }
 body:not(.is-desk) .w.pc.pc--mobh2 .qz-z .qz-zs { margin-top: auto; }
+/* w-predict-4 (дирижёр 10.11): PC_VOTES — голоса всех у решённого прогноза в итоге. Голоса — пример */
+.w.pc .qz-zr:has(.qz-zv) { flex-wrap: wrap; row-gap: 8px; }
+.w.pc .qz-zv { flex: 0 0 100%; display: flex; flex-direction: column; gap: 4px; color: var(--w-muted-fg); font: 500 11px/14px var(--w-font); }
+.w.pc .qz-zv--line { display: block; } .w.pc .qz-zv--line b { color: var(--w-fg); font-weight: 600; }
+.w.pc .qz-vs { display: flex; gap: 2px; height: 4px; border-radius: 2px; overflow: hidden; }
+.w.pc .qz-vs i { min-width: 2px; background: var(--w-muted); transition: flex .4s; } .w.pc .qz-vs i.is-w.qz-vs--y { background: var(--pc-y); } .w.pc .qz-vs i.is-w.qz-vs--n { background: var(--pc-n); }
+.w.pc .qz-vl { display: flex; justify-content: space-between; } .w.pc .qz-vl .is-w { color: var(--w-fg); font-weight: 600; }
+.w.pc .qz-zv.is-fresh { animation: qz-vin .5s ease-out both; } .w.pc .qz-zv.is-fresh .qz-vs { animation: qz-vbar .7s cubic-bezier(.2,.7,.3,1) both; transform-origin: left; }
+@keyframes qz-vin { from { opacity: 0; transform: translateY(-4px); } } @keyframes qz-vbar { from { transform: scaleX(0); } }
+.w.pc .qz-zr--fill { position: relative; overflow: hidden; isolation: isolate; }
+.w.pc .qz-zr--fill::before { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--qz-vf); z-index: -1; background: color-mix(in srgb, var(--w-fg) 7%, transparent); transform-origin: left; }
+.w.pc .qz-zr--fill.is-fresh::before { animation: qz-vbar .8s cubic-bezier(.2,.7,.3,1) both; }
+.w.pc .qz-za .qz-vn { display: inline-flex; align-items: center; gap: 4px; color: var(--w-muted-fg); font: 500 11px/14px var(--w-font); }
+.w.pc .qz-zr--tap { cursor: pointer; } .w.pc .qz-zr--tap:hover { background: color-mix(in srgb, var(--w-fg) 6%, var(--w-mid-bg)); } .w.pc .qz-zr--tap.is-open .qz-vn { color: var(--w-fg); }
+/* w-predict-4 v5+ (дирижёр 10.11): PC_CD — обратный отсчёт у неотвеченного в итоге, пока прогноз не решился; время — по --cd-t / --cd-d, перерисовка не сбрасывает */
+.w.pc .qz-cd [data-cd] { color: var(--w-fg); font-weight: 600; }
+.w.pc .qz-cd--bar { position: relative; overflow: hidden; }
+.w.pc .qz-cdb { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--pc-ac); transform-origin: left; animation: qz-cd var(--cd-t) linear var(--cd-d) both; }
+@keyframes qz-cd { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+.w.pc .qz-zb--ring { position: relative; }
+.w.pc .qz-cdr { position: absolute; inset: -2px; width: 32px; height: 32px; fill: none; stroke: var(--pc-ac); stroke-width: 1.5; stroke-dasharray: 100; animation: qz-cdr var(--cd-t) linear var(--cd-d) both; }
+@keyframes qz-cdr { from { stroke-dashoffset: 0; } to { stroke-dashoffset: 100; } }
+.w.pc .qz-zb--num { width: auto; min-width: 28px; padding: 0 6px; font: 600 11px/14px var(--w-font); color: var(--w-fg); }
+/* w-predict-4 v9–v10 (дирижёр 10.11): 'pill' — время отсчёта в контейнере, как кнопка v8; 'pillring' — плюс по рамке строки тает тонкая лёгкая линия, как блик на карточке */
+.w.pc .qz-zq small:has(.qz-cdp) { display: flex; align-items: center; gap: 4px; }
+.w.pc .qz-cdp { display: inline-grid; place-items: center; min-width: 32px; height: 18px; padding: 0 5px; border-radius: 6px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.w.pc .qz-cdp [data-cd] { font: 600 11px/14px var(--w-font); }
+/* v10 (дирижёр 10.11: «от середины, по часовой, равномерно; градиент без ступенек»): линия по рамке — canvas поверх строки, рисует _pc.js cdTick каждый кадр */
+.w.pc .qz-cd--pillring { position: relative; }
+.w.pc .qz-cdl { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+/* w-predict-4 v11–v18 (дирижёр 10.11): PC_SUMV — 8 видов строки итога в стилистике страницы: мелко, ёмко, иконки, цифры моно. Не ответил — золото, ждёт итога — серое */
+.w.pc .sv { --sv-mono: 'JetBrains Mono', ui-monospace, monospace; gap: 6px; }
+.w.pc .sv-r { position: relative; display: flex; align-items: center; gap: 8px; min-width: 0; color: var(--w-fg); font: 500 12px/16px var(--w-font); transition: opacity .3s, background .2s; }
+.w.pc .sv-r[data-back-id] { cursor: pointer; }
+.w.pc .sv-r.is-no, .w.pc .sv-r.is-gone { opacity: .5; }
+.w.pc .sv-q { flex: 1; min-width: 0; font: 500 12px/16px var(--w-font); color: var(--w-fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.w.pc .sv-ic { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 6px; background: var(--w-muted); color: var(--w-muted-fg); }
+.w.pc .sv-ei { flex: none; }
+.w.pc .sv-t { flex: none; font: 600 11px/14px var(--sv-mono); letter-spacing: -.02em; color: var(--w-muted-fg); }
+.w.pc .sv-r.is-open .sv-t { color: var(--pc-ac); }
+.w.pc .sv-t--box { display: inline-grid; place-items: center; min-width: 36px; height: 20px; padding: 0 5px; border-radius: 5px; background: var(--w-muted); box-shadow: inset 0 0 0 1px var(--w-border); }
+.w.pc .sv-r.is-open .sv-t--box { background: color-mix(in srgb, var(--pc-ac) 10%, var(--w-muted)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pc-ac) 30%, transparent); }
+.w.pc .sv-pk { flex: none; height: 18px; padding: 0 6px; border-radius: 5px; font: 600 10px/18px var(--w-font); }
+.w.pc .sv-pk--y { color: var(--pc-y); background: color-mix(in srgb, var(--pc-y) 14%, transparent); } .w.pc .sv-pk--n { color: var(--pc-n); background: color-mix(in srgb, var(--pc-n) 14%, transparent); }
+.w.pc .sv-rs { flex: none; display: inline-flex; align-items: center; gap: 3px; font: 600 11px/14px var(--sv-mono); color: var(--w-muted-fg); }
+.w.pc .sv-rs.is-ok { color: var(--pc-y); }
+.w.pc .sv-bk { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 6px; background: var(--w-muted); color: var(--w-muted-fg); transition: color .12s, background .12s; }
+.w.pc .sv-r[data-back-id]:hover .sv-bk { color: var(--w-fg); background: var(--w-hover, var(--w-muted)); }
+.w.pc .sv-hint { color: var(--w-muted-fg); font: 400 11px/14px var(--w-font); }
+.w.pc .sv-v { flex: none; display: inline-flex; align-items: center; gap: 6px; }
+.w.pc .sv-vb { display: flex; gap: 2px; width: 44px; height: 3px; border-radius: 2px; overflow: hidden; }
+.w.pc .sv-vb i { min-width: 2px; background: var(--w-muted); } .w.pc .sv-vb i.sv-vb--y { background: var(--pc-y); } .w.pc .sv-vb i.sv-vb--n { background: var(--pc-n); }
+.w.pc .sv-vl { font: 500 10px/14px var(--sv-mono); color: var(--w-muted-fg); white-space: nowrap; }
+.w.pc .sv-v.is-fresh .sv-vb { animation: qz-vbar .7s cubic-bezier(.2,.7,.3,1) both; transform-origin: left; }
+.w.pc .sv-meta { display: flex; align-items: center; gap: 6px; min-width: 0; color: var(--w-muted-fg); font: 400 10px/14px var(--w-font); }
+.w.pc .sv-meta .sv-ei { width: 12px; height: 12px; }
+
+/* v11 tick — строка-тикер в одну линию, 36 */
+.w.pc .sv-r--tick { height: 36px; padding: 0 6px; border-radius: 8px; background: var(--w-mid-bg); }
+.w.pc .sv-r--tick[data-back-id]:hover { background: color-mix(in srgb, var(--w-fg) 5%, var(--w-mid-bg)); }
+
+/* v12 table — таблица: событие · ответ · время, черты между строками */
+.w.pc .sv--table { gap: 0; }
+.w.pc .sv-r--table { display: grid; grid-template-columns: minmax(0, 1fr) 44px 52px; align-items: center; column-gap: 8px; min-height: 34px; padding: 0 2px; border-bottom: 1px solid var(--w-border); }
+.w.pc .sv-r--table:last-child { border-bottom: 0; }
+.w.pc .sv-r--table[data-back-id]:hover { background: color-mix(in srgb, var(--w-fg) 4%, transparent); }
+.w.pc .sv-c1 { display: flex; align-items: center; gap: 8px; min-width: 0; color: var(--w-muted-fg); }
+.w.pc .sv-c2 { display: flex; justify-content: center; } .w.pc .sv-c3 { display: flex; justify-content: flex-end; }
+.w.pc .sv-c2 .sv-bk { width: 22px; height: 22px; }
+.w.pc .sv-c4 { grid-column: 1 / -1; padding: 0 0 8px 22px; } .w.pc .sv-c4 .sv-vb { width: 80px; }
+.w.pc .sv-dash { color: var(--w-muted-fg); font: 500 11px/14px var(--sv-mono); }
+
+/* v13 clock — таймер крупно слева, вопрос в две строки, подпись значками */
+.w.pc .sv-r--clock { align-items: center; gap: 10px; padding: 8px 8px 8px 8px; border-radius: 10px; background: var(--w-mid-bg); }
+.w.pc .sv-r--clock .sv-big { flex: none; display: grid; place-items: center; width: 52px; }
+.w.pc .sv-t--big { min-width: 52px; height: 30px; border-radius: 7px; font-size: 14px; }
+.w.pc .sv-r--clock .sv-rs { font-size: 13px; }
+.w.pc .sv-mid { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.w.pc .sv-r--clock .sv-q, .w.pc .sv-r--icon .sv-q { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+
+/* v14 tile — плитки по две в ряд */
+.w.pc .sv--tile { display: grid; grid-template-columns: 1fr 1fr; align-content: start; }
+.w.pc .sv-r--tile { flex-direction: column; align-items: stretch; gap: 6px; min-height: 96px; padding: 8px; border-radius: 10px; background: var(--w-mid-bg); }
+.w.pc .sv-r--tile .sv-top, .w.pc .sv-r--gauge .sv-top { display: flex; align-items: center; justify-content: space-between; color: var(--w-muted-fg); }
+.w.pc .sv-r--tile .sv-q { flex: 1; white-space: normal; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; font-size: 11px; line-height: 15px; }
+.w.pc .sv-r--tile .sv-bot, .w.pc .sv-r--gauge .sv-bot { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.w.pc .sv-r--tile .sv-bot .sv-bk { width: 22px; height: 22px; } .w.pc .sv-r--tile .sv-bot:has(.sv-bk) { justify-content: flex-start; }
+.w.pc .sv-r--tile .sv-v { justify-content: space-between; } .w.pc .sv-r--tile .sv-vb { flex: 1; width: auto; }
+
+/* v15 pill — капсулы, линия по контуру капсулы */
+.w.pc .sv-r--pill { height: 36px; padding: 0 5px 0 4px; border-radius: 18px; background: var(--w-mid-bg); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--w-border) 60%, transparent); }
+.w.pc .sv-r--pill .sv-ic { width: 28px; height: 28px; border-radius: 50%; }
+.w.pc .sv-r--pill .sv-bk { width: 26px; height: 26px; border-radius: 50%; }
+.w.pc .sv-r--pill .sv-t { min-width: 32px; text-align: right; }
+
+/* v16 line — без подложки, только контур: тусклая дорожка, по ней уходит время */
+.w.pc .sv-r--line { flex-direction: column; align-items: stretch; gap: 4px; padding: 8px 10px; border-radius: 8px; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--w-border) 70%, transparent); }
+.w.pc .sv-r--line[data-back-id]:hover { background: color-mix(in srgb, var(--w-fg) 3%, transparent); }
+.w.pc .sv-hd { display: flex; align-items: center; gap: 6px; color: var(--w-muted-fg); font: 400 10px/14px var(--w-font); } .w.pc .sv-hd .sv-ei { width: 12px; height: 12px; }
+.w.pc .sv-hd .sv-rs { margin-left: auto; }
+.w.pc .sv-t--r { margin-left: auto; font-size: 12px; }
+.w.pc .sv-ln { display: flex; align-items: center; gap: 8px; } .w.pc .sv-r--line .sv-q { font-weight: 600; font-size: 13px; line-height: 18px; white-space: normal; }
+.w.pc .sv-r--line .sv-v .sv-vb { width: 64px; }
+
+/* v17 gauge — плитки с крупным временем по центру, линия по рамке плитки */
+.w.pc .sv--gauge { display: grid; grid-template-columns: 1fr 1fr; align-content: start; }
+.w.pc .sv-r--gauge { flex-direction: column; align-items: stretch; gap: 4px; min-height: 108px; padding: 8px; border-radius: 10px; background: var(--w-mid-bg); text-align: center; }
+.w.pc .sv-r--gauge .sv-top .sv-bk { width: 22px; height: 22px; }
+.w.pc .sv-r--gauge .sv-big { display: grid; place-items: center; min-height: 28px; }
+.w.pc .sv-r--gauge .sv-t--big { min-width: 0; height: auto; font-size: 20px; line-height: 26px; font-weight: 700; }
+.w.pc .sv-r--gauge .sv-rs { font-size: 14px; }
+.w.pc .sv-r--gauge .sv-q { flex: 1; white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; font: 400 11px/14px var(--w-font); color: var(--w-muted-fg); }
+.w.pc .sv-r--gauge .sv-v { justify-content: center; } .w.pc .sv-r--gauge .sv-vb { flex: 1; width: auto; }
+
+/* v18 icon — время уходит линией вокруг значка события, строки через черту */
+.w.pc .sv--icon { gap: 0; }
+.w.pc .sv-r--icon { gap: 10px; padding: 8px 2px; border-bottom: 1px solid var(--w-border); }
+.w.pc .sv-r--icon:last-child { border-bottom: 0; }
+.w.pc .sv-ib { position: relative; flex: none; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 7px; background: var(--w-muted); color: var(--w-muted-fg); }
+.w.pc .sv-r--icon.is-open .sv-ib { color: var(--pc-ac); }
+.w.pc .sv-r--icon .sv-meta .sv-t { font-size: 10px; }
+.w.pc .sv-r--icon .sv-v .sv-vb { width: 56px; }
+/* v19 (дирижёр 10.11): PC_SV2 — плитки не прыгают: высота и рамка 1px постоянные (не ответил — золотом, иначе обычная), верх и низ по 22, низ просторнее */
+.w.pc .sv--v2 .sv-r--tile { height: 112px; min-height: 0; gap: 8px; padding: 9px 10px; box-shadow: inset 0 0 0 1px var(--w-border); }
+.w.pc .sv--v2 .sv-r--tile.is-open { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pc-ac) 35%, var(--w-border)); }
+.w.pc .sv--v2 .sv-r--tile .sv-top, .w.pc .sv--v2 .sv-r--tile .sv-bot { flex: none; height: 22px; }
+.w.pc .sv--v2 .sv-r--tile .sv-q { font-size: 12px; line-height: 16px; }
+.w.pc .sv--v2 .sv-r--tile .sv-bot { gap: 8px; }
+.w.pc .sv--v2 .sv-r--tile .sv-pk { height: 22px; padding: 0 10px; border-radius: 6px; font: 600 11px/22px var(--w-font); }
+.w.pc .sv--v2 .sv-r--tile .sv-rs { font-size: 12px; }
+.w.pc .sv--v2 .sv-r--tile .sv-v { flex: 1; gap: 8px; } .w.pc .sv--v2 .sv-r--tile .sv-vb { height: 4px; } .w.pc .sv--v2 .sv-r--tile .sv-vl { font-size: 11px; }
+/* v20–v22 (дирижёр 10.11): PC_SV3 — золота нет: время и линия серые всегда; не ответил — «вернуться» светлой заливкой, вопрос белым, отвеченный тише; голоса на всю ширину */
+.w.pc .sv--v3 .sv-r.is-open .sv-t { color: var(--w-muted-fg); }
+.w.pc .sv--v3 .sv-r.is-open .sv-t--box { background: var(--w-muted); box-shadow: inset 0 0 0 1px var(--w-border); }
+.w.pc .sv--v3 .sv-r.is-open .sv-bk { background: var(--w-fg); color: var(--w-bg); }
+.w.pc .sv--v3 .sv-r.is-open[data-back-id]:hover .sv-bk { background: #fff; color: var(--w-bg); }
+.w.pc .sv--v3 .sv-r.is-ans .sv-q { color: color-mix(in srgb, var(--w-fg) 70%, transparent); }
+.w.pc .sv--v3 .sv-r--icon.is-open .sv-ib { color: var(--w-fg); }
+.w.pc .sv--v3 .sv-r--tile.is-open { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--w-fg) 22%, transparent); }
+.w.pc .sv--v3 .sv-v { flex: 1; min-width: 0; } .w.pc .sv--v3 .sv-vb { flex: 1; width: auto; }
+.w.pc .sv--v3 .sv-r--tile .sv-bot:has(.sv-v) { justify-content: stretch; }
+.w.pc .sv--v3 .sv-r--clock .sv-meta .sv-v { margin-left: 4px; }
+.w.pc .sv--v3 .sv-r--icon .sv-mid > .sv-v { display: flex; width: 100%; }
+/* v23–v25 (дирижёр 10.11): PC_SV4 — цифры таймера серые, линии могут быть золотыми; «вернуться» серая; «Ответить» в плитке — на всю ширину; таймер слева чуть меньше */
+.w.pc .sv--v4 .sv-r.is-open .sv-bk { background: var(--w-muted); color: var(--w-muted-fg); }
+.w.pc .sv--v4 .sv-r.is-open[data-back-id]:hover .sv-bk { background: var(--w-hover, var(--w-muted)); color: var(--w-fg); }
+.w.pc .sv--v4 .sv-r--icon.is-open .sv-ib { color: var(--w-fg); }
+.w.pc .sv--v4 .sv-btn { flex: 1; display: grid; place-items: center; height: 22px; border-radius: 6px; background: var(--w-fg); color: var(--w-bg); font: 600 11px/22px var(--w-font); transition: background .12s; }
+.w.pc .sv--v4 .sv-r[data-back-id]:hover .sv-btn { background: #fff; }
+.w.pc .sv--v4 .sv-r--clock .sv-big { width: 44px; }
+.w.pc .sv--v4 .sv-r--clock .sv-t--big { min-width: 44px; height: 24px; border-radius: 6px; font-size: 12px; }
+.w.pc .sv--v4 .sv-r--clock .sv-rs { font-size: 12px; }
+/* v26–v30 (дирижёр 10.11): PC_SV5 — полоса голосов одной длины справа (таймер слева); строки одной высоты до и после итога (линия вокруг значка); серая «Ответить» со значком (плитки) */
+.w.pc .sv--v5 .sv-r--clock .sv-meta { min-width: 0; }
+.w.pc .sv--v5 .sv-r--clock .sv-meta > span:not(.sv-pk):not(.sv-v) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.w.pc .sv--v5 .sv-r--clock .sv-meta .sv-v { flex: none; width: 104px; margin-left: auto; } .w.pc .sv--v5 .sv-r--clock .sv-meta .sv-vb { flex: 1; width: auto; }
+.w.pc .sv--v5 .sv-r--clock .sv-meta .sv-vl { width: 30px; text-align: right; }
+.w.pc .sv--v5 .sv-r--icon { height: 64px; padding-top: 0; padding-bottom: 0; }
+.w.pc .sv--v5 .sv-r--icon .sv-mid { justify-content: center; gap: 4px; }
+.w.pc .sv--v5 .sv-r--icon .sv-meta, .w.pc .sv--v5 .sv-r--icon .sv-mid > .sv-v { height: 16px; }
+.w.pc .sv--v5 .sv-btn--g { display: flex; align-items: center; justify-content: center; gap: 6px; background: var(--w-muted); color: var(--w-fg); box-shadow: inset 0 0 0 1px var(--w-border); }
+.w.pc .sv--v5 .sv-btn--g svg { width: 12px; height: 12px; color: var(--w-muted-fg); }
+.w.pc .sv--v5 .sv-r[data-back-id]:hover .sv-btn--g { background: var(--w-hover, var(--w-muted)); }
+/* PC_RES — «угадал / мимо» ярче (плитки); «мимо» не гасим, гасим только «не ответил» */
+.w.pc .sv[class*="sv--res-"] .sv-r.is-no { opacity: 1; }
+.w.pc .sv--res-tint .sv-r--tile.is-ok { background: color-mix(in srgb, var(--pc-y) 12%, var(--w-mid-bg)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pc-y) 45%, transparent); }
+.w.pc .sv--res-tint .sv-r--tile.is-no { background: color-mix(in srgb, var(--pc-n) 10%, var(--w-mid-bg)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pc-n) 40%, transparent); }
+.w.pc .sv--res-tint .sv-r--tile.is-ok .sv-rs { font-size: 13px; } .w.pc .sv--res-tint .sv-r--tile.is-no .sv-rs { color: var(--pc-n); }
+.w.pc .sv--res-ribbon .sv-r--tile { overflow: hidden; }
+.w.pc .sv-rib { position: absolute; top: 12px; right: -30px; width: 110px; transform: rotate(45deg); text-align: center; font: 700 10px/18px var(--w-font); color: #0b0b0b; pointer-events: none; box-shadow: 0 2px 6px rgba(0,0,0,.35); }
+.w.pc .sv-rib--ok { background: var(--pc-y); } .w.pc .sv-rib--no { background: var(--pc-n); color: #fff; }
+.w.pc .sv--res-ribbon .sv-r--tile .sv-top { padding-right: 34px; }
+.w.pc .sv-st { display: inline-flex; align-items: center; gap: 6px; }
+.w.pc .sv-st i { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; font-style: normal; }
+.w.pc .sv-st i svg { width: 13px; height: 13px; stroke-width: 2.4; }
+.w.pc .sv-st--ok i { background: var(--pc-y); color: #0b0b0b; } .w.pc .sv-st--no i { background: var(--pc-n); color: #fff; }
+.w.pc .sv-st b { font: 700 15px/18px var(--sv-mono); color: var(--pc-y); }
+.w.pc .sv--res-stamp .sv-r--tile .sv-top { height: 24px; }
+/* фикс 10.11 (дирижёр: «на второй плитке баг»): в плитке постоянной высоты вопрос — до двух строк с многоточием, третья строка не обрезается посередине */
+.w.pc .sv--v2 .sv-r--tile .sv-q { -webkit-line-clamp: 2; }
+/* v31–v33 (дирижёр 10.11): PC_SV6 */
+.w.pc .sv--v6 .sv-r--clock { height: 68px; padding-top: 0; padding-bottom: 0; }
+.w.pc .sv--v6 .sv-r--clock .sv-mid { justify-content: center; }
+.w.pc .sv--v6 .sv-r--clock .sv-meta { height: 18px; }
+.w.pc .sv--v6 .sv-r--icon > :last-child:not(.sv-bk) { flex: none; width: 40px; display: flex; justify-content: flex-end; }
+.w.pc .sv--v6 .sv-r--icon > .sv-bk:last-child { margin-left: 16px; }
+.w.pc .sv--v6 .sv-r--icon .sv-mid > .sv-v { display: grid; grid-template-columns: 96px minmax(0, 1fr); column-gap: 8px; align-items: center; }
+.w.pc .sv--v6 .sv-r--icon .sv-mid > .sv-v .sv-vb { width: 96px; }
+.w.pc .sv--v6 .sv-r--icon .sv-mid > .sv-v .sv-vl { overflow: hidden; text-overflow: ellipsis; }
+.w.pc .sv--v6 .sv-rib { top: 14px; right: -34px; width: 124px; }
+.w.pc .sv-rib--gone { background: #0b0b0b; color: var(--w-fg); box-shadow: 0 0 0 1px var(--w-border), 0 2px 6px rgba(0,0,0,.35); }
+.w.pc .sv--v6.sv--res-ribbon .sv-r--tile.is-gone { opacity: .75; }
+/* 10.11 (дирижёр): подсказка с полным текстом у обрезанного многоточием — своя, в стиле сайта */
+.sv-tip { position: fixed; z-index: 9999; padding: 6px 8px; border-radius: 8px; background: #1b1b1f; box-shadow: 0 0 0 1px #2c2c33, 0 8px 24px rgba(0,0,0,.5); color: #f4f4f5; font: 500 12px/16px 'Google Sans Flex', Inter, system-ui, sans-serif; pointer-events: none; opacity: 0; transform: translateY(2px); transition: opacity .12s, transform .12s; white-space: normal; }
+.sv-tip.is-on { opacity: 1; transform: none; }
+/* v34–v36 (дирижёр 10.11): PC_SV7 — значок события на карточке прогноза перед «Рошан · до 34:40» */
+.w.pc .qz-ev--ic { display: inline-flex; align-items: center; gap: 6px; } .w.pc .qz-ev--ic .sv-ei { width: 14px; height: 14px; flex: none; }

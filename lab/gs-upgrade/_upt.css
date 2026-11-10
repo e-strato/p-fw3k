@@ -1,0 +1,359 @@
+/* Лаба gs-upgrade · страница турнира v2 (10.11) — стиль доработок (_upt.js). Токены — ../widget-tournament/_w.css (--w-*), текст — ../widgets-unified/_type.css (--t-*).
+   Блоки — в стиле виджетов страницы (.w + .w-hd, как «Участники» и «Статистика героев»). Компьютер 1440 — главная колонка; телефон 390 — без горизонтальной прокрутки. */
+.w.upt{ width:100%; overflow:visible; }
+.upt .mut{ color:var(--w-muted-fg); }
+.upt .num{ font-variant-numeric:tabular-nums; }
+.upt .w-hd{ gap:12px; }
+.upt-sub{ margin-left:auto; font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+.upt-lg{ width:16px; height:16px; object-fit:contain; flex:none; vertical-align:middle; }
+.upt-lg--28{ width:28px; height:28px; }
+.upt-hi{ width:32px; height:18px; border-radius:4px; object-fit:cover; flex:none; background:var(--w-muted); vertical-align:middle; }
+.upt-go{ font:var(--t-link); color:var(--w-muted-fg); } .upt-go:hover{ color:var(--w-fg); }
+.upt-live{ display:inline-flex; align-items:center; height:16px; padding:0 5px; border-radius:4px; background:var(--w-down-bg); color:var(--w-down); font:var(--t-live); }
+.upt-ft{ padding:10px 16px 12px; border-top:1px solid var(--w-border); font:var(--t-sub); }
+.upt-rh{ display:flex; align-items:baseline; gap:8px; min-width:0; margin:0 0 8px; }
+.upt-rh b{ font:var(--t-title); white-space:nowrap; } .upt-rh small{ font:var(--t-sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.upt-box{ max-height:600px; overflow:auto; overscroll-behavior:contain; scrollbar-width:thin; }
+.upt-empty{ padding:24px 16px; font:var(--t-sub); text-align:center; }
+
+/* сегменты и фильтры — как .t5-seg / .hsw-seg */
+.upt-fl{ display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:12px 16px 4px; }
+.upt-seg{ display:inline-flex; gap:2px; padding:2px; border-radius:var(--w-r-sm); background:var(--w-mid-bg); }
+.w .upt-seg button, .upt-seg button{ height:28px; padding:0 10px; border-radius:6px; font:var(--t-seg); color:var(--w-muted-fg); white-space:nowrap; text-align:center; }
+.w .upt-seg button.is-on, .upt-seg button.is-on{ background:var(--w-muted); color:var(--w-fg); }
+.w .upt-seg button:hover:not(.is-on){ color:var(--w-fg); }
+.upt-seg--w{ display:flex; width:100%; } .upt-seg--w button{ flex:1; padding:0 4px; }
+.upt-sel select{ height:32px; padding:0 28px 0 10px; border:1px solid var(--w-border); border-radius:var(--w-r-sm); background:var(--w-bg); color:var(--w-fg); font:var(--t-seg);
+  appearance:none; -webkit-appearance:none; cursor:pointer;
+  background-image:linear-gradient(45deg, transparent 50%, var(--w-muted-fg) 50%), linear-gradient(135deg, var(--w-muted-fg) 50%, transparent 50%);
+  background-position:calc(100% - 14px) 14px, calc(100% - 10px) 14px; background-size:4px 4px; background-repeat:no-repeat; }
+.w .upt-chk{ display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 10px; border-radius:var(--w-r-sm); font:var(--t-seg); color:var(--w-muted-fg); }
+.upt-chk i{ width:14px; height:14px; border-radius:4px; border:1px solid var(--w-ring); }
+.w .upt-chk.is-on{ color:var(--w-fg); } .upt-chk.is-on i{ background:var(--w-fg); border-color:var(--w-fg); box-shadow:inset 0 0 0 3px var(--w-bg); }
+
+/* ——— 1. Мета турнира: плитки ——— */
+.upt-tls{ display:grid; grid-template-columns:repeat(6, minmax(0, 1fr)); }
+.upt-tl{ display:flex; flex-direction:column; gap:4px; min-width:0; padding:14px 16px 16px; border-left:1px solid var(--w-border); }
+.upt-tl:first-child{ border-left:0; }
+.upt-tl__l{ font:var(--t-label); line-height:16px; color:var(--w-muted-fg); white-space:nowrap; }
+.upt-tl__v{ font:700 22px/28px var(--w-font); white-space:nowrap; } .upt-tl__v .mut{ font:600 14px/20px var(--w-font); }
+.upt-tl small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.upt-tl__m, .upt-rc__m{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.upt-tl__m > span, .upt-rc__m > span{ display:flex; align-items:center; gap:6px; min-width:0; font:var(--t-cell); }
+.upt-tl__m .n, .upt-rc__m .n{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .upt-tl__m b, .upt-rc__m b{ font:var(--t-num-s); }
+.upt-rc__m .is-w{ color:var(--w-fg); }
+.upt-tl--go:hover{ background:var(--w-mid-bg); } .upt-tl--go:hover small{ color:var(--w-fg); }
+.upt-bar{ display:flex; height:4px; border-radius:2px; background:var(--w-muted); overflow:hidden; margin:2px 0; } .upt-bar i{ background:var(--w-fg); }
+.upt-tl:last-child{ border-radius:0 var(--w-r) var(--w-r) 0; }
+body:not(.is-desk) .upt-tls{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+body:not(.is-desk) .upt-tl{ padding:12px; border-left:0; border-top:1px solid var(--w-border); }
+body:not(.is-desk) .upt-tl:nth-child(-n+2){ border-top:0; } body:not(.is-desk) .upt-tl:nth-child(2n){ border-left:1px solid var(--w-border); }
+body:not(.is-desk) .upt-tl__v{ font:700 18px/24px var(--w-font); } body:not(.is-desk) .upt-tl:last-child{ border-radius:0 0 var(--w-r) 0; }
+
+/* ——— 2. Сетка плей-офф ——— */
+.upt-brd{ --gap:28px; --slot:90px; display:grid; grid-template-columns:minmax(0, 4fr) minmax(0, 1fr); grid-template-rows:auto auto auto auto; column-gap:var(--gap); padding:12px 16px 16px; }
+.upt-brd__lb{ grid-column:1; font:var(--t-label); color:var(--w-muted-fg); margin-bottom:4px; } .upt-brd__lb--l{ margin-top:16px; padding-top:12px; border-top:1px dashed var(--w-border); }
+.upt-brd__u, .upt-brd__l{ grid-column:1; display:flex; gap:var(--gap); } .upt-brd__u{ --rows:4; } .upt-brd__l{ --rows:2; }
+.upt-brd__gf{ grid-column:2; grid-row:1 / 5; align-self:center; display:flex; flex-direction:column; gap:12px; }
+.upt-bc{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.upt-bc--gap{ visibility:hidden; }
+.upt-bc__s{ display:flex; flex-direction:column; height:calc(var(--rows) * var(--slot)); }
+.upt-bs{ position:relative; flex:1; display:flex; align-items:center; }
+.upt-bs > *{ width:100%; }
+/* линии: пара матчей сходится в один матч следующего раунда; «прямо» — матч идёт в матч следующего раунда */
+.upt-bc--pair .upt-bs::after{ content:''; position:absolute; right:calc(var(--gap) / -2); width:calc(var(--gap) / 2); border-right:1px solid var(--w-ring); pointer-events:none; }
+.upt-bc--pair .upt-bs:nth-child(odd)::after{ top:50%; height:50%; border-top:1px solid var(--w-ring); }
+.upt-bc--pair .upt-bs:nth-child(even)::after{ top:0; height:50%; border-bottom:1px solid var(--w-ring); }
+.upt-bc--pair + .upt-bc .upt-bs::before{ content:''; position:absolute; left:calc(var(--gap) / -2); width:calc(var(--gap) / 2); top:50%; border-top:1px solid var(--w-ring); }
+.upt-bc--str .upt-bs::after{ content:''; position:absolute; right:calc(var(--gap) * -1); width:var(--gap); top:50%; border-top:1px solid var(--w-ring); }
+/* матч */
+.upt-bm{ display:flex; flex-direction:column; gap:2px; padding:6px 8px 6px; border:1px solid var(--w-border); border-radius:var(--w-r-sm); background:var(--w-mid-bg); min-width:0; }
+a.upt-bm:hover{ border-color:var(--w-ring); }
+.upt-bm.is-live{ border-color:color-mix(in srgb, var(--w-down) 55%, var(--w-border)); }
+.upt-bm.is-tbd{ background:transparent; border-style:dashed; }
+.upt-bm__h{ display:flex; align-items:center; gap:6px; height:16px; font:var(--t-sub); white-space:nowrap; overflow:hidden; }
+.upt-bt{ display:flex; align-items:center; gap:6px; height:22px; min-width:0; font:var(--t-title); }
+.upt-bt .n{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.upt-bt b{ font:var(--t-num); min-width:12px; text-align:right; }
+.upt-bt.is-l{ color:var(--w-muted-fg); } .upt-bt.is-l img{ opacity:.55; }
+.upt-bt.is-tbd{ color:var(--w-ring); font:var(--t-sub); } .upt-bt.is-tbd i{ width:16px; height:16px; border-radius:4px; background:var(--w-muted); flex:none; }
+/* победитель и места */
+.upt-ch{ display:flex; flex-direction:column; gap:4px; padding:10px 12px; border-radius:var(--w-r-sm); background:var(--w-up-bg); }
+.upt-ch > .mut{ font:var(--t-sub); } .upt-ch small{ font:var(--t-num-s); color:var(--w-up-fg); }
+.upt-ch__t{ display:flex; align-items:center; gap:8px; } .upt-ch__t b{ font:var(--t-big); }
+.upt-pl{ display:flex; flex-wrap:wrap; gap:6px; padding:0 16px 16px; }
+.upt-plc{ display:inline-flex; align-items:center; gap:6px; height:28px; padding:0 10px 0 8px; border-radius:999px; background:var(--w-mid-bg); font:var(--t-cell); white-space:nowrap; }
+.upt-plc b{ font:var(--t-num-s); color:var(--w-muted-fg); } .upt-plc small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.upt-plc.is-1 b{ color:var(--w-up); }
+/* телефон: сетка по раундам */
+#upt-br .upt-seg--w{ margin:12px 16px 0; width:auto; }
+.upt-brm{ display:flex; flex-direction:column; gap:16px; padding:12px 16px 16px; }
+.upt-brm__g{ display:grid; gap:8px; } .upt-brm__g.is-2{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+#upt-br .upt-pl{ padding-top:0; }
+
+/* ——— 3. Серии турнира ——— */
+.upt-day__h{ position:sticky; top:0; z-index:1; display:flex; align-items:baseline; gap:8px; height:32px; padding:8px 16px 0; background:var(--w-bg); border-bottom:1px solid var(--w-border); }
+.upt-day__h b{ font:var(--t-title); } .upt-day__h small{ font:var(--t-sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.upt-sr{ border-bottom:1px solid var(--w-border); } .upt-sr:last-child{ border-bottom:0; }
+.w .upt-sr__r{ display:grid; grid-template-columns:44px 120px minmax(0, 1fr) 64px minmax(0, 1fr) 36px 16px; align-items:center; gap:10px; width:100%; height:44px; padding:0 16px; text-align:left; }
+.w .upt-sr__r:not(:disabled):hover{ background:var(--w-mid-bg); } .w .upt-sr__r:disabled{ cursor:default; }
+.upt-sr__tm, .upt-sr__st, .upt-sr__bo{ font:var(--t-sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.upt-sr__a, .upt-sr__b{ display:flex; align-items:center; gap:8px; min-width:0; font:var(--t-title); }
+.upt-sr__a{ justify-content:flex-end; } .upt-sr__a .n, .upt-sr__b .n{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.upt-sr__a.is-l, .upt-sr__b.is-l{ color:var(--w-muted-fg); }
+.upt-sr__sc{ display:flex; justify-content:center; gap:4px; font:var(--t-num); } .upt-sr__sc b{ color:var(--w-muted-fg); } .upt-sr__sc b.is-w{ color:var(--w-fg); } .upt-sr__sc i{ font-style:normal; color:var(--w-ring); }
+.upt-car{ color:var(--w-muted-fg); font-size:11px; text-align:center; }
+.upt-sr.is-open{ background:color-mix(in srgb, var(--w-fg) 2%, transparent); }
+.upt-sr__d{ padding:0 16px 12px; }
+.upt-sr__f{ display:flex; justify-content:flex-end; padding-top:8px; }
+/* карта: пики 5 + 5, убийства, длительность */
+.upt-mp{ display:grid; grid-template-columns:80px minmax(0, 1fr) 72px minmax(0, 1fr); align-items:center; gap:10px; min-height:44px; padding:6px 0; border-top:1px solid color-mix(in srgb, var(--w-border) 60%, transparent); }
+.upt-mp:first-child{ border-top:0; }
+.upt-mp__n{ display:flex; flex-direction:column; } .upt-mp__n b{ font:var(--t-title); } .upt-mp__n small{ font:var(--t-sub); }
+.upt-mp__s{ display:flex; align-items:center; gap:8px; min-width:0; } .upt-mp__s--a{ justify-content:flex-end; }
+.upt-mp__t{ display:flex; align-items:center; gap:6px; flex:none; } .upt-mp__t small{ font:var(--t-sub); color:var(--w-muted-fg); }
+.upt-mp__h{ display:flex; gap:3px; } .upt-mp__h .upt-hi{ width:36px; height:20px; }
+.upt-mp__s:not(.is-w) .upt-mp__h{ opacity:.6; }
+.upt-mp__k{ display:flex; justify-content:center; gap:6px; font:var(--t-num); } .upt-mp__k b{ color:var(--w-muted-fg); } .upt-mp__k b.is-w{ color:var(--w-fg); } .upt-mp__k i{ font-style:normal; color:var(--w-ring); }
+.upt-fp{ padding:0 5px; border-radius:4px; background:var(--w-muted); font:var(--t-tag); font-style:normal; color:var(--w-fg); white-space:nowrap; }
+.upt-mp--live{ display:flex; gap:8px; font:var(--t-sub); }
+/* телефон: строка серии и карты в две строки */
+body:not(.is-desk) .w .upt-sr__r{ grid-template-columns:36px minmax(0, 1fr) 48px minmax(0, 1fr) 12px; gap:6px; padding:0 12px; height:48px; }
+body:not(.is-desk) .upt-sr__st, body:not(.is-desk) .upt-sr__bo{ display:none; }
+body:not(.is-desk) .upt-day__h{ padding:8px 12px 0; }
+body:not(.is-desk) .upt-sr__d{ padding:0 12px 12px; }
+body:not(.is-desk) .upt-mp{ grid-template-columns:minmax(0, 1fr) auto; grid-template-areas:"n k" "a a" "b b"; gap:4px 8px; }
+body:not(.is-desk) .upt-mp__n{ grid-area:n; flex-direction:row; align-items:baseline; gap:8px; } body:not(.is-desk) .upt-mp__k{ grid-area:k; }
+body:not(.is-desk) .upt-mp__s--a{ grid-area:a; justify-content:flex-start; } body:not(.is-desk) .upt-mp__s--b{ grid-area:b; justify-content:flex-start; }
+body:not(.is-desk) .upt-mp__t{ width:84px; }
+body:not(.is-desk) .upt-mp__s--b .upt-mp__t{ order:-1; flex-direction:row-reverse; justify-content:flex-end; }
+body:not(.is-desk) .upt-mp__h .upt-hi{ width:42px; height:24px; }
+body:not(.is-desk) .upt-fl{ padding:12px 12px 4px; } body:not(.is-desk) .upt-sel{ flex:1; } body:not(.is-desk) .upt-sel select{ width:100%; }
+
+/* ——— 4. Рекорды и заметные матчи ——— */
+.upt-rs{ padding:12px 16px 16px; }
+.upt-rs > .upt-rh:not(:first-child){ margin-top:16px; }
+.upt-rg{ display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:8px; } .upt-rg--m{ grid-template-columns:repeat(5, minmax(0, 1fr)); }
+.upt-rc{ display:flex; flex-direction:column; gap:4px; min-width:0; padding:10px 12px 12px; border:1px solid var(--w-border); border-radius:var(--w-r-sm); background:var(--w-mid-bg); }
+.upt-rc:hover{ border-color:var(--w-ring); } .upt-rc:hover > small{ color:var(--w-fg); }
+.upt-rc__l{ font:var(--t-label); line-height:16px; color:var(--w-muted-fg); }
+.upt-rc__v{ font:700 20px/26px var(--w-font); white-space:nowrap; } .upt-rc__v .mut{ font:500 12px/16px var(--w-font); }
+.upt-rc > small{ font:var(--t-sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+.upt-rc__p{ display:flex; align-items:center; gap:8px; min-width:0; }
+.upt-rc__p .n{ display:flex; flex-direction:column; flex:1; min-width:0; } .upt-rc__p .n b{ font:var(--t-title); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.upt-rc__p .n small{ display:flex; align-items:center; gap:4px; font:var(--t-sub); white-space:nowrap; overflow:hidden; } .upt-rc__p .n small .upt-lg{ width:12px; height:12px; }
+.upt-av{ width:28px; height:28px; border-radius:50%; object-fit:cover; flex:none; background:var(--w-muted); display:inline-block; }
+.upt-hi--r{ width:40px; height:22px; }
+body:not(.is-desk) .upt-rs{ padding:12px; }
+body:not(.is-desk) .upt-rg, body:not(.is-desk) .upt-rg--m{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+body:not(.is-desk) .upt-rc > small{ white-space:normal; }
+body:not(.is-desk) .upt-rc__p .upt-hi--r{ display:none; } body:not(.is-desk) .upt-rc__v{ font:700 18px/24px var(--w-font); }
+
+/* ——— 5 и 6. Таблицы игроков и героев — как «Статистика героев» (hsw--nice): фиксированная шапка, сортировка, колонка сортировки подсвечена ——— */
+.upt-t{ width:100%; border-collapse:collapse; }
+.upt-t thead{ position:sticky; top:0; z-index:2; background:var(--w-bg); box-shadow:0 1px 0 var(--w-border); }
+.upt-t th{ height:30px; padding:0 8px; background:var(--w-bg); text-align:right; font:500 11px/1 var(--w-font); color:var(--w-muted-fg); white-space:nowrap; }
+.upt-t td{ height:40px; padding:0 8px; border-top:1px solid color-mix(in srgb, var(--w-border) 60%, transparent); text-align:right; font:var(--t-cell); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.upt-t td b{ font:var(--t-num-s); }
+.upt-t th.k, .upt-t td.k{ width:36px; text-align:right; } .upt-t td.k{ color:var(--w-ring); font:var(--t-num-s); }
+.upt-t th.pl, .upt-t td.pl, .upt-t th.h, .upt-t td.h{ text-align:left; }
+.upt-t th.srt{ cursor:pointer; user-select:none; } .upt-t th.srt:hover, .upt-t th.srt.is-on{ color:var(--w-fg); } .upt-t th.srt.is-on{ box-shadow:inset 0 -2px 0 var(--w-fg); }
+.upt-t th.srt .ar{ display:inline-block; width:10px; margin-left:3px; font-style:normal; font-size:10px; visibility:hidden; } .upt-t th.srt .ar.is-on{ visibility:visible; }
+.upt-t td.is-sc{ background:color-mix(in srgb, var(--w-fg) 6%, transparent); color:var(--w-fg); }
+.upt-t tbody tr:hover td{ background:color-mix(in srgb, var(--w-fg) 4%, transparent); }
+.upt-t .gs{ border-left:1px solid color-mix(in srgb, var(--w-border) 80%, transparent); }
+.upt .wrh{ display:inline-block; min-width:44px; padding:3px 7px; border-radius:999px; text-align:center; font:600 11px/14px var(--w-font); background:var(--tc, transparent); color:var(--tf, var(--w-fg)); }
+.upt .w2{ --tc:color-mix(in srgb, var(--w-up) 55%, transparent); --tf:#fff; } .upt .w1{ --tc:color-mix(in srgb, var(--w-up) 22%, transparent); --tf:var(--w-up-fg); }
+.upt .l2{ --tc:color-mix(in srgb, var(--w-down) 55%, transparent); --tf:#fff; } .upt .l1{ --tc:color-mix(in srgb, var(--w-down) 22%, transparent); --tf:var(--w-down-fg); }
+.upt-box--t{ margin-top:8px; border-top:1px solid var(--w-border); }
+/* игроки */
+.upt-pp{ display:inline-flex; align-items:center; gap:8px; min-width:0; max-width:100%; } .upt-pp b{ max-width:140px; font:var(--t-title); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.upt-pp small{ font:var(--t-sub); overflow:hidden; text-overflow:ellipsis; }
+.upt-pos{ display:inline-grid; place-items:center; width:18px; height:18px; border-radius:4px; background:var(--w-muted); color:var(--w-fg); font:var(--t-tag); flex:none; } .upt-pos.is-0{ color:var(--w-ring); }
+.upt-pp .upt-av{ width:24px; height:24px; }
+.upt-pool{ display:inline-flex; align-items:center; gap:4px; } .upt-pool b{ width:22px; text-align:right; margin-right:2px; } .upt-pool .upt-hi{ width:28px; height:16px; }
+.upt-t--pl td.c-kda3{ font:var(--t-sub); }
+.upt-t--pl.is-ph{ table-layout:fixed; } .upt-t--pl.is-ph th.k, .upt-t--pl.is-ph td.k{ width:26px; padding:0 4px; }
+.upt-t--pl.is-ph th, .upt-t--pl.is-ph td{ padding:0 4px; } .upt-t--pl.is-ph th.pl{ width:auto; } .upt-t--pl.is-ph th:not(.k):not(.pl){ width:48px; } .upt-t--pl.is-ph .upt-pp b{ max-width:none; min-width:0; font:600 12px/16px var(--w-font); } .upt-t--pl.is-ph th.c-pool:not(.k):not(.pl){ width:132px; } .upt-t--pl.is-ph td{ overflow:hidden; } .upt-t--pl.is-ph .upt-pool .upt-hi{ width:26px; height:15px; }
+.upt-t--pl.is-ph td.pl{ overflow:hidden; } .upt-t--pl.is-ph .upt-pp{ gap:6px; } .upt-t--pl.is-ph .wrh{ min-width:0; padding:2px 5px; }
+body:not(.is-desk) #upt-pls .upt-fl{ gap:6px; } body:not(.is-desk) #upt-pls .upt-chk{ margin-left:auto; }
+/* герои */
+.upt-hero{ display:inline-flex; align-items:center; gap:10px; min-width:0; max-width:100%; font:500 13px/16px var(--w-font); } .upt-hero .upt-hi{ width:40px; height:22px; border-radius:5px; }
+.upt-hero > span{ overflow:hidden; text-overflow:ellipsis; }
+.upt-sd{ display:inline-flex; align-items:center; gap:6px; }
+#upt-hs .w-hd .upt-rc0{ margin-left:0; flex:none; height:28px; padding:0 10px; border-radius:6px; background:var(--w-muted); color:var(--w-fg); font:500 12px/1 var(--w-font); }
+#upt-hs .w-hd .upt-rc0:disabled{ opacity:.35; cursor:default; }
+/* телефон — имена героев целиком: колонка героя шире, числа уже, имя переносится на вторую строку */
+.upt-t--hs.is-ph{ table-layout:fixed; }
+.upt-t--hs.is-ph th, .upt-t--hs.is-ph td{ padding:0 4px; } .upt-t--hs.is-ph th.k, .upt-t--hs.is-ph td.k{ width:26px; }
+.upt-t--hs.is-ph th:not(.k):not(.h){ width:50px; } .upt-t--hs.is-ph th:last-child{ width:66px; } .upt-t--hs.is-ph th.h{ width:auto; } .upt-t--hs.is-ph th{ overflow:hidden; }
+.upt-t--hs.is-ph td.h{ height:44px; white-space:normal; }
+.upt-t--hs.is-ph .upt-hero{ gap:8px; font:500 12px/14px var(--w-font); } .upt-t--hs.is-ph .upt-hero .upt-hi{ width:30px; height:17px; }
+.upt-t--hs.is-ph .upt-hero > span{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; white-space:normal; overflow-wrap:anywhere; }
+.upt-t--hs.is-ph .wrh{ min-width:0; padding:2px 5px; }
+body:not(.is-desk) #upt-hs .upt-fl{ padding:12px 12px 4px; } body:not(.is-desk) #upt-hs .upt-seg{ display:flex; width:100%; } body:not(.is-desk) #upt-hs .upt-seg button{ flex:1; padding:0 4px; }
+/* вне меты */
+.upt-om{ padding:12px 16px 4px; border-top:1px solid var(--w-border); }
+.upt-hcs{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+.upt-hc{ display:inline-flex; align-items:center; gap:6px; height:28px; padding:0 10px 0 4px; border-radius:999px; background:var(--w-mid-bg); font:var(--t-cell); white-space:nowrap; }
+.upt-hc .upt-hi{ width:30px; height:17px; border-radius:999px; filter:grayscale(1); opacity:.7; }
+body:not(.is-desk) .upt-om{ padding:12px 12px 4px; }
+
+/* ——— 7. Статы команды в карточке «Участников» ——— */
+.upt-ts{ display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:2px; margin:0 0 8px; padding:6px 0; border-top:1px solid var(--w-border); border-bottom:1px solid var(--w-border); }
+.upt-ts span{ display:flex; flex-direction:column; min-width:0; }
+.upt-ts small{ font:var(--t-sub); color:var(--w-muted-fg); } .upt-ts b{ font:var(--t-num-s); white-space:nowrap; }
+
+/* ——— телефон: групповой этап без ухода за край ——— */
+.upt-gsw{ margin-bottom:12px; }
+.upt-gs--ph .scroll{ overflow:visible; }
+.upt-gs--ph .gm, .upt-gs--ph .gp{ min-width:0; width:100%; }
+/* Universe: «Таблица» — места, серии, карты; «Каждый с каждым» — лого и клетки */
+.upt-gs--ph.upt-gs--t:not(.upt-gs--ti) .gm-h, .upt-gs--ph.upt-gs--t:not(.upt-gs--ti) td.ht, .upt-gs--ph.upt-gs--t:not(.upt-gs--ti) td.hx{ display:none; }
+.upt-gs--ph.upt-gs--x:not(.upt-gs--ti) tr > :nth-last-child(-n+2){ display:none; }
+.upt-gs--ph.upt-gs--x:not(.upt-gs--ti) .tmn > span, .upt-gs--ph.upt-gs--x:not(.upt-gs--ti) th:nth-child(2){ font-size:0; }
+.upt-gs--ph.upt-gs--x:not(.upt-gs--ti) td.ht, .upt-gs--ph.upt-gs--x:not(.upt-gs--ti) td.hx{ width:auto; height:36px; }
+.upt-gs--ph.upt-gs--x .gm td, .upt-gs--ph.upt-gs--x .gm th{ padding:0 2px; }
+.upt-gs--ph .gm .tmn{ max-width:100%; overflow:hidden; } .upt-gs--ph .gm .tmn > span{ overflow:hidden; text-overflow:ellipsis; }
+.upt-gs--ph .gm td:nth-child(2){ max-width:0; width:100%; }
+.upt-gs--ph.upt-gs--x .gm td:nth-child(2){ width:28px; max-width:none; }
+/* TI: «Таблица» — место, команда, серии, карты, итог; «Матчи по порядку» — лого и матчи */
+.upt-gs--ph.upt-gs--ti.upt-gs--t .gp tr > :nth-child(3){ display:none; }
+.upt-gs--ph.upt-gs--ti.upt-gs--t .gp td, .upt-gs--ph.upt-gs--ti.upt-gs--t .gp th{ padding:0 4px; }
+.upt-gs--ph.upt-gs--ti.upt-gs--t .gp td:nth-child(2){ max-width:0; width:100%; } .upt-gs--ph.upt-gs--ti .gp .tmn{ max-width:100%; overflow:hidden; } .upt-gs--ph.upt-gs--ti .gp .tmn > span{ overflow:hidden; text-overflow:ellipsis; }
+.upt-gs--ph.upt-gs--ti.upt-gs--t .gp td:last-child{ white-space:normal; font:var(--t-sub); line-height:14px; width:76px; }
+.upt-gs--ph.upt-gs--ti.upt-gs--x .gp tr > :nth-child(n+4){ display:none; }
+.upt-gs--ph.upt-gs--ti.upt-gs--x .gp .tmn > span, .upt-gs--ph.upt-gs--ti.upt-gs--x .gp th:nth-child(2){ font-size:0; }
+.upt-gs--ph.upt-gs--ti.upt-gs--x .gp td{ padding:4px 4px; height:auto; } .upt-gs--ph.upt-gs--ti.upt-gs--x .gp-ms{ flex-wrap:wrap; gap:4px; }
+.upt-gs--ph.upt-gs--ti.upt-gs--x .gp td:nth-child(3){ white-space:normal; }
+
+/* ── v13–v16 (html.upt-o): таблицы без скролла — «Показать ещё»; мета и рекорды одним блоком ── */
+.upt-o .upt-box{ max-height:none; overflow-y:visible; }
+.upt-more{ display:block; width:calc(100% - 32px); height:36px; margin:8px 16px 12px; border:1px solid var(--w-border); border-radius:var(--w-r-sm); background:none; color:var(--w-fg); font:var(--t-seg); cursor:pointer; }
+.upt-more:hover{ background:var(--w-mid-bg); }
+body:not(.is-desk) .upt-more{ width:calc(100% - 24px); margin:8px 12px 12px; }
+.upt-tls--5{ grid-template-columns:repeat(5, minmax(0, 1fr)); border-bottom:1px solid var(--w-border); }
+.upt-tls--3{ grid-template-columns:repeat(3, minmax(0, 1fr)); }
+.upt-tls--3 .upt-tl:nth-child(n+4){ border-top:1px solid var(--w-border); } .upt-tls--3 .upt-tl:nth-child(3n+1){ border-left:0; }
+.upt-tl--rc{ color:inherit; text-decoration:none; } .upt-tl--rc .upt-rc__l{ font:var(--t-label); line-height:16px; color:var(--w-muted-fg); } .upt-tl--rc .upt-rc__v{ font:700 22px/28px var(--w-font); }
+.upt-rs--top{ padding-top:14px; }
+#upt-meta .upt-fl{ padding:12px 16px 0; }
+/* list: цифры строкой + два списка */
+.upt-strip{ display:flex; border-bottom:1px solid var(--w-border); }
+.upt-strip__i{ flex:1; display:flex; flex-direction:column; gap:2px; min-width:0; padding:12px 16px; border-left:1px solid var(--w-border); }
+.upt-strip__i:first-child{ border-left:0; } .upt-strip__i b{ font:700 20px/26px var(--w-font); white-space:nowrap; } .upt-strip__i b .mut{ font-weight:500; font-size:14px; } .upt-strip__i small{ font:var(--t-sub); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.upt-l2{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:24px; padding:14px 16px 8px; }
+.upt-lrs{ display:flex; flex-direction:column; margin-bottom:8px; }
+.upt-lr{ display:grid; grid-template-columns:120px 92px minmax(0, 1fr); grid-template-areas:"l v w" "l v s"; align-items:center; column-gap:12px; padding:8px 0; border-top:1px solid var(--w-border); color:inherit; text-decoration:none; }
+.upt-lr:hover .upt-lr__s{ color:var(--w-fg); }
+.upt-lr__l{ grid-area:l; font:var(--t-label); color:var(--w-muted-fg); } .upt-lr__v{ grid-area:v; font:700 17px/22px var(--w-font); white-space:nowrap; } .upt-lr__v .mut{ display:none; }
+.upt-lr__w{ grid-area:w; display:flex; align-items:center; gap:6px; min-width:0; font:var(--t-cell); white-space:nowrap; overflow:hidden; } .upt-lr__w .is-w{ color:var(--w-fg); } .upt-lr__w b{ font:var(--t-num-s); }
+.upt-lr__w .upt-av{ width:20px; height:20px; } .upt-lr__w .upt-lg{ width:14px; height:14px; } .upt-lr__w .upt-hi--r{ width:32px; height:18px; margin-left:auto; }
+.upt-lr__s{ grid-area:s; font:var(--t-sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* two: мета слева списком, рекорды справа */
+.upt-tw{ display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 2fr); }
+.upt-tw__m{ padding:14px 16px; border-right:1px solid var(--w-border); } .upt-tw__r{ padding:14px 16px 8px; }
+.upt-tw__r > .upt-rh:not(:first-child){ margin-top:8px; }
+.upt-ml{ display:flex; flex-direction:column; gap:2px; padding:10px 0; border-top:1px solid var(--w-border); }
+.upt-ml__l{ font:var(--t-label); color:var(--w-muted-fg); } .upt-ml__v{ font:700 20px/26px var(--w-font); } .upt-ml__v .mut{ font:600 14px/20px var(--w-font); } .upt-ml small{ font:var(--t-sub); }
+/* телефон */
+body:not(.is-desk) .upt-tls--5, body:not(.is-desk) .upt-tls--3{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+body:not(.is-desk) .upt-tls--3 .upt-tl{ border-left:0; border-top:1px solid var(--w-border); } body:not(.is-desk) .upt-tls--3 .upt-tl:nth-child(-n+2){ border-top:0; } body:not(.is-desk) .upt-tls--3 .upt-tl:nth-child(2n){ border-left:1px solid var(--w-border); }
+body:not(.is-desk) .upt-strip{ display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); } body:not(.is-desk) .upt-strip__i{ padding:10px 12px; border-left:0; } body:not(.is-desk) .upt-strip__i:not(:nth-child(3n+1)){ border-left:1px solid var(--w-border); } body:not(.is-desk) .upt-strip__i:nth-child(n+4){ border-top:1px solid var(--w-border); }
+body:not(.is-desk) .upt-strip__i b{ font-size:17px; line-height:22px; }
+body:not(.is-desk) .upt-l2, body:not(.is-desk) .upt-tw{ grid-template-columns:minmax(0, 1fr); gap:8px; padding:12px; }
+body:not(.is-desk) .upt-tw__m, body:not(.is-desk) .upt-tw__r{ padding:0; border-right:0; }
+body:not(.is-desk) .upt-lr{ grid-template-columns:minmax(0, 1fr) auto; grid-template-areas:"l v" "w w" "s s"; row-gap:2px; }
+
+/* ── v17–v19 (UPT_OPT.st): мета и рекорды в одной стилистике, каждый на своём месте ── */
+.upt-vz{ display:grid; grid-template-columns:repeat(6, minmax(0, 1fr)); gap:8px; padding:12px 16px 16px; }
+.upt-rs .upt-vz{ padding:0; } .upt-vz--5{ grid-template-columns:repeat(5, minmax(0, 1fr)); } .upt-vz--4{ grid-template-columns:repeat(4, minmax(0, 1fr)); }
+.upt-vz__c, .upt-vr{ display:flex; flex-direction:column; gap:6px; min-width:0; padding:12px; border-radius:var(--w-r-sm); background:var(--w-mid-bg); color:inherit; text-decoration:none; }
+.upt-vr:hover{ background:var(--w-muted); } .upt-vr > small{ font:var(--t-sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.upt-vz__l{ font:var(--t-label); color:var(--w-muted-fg); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.upt-vz__v{ font:700 22px/28px var(--w-font); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .upt-vz__v .mut{ font:600 13px/18px var(--w-font); }
+.upt-vz__g{ display:flex; flex-direction:column; gap:4px; margin-top:auto; }
+.upt-sp{ display:flex; gap:2px; height:8px; } .upt-sp i{ border-radius:2px; background:var(--w-fg); } .upt-sp i + i{ background:var(--w-muted); }
+.upt-sp__l{ display:flex; justify-content:space-between; font:var(--t-sub); color:var(--w-muted-fg); }
+.upt-hg{ display:flex; align-items:flex-end; gap:2px; height:32px; } .upt-hg i{ flex:1; border-radius:2px 2px 0 0; background:var(--w-fg); opacity:.75; }
+.upt-ring{ --p:50; display:grid; place-items:center; flex:none; width:44px; height:44px; border-radius:50%; background:conic-gradient(var(--w-fg) calc(var(--p) * 1%), var(--w-muted) 0); -webkit-mask:radial-gradient(circle, transparent 15px, #000 16px); mask:radial-gradient(circle, transparent 15px, #000 16px); }
+.upt-ring b{ display:none; }
+.upt-vz__rw{ display:flex; align-items:center; gap:8px; min-width:0; } .upt-vz__rw small{ font:var(--t-sub); }
+.upt-hi--l{ width:56px; height:32px; border-radius:6px; }
+.upt-cb{ display:block; height:4px; border-radius:2px; background:var(--w-muted); overflow:hidden; } .upt-cb i{ display:block; height:100%; background:var(--w-fg); }
+.upt-vr .upt-cb + small{ font:var(--t-sub); }
+/* big */
+.upt-bg{ display:grid; grid-template-columns:repeat(6, minmax(0, 1fr)); gap:24px 16px; padding:20px 20px 24px; }
+.upt-rs--big{ padding:16px 20px 20px; } .upt-rs--big .upt-bg{ padding:4px 0 8px; } .upt-rs--big > .upt-rh:not(:first-child){ margin-top:16px; }
+.upt-bg--5{ grid-template-columns:repeat(5, minmax(0, 1fr)); } .upt-bg--4{ grid-template-columns:repeat(4, minmax(0, 1fr)); }
+.upt-bg__c{ display:flex; flex-direction:column; gap:4px; min-width:0; color:inherit; text-decoration:none; }
+.upt-bg__v{ font:700 40px/44px var(--w-font); letter-spacing:-0.02em; white-space:nowrap; } .upt-bg__v .mut{ font-size:24px; }
+.upt-bg__l{ font:500 14px/18px var(--w-font); color:var(--w-fg); } .upt-bg__c small{ font:var(--t-sub); }
+.upt-bg__c--a:hover .upt-bg__v{ text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:6px; }
+.upt-bg__c .upt-rc__m{ margin-top:4px; }
+.upt-bg__p{ display:flex; align-items:center; gap:10px; min-width:0; margin-top:6px; } .upt-bg__p > span{ display:flex; flex-direction:column; min-width:0; } .upt-bg__p b{ font:var(--t-title); } .upt-bg__p small{ font:var(--t-sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.upt-av--l{ width:40px; height:40px; }
+/* art */
+.upt-ah{ display:flex; flex-direction:column; gap:8px; padding:12px 16px 0; } .upt-ah__l{ font:var(--t-label); color:var(--w-muted-fg); }
+.upt-ah__r{ display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:8px; }
+.upt-ah__h{ position:relative; display:block; aspect-ratio:16 / 9; border-radius:var(--w-r-sm); overflow:hidden; background:var(--w-muted); }
+.upt-ah__h img{ width:100%; height:100%; object-fit:cover; display:block; }
+.upt-ah__h > span{ position:absolute; inset:auto 0 0 0; display:flex; flex-direction:column; padding:18px 10px 8px; background:linear-gradient(transparent, rgba(0,0,0,.85)); }
+.upt-ah__h b{ font:600 13px/16px var(--w-font); color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .upt-ah__h small{ font:var(--t-sub); color:rgba(255,255,255,.75); }
+.upt-an{ display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:16px; margin-top:12px; padding:12px 16px 14px; border-top:1px solid var(--w-border); }
+.upt-an > span{ display:flex; flex-direction:column; gap:2px; min-width:0; } .upt-an small{ font:var(--t-label); } .upt-an b{ font:700 20px/26px var(--w-font); white-space:nowrap; } .upt-an b .mut{ font:600 13px/18px var(--w-font); }
+.upt-ar{ position:relative; display:block; min-height:150px; border-radius:var(--w-r-sm); overflow:hidden; background:var(--w-mid-bg); color:inherit; text-decoration:none; }
+.upt-ar__h{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.55; }
+.upt-ar__bg{ position:absolute; inset:0; display:flex; justify-content:space-between; align-items:center; padding:0 6px; opacity:.12; } .upt-ar__bg img{ width:72px; height:72px; object-fit:contain; }
+.upt-ar::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.85)); }
+.upt-ar--m::after{ background:none; }
+.upt-ar__t{ position:relative; z-index:1; display:flex; flex-direction:column; gap:4px; height:100%; min-height:150px; padding:12px; justify-content:flex-end; }
+.upt-ar__v{ font:700 26px/30px var(--w-font); white-space:nowrap; } .upt-ar__v .mut{ font:600 13px/18px var(--w-font); }
+.upt-ar__p{ display:flex; align-items:center; gap:6px; min-width:0; flex-wrap:wrap; } .upt-ar__p b{ font:var(--t-title); } .upt-ar__p small{ flex-basis:100%; font:var(--t-sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.upt-ar__p .upt-av{ width:22px; height:22px; }
+.upt-ar:hover .upt-ar__h{ opacity:.75; } .upt-ar--m:hover{ background:var(--w-muted); }
+/* телефон */
+body:not(.is-desk) .upt-vz, body:not(.is-desk) .upt-bg, body:not(.is-desk) .upt-ah__r, body:not(.is-desk) .upt-an{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+body:not(.is-desk) .upt-vz{ padding:12px; } body:not(.is-desk) .upt-rs .upt-vz{ padding:0; }
+body:not(.is-desk) .upt-bg{ padding:16px 12px; gap:20px 12px; } body:not(.is-desk) .upt-bg__v{ font-size:30px; line-height:34px; } body:not(.is-desk) .upt-rs--big{ padding:12px; }
+body:not(.is-desk) .upt-ah{ padding:12px 12px 0; } body:not(.is-desk) .upt-ah__h:nth-child(n+5){ display:none; } body:not(.is-desk) .upt-an{ padding:12px; }
+
+/* ── v20–v22: серии турнира виджетом в правой колонке (как виджет турниров) ── */
+.upt-sw{ padding-bottom:4px; }
+.upt-sw__g{ display:flex; flex-direction:column; padding:4px 0; } .upt-sw__g + .upt-sw__g{ border-top:1px solid var(--w-border); }
+.upt-sw__h{ padding:8px 16px 4px; font:var(--t-sub); }
+.upt-sw__r{ display:grid; grid-template-columns:44px minmax(0, 1fr); gap:10px; padding:8px 16px; color:inherit; text-decoration:none; }
+.upt-sw__r:hover{ background:var(--w-mid-bg); }
+.upt-sw__d{ padding-top:2px; font:500 11px/16px var(--upn-mono, ui-monospace, monospace); color:var(--w-fg); }
+.upt-sw__t{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+.upt-sw__t > span{ display:flex; align-items:center; gap:8px; min-width:0; font:500 13px/18px var(--w-font); }
+.upt-sw__t > span.is-l{ color:var(--w-muted-fg); } .upt-sw__t .upt-lg{ width:16px; height:16px; } .upt-sw__t .n{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.upt-sw__t b{ font:var(--t-num-s); } .upt-sw__t small{ font:var(--t-sub); }
+.upt-sw .upt-more{ margin-top:4px; }
+/* ── v21: как v18, подпись над числом, колонки через тонкую черту ── */
+.upt-bs-line .upt-bg__c{ padding-left:16px; border-left:1px solid var(--w-border); } .upt-bs-line .upt-bg{ gap:20px 0; }
+.upt-bs-line .upt-bg__l{ order:-1; color:var(--w-muted-fg); font:var(--t-label); } .upt-bs-line .upt-bg__v{ font-size:34px; line-height:40px; }
+.upt-bs-line .upt-bg__c:first-child, .upt-bs-line .upt-bg > .upt-bg__c:nth-child(6n+1){ padding-left:0; border-left:0; }
+.upt-bs-line .upt-bg--5 > .upt-bg__c:nth-child(5n+1), .upt-bs-line .upt-bg--4 > .upt-bg__c:nth-child(4n+1){ padding-left:0; border-left:0; }
+/* ── v22: как v18, крупнее и по три в ряд ── */
+.upt-bs-xl #upt-meta .upt-bg{ grid-template-columns:repeat(3, minmax(0, 1fr)); gap:28px 24px; padding:24px; }
+.upt-bs-xl .upt-bg__v{ font-size:56px; line-height:60px; } .upt-bs-xl .upt-bg__v .mut{ font-size:30px; } .upt-bs-xl .upt-bg__l{ font-size:16px; line-height:22px; }
+.upt-bs-xl .upt-bg--5 .upt-bg__v, .upt-bs-xl .upt-bg--4 .upt-bg__v{ font-size:44px; line-height:48px; }
+body:not(.is-desk) .upt-bs-line .upt-bg__c, html.upt-bs-line body:not(.is-desk) .upt-bg__c{ padding-left:0; border-left:0; }
+html.upt-bs-xl body:not(.is-desk) #upt-meta .upt-bg{ grid-template-columns:repeat(2, minmax(0, 1fr)); padding:16px 12px; }
+html.upt-bs-xl body:not(.is-desk) .upt-bg__v{ font-size:36px; line-height:40px; }
+
+/* ── v24: как v17, без плашек — колонки через тонкую черту ── */
+.upt-bs-vflat .upt-vz{ gap:16px 0; }
+.upt-bs-vflat .upt-vz__c, .upt-bs-vflat .upt-vr{ padding:0 16px; border-left:1px solid var(--w-border); border-radius:0; background:none; }
+.upt-bs-vflat .upt-vr:hover{ background:none; } .upt-bs-vflat .upt-vr:hover .upt-vz__v{ text-decoration:underline; text-underline-offset:4px; }
+.upt-bs-vflat .upt-vz > :nth-child(6n+1), .upt-bs-vflat .upt-vz--5 > :nth-child(5n+1), .upt-bs-vflat .upt-vz--4 > :nth-child(4n+1){ padding-left:0; border-left:0; }
+.upt-bs-vflat .upt-vz--5 > :nth-child(6n+1):not(:nth-child(5n+1)), .upt-bs-vflat .upt-vz--4 > :nth-child(6n+1):not(:nth-child(4n+1)){ padding-left:16px; border-left:1px solid var(--w-border); }
+html.upt-bs-vflat body:not(.is-desk) .upt-vz > *{ padding:0 12px; border-left:1px solid var(--w-border); } html.upt-bs-vflat body:not(.is-desk) .upt-vz > :nth-child(2n+1){ padding-left:0; border-left:0; }
+/* ── v25: как v17, по три в ряд, графики крупнее ── */
+.upt-bs-vxl #upt-meta .upt-vz{ grid-template-columns:repeat(3, minmax(0, 1fr)); gap:12px; }
+.upt-bs-vxl #upt-meta .upt-vz__c{ padding:16px; gap:10px; } .upt-bs-vxl .upt-vz__v{ font-size:30px; line-height:36px; } .upt-bs-vxl .upt-vz__v .mut{ font-size:16px; }
+.upt-bs-vxl .upt-hg{ height:56px; gap:3px; } .upt-bs-vxl .upt-sp{ height:12px; } .upt-bs-vxl .upt-ring{ width:64px; height:64px; -webkit-mask:radial-gradient(circle, transparent 22px, #000 23px); mask:radial-gradient(circle, transparent 22px, #000 23px); }
+.upt-bs-vxl .upt-hi--l{ width:84px; height:48px; } .upt-bs-vxl .upt-cb{ height:6px; }
+html.upt-bs-vxl body:not(.is-desk) #upt-meta .upt-vz{ grid-template-columns:repeat(2, minmax(0, 1fr)); } html.upt-bs-vxl body:not(.is-desk) .upt-vz__v{ font-size:22px; line-height:28px; }

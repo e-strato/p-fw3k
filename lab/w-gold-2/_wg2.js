@@ -63,11 +63,11 @@
     // окно: o.win = { span, end } (end null — живой край); без o.win — вся карта
     const wn = o.win, bE = wn && wn.end != null ? Math.min(now, Math.max(wn.span, wn.end)) : now, a0 = wn ? Math.max(0, bE - wn.span) : 0, edge = bE === now;
     // o.lane (w-lane v2, задача 9 «Лайнинг», дирижёр 04.11: «график, который появляется до начала матча на основе данных»): пока не прошло 12′ — ось времени до 12′, дальше линии — пунктир прогноза по драфту
-    const FC = !!(o.lane && !wn && now < 720), bX = FC ? (o.laneTail ? 720 + o.laneTail : 720) : bE; // o.laneTail (w-lane v9, дирижёр 04.11: «где линия 12 мин?» — стояла на самом краю): ось чуть дальше 12′, чтобы линия и подпись 12′ были видны
+    const FC = !!(o.lane && !wn && now < 720), bX = FC ? (o.laneTail ? 720 + o.laneTail : 720) : bE + (o.fwd && edge && live ? o.fwd : 0); /* o.fwd (gs-upgrade v27, дирижёр 10.11: «прогноз наперёд хотя бы минут на пять»): live — ось времени на o.fwd секунд дальше «сейчас», поле под прогноз */ // o.laneTail (w-lane v9, дирижёр 04.11: «где линия 12 мин?» — стояла на самом краю): ось чуть дальше 12′, чтобы линия и подпись 12′ были видны
     const X = s => L + ((s - a0) / (bX - a0)) * (W - L - R);
     const secs = [a0]; for (let s = Math.floor(a0 / 60) * 60 + 60; s < bE; s += 60) secs.push(s); secs.push(bE);
     const fr = t => (o.lane ? o.lane.g12 : 0) * Math.pow(t / 720, 1.3), v0 = now > 0 ? at(m, now) : 0, fcP = []; if (FC) for (let t = o.fcAll ? 0 : now; ; t = Math.min(720, t + 20)) { fcP.push([t, o.fcAll ? fr(t) : v0 + fr(t) - fr(now)]); if (t >= 720) break; } // o.fcAll (w-lane-2, созвон 05.11 §8.4: «поверх будет идти»): прогноз — весь 0–12′ от нуля, реальный график идёт поверх
-    const vals = secs.map(s => at(m, s)).concat(fcP.map(q => q[1])); let hi = Math.max(0, ...vals), lo = Math.min(0, ...vals); const pad = o.tight ? Math.max(200, (hi - lo) * .04) : Math.max(800, (hi - lo) * .12); hi += pad; lo -= pad;
+    const vals = secs.map(s => at(m, s)).concat(fcP.map(q => q[1]), o.yAdd || []); /* o.yAdd (gs-upgrade v28–v30, дирижёр 11.11: «график выезжает за область»): значения прогноза — тоже в шкалу */ let hi = Math.max(0, ...vals), lo = Math.min(0, ...vals); const pad = o.tight ? Math.max(200, (hi - lo) * .04) : Math.max(800, (hi - lo) * .12); hi += pad; lo -= pad;
     const step = [500, 1000, 2000, 5000, 10000, 20000].find(s => (hi - lo) / s <= (H > 400 ? 6 : 4)) || 20000;
     // o.R = 'auto' (w-bottom v37, дирижёр 04.11: «отступ справа всё равно большой — подумать о результате»): поле справа — по самой широкой подписи
     // этой карты (метка значения или число шкалы), а не с запасом под 35k; растёт, только когда растут числа
